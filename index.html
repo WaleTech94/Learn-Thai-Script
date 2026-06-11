@@ -272,8 +272,9 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   position:fixed;left:0;right:0;bottom:0;z-index:40;
   background:var(--bg);
   border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom, 0px); /* inset OUTSIDE the bar height */
 }
-.tabbar-inner{max-width:680px;margin:0 auto;display:flex;height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar-inner{max-width:680px;margin:0 auto;display:flex;height:var(--nav-h)}
 .tab{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   color:var(--muted);font-size:10.5px;font-weight:400;letter-spacing:.03em;
@@ -401,7 +402,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.2.2 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.2.3 (PWA)</div>
     </div>
   </section>
 
