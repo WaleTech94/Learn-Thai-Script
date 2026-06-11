@@ -31,7 +31,11 @@
   --nav-h:64px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
+html,body{height:100%;background:var(--bg)} /* QA-5: dark rubber-band overscroll */
+#statusbar-scrim{
+  position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top, 0px);
+  background:var(--bg);z-index:60;pointer-events:none;
+}
 body{
   background:var(--bg);
   color:var(--text);
@@ -155,7 +159,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .xbtn{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);font-size:17px;flex:none}
 .progressbar{flex:1;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
 .progressbar i{display:block;height:100%;width:0%;background:var(--mid);border-radius:99px;transition:width .25s ease}
-.stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:8px 0}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;gap:18px;padding:8px 0;min-height:0}
 .stage .glyph-big{
   text-align:center;font-family:'Mitr',sans-serif;font-size:120px;font-weight:400;line-height:1.1;
 }
@@ -259,14 +263,14 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(20px);
   background:var(--surface2);border:1px solid var(--line);color:var(--text);
   padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;
-  transition:all .25s ease;z-index:99;white-space:nowrap;
+  transition:all .25s ease;z-index:99;max-width:88vw;text-align:center;
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ---------- bottom nav ---------- */
 #tabbar{
   position:fixed;left:0;right:0;bottom:0;z-index:40;
-  background:rgba(20,22,29,.92);backdrop-filter:blur(12px);
+  background:var(--bg);
   border-top:1px solid var(--line);
 }
 .tabbar-inner{max-width:680px;margin:0 auto;display:flex;height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom)}
@@ -320,6 +324,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 </style>
 </head>
 <body>
+<div id="statusbar-scrim"></div>
 <div id="app">
 <main id="views">
 
@@ -396,7 +401,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.2.1 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.2.2 (PWA)</div>
     </div>
   </section>
 
@@ -1709,6 +1714,18 @@ function nextGenericQ(){
 /* =====================================================
    INIT
 ===================================================== */
+/* flush pending save synchronously when app is backgrounded or closed */
+function flushState(){
+  clearTimeout(saveTimer);
+  try{ localStorage.setItem(SKEY, JSON.stringify(state)); }catch(e){}
+  try{ if(window.storage) window.storage.set(SKEY, JSON.stringify(state)); }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden') flushState();
+  else if('speechSynthesis' in window) speechSynthesis.resume();
+});
+window.addEventListener('pagehide', flushState);
+
 /* iOS requires a user gesture before speechSynthesis works — prime it once */
 let speechPrimed = false;
 document.addEventListener('touchstart', ()=>{
