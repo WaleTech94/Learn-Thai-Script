@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>อ่าน — Learn Thai</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14161D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="อ่าน">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14161D;
+  --surface:#1D2029;
+  --surface2:#252936;
+  --line:#2E3344;
+  --text:#F2EFE6;
+  --muted:#9BA0B0;
+  --mid:#2FD4B5;      /* mid class — teal */
+  --high:#FF5C9E;     /* high class — pink */
+  --low:#FFB23E;      /* low class — marigold */
+  --blue:#7FA8FF;
+  --good:#5BD179;
+  --bad:#FF6B6B;
+  --radius:18px;
+  --nav-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg)} /* QA-5: dark rubber-band overscroll */
+#statusbar-scrim{
+  position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top, 0px);
+  background:var(--bg);z-index:60;pointer-events:none;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Prompt','Noto Sans Thai',system-ui,sans-serif;
+  font-weight:300;
+  font-size:16px;
+  line-height:1.55;
+}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.flashcard{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#app{max-width:680px;margin:0 auto;min-height:100%;position:relative}
+main{padding:calc(20px + env(safe-area-inset-top, 0px)) 18px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px))}
+.view{display:none;animation:fadein .25s ease}
+.view.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,.display{font-family:'Mitr','Prompt',sans-serif;font-weight:500;line-height:1.25}
+h1{font-size:26px}
+h2{font-size:20px;margin-bottom:4px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
+.sub{color:var(--muted);font-size:14px}
+.thai{font-weight:400}
+
+/* ---------- shared ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.row{display:flex;align-items:center;gap:12px}
+.spread{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:'Mitr',sans-serif;font-weight:500;font-size:15px;
+  background:var(--text);color:var(--bg);
+  border-radius:14px;padding:12px 22px;
+  transition:transform .12s ease, opacity .12s ease;
+}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
+.btn.small{padding:11px 16px;font-size:13px;border-radius:12px;min-height:42px}
+.btn:disabled{opacity:.4;pointer-events:none}
+.btn.full{width:100%}
+.classchip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 10px;border-radius:99px;border:1px solid;
+}
+.classchip.mid{color:var(--mid);border-color:var(--mid)}
+.classchip.high{color:var(--high);border-color:var(--high)}
+.classchip.low{color:var(--low);border-color:var(--low)}
+.speak{
+  width:44px;height:44px;border-radius:50%;flex:none;
+  background:var(--surface2);border:1px solid var(--line);
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:transform .12s ease;
+}
+.speak:active{transform:scale(.92)}
+.speak svg{width:19px;height:19px;fill:var(--text)}
+.speak.playing{border-color:var(--blue)}
+.speak.playing svg{fill:var(--blue)}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.brand{font-family:'Mitr',sans-serif;font-weight:600;font-size:21px}
+.brand .thai-accent{color:var(--high)}
+.streak{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:99px;padding:7px 14px;font-family:'Mitr',sans-serif;font-weight:500;font-size:14px;
+}
+.streak .flame{color:var(--low)}
+
+/* ---------- home ---------- */
+.glyph-hero{
+  position:relative;overflow:hidden;text-align:center;padding:30px 18px 26px;margin-bottom:16px;
+}
+.glyph-hero .bigchar{
+  font-size:118px;line-height:1.05;font-family:'Mitr',sans-serif;font-weight:400;display:block;
+}
+.glyph-hero.mid .bigchar{color:var(--mid)}
+.glyph-hero.high .bigchar{color:var(--high)}
+.glyph-hero.low .bigchar{color:var(--low)}
+.glyph-hero .ghost-char{
+  position:absolute;right:-26px;bottom:-58px;font-size:230px;opacity:.045;
+  font-family:'Mitr',sans-serif;pointer-events:none;user-select:none;
+}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+.stat .num{font-family:'Mitr',sans-serif;font-weight:600;font-size:22px}
+.stat .lbl{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.homecta{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.cta-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px}
+.cta-card .t{font-family:'Mitr',sans-serif;font-weight:500;font-size:16px}
+.cta-card .d{font-size:13px;color:var(--muted)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* ---------- learn ---------- */
+.lesson-list{display:flex;flex-direction:column;gap:12px}
+.lesson-card{display:flex;align-items:center;gap:14px;padding:16px}
+.lesson-card .glyphs{
+  font-family:'Mitr',sans-serif;font-size:26px;font-weight:400;flex:none;
+  width:74px;text-align:center;background:var(--surface2);border-radius:13px;padding:10px 4px;line-height:1.2;
+}
+.lesson-card .meta{flex:1;min-width:0}
+.lesson-card .t{font-family:'Mitr',sans-serif;font-weight:500;font-size:16px}
+.lesson-card .d{font-size:13px;color:var(--muted)}
+.lesson-card .state{flex:none;font-size:12px;color:var(--muted)}
+.lesson-card.done{border-color:rgba(91,209,121,.45)}
+.lesson-card.done .state{color:var(--good)}
+.lesson-card.locked{opacity:.45}
+
+/* ---------- lesson player / overlay ---------- */
+#overlay{
+  position:fixed;inset:0;background:var(--bg);z-index:50;display:none;
+  overflow-y:auto;
+}
+#overlay.open{display:block}
+.overlay-inner{max-width:680px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:calc(16px + env(safe-area-inset-top, 0px)) 18px calc(28px + env(safe-area-inset-bottom, 0px))}
+.overlay-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.xbtn{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);font-size:17px;flex:none}
+.progressbar{flex:1;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.progressbar i{display:block;height:100%;width:0%;background:var(--mid);border-radius:99px;transition:width .25s ease}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;gap:18px;padding:8px 0;min-height:0}
+.stage .glyph-big{
+  text-align:center;font-family:'Mitr',sans-serif;font-size:120px;font-weight:400;line-height:1.1;
+}
+.stage .glyph-big.mid{color:var(--mid)}
+.stage .glyph-big.high{color:var(--high)}
+.stage .glyph-big.low{color:var(--low)}
+.stage .center{text-align:center}
+.stage .name-thai{font-size:22px;font-family:'Mitr',sans-serif}
+.stage .translit{font-size:17px;color:var(--blue);font-weight:400}
+.stage .gloss{color:var(--muted);font-size:14px}
+.notebox{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--muted)}
+.notebox b{color:var(--text);font-weight:500}
+.word-line{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.word-line .w-thai{font-family:'Mitr',sans-serif;font-size:30px;flex:none}
+.word-line .w-meta{flex:1}
+.word-line .w-tr{color:var(--blue);font-size:15px}
+.word-line .w-en{color:var(--muted);font-size:13px}
+.stage-actions{display:flex;gap:10px;margin-top:6px}
+.stage-actions .btn{flex:1}
+
+/* ---------- quiz ---------- */
+.q-prompt{text-align:center;margin-bottom:6px}
+.q-prompt .q-big{font-family:'Mitr',sans-serif;font-size:84px;line-height:1.15}
+.q-prompt .q-text{font-size:19px;font-family:'Mitr',sans-serif;font-weight:500}
+.q-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px 10px;text-align:center;font-size:17px;font-weight:400;
+  font-family:'Mitr',sans-serif;transition:border-color .12s ease, transform .1s ease;
+}
+.q-opt.thai-opt{font-size:26px}
+.q-opt:active{transform:scale(.97)}
+.q-opt.correct{border-color:var(--good);color:var(--good)}
+.q-opt.wrong{border-color:var(--bad);color:var(--bad)}
+.q-opt:disabled{pointer-events:none}
+.q-feedback{min-height:24px;text-align:center;font-size:14px;color:var(--muted)}
+.q-feedback.ok{color:var(--good)}
+.q-feedback.no{color:var(--bad)}
+
+/* ---------- tones ---------- */
+.tone-row{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.tone-row .contour{flex:none;width:54px;height:30px}
+.contour path{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round}
+.tone-row .t-name{font-family:'Mitr',sans-serif;font-weight:500;font-size:15px;width:64px;flex:none}
+.tone-row .t-word{font-family:'Mitr',sans-serif;font-size:24px;flex:none;width:56px;text-align:center}
+.tone-row .t-meta{flex:1;min-width:0}
+.tone-row .t-tr{color:var(--blue);font-size:14px}
+.tone-row .t-en{color:var(--muted);font-size:12px}
+.section-gap{margin-top:22px}
+
+/* ---------- phrases ---------- */
+.cat-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{
+  flex:none;font-family:'Mitr',sans-serif;font-weight:500;font-size:13px;
+  padding:11px 18px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  min-height:42px;
+}
+.cat-tab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.phrase-list{display:flex;flex-direction:column;gap:10px}
+.phrase{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.phrase .p-meta{flex:1;min-width:0}
+.phrase .p-thai{font-family:'Mitr',sans-serif;font-size:21px;line-height:1.4}
+.phrase .p-tr{color:var(--blue);font-size:14px}
+.phrase .p-en{color:var(--muted);font-size:13px}
+.phrase .p-note{color:var(--low);font-size:12px;margin-top:2px}
+
+/* ---------- review ---------- */
+.flashcard{
+  perspective:1100px;cursor:pointer;margin-bottom:14px;
+}
+.fc-inner{
+  position:relative;width:100%;min-height:240px;
+  transition:transform .45s cubic-bezier(.2,.7,.3,1);transform-style:preserve-3d;
+}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;
+}
+.fc-face.back{transform:rotateY(180deg)}
+.fc-face .fc-big{font-family:'Mitr',sans-serif;font-size:72px;line-height:1.15;text-align:center}
+.fc-face .fc-mid{font-family:'Mitr',sans-serif;font-size:30px;text-align:center}
+.fc-face .fc-tr{color:var(--blue);font-size:18px}
+.fc-face .fc-en{color:var(--muted);font-size:15px;text-align:center}
+.fc-hint{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grade-grid .btn{padding:12px 4px;font-size:13px}
+.g-again{background:var(--bad)!important;color:#fff!important}
+.g-hard{background:var(--low)!important;color:var(--bg)!important}
+.g-good{background:var(--mid)!important;color:var(--bg)!important}
+.g-easy{background:var(--good)!important;color:var(--bg)!important}
+.empty{
+  text-align:center;color:var(--muted);padding:40px 16px;font-size:14px;
+  border:1px dashed var(--line);border-radius:var(--radius);
+}
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(20px);
+  background:var(--surface2);border:1px solid var(--line);color:var(--text);
+  padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;
+  transition:all .25s ease;z-index:99;max-width:88vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- bottom nav ---------- */
+#tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:var(--bg);
+  border-top:1px solid var(--line);
+}
+.tabbar-inner{max-width:680px;margin:0 auto;display:flex;height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom)}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);font-size:10.5px;font-weight:400;letter-spacing:.03em;
+}
+.tab .tab-glyph{font-family:'Mitr',sans-serif;font-size:19px;line-height:1}
+.tab.active{color:var(--text)}
+.tab.active .tab-glyph{color:var(--high)}
+.tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.result-big{text-align:center;font-family:'Mitr',sans-serif;font-size:54px;font-weight:600;line-height:1.2}
+.result-sub{text-align:center;color:var(--muted);font-size:15px}
+.danger-link{color:var(--bad);font-size:13px;background:none;text-decoration:underline}
+.settings-row{margin-top:24px;text-align:center}
+
+/* ---------- v2.1 gamification ---------- */
+.chips{display:flex;gap:8px;align-items:center}
+.quest-line{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px}
+.quest-line .qc{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--bg)}
+.quest-line.done .qc{background:var(--good);border-color:var(--good)}
+.quest-line.done{color:var(--muted);text-decoration:line-through}
+.wall{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.tile{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:'Mitr',sans-serif;font-size:19px;background:var(--surface2);color:#565b6e;border:1px solid var(--line);cursor:pointer}
+.tile.learning.mid{border-color:var(--mid);color:var(--mid)}
+.tile.learning.high{border-color:var(--high);color:var(--high)}
+.tile.learning.low{border-color:var(--low);color:var(--low)}
+.tile.growing.mid{background:rgba(47,212,181,.22);color:var(--mid);border-color:transparent}
+.tile.growing.high{background:rgba(255,92,158,.22);color:var(--high);border-color:transparent}
+.tile.growing.low{background:rgba(255,178,62,.22);color:var(--low);border-color:transparent}
+.tile.mastered.mid{background:var(--mid);color:#0E2620;border-color:var(--mid)}
+.tile.mastered.high{background:var(--high);color:#33101F;border-color:var(--high)}
+.tile.mastered.low{background:var(--low);color:#332208;border-color:var(--low)}
+.heatmap{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:12px}
+.hm{aspect-ratio:1;border-radius:3px;background:var(--surface2)}
+.hm.l1{background:rgba(47,212,181,.28)}
+.hm.l2{background:rgba(47,212,181,.6)}
+.hm.l3{background:var(--mid)}
+.wagerrow{display:flex;gap:10px}
+.wager{flex:1;font-family:'Mitr',sans-serif;font-weight:500;font-size:16px;padding:13px 4px;border-radius:13px;background:var(--surface2);border:1px solid var(--line);transition:transform .1s ease}
+.wager:active{transform:scale(.96)}
+.rw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.timerbar{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-bottom:10px}
+.timerbar i{display:block;height:100%;width:100%;background:var(--blue);border-radius:99px}
+.boss-card{border-color:rgba(255,178,62,.5)}
+.boss-card .glyphs{background:rgba(255,178,62,.12);color:var(--low)}
+.calib-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.calib-row:last-child{border-bottom:none}
+.calib-row .pct{font-family:'Mitr',sans-serif;font-weight:500}
+</style>
+</head>
+<body>
+<div id="statusbar-scrim"></div>
+<div id="app">
+<main id="views">
+
+  <!-- HOME -->
+  <section class="view" id="view-home">
+    <header>
+      <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan — to read</span></div>
+      <div class="chips">
+        <div class="streak">฿<span id="baht-num" style="margin-left:4px">0</span></div>
+        <div class="streak"><span class="flame">🔥</span><span id="streak-num">0</span></div>
+      </div>
+    </header>
+    <div class="card glyph-hero" id="hero-card">
+      <div class="eyebrow">Letter of the day</div>
+      <span class="bigchar" id="hero-char">ก</span>
+      <div class="name-thai" id="hero-name"></div>
+      <div class="translit" id="hero-sound" style="color:var(--blue)"></div>
+      <div class="row" style="justify-content:center;margin-top:10px;gap:10px">
+        <span class="classchip" id="hero-class"></span>
+        <button class="speak" id="hero-speak" aria-label="Play sound"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>
+      </div>
+      <span class="ghost-char" id="hero-ghost">ก</span>
+    </div>
+    <div class="statgrid">
+      <div class="stat"><div class="num" id="stat-letters">0</div><div class="lbl">letters</div></div>
+      <div class="stat"><div class="num" id="stat-words">0</div><div class="lbl">words</div></div>
+      <div class="stat"><div class="num" id="stat-due">0</div><div class="lbl">due now</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Daily quest</div>
+        <span class="sub" style="font-size:12px" id="quest-reward">+10฿</span>
+      </div>
+      <div class="quest-line" id="quest-a"><span class="qc">✓</span><span>Clear your due cards</span></div>
+      <div class="quest-line" id="quest-b"><span class="qc">✓</span><span>One lesson, drill or boss run</span></div>
+    </div>
+    <div class="homecta">
+      <button class="card cta-card" id="cta-lesson">
+        <div><div class="t" id="cta-lesson-title">Start Lesson 1</div><div class="d" id="cta-lesson-sub">First sounds: ก น ม</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="cta-review">
+        <div><div class="t">Review due cards</div><div class="d" id="cta-review-sub">Nothing due yet</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">The letter wall</div>
+        <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
+      </div>
+      <div class="wall" id="wall"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met &middot; outlined = learning &middot; tinted = growing &middot; solid = mastered (7+ day interval). Tap any tile to hear it.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Last 16 weeks</div>
+        <button class="btn small ghost" id="buy-freeze">Freeze 30฿ (<span id="freeze-n">0</span>)</button>
+      </div>
+      <div class="heatmap" id="heatmap"></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">How colour works here</div>
+      <div class="sub">Every Thai consonant belongs to a <b style="color:var(--text);font-weight:500">class</b>, and the class decides the tone of the syllable. You'll see these three colours everywhere in this app — learn them by accident.</div>
+      <div class="legend">
+        <span class="classchip mid">Mid class</span>
+        <span class="classchip high">High class</span>
+        <span class="classchip low">Low class</span>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="row" style="justify-content:center;gap:10px;margin-bottom:14px">
+        <button class="btn small ghost" id="export-btn">Export progress</button>
+        <button class="btn small ghost" id="import-btn">Import progress</button>
+      </div>
+      <button class="danger-link" id="reset-btn">Reset all progress</button>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.2.2 (PWA)</div>
+    </div>
+  </section>
+
+  <!-- LEARN -->
+  <section class="view" id="view-learn">
+    <div class="eyebrow">Script course</div>
+    <h1 style="margin-bottom:4px">Read Thai, fast wins first</h1>
+    <p class="sub" style="margin-bottom:18px">24 lessons, 4 units: foundations &rarr; workhorse letters &rarr; the tone engine &rarr; clusters and the long tail. Finish Unit D and you can sound out any sign in Bangkok.</p>
+    <div class="lesson-list" id="lesson-list"></div>
+  </section>
+
+  <!-- TONES -->
+  <section class="view" id="view-tones">
+    <div class="eyebrow">The five tones</div>
+    <h1 style="margin-bottom:4px">Same sounds, five words</h1>
+    <p class="sub" style="margin-bottom:18px">Thai is tonal: pitch changes meaning. The classic example — five words that are all "khaa".</p>
+    <div class="phrase-list" id="tone-list"></div>
+    <div class="section-gap"></div>
+    <div class="eyebrow">Real-life set</div>
+    <p class="sub" style="margin-bottom:12px">The "mai" family — you'll hear these daily in Bangkok.</p>
+    <div class="phrase-list" id="tone-list2"></div>
+    <div class="section-gap"></div>
+    <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
+    <div style="height:10px"></div>
+    <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
+    <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
+  </section>
+
+  <!-- PHRASES -->
+  <section class="view" id="view-phrases">
+    <div class="eyebrow">Bangkok phrasebook</div>
+    <h1 style="margin-bottom:4px">Say it today</h1>
+    <p class="sub" style="margin-bottom:14px">Tap the speaker to hear it. End with <b style="font-weight:500;color:var(--text)">ครับ khráp</b> to be polite — already added where it matters.</p>
+    <div class="cat-tabs" id="cat-tabs"></div>
+    <div class="phrase-list" id="phrase-list"></div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="view" id="view-review">
+    <div class="eyebrow">Practice</div>
+    <h1 style="margin-bottom:4px">Keep it sticky</h1>
+    <p class="sub" style="margin-bottom:18px">Spaced repetition on everything you've learned, plus a mixed quiz.</p>
+    <div class="homecta">
+      <button class="card cta-card" id="cta-flash">
+        <div><div class="t">Flashcards</div><div class="d" id="flash-sub">0 cards due</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="cta-quiz">
+        <div><div class="t">Mixed quiz</div><div class="d">10 questions from what you know</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="eyebrow">Your calibration</div>
+      <div id="calib-body"><div class="sub">Wager on flashcards to build your record. When you bet 3฿ you should be right ~90%+ of the time — if not, you're overconfident.</div></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Transliteration key</div>
+      <div class="sub">
+        Tone marks on vowels: <b style="color:var(--text);font-weight:500">a</b> mid · <b style="color:var(--text);font-weight:500">à</b> low · <b style="color:var(--text);font-weight:500">â</b> falling · <b style="color:var(--text);font-weight:500">á</b> high · <b style="color:var(--text);font-weight:500">ǎ</b> rising.
+        Doubled vowels (aa, ii, uu) are long. <b style="color:var(--text);font-weight:500">or</b> = the vowel in "for" with no r sound. <b style="color:var(--text);font-weight:500">bp</b>/<b style="color:var(--text);font-weight:500">dt</b> are unaspirated p/t — between English b/p and d/t.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- overlay player -->
+<div id="overlay">
+  <div class="overlay-inner">
+    <div class="overlay-top">
+      <button class="xbtn" id="overlay-close" aria-label="Close">✕</button>
+      <div class="progressbar"><i id="overlay-prog"></i></div>
+    </div>
+    <div class="stage" id="stage"></div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<nav id="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab active" data-view="home"><span class="tab-glyph">บ้</span>Home</button>
+    <button class="tab" data-view="learn"><span class="tab-glyph">ก</span>Learn</button>
+    <button class="tab" data-view="tones"><span class="tab-glyph">ห้</span>Tones</button>
+    <button class="tab" data-view="phrases"><span class="tab-glyph">พูด</span>Phrases</button>
+    <button class="tab" data-view="review"><span class="tab-glyph">ซ้ำ</span>Review</button>
+  </div>
+</nav>
+</div>
+<script>
+/* =====================================================
+   DATA
+===================================================== */
+const GLYPHS = {
+  /* ---- consonants (sound, acrophonic name, class) ---- */
+  "ก":{type:"c", sound:"g",  name:"กอ ไก่",  nameTr:"gor gài",   gloss:"chicken", cls:"mid"},
+  "จ":{type:"c", sound:"j",  name:"จอ จาน",  nameTr:"jor jaan",  gloss:"plate",   cls:"mid"},
+  "ด":{type:"c", sound:"d",  name:"ดอ เด็ก", nameTr:"dor dèk",   gloss:"child",   cls:"mid"},
+  "ต":{type:"c", sound:"dt", name:"ตอ เต่า", nameTr:"dtor dtào", gloss:"turtle",  cls:"mid"},
+  "บ":{type:"c", sound:"b",  name:"บอ ใบไม้",nameTr:"bor bai-máai",gloss:"leaf",  cls:"mid"},
+  "ป":{type:"c", sound:"bp", name:"ปอ ปลา", nameTr:"bpor bplaa",gloss:"fish",    cls:"mid"},
+  "อ":{type:"c", sound:"or / silent", name:"ออ อ่าง", nameTr:"or àang", gloss:"basin", cls:"mid"},
+  "ฎ":{type:"c", sound:"d",  name:"ฎอ ชฎา", nameTr:"dor chá-daa",gloss:"headdress",cls:"mid", rare:true},
+  "ฏ":{type:"c", sound:"dt", name:"ฏอ ปฏัก",nameTr:"dtor bpà-dtàk",gloss:"goad", cls:"mid", rare:true},
+  "ข":{type:"c", sound:"kh", name:"ขอ ไข่",  nameTr:"khor khài", gloss:"egg",     cls:"high"},
+  "ฉ":{type:"c", sound:"ch", name:"ฉอ ฉิ่ง", nameTr:"chor chìng",gloss:"cymbals", cls:"high"},
+  "ถ":{type:"c", sound:"th", name:"ถอ ถุง",  nameTr:"thor thǔng",gloss:"bag",     cls:"high"},
+  "ผ":{type:"c", sound:"ph", name:"ผอ ผึ้ง", nameTr:"phor phûeng",gloss:"bee",    cls:"high"},
+  "ฝ":{type:"c", sound:"f",  name:"ฝอ ฝา",  nameTr:"for fǎa",   gloss:"lid",     cls:"high"},
+  "ส":{type:"c", sound:"s",  name:"สอ เสือ", nameTr:"sor sǔea",  gloss:"tiger",   cls:"high"},
+  "ห":{type:"c", sound:"h",  name:"หอ หีบ", nameTr:"hor hìip",  gloss:"chest",   cls:"high"},
+  "ศ":{type:"c", sound:"s",  name:"ศอ ศาลา",nameTr:"sor sǎa-laa",gloss:"pavilion",cls:"high"},
+  "ษ":{type:"c", sound:"s",  name:"ษอ ฤๅษี",nameTr:"sor ruue-sǐi",gloss:"hermit", cls:"high", rare:true},
+  "ฐ":{type:"c", sound:"th", name:"ฐอ ฐาน", nameTr:"thor thǎan",gloss:"pedestal",cls:"high", rare:true},
+  "น":{type:"c", sound:"n",  name:"นอ หนู",  nameTr:"nor nǔu",   gloss:"mouse",   cls:"low"},
+  "ม":{type:"c", sound:"m",  name:"มอ ม้า",  nameTr:"mor máa",   gloss:"horse",   cls:"low"},
+  "ท":{type:"c", sound:"th", name:"ทอ ทหาร",nameTr:"thor tha-hǎan",gloss:"soldier",cls:"low"},
+  "ร":{type:"c", sound:"r",  name:"รอ เรือ", nameTr:"ror ruea",  gloss:"boat",    cls:"low"},
+  "ล":{type:"c", sound:"l",  name:"ลอ ลิง", nameTr:"lor ling",  gloss:"monkey",  cls:"low"},
+  "ว":{type:"c", sound:"w",  name:"วอ แหวน",nameTr:"wor wǎaen", gloss:"ring",    cls:"low"},
+  "ย":{type:"c", sound:"y",  name:"ยอ ยักษ์",nameTr:"yor yák",  gloss:"giant",   cls:"low"},
+  "ช":{type:"c", sound:"ch", name:"ชอ ช้าง", nameTr:"chor cháang",gloss:"elephant",cls:"low"},
+  "ง":{type:"c", sound:"ng", name:"งอ งู",   nameTr:"ngor nguu", gloss:"snake",   cls:"low"},
+  "พ":{type:"c", sound:"ph", name:"พอ พาน", nameTr:"phor phaan",gloss:"tray",    cls:"low"},
+  "ฟ":{type:"c", sound:"f",  name:"ฟอ ฟัน", nameTr:"for fan",   gloss:"teeth",   cls:"low"},
+  "ค":{type:"c", sound:"kh", name:"คอ ควาย",nameTr:"khor khwaai",gloss:"buffalo", cls:"low"},
+  "ซ":{type:"c", sound:"s",  name:"ซอ โซ่", nameTr:"sor sôh",   gloss:"chain",   cls:"low"},
+  "ธ":{type:"c", sound:"th", name:"ธอ ธง",  nameTr:"thor thong",gloss:"flag",    cls:"low"},
+  "ภ":{type:"c", sound:"ph", name:"ภอ สำเภา",nameTr:"phor sǎm-phao",gloss:"sailing ship",cls:"low"},
+  "ญ":{type:"c", sound:"y",  name:"ญอ หญิง",nameTr:"yor yǐng",  gloss:"woman",   cls:"low"},
+  "ณ":{type:"c", sound:"n",  name:"ณอ เณร", nameTr:"nor neen",  gloss:"novice monk",cls:"low", rare:true},
+  "ฮ":{type:"c", sound:"h",  name:"ฮอ นกฮูก",nameTr:"hor nók-hûuk",gloss:"owl",  cls:"low"},
+  "ฌ":{type:"c", sound:"ch", name:"ฌอ เฌอ", nameTr:"chor cher",gloss:"tree",    cls:"low", rare:true},
+  "ฑ":{type:"c", sound:"th", name:"ฑอ มณโฑ",nameTr:"thor mon-thoh",gloss:"Montho",cls:"low", rare:true},
+  "ฒ":{type:"c", sound:"th", name:"ฒอ ผู้เฒ่า",nameTr:"thor phûu-thâo",gloss:"elder",cls:"low", rare:true},
+  "ฆ":{type:"c", sound:"kh", name:"ฆอ ระฆัง",nameTr:"khor rá-khang",gloss:"bell",cls:"low", rare:true},
+  "ฬ":{type:"c", sound:"l",  name:"ฬอ จุฬา",nameTr:"lor jù-laa",gloss:"kite",    cls:"low", rare:true},
+  /* ---- vowels & marks ---- */
+  "า":{disp:"อา", type:"v", sound:"aa (long)",  name:"สระอา", nameTr:"sara aa", gloss:"written after the consonant", demo:"กา"},
+  "ี":{disp:"อี", type:"v", sound:"ii (long)",  name:"สระอี", nameTr:"sara ii", gloss:"sits on top", demo:"มี"},
+  "ิ":{disp:"อิ", type:"v", sound:"i (short)",  name:"สระอิ", nameTr:"sara i",  gloss:"sits on top — short twin of ี", demo:"กิน"},
+  "ู":{disp:"อู", type:"v", sound:"uu (long)",  name:"สระอู", nameTr:"sara uu", gloss:"hangs underneath", demo:"ดู"},
+  "ุ":{disp:"อุ", type:"v", sound:"u (short)",  name:"สระอุ", nameTr:"sara u",  gloss:"hangs underneath — short twin of ู", demo:"ทุก"},
+  "เ":{disp:"เอ", type:"v", sound:"ee (long)",  name:"สระเอ", nameTr:"sara ee", gloss:"written BEFORE the consonant", demo:"เท"},
+  "แ":{disp:"แอ", type:"v", sound:"aae (long)", name:"สระแอ", nameTr:"sara aae",gloss:"written BEFORE — wider than เ", demo:"แม่"},
+  "ไ":{disp:"ไอ", type:"v", sound:"ai",         name:"สระไอ", nameTr:"sara ai", gloss:"written BEFORE the consonant", demo:"ไป"},
+  "ใ":{disp:"ใอ", type:"v", sound:"ai",         name:"สระใอ ไม้ม้วน", nameTr:"sara ai mái múan", gloss:"same sound as ไ — only 20 words use it", demo:"ใช่"},
+  "โ":{disp:"โอ", type:"v", sound:"oo (long)",  name:"สระโอ", nameTr:"sara oo", gloss:"written BEFORE the consonant", demo:"โต"},
+  "ะ":{disp:"อะ", type:"v", sound:"a (short)",  name:"สระอะ", nameTr:"sara a",  gloss:"written after — cuts the vowel short", demo:"จะ"},
+  "ั":{disp:"อั", type:"v", sound:"a (short)",  name:"ไม้หันอากาศ", nameTr:"mái hǎn-aa-gàat", gloss:"short a when a final consonant follows", demo:"วัน"},
+  "ึ":{disp:"อึ", type:"v", sound:"ue (short)", name:"สระอึ", nameTr:"sara ue", gloss:"on top — say 'u' with a flat smile", demo:"ลึก"},
+  "ื":{disp:"อือ", type:"v", sound:"uue (long)", name:"สระอือ", nameTr:"sara uue", gloss:"on top, usually followed by อ", demo:"มือ"},
+  "ำ":{disp:"อำ", type:"v", sound:"am",         name:"สระอำ", nameTr:"sara am", gloss:"after the consonant", demo:"น้ำ"},
+  "เ◌า":{disp:"เอา", type:"v", sound:"ao",       name:"สระเอา", nameTr:"sara ao", gloss:"wraps around the consonant", demo:"เขา"},
+  "เ◌ีย":{disp:"เอีย", type:"v", sound:"ia",      name:"สระเอีย", nameTr:"sara ia", gloss:"three pieces, one vowel", demo:"เรียน"},
+  "เ◌ือ":{disp:"เอือ", type:"v", sound:"uea",     name:"สระเอือ", nameTr:"sara uea", gloss:"three pieces, one vowel", demo:"เพื่อน"},
+  "◌ัว":{disp:"อัว", type:"v", sound:"ua",       name:"สระอัว", nameTr:"sara ua", gloss:"two pieces after/above", demo:"ตัว"},
+  "่":{disp:"ก่", type:"m", sound:"mái èek",    name:"ไม้เอก", nameTr:"mái èek", gloss:"tone mark 1 — low tone on mid/high class", demo:"ไม่"},
+  "้":{disp:"ก้", type:"m", sound:"mái thoo",   name:"ไม้โท", nameTr:"mái thoo", gloss:"tone mark 2 — falling on mid class", demo:"บ้าน"},
+  "๊":{disp:"ก๊", type:"m", sound:"mái dtrii",  name:"ไม้ตรี", nameTr:"mái dtrii", gloss:"tone mark 3 — high tone, mid class only", demo:"โต๊ะ"},
+  "๋":{disp:"ก๋", type:"m", sound:"mái jàt-dtà-waa", name:"ไม้จัตวา", nameTr:"mái jàt-dtà-waa", gloss:"tone mark 4 — rising, mid class only", demo:"ก๋วยเตี๋ยว"},
+  "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it — common in loanwords", demo:"ศูนย์"}
+};
+
+const LESSONS = [
+  /* ---------------- UNIT A — Foundations ---------------- */
+  {id:"l1", unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
+   note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants — after, above, below, even before.",
+   words:[
+     {thai:"มา", tr:"maa", en:"to come"},
+     {thai:"นา", tr:"naa", en:"rice field"},
+     {thai:"กา", tr:"gaa", en:"crow"},
+     {thai:"มี", tr:"mii", en:"to have"}
+   ]},
+  {id:"l2", unit:"A · Foundations", title:"Eat, look, fly", sub:"ด บ + short i, long uu", glyphs:["ด","บ","ิ","ู"],
+   note:"A consonant at the END of a syllable is a 'final'. น as a final is just -n: กิน = g + i + n.",
+   words:[
+     {thai:"กิน", tr:"gin", en:"to eat"},
+     {thai:"ดี", tr:"dii", en:"good"},
+     {thai:"ดู", tr:"duu", en:"to look / watch"},
+     {thai:"บิน", tr:"bin", en:"to fly"}
+   ]},
+  {id:"l3", unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
+   note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat.",
+   words:[
+     {thai:"ไป", tr:"bpai", en:"to go"},
+     {thai:"บาท", tr:"bàat", en:"baht (฿)"},
+     {thai:"มาก", tr:"mâak", en:"very / a lot"},
+     {thai:"ปี", tr:"bpii", en:"year"}
+   ]},
+  {id:"l4", unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
+   note:"The SAME mark gives different tones depending on consonant class. On low-class ม: ไม่ = falling. On mid-class บ: บ้าน = falling. This is why the colours matter.",
+   words:[
+     {thai:"ไม่", tr:"mâi", en:"no / not"},
+     {thai:"บ้าน", tr:"bâan", en:"house / home"},
+     {thai:"นี่", tr:"nîi", en:"this"},
+     {thai:"ห้า", tr:"hâa", en:"five"}
+   ]},
+  {id:"l5", unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ as a vowel", glyphs:["ร","ล","ว","ย"],
+   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as a final makes -ao/-aao: ยาว yaao.",
+   words:[
+     {thai:"รอ", tr:"ror", en:"to wait"},
+     {thai:"เรา", tr:"rao", en:"we / us"},
+     {thai:"ยาว", tr:"yaao", en:"long"},
+     {thai:"ลาว", tr:"laao", en:"Lao / Laos"}
+   ]},
+  {id:"l6", unit:"A · Foundations", title:"High class, please", sub:"ส ข + asking nicely", glyphs:["ส","ข"],
+   note:"High-class consonants with a plain live syllable give a RISING tone: ขอ khǒr (may I have…) starts almost every polite request in Thailand.",
+   words:[
+     {thai:"ขอ", tr:"khǒr", en:"may I have… (request)"},
+     {thai:"สาม", tr:"sǎam", en:"three"},
+     {thai:"ขาว", tr:"khǎao", en:"white"},
+     {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)"}
+   ]},
+  /* ---------------- UNIT B — The workhorses ---------------- */
+  {id:"l7", unit:"B · The workhorses", title:"Work and elephants", sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
+   note:"ง 'ng' can START a syllable in Thai — งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
+   words:[
+     {thai:"งาน", tr:"ngaan", en:"work"},
+     {thai:"ช้าง", tr:"cháang", en:"elephant"},
+     {thai:"จาน", tr:"jaan", en:"plate"},
+     {thai:"วันนี้", tr:"wan-níi", en:"today"}
+   ]},
+  {id:"l8", unit:"B · The workhorses", title:"Father is cheap-ish", sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
+   note:"ต dt is the unaspirated twin of ท th — no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
+   words:[
+     {thai:"ตา", tr:"dtaa", en:"eye / maternal grandpa"},
+     {thai:"ถูก", tr:"thùuk", en:"cheap / correct"},
+     {thai:"พ่อ", tr:"phôr", en:"father"},
+     {thai:"ฟัน", tr:"fan", en:"tooth"}
+   ]},
+  {id:"l9", unit:"B · The workhorses", title:"The hidden vowel", sub:"ค ผ ฝ ซ + invisible o", glyphs:["ค","ผ","ฝ","ซ"],
+   pre:[{h:"Some vowels are invisible", body:"Two consonants with no vowel written between them get a free short <b>o</b>: คน = kh + o + n = khon (person). ผม = ph + o + m = phǒm — which happens to be the male word for <b>I</b>. You'll use it constantly."}],
+   note:"ผม phǒm = I (for male speakers) and also 'hair'. Same word.",
+   words:[
+     {thai:"คน", tr:"khon", en:"person"},
+     {thai:"ผม", tr:"phǒm", en:"I (male) / hair"},
+     {thai:"ฝน", tr:"fǒn", en:"rain"},
+     {thai:"ซ้าย", tr:"sáai", en:"left"}
+   ]},
+  {id:"l10", unit:"B · The workhorses", title:"Mother is expensive", sub:"แ ◌ึ ◌ื", glyphs:["แ","ึ","ื"],
+   note:"ึ/ื is the vowel English doesn't have: say 'oo' but spread your lips into a flat smile. Listen and copy.",
+   words:[
+     {thai:"แม่", tr:"mâae", en:"mother"},
+     {thai:"แพง", tr:"phaaeng", en:"expensive"},
+     {thai:"มือ", tr:"muue", en:"hand"},
+     {thai:"ลึก", tr:"lúek", en:"deep"}
+   ]},
+  {id:"l11", unit:"B · The workhorses", title:"Short and snappy", sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
+   note:"◌ะ chops a vowel short and makes the syllable DEAD — which changes its tone. จะ jà (will) is low tone for exactly that reason.",
+   words:[
+     {thai:"จะ", tr:"jà", en:"will (future marker)"},
+     {thai:"รถ", tr:"rót", en:"car / vehicle"},
+     {thai:"ทุก", tr:"thúk", en:"every"},
+     {thai:"กุ้ง", tr:"gûng", en:"shrimp"}
+   ]},
+  {id:"l12", unit:"B · The workhorses", title:"He, she, water, yes", sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
+   note:"ใ (mái múan) sounds identical to ไ. Only 20 words in the whole language use it — ใช่, ใหม่, ใกล้, ใจ are the ones you'll meet constantly.",
+   words:[
+     {thai:"เขา", tr:"khǎo", en:"he / she"},
+     {thai:"น้ำ", tr:"náam", en:"water"},
+     {thai:"ทำ", tr:"tham", en:"to do / make"},
+     {thai:"ใช่", tr:"châi", en:"yes / that's right"}
+   ]},
+  /* ---------------- UNIT C — The tone engine ---------------- */
+  {id:"l13", unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
+   pre:[
+     {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a sonorant final (n, m, ng, ai, ao…). It can ring on. มา, กิน, งาน — live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ — dead."},
+     {h:"Why you care", body:"A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel — still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
+   ],
+   note:"You now know why มาก is falling and รัก is high — same class, different vowel length. This is the whole trick.",
+   words:[
+     {thai:"จาก", tr:"jàak", en:"from"},
+     {thai:"พูด", tr:"phûut", en:"to speak"},
+     {thai:"รัก", tr:"rák", en:"to love"},
+     {thai:"นอน", tr:"norn", en:"to sleep / lie down"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"มา", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"long vowel, rings on"},
+     {kind:"mcq", prompt:"มาก", text:"Live or dead?", answer:"Dead", options:["Live","Dead"], explain:"ends in a k-stop"},
+     {kind:"mcq", prompt:"จะ", text:"Live or dead?", answer:"Dead", options:["Live","Dead"], explain:"short vowel, cut off"},
+     {kind:"mcq", prompt:"งาน", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"ends in -n, rings on"}
+   ]},
+  {id:"l14", unit:"C · The tone engine", title:"Mid class: all five", sub:"Tone marks ๊ ๋ complete the set", glyphs:["๊","๋"],
+   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"กา gaa (mid) · ก่า gàa (low) · ก้า gâa (falling) · ก๊า gáa (high) · ก๋า gǎa (rising).<br><br>๊ and ๋ only ever appear on mid-class consonants — mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
+   note:"ได้ dâi after a verb = 'can'. พูดได้ = can speak. The single most useful grammar word in Thai.",
+   words:[
+     {thai:"เก่า", tr:"gào", en:"old (things)"},
+     {thai:"ได้", tr:"dâi", en:"can / to get"},
+     {thai:"ต้อง", tr:"dtôrng", en:"must / have to"},
+     {thai:"โต๊ะ", tr:"dtó", en:"table"}
+   ]},
+  {id:"l15", unit:"C · The tone engine", title:"High class: the grid", sub:"ข้าว ห้อง and friends", glyphs:[],
+   pre:[{h:"High class makes 3 tones", body:"Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
+   note:"ข้าว khâao = rice, but also 'a meal'. กินข้าว literally 'eat rice' = to eat, full stop.",
+   words:[
+     {thai:"ข้าว", tr:"khâao", en:"rice / a meal"},
+     {thai:"ห้อง", tr:"hôrng", en:"room"},
+     {thai:"ถาม", tr:"thǎam", en:"to ask"},
+     {thai:"สี", tr:"sǐi", en:"colour"}
+   ]},
+  {id:"l16", unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:[],
+   pre:[{h:"Low class shifts everything one notch", body:"+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
+   note:"พี่ phîi (older) and น้อง nórng (younger) — Thais use these for siblings, colleagues, waiters, everyone. You'll be พี่ to your students' eyes and น้อง to senior staff.",
+   words:[
+     {thai:"น้อง", tr:"nórng", en:"younger sibling / junior"},
+     {thai:"พี่", tr:"phîi", en:"older sibling / senior"},
+     {thai:"ช้า", tr:"cháa", en:"slow"},
+     {thai:"เล็ก", tr:"lék", en:"small"}
+   ]},
+  {id:"l17", unit:"C · The tone engine", title:"The silent leaders", sub:"ห nam and อ nam", glyphs:[],
+   pre:[{h:"Silent ห upgrades low class", body:"A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules — but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
+   note:"อยู่ marks location AND continuous action: อยู่ไหน = where are you? กินอยู่ = (I'm) eating.",
+   words:[
+     {thai:"หมา", tr:"mǎa", en:"dog"},
+     {thai:"ไหน", tr:"nǎi", en:"where / which"},
+     {thai:"อยู่", tr:"yùu", en:"to be at / -ing"},
+     {thai:"อยาก", tr:"yàak", en:"to want to"}
+   ]},
+  /* ---------------- UNIT D — Clusters & the long tail ---------------- */
+  {id:"l18", unit:"D · Clusters & the long tail", title:"Decode ครับ", sub:"True clusters: กร ปล คร…", glyphs:[],
+   pre:[{h:"Two consonants, one syllable", body:"Thai allows clusters with ร ล ว as the second letter: ปลา bplaa, ครู khruu, กว้าง gwâang.<br><br>The cluster takes its class from the FIRST letter. ครับ: ค (low) + ร + ◌ั + บ → dead short → high tone: khráp. You've been saying it for weeks — now you can read it."}],
+   note:"ใกล้ glâi (near) vs ไกล glai (far) — same letters, one tone mark apart. A taxi-critical distinction.",
+   words:[
+     {thai:"ครับ", tr:"khráp", en:"polite particle (male)"},
+     {thai:"ปลา", tr:"bplaa", en:"fish"},
+     {thai:"ครู", tr:"khruu", en:"teacher"},
+     {thai:"ใกล้", tr:"glâi", en:"near"}
+   ]},
+  {id:"l19", unit:"D · Clusters & the long tail", title:"Fake clusters", sub:"ทร says s, จร drops the r", glyphs:[],
+   pre:[{h:"Some clusters are lies", body:"ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Now you can read the most important food word in the country."}],
+   note:"จริง jing on its own = 'really?!' — say it with a rising intonation and you sound instantly more Thai.",
+   words:[
+     {thai:"จริง", tr:"jing", en:"true / really"},
+     {thai:"ทราบ", tr:"sâap", en:"to know (formal)"},
+     {thai:"สร้าง", tr:"sâang", en:"to build"},
+     {thai:"อร่อย", tr:"a-ròy", en:"delicious"}
+   ]},
+  {id:"l20", unit:"D · Clusters & the long tail", title:"Formal friends", sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
+   note:"◌์ (gaa-ran) silences the letter under it — Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
+   words:[
+     {thai:"เธอ", tr:"ter", en:"you / she (informal)"},
+     {thai:"ภาษา", tr:"phaa-sǎa", en:"language"},
+     {thai:"ผู้หญิง", tr:"phûu-yǐng", en:"woman"},
+     {thai:"ศูนย์", tr:"sǔun", en:"zero / centre"}
+   ]},
+  {id:"l21", unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ + recognition-only rarities", glyphs:["ฉ"],
+   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise, don't drill:<br><br>ฌ (ch) · ฎ (d) · ฏ (dt) · ฐ ฑ ฒ (th) · ณ (n) · ษ (s) · ฆ (kh) · ฬ (l)<br><br>Two letters are RETIRED — ฃ and ฅ exist on keyboards but no living word uses them. 44 consonants, 42 in service."}],
+   note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
+   words:[
+     {thai:"ฉัน", tr:"chǎn", en:"I (informal)"},
+     {thai:"กีฬา", tr:"gii-laa", en:"sport"},
+     {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior"},
+     {thai:"สนุก", tr:"sà-nùk", en:"fun"}
+   ]},
+  {id:"l22", unit:"D · Clusters & the long tail", title:"Three-piece vowels", sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
+   note:"ๆ (mái yá-mók) repeats the previous word: ช้าๆ = cháa cháa = slowly. เร็วๆ = quickly. You'll see it everywhere.",
+   words:[
+     {thai:"เรียน", tr:"rian", en:"to study"},
+     {thai:"เพื่อน", tr:"phûean", en:"friend"},
+     {thai:"ตัว", tr:"dtua", en:"body / classifier"},
+     {thai:"เสื้อ", tr:"sûea", en:"shirt"}
+   ]},
+  {id:"l23", unit:"D · Clusters & the long tail", title:"Thai digits & signs", sub:"๑ ๒ ๓ and reading the street", glyphs:[],
+   pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and — usefully — <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
+   note:"ระวัง rá-wang appears on every wet floor, low doorway, and BTS platform in Bangkok.",
+   words:[
+     {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful"},
+     {thai:"ทางออก", tr:"thaang-òrk", en:"exit"},
+     {thai:"ทางเข้า", tr:"thaang-khâo", en:"entrance"},
+     {thai:"ห้องน้ำ", tr:"hôrng-náam", en:"toilet"}
+   ]},
+  {id:"l24", unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
+   pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list."}],
+   note:"That's Phase 1. You can now sound out any Thai text — slowly, but correctly. Phase 2 turns decoding into vocabulary.",
+   words:[
+     {thai:"เปิด", tr:"bpèrt", en:"open"},
+     {thai:"ปิด", tr:"bpìt", en:"closed"},
+     {thai:"ห้าม", tr:"hâam", en:"forbidden / do not"},
+     {thai:"อาหาร", tr:"aa-hǎan", en:"food"}
+   ]}
+];
+
+const TONES = [
+  {name:"Mid",     path:"M4,15 L50,15",                 thai:"คา",  tr:"khaa",  en:"to be stuck"},
+  {name:"Low",     path:"M4,12 C20,18 36,21 50,21",     thai:"ข่า", tr:"khàa",  en:"galangal"},
+  {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ค่า", tr:"khâa",  en:"value, fee"},
+  {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ค้า", tr:"kháa",  en:"to trade"},
+  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ขา",  tr:"khǎa",  en:"leg"}
+];
+const TONES2 = [
+  {name:"Mid",     path:"M4,15 L50,15",                 thai:"มา",  tr:"maa",  en:"to come"},
+  {name:"Low",     path:"M4,12 C20,18 36,21 50,21",     thai:"ใหม่", tr:"mài",  en:"new"},
+  {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ไม่", tr:"mâi",  en:"no, not"},
+  {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ไม้", tr:"máai", en:"wood"},
+  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle"}
+];
+
+const PHRASE_CATS = ["Politeness","Numbers","Food","Taxi","Shopping","Survival","Slang"];
+const SLANG = [
+  {cat:"Slang", thai:"เจ๋ง", tr:"jěng", en:"cool / awesome"},
+  {cat:"Slang", thai:"ชิวๆ", tr:"chiu chiu", en:"chilled, relaxed"},
+  {cat:"Slang", thai:"แซ่บ", tr:"sâep", en:"delicious / hot (Isaan, used everywhere)"},
+  {cat:"Slang", thai:"ปัง", tr:"bpang", en:"amazing, on point"},
+  {cat:"Slang", thai:"จัดไป", tr:"jàt bpai", en:"go for it / bring it on"},
+  {cat:"Slang", thai:"ไม่ไหว", tr:"mâi wǎi", en:"can't even / too much"},
+  {cat:"Slang", thai:"งง", tr:"ngong", en:"confused"},
+  {cat:"Slang", thai:"ฟิน", tr:"fin", en:"blissed out"},
+  {cat:"Slang", thai:"เดี๋ยว", tr:"dǐao", en:"hang on / in a sec", note:"เดี๋ยวๆ = wait wait! — you'll hear it daily"},
+  {cat:"Slang", thai:"ของกิน", tr:"khǒrng gin", en:"snacks / things to eat"}
+];
+const PHRASES = [
+  {cat:"Politeness", thai:"สวัสดีครับ", tr:"sa-wàt-dii khráp", en:"hello / goodbye"},
+  {cat:"Politeness", thai:"ขอบคุณครับ", tr:"khòrp-khun khráp", en:"thank you"},
+  {cat:"Politeness", thai:"ขอโทษครับ", tr:"khǒr-thôht khráp", en:"sorry / excuse me"},
+  {cat:"Politeness", thai:"ไม่เป็นไร", tr:"mâi bpen rai", en:"no worries / it's fine", note:"the most Thai sentence in existence"},
+  {cat:"Numbers", thai:"หนึ่ง", tr:"nùeng", en:"1"},
+  {cat:"Numbers", thai:"สอง", tr:"sǒrng", en:"2"},
+  {cat:"Numbers", thai:"สาม", tr:"sǎam", en:"3"},
+  {cat:"Numbers", thai:"สี่", tr:"sìi", en:"4"},
+  {cat:"Numbers", thai:"ห้า", tr:"hâa", en:"5"},
+  {cat:"Numbers", thai:"หก", tr:"hòk", en:"6"},
+  {cat:"Numbers", thai:"เจ็ด", tr:"jèt", en:"7"},
+  {cat:"Numbers", thai:"แปด", tr:"bpàaet", en:"8"},
+  {cat:"Numbers", thai:"เก้า", tr:"gâo", en:"9"},
+  {cat:"Numbers", thai:"สิบ", tr:"sìp", en:"10"},
+  {cat:"Numbers", thai:"ยี่สิบ", tr:"yîi-sìp", en:"20"},
+  {cat:"Numbers", thai:"ร้อย", tr:"róy", en:"100"},
+  {cat:"Food", thai:"ไม่เผ็ดครับ", tr:"mâi phèt khráp", en:"not spicy, please", note:"learn this before anything else"},
+  {cat:"Food", thai:"เผ็ดนิดหน่อย", tr:"phèt nít nòi", en:"a little spicy"},
+  {cat:"Food", thai:"เอาอันนี้ครับ", tr:"ao an níi khráp", en:"I'll take this one"},
+  {cat:"Food", thai:"อร่อยมาก", tr:"a-ròy mâak", en:"very delicious"},
+  {cat:"Food", thai:"น้ำเปล่า", tr:"náam bplàao", en:"plain water"},
+  {cat:"Food", thai:"ข้าว", tr:"khâao", en:"rice"},
+  {cat:"Food", thai:"ไก่", tr:"gài", en:"chicken"},
+  {cat:"Food", thai:"หมู", tr:"mǔu", en:"pork"},
+  {cat:"Food", thai:"กุ้ง", tr:"gûng", en:"shrimp"},
+  {cat:"Food", thai:"เช็คบิลครับ", tr:"chék-bin khráp", en:"the bill, please"},
+  {cat:"Taxi", thai:"ไปเอกมัยครับ", tr:"bpai èek-ga-mai khráp", en:"to Ekkamai, please"},
+  {cat:"Taxi", thai:"เลี้ยวซ้าย", tr:"líao sáai", en:"turn left"},
+  {cat:"Taxi", thai:"เลี้ยวขวา", tr:"líao khwǎa", en:"turn right"},
+  {cat:"Taxi", thai:"ตรงไป", tr:"dtrong bpai", en:"straight ahead"},
+  {cat:"Taxi", thai:"จอดตรงนี้ครับ", tr:"jòrt dtrong níi khráp", en:"stop here, please"},
+  {cat:"Taxi", thai:"เท่าไหร่ครับ", tr:"thâo-rài khráp", en:"how much?"},
+  {cat:"Shopping", thai:"อันนี้เท่าไหร่", tr:"an níi thâo-rài", en:"how much is this one?"},
+  {cat:"Shopping", thai:"แพงไป", tr:"phaaeng bpai", en:"too expensive"},
+  {cat:"Shopping", thai:"ลดได้ไหม", tr:"lót dâi mǎi", en:"can you lower the price?"},
+  {cat:"Shopping", thai:"เอาอันนี้", tr:"ao an níi", en:"I'll take this"},
+  {cat:"Survival", thai:"ไม่เข้าใจ", tr:"mâi khâo-jai", en:"I don't understand"},
+  {cat:"Survival", thai:"พูดช้าๆ ได้ไหม", tr:"phûut cháa cháa dâi mǎi", en:"can you speak slowly?"},
+  {cat:"Survival", thai:"พูดภาษาอังกฤษได้ไหม", tr:"phûut phaa-sǎa ang-grìt dâi mǎi", en:"do you speak English?"},
+  {cat:"Survival", thai:"ห้องน้ำอยู่ไหน", tr:"hôrng-náam yùu nǎi", en:"where is the toilet?"},
+  {cat:"Survival", thai:"ไม่เอาครับ", tr:"mâi ao khráp", en:"no thanks / I don't want it"}
+];
+
+const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
+const TONE_NAMES = ["Mid","Low","Falling","High","Rising"];
+
+/* =====================================================
+   STATE & STORAGE
+===================================================== */
+let state = {
+  streak:{count:0,last:null},
+  done:[],            // completed lesson ids
+  srs:{},             // id -> {iv, due, lapses}
+  intro:{},           // glyphs seen
+  baht:0, freeze:0,
+  days:{},            // date -> {r,l,d,due,paid}
+  calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
+  boss:{},            // unit -> {passed,lastAttempt}
+  packs:[]
+};
+const SKEY = 'thai_state_v1';
+async function loadState(){
+  // 1) Claude artifact storage  2) localStorage (PWA / browser)
+  try{
+    if(window.storage){
+      const r = await window.storage.get(SKEY);
+      if(r && r.value){ state = Object.assign(state, JSON.parse(r.value)); return; }
+    }
+  }catch(e){ /* fall through */ }
+  try{
+    const raw = localStorage.getItem(SKEY);
+    if(raw) state = Object.assign(state, JSON.parse(raw));
+  }catch(e){ /* private mode etc. */ }
+}
+let saveTimer = null;
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    const raw = JSON.stringify(state);
+    let ok = false;
+    try{ if(window.storage){ await window.storage.set(SKEY, raw); ok = true; } }catch(e){}
+    try{ localStorage.setItem(SKEY, raw); ok = true; }catch(e){}
+    if(!ok) console.error('save failed everywhere');
+  }, 350);
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function bumpStreak(){
+  const t = todayStr();
+  if(state.streak.last === t) return;
+  const y  = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const y2 = new Date(Date.now()-2*86400000).toISOString().slice(0,10);
+  if(state.streak.last === y){ state.streak.count++; }
+  else if(state.streak.last === y2 && state.freeze > 0){
+    state.freeze--; state.streak.count++;
+    toast('Streak freeze used — streak saved');
+  }
+  else { state.streak.count = 1; }
+  state.streak.last = t;
+  saveState();
+  el('streak-num').textContent = state.streak.count;
+}
+
+/* ----- economy + daily quest ----- */
+function award(n){
+  state.baht = Math.max(0, (state.baht||0) + n);
+  saveState();
+  const b = el('baht-num'); if(b) b.textContent = state.baht;
+}
+function ensureDay(){
+  const t = todayStr();
+  if(!state.days) state.days = {};
+  if(!state.days[t]){
+    state.days[t] = {r:0, l:0, d:0, due:srsDue().length, paid:false};
+    saveState();
+  }
+  return state.days[t];
+}
+function questCheck(){
+  const d = ensureDay();
+  const A = d.due === 0 || (d.r > 0 && srsDue().length === 0);
+  const B = (d.l + d.d) > 0;
+  if(A && B && !d.paid){ d.paid = true; award(10); toast('Daily quest complete · +10฿'); }
+  const qa = el('quest-a'), qb = el('quest-b');
+  if(qa) qa.classList.toggle('done', A);
+  if(qb) qb.classList.toggle('done', B);
+  return A && B;
+}
+
+/* =====================================================
+   SRS  (simple SM-2-lite, day granularity)
+===================================================== */
+function srsAdd(id){
+  if(!state.srs[id]) state.srs[id] = {iv:0, due:todayStr(), lapses:0};
+}
+function srsDue(){
+  const t = todayStr();
+  return Object.keys(state.srs).filter(id => state.srs[id].due <= t);
+}
+function srsGrade(id, grade){ // 0 again, 1 hard, 2 good, 3 easy
+  const c = state.srs[id]; if(!c) return;
+  if(grade === 0){ c.iv = 0; c.lapses++; }
+  else if(grade === 1){ c.iv = Math.max(1, Math.round(c.iv * 1.2) || 1); }
+  else if(grade === 2){ c.iv = c.iv === 0 ? 1 : Math.round(c.iv * 2); }
+  else { c.iv = c.iv === 0 ? 3 : Math.round(c.iv * 3); }
+  const d = new Date(); d.setDate(d.getDate() + c.iv);
+  c.due = d.toISOString().slice(0,10);
+  saveState();
+}
+
+/* card content lookup: ids are "g:ก" (glyph) or "w:มา" (word/phrase) */
+const COMBINING = ['ิ','ี','ู','ุ','ึ','ื','ั','ำ','่','้','๊','๋','์'];
+function cardFront(id){
+  if(id.startsWith('g:')){
+    const ch = id.slice(2), g = GLYPHS[ch];
+    return {big: (g && g.disp) || ch, hint:'What sound?'};
+  }
+  return {big:id.slice(2), hint:'What does it mean?'};
+}
+function cardSay(id){
+  if(id.startsWith('g:')){
+    const g = GLYPHS[id.slice(2)];
+    return (g && g.demo) ? g.demo : id.slice(2);
+  }
+  return id.slice(2);
+}
+function cardBack(id){
+  if(id.startsWith('g:')){
+    const g = GLYPHS[id.slice(2)];
+    return {big:g ? g.sound : '?', tr:g ? g.name + ' · ' + g.nameTr : '', en:g ? (g.type==='c' ? CLS_LABEL[g.cls] : g.gloss) : ''};
+  }
+  const w = findWord(id.slice(2));
+  return w ? {big:w.en, tr:w.tr, en:''} : {big:'?', tr:'', en:''};
+}
+function findWord(thai){
+  for(const L of LESSONS){ const w = L.words.find(x=>x.thai===thai); if(w) return w; }
+  const p = PHRASES.find(x=>x.thai===thai); if(p) return p;
+  const s = SLANG.find(x=>x.thai===thai); if(s) return s;
+  return null;
+}
+
+/* =====================================================
+   SPEECH
+===================================================== */
+let thaiVoice = null, voiceWarned = false;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  thaiVoice = vs.find(v => v.lang && v.lang.toLowerCase().startsWith('th')) || null;
+}
+if('speechSynthesis' in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ toast('Speech not supported on this device'); return; }
+  if(!thaiVoice) pickVoice();
+  if(!thaiVoice && !voiceWarned){ toast('No Thai voice found — install one in device settings'); voiceWarned = true; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if(thaiVoice) u.voice = thaiVoice;
+  u.lang = 'th-TH'; u.rate = 0.75;
+  if(btn){ btn.classList.add('playing'); u.onend = ()=>btn.classList.remove('playing'); u.onerror = ()=>btn.classList.remove('playing'); }
+  speechSynthesis.speak(u);
+}
+function speakBtn(text){
+  return `<button class="speak" data-say="${text}" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>`;
+}
+
+/* =====================================================
+   HELPERS
+===================================================== */
+const el = id => document.getElementById(id);
+function toast(msg){
+  const t = el('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function sample(a,n){ return shuffle(a).slice(0,n); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function toneOf(tr){
+  const n = tr.normalize('NFD');
+  if(n.includes('\u030C')) return 'Rising';
+  if(n.includes('\u0302')) return 'Falling';
+  if(n.includes('\u0301')) return 'High';
+  if(n.includes('\u0300')) return 'Low';
+  return 'Mid';
+}
+function monoSyllable(w){ return !w.tr.includes('-') && !w.tr.includes(' '); }
+
+/* =====================================================
+   NAV
+===================================================== */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    el('view-'+t.dataset.view).classList.add('active');
+    if(t.dataset.view==='home') renderHome();
+    if(t.dataset.view==='learn') renderLearn();
+    if(t.dataset.view==='review') renderReviewTab();
+    window.scrollTo({top:0});
+  });
+});
+function gotoView(name){
+  document.querySelector(`.tab[data-view="${name}"]`).click();
+}
+
+/* delegate speaker buttons */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-say]');
+  if(b) speak(b.dataset.say, b);
+});
+
+/* =====================================================
+   HOME
+===================================================== */
+function learnedGlyphIds(){
+  const out = [];
+  for(const L of LESSONS){ if(state.done.includes(L.id)) L.glyphs.forEach(g=>out.push(g)); }
+  return out;
+}
+function learnedWords(){
+  const out = [];
+  for(const L of LESSONS){ if(state.done.includes(L.id)) L.words.forEach(w=>out.push(w)); }
+  return out;
+}
+function nextLesson(){
+  return LESSONS.find(L=>!state.done.includes(L.id)) || null;
+}
+function renderHome(){
+  el('streak-num').textContent = state.streak.count;
+  el('baht-num').textContent = state.baht || 0;
+  el('freeze-n').textContent = state.freeze || 0;
+  ensureDay(); questCheck(); renderWall(); renderHeatmap();
+  // letter of the day: deterministic by date from consonants
+  const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
+  const ch = cons[dayIdx], g = GLYPHS[ch];
+  el('hero-char').textContent = ch;
+  el('hero-ghost').textContent = ch;
+  el('hero-name').textContent = g.name;
+  el('hero-sound').textContent = '"' + g.sound + '" — ' + g.nameTr + ' (' + g.gloss + ')';
+  const hc = el('hero-class'); hc.className = 'classchip ' + g.cls; hc.textContent = CLS_LABEL[g.cls];
+  const hero = el('hero-card'); hero.className = 'card glyph-hero ' + g.cls;
+  el('hero-speak').onclick = ()=>speak(ch + ' ' + g.name, el('hero-speak'));
+
+  el('stat-letters').textContent = learnedGlyphIds().filter(x=>GLYPHS[x] && GLYPHS[x].type==='c').length;
+  el('stat-words').textContent = learnedWords().length + Object.keys(state.srs).filter(k=>k.startsWith('w:') && !findWordInLessons(k.slice(2))).length;
+  const due = srsDue().length;
+  el('stat-due').textContent = due;
+  const nl = nextLesson();
+  if(nl){
+    el('cta-lesson-title').textContent = (state.done.length ? 'Continue: ' : 'Start ') + nl.title;
+    el('cta-lesson-sub').textContent = nl.sub;
+  } else {
+    el('cta-lesson-title').textContent = 'Course complete';
+    el('cta-lesson-sub').textContent = 'Replay any lesson from the Learn tab';
+  }
+  el('cta-review-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' waiting' : 'Nothing due yet';
+}
+function findWordInLessons(thai){
+  for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
+  return false;
+}
+el('cta-lesson').addEventListener('click', ()=>{
+  const nl = nextLesson();
+  if(nl) startLesson(nl); else gotoView('learn');
+});
+el('cta-review').addEventListener('click', ()=>{ gotoView('review'); });
+el('export-btn').addEventListener('click', async ()=>{
+  const raw = JSON.stringify(state);
+  try{
+    await navigator.clipboard.writeText(raw);
+    toast('Progress copied to clipboard');
+  }catch(e){
+    prompt('Copy this JSON:', raw);
+  }
+});
+el('import-btn').addEventListener('click', ()=>{
+  const raw = prompt('Paste your exported progress JSON:');
+  if(!raw) return;
+  try{
+    const s = JSON.parse(raw);
+    if(!s.srs || !s.streak) throw new Error('not a progress blob');
+    state = Object.assign(state, s);
+    saveState();
+    renderHome(); renderLearn(); renderReviewTab(); renderCats(); renderPhrases();
+    toast('Progress imported');
+  }catch(e){ toast('Import failed — not valid progress data'); }
+});
+
+el('buy-freeze').addEventListener('click', ()=>{
+  if((state.baht||0) < 30){ toast('Not enough baht — need 30฿'); return; }
+  award(-30); state.freeze = (state.freeze||0) + 1; saveState();
+  el('freeze-n').textContent = state.freeze;
+  toast('Streak freeze bought — auto-used if you miss a day');
+});
+
+/* ----- letter wall ----- */
+function masteryOf(id){
+  const c = state.srs[id];
+  if(!c) return 'locked';
+  if(c.iv >= 7) return 'mastered';
+  if(c.iv >= 1) return 'growing';
+  return 'learning';
+}
+function renderWall(){
+  const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  let mastered = 0;
+  el('wall').innerHTML = cons.map(ch=>{
+    const g = GLYPHS[ch], m = masteryOf('g:'+ch);
+    if(m==='mastered') mastered++;
+    return `<button class="tile ${m!=='locked'?m+' '+g.cls:''}" data-tile="${ch}">${ch}</button>`;
+  }).join('');
+  el('wall-count').textContent = mastered + ' / ' + cons.length;
+  el('wall').querySelectorAll('[data-tile]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const g = GLYPHS[b.dataset.tile];
+      speak(b.dataset.tile + ' ' + g.name);
+      toast(g.name + ' · "' + g.sound + '" · ' + CLS_LABEL[g.cls]);
+    });
+  });
+}
+
+/* ----- heatmap (last 112 days) ----- */
+function renderHeatmap(){
+  const cells = [];
+  for(let i = 111; i >= 0; i--){
+    const d = new Date(Date.now() - i*86400000).toISOString().slice(0,10);
+    const rec = (state.days||{})[d];
+    const score = rec ? rec.r + rec.l*5 + rec.d*3 : 0;
+    const lvl = score >= 10 ? 3 : score >= 5 ? 2 : score >= 1 ? 1 : 0;
+    cells.push(`<div class="hm${lvl?' l'+lvl:''}" title="${d}"></div>`);
+  }
+  el('heatmap').innerHTML = cells.join('');
+}
+
+el('reset-btn').addEventListener('click', async ()=>{
+  if(!confirm('Wipe all progress, streak and review cards?')) return;
+  state = {streak:{count:0,last:null}, done:[], srs:{}, intro:{}, baht:0, freeze:0, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}}, boss:{}, packs:[]};
+  try{ if(window.storage) await window.storage.set('thai_state_v1', JSON.stringify(state)); }catch(e){}
+  renderHome(); toast('Progress reset');
+});
+
+/* =====================================================
+   LEARN TAB
+===================================================== */
+function unitKey(L){ return L.unit.charAt(0); }
+function unitLessons(u){ return LESSONS.filter(L=>unitKey(L)===u); }
+function unitDone(u){ return unitLessons(u).every(L=>state.done.includes(L.id)); }
+
+function renderLearn(){
+  const list = el('lesson-list'); list.innerHTML = '';
+  let prevDone = true, lastUnit = null;
+  LESSONS.forEach((L,i)=>{
+    if(L.unit !== lastUnit){
+      lastUnit = L.unit;
+      const h = document.createElement('div');
+      h.className = 'eyebrow';
+      h.style.marginTop = i ? '14px' : '0';
+      const u = unitKey(L);
+      const cleared = state.boss[u] && state.boss[u].passed;
+      h.textContent = 'Unit ' + L.unit + (cleared ? ' · 👑 cleared' : '');
+      list.appendChild(h);
+    }
+    const done = state.done.includes(L.id);
+    const locked = !done && !prevDone;
+    const card = document.createElement('button');
+    card.className = 'card lesson-card' + (done?' done':'') + (locked?' locked':'');
+    card.innerHTML = `
+      <div class="glyphs">${L.glyphs.length ? L.glyphs.slice(0,3).map(g=>(GLYPHS[g]&&GLYPHS[g].disp)||g).join(' ') : '💡'}</div>
+      <div class="meta"><div class="t">${i+1}. ${L.title}</div><div class="d">${L.sub}</div></div>
+      <div class="state">${done?'✓ done':(locked?'🔒':'start →')}</div>`;
+    if(!locked) card.addEventListener('click', ()=>startLesson(L));
+    list.appendChild(card);
+    prevDone = done;
+    // boss card at the end of each unit
+    const next = LESSONS[i+1];
+    if(!next || unitKey(next) !== unitKey(L)){
+      const u = unitKey(L);
+      const ready = unitDone(u);
+      const b = state.boss[u] || {};
+      const attemptedToday = b.lastAttempt === todayStr() && !b.passed;
+      const bossCard = document.createElement('button');
+      bossCard.className = 'card lesson-card boss-card' + ((!ready || attemptedToday) ? ' locked' : '');
+      let stateTxt = '🔒 finish unit';
+      if(ready && b.passed) stateTxt = '👑 replay';
+      else if(ready && attemptedToday) stateTxt = '⏳ tomorrow';
+      else if(ready) stateTxt = 'fight →';
+      bossCard.innerHTML = `
+        <div class="glyphs">👑</div>
+        <div class="meta"><div class="t">Boss: Unit ${u}</div><div class="d">12 questions · 15s each · 80% to pass · ${b.passed?'cleared':'+20฿ first clear'}</div></div>
+        <div class="state">${stateTxt}</div>`;
+      if(ready && !attemptedToday) bossCard.addEventListener('click', ()=>startBoss(u));
+      list.appendChild(bossCard);
+    }
+  });
+}
+
+function buildBossQuiz(u){
+  const Ls = unitLessons(u);
+  const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const words = Ls.flatMap(L=>L.words);
+  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  const allWordsPool = LESSONS.flatMap(x=>x.words);
+  const qs = [];
+  glyphs.forEach(ch=>{
+    const g = GLYPHS[ch];
+    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
+  });
+  words.forEach(w=>{
+    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
+    qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    if(monoSyllable(w)){
+      qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
+    }
+  });
+  return sample(qs, Math.min(12, qs.length));
+}
+function startBoss(u){
+  state.boss[u] = state.boss[u] || {};
+  state.boss[u].lastAttempt = todayStr();
+  saveState();
+  startGenericQuiz(buildBossQuiz(u), 'Boss · Unit ' + u, {timed:15, boss:u});
+}
+
+/* =====================================================
+   LESSON PLAYER
+===================================================== */
+let player = null;
+function openOverlay(){ el('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); player=null; }
+el('overlay-close').addEventListener('click', closeOverlay);
+
+function setProg(pct){ el('overlay-prog').style.width = pct + '%'; }
+
+function startLesson(L){
+  // steps: concept pages, one per glyph, words page, quiz questions, result
+  const quiz = buildLessonQuiz(L);
+  const pre = L.pre || [];
+  player = {type:'lesson', L, pre, steps: pre.length + L.glyphs.length + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0};
+  openOverlay(); renderLessonStep();
+}
+function renderLessonStep(){
+  const p = player, L = p.L, stage = el('stage');
+  const nPre = p.pre.length, nGly = L.glyphs.length;
+  setProg(Math.round(100 * p.i / p.steps));
+  // concept pages
+  if(p.i < nPre){
+    const c = p.pre[p.i];
+    stage.innerHTML = `
+      <div class="center"><h2>${c.h}</h2></div>
+      <div class="notebox" style="font-size:15px;line-height:1.7">${c.body}</div>
+      <div class="stage-actions">
+        ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
+        <button class="btn" id="st-next">Next</button>
+      </div>`;
+  }
+  // glyph intro steps
+  else if(p.i < nPre + nGly){
+    const ch = L.glyphs[p.i - nPre], g = GLYPHS[ch];
+    const clsHtml = g.type==='c' ? `<span class="classchip ${g.cls}">${CLS_LABEL[g.cls]}</span>` :
+      `<span class="classchip" style="color:var(--blue);border-color:var(--blue)">${g.type==='v'?'Vowel':'Tone mark'}</span>`;
+    stage.innerHTML = `
+      <div class="glyph-big ${g.type==='c'?g.cls:''}" style="${(g.disp||ch).length>2?'font-size:84px':''}">${g.disp || ch}</div>
+      <div class="center">
+        <div class="name-thai">${g.name}</div>
+        <div class="translit">"${g.sound}" · ${g.nameTr}</div>
+        <div class="gloss">${g.type==='c' ? 'name means: ' + g.gloss : g.gloss}${g.demo ? ' · e.g. ' + g.demo : ''}</div>
+        <div style="margin-top:12px">${clsHtml}</div>
+      </div>
+      <div class="row" style="justify-content:center">${speakBtn(g.demo || ch)}</div>
+      <div class="stage-actions">
+        ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
+        <button class="btn" id="st-next">Next</button>
+      </div>`;
+  }
+  // words page
+  else if(p.i === nPre + nGly){
+    stage.innerHTML = `
+      <div class="center"><h2>Now read these</h2><p class="sub">Real words built only from what you just learned.</p></div>
+      ${L.words.map(w=>`
+        <div class="word-line">
+          <div class="w-thai">${w.thai}</div>
+          <div class="w-meta"><div class="w-tr">${w.tr}</div><div class="w-en">${w.en}</div></div>
+          ${speakBtn(w.thai)}
+        </div>`).join('')}
+      <div class="notebox">${L.note}</div>
+      <div class="stage-actions">
+        <button class="btn ghost" id="st-back">Back</button>
+        <button class="btn" id="st-next">Quiz me</button>
+      </div>`;
+  }
+  // quiz steps
+  else if(p.i < nPre + nGly + 1 + p.quiz.length){
+    renderQuizQ(p.quiz[p.qIdx], (ok)=>{
+      if(ok) p.correct++;
+      p.qIdx++; p.i++;
+      renderLessonStep();
+    }, `Question ${p.qIdx+1} of ${p.quiz.length}`);
+    return;
+  }
+  // result
+  else {
+    finishLesson();
+    return;
+  }
+  const nb = el('st-next'); if(nb) nb.onclick = ()=>{ p.i++; renderLessonStep(); };
+  const bb = el('st-back'); if(bb) bb.onclick = ()=>{ p.i = Math.max(0, p.i-1); if(p.i < nPre + nGly + 1) renderLessonStep(); };
+}
+function finishLesson(){
+  const p = player, L = p.L;
+  setProg(100);
+  const firstTime = !state.done.includes(L.id);
+  if(firstTime){
+    state.done.push(L.id);
+    L.glyphs.forEach(g=>srsAdd('g:'+g));
+    L.words.forEach(w=>srsAdd('w:'+w.thai));
+  }
+  ensureDay().l++; bumpStreak(); saveState(); questCheck();
+  el('stage').innerHTML = `
+    <div class="result-big">${p.correct} / ${p.quiz.length}</div>
+    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete — everything added to your review deck.':'Nice refresher.'}</div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+}
+
+/* build per-lesson quiz: glyph->sound, sound->glyph, word->meaning */
+function buildLessonQuiz(L){
+  const qs = [];
+  const cons = L.glyphs.filter(g=>GLYPHS[g].type==='c');
+  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  cons.forEach(ch=>{
+    const g = GLYPHS[ch];
+    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
+    qs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
+    const wrongG = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3);
+    qs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
+  });
+  if(L.extraQuiz) qs.push(...L.extraQuiz);
+  L.words.forEach(w=>{
+    const pool = LESSONS.flatMap(x=>x.words).filter(x=>x.thai!==w.thai);
+    const wrong = sample(pool,3).map(x=>x.en);
+    qs.push({kind:'mcq', prompt:w.thai, promptBig:true, text:'What does this mean?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai});
+  });
+  return sample(qs, Math.min(8, qs.length));
+}
+
+/* generic MCQ renderer used by lessons, mixed quiz, tone drill */
+function renderQuizQ(q, onDone, counterLabel, timedSecs){
+  const stage = el('stage');
+  stage.innerHTML = `
+    ${timedSecs ? '<div class="timerbar"><i id="qtimer"></i></div>' : ''}
+    <div class="q-prompt">
+      <div class="eyebrow">${counterLabel||''}</div>
+      ${q.prompt ? `<div class="q-big">${q.prompt}</div>` : ''}
+      <div class="q-text">${q.text}</div>
+      ${q.say ? `<div style="margin-top:10px">${speakBtn(q.say)}</div>` : ''}
+    </div>
+    <div class="q-options">
+      ${q.options.map(o=>`<button class="q-opt ${q.thaiOpts?'thai-opt':''}">${esc(String(o))}</button>`).join('')}
+    </div>
+    <div class="q-feedback" id="q-fb"></div>`;
+  if(q.autoplay && q.say) setTimeout(()=>speak(q.say), 350);
+  const opts = stage.querySelectorAll('.q-opt');
+  let settled = false;
+  function settle(ok, pickedBtn, timedOut){
+    if(settled) return; settled = true;
+    clearInterval(window._qTimer);
+    opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
+    if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
+    const fb = el('q-fb');
+    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (q.explain ? ' — ' + q.explain : '');
+    fb.className = 'q-feedback ' + (ok?'ok':'no');
+    setTimeout(()=>onDone(ok), ok ? 700 : 1700);
+  }
+  if(timedSecs){
+    const bar = el('qtimer'), t0 = Date.now(), ms = timedSecs*1000;
+    clearInterval(window._qTimer);
+    window._qTimer = setInterval(()=>{
+      const left = Math.max(0, 1 - (Date.now()-t0)/ms);
+      bar.style.width = (left*100) + '%';
+      bar.style.background = left < .25 ? 'var(--bad)' : left < .5 ? 'var(--low)' : 'var(--blue)';
+      if(left <= 0) settle(false, null, true);
+    }, 100);
+  }
+  opts.forEach(b=>{
+    b.addEventListener('click', ()=>settle(b.textContent === String(q.answer), b, false));
+  });
+}
+
+/* =====================================================
+   TONES TAB
+===================================================== */
+function toneRow(t){
+  return `<div class="card tone-row">
+    <svg class="contour" viewBox="0 0 54 28"><path d="${t.path}"/></svg>
+    <div class="t-name">${t.name}</div>
+    <div class="t-word">${t.thai}</div>
+    <div class="t-meta"><div class="t-tr">${t.tr}</div><div class="t-en">${t.en}</div></div>
+    ${speakBtn(t.thai)}
+  </div>`;
+}
+el('tone-list').innerHTML = TONES.map(toneRow).join('');
+el('tone-list2').innerHTML = TONES2.map(toneRow).join('');
+
+el('tone-drill-btn').addEventListener('click', ()=>{
+  const pool = TONES.concat(TONES2);
+  const qs = sample(pool, 8).map(t=>({
+    kind:'mcq', text:'Listen — which tone is it?', say:t.thai, autoplay:true,
+    answer:t.name, options: shuffle(TONE_NAMES.slice()),
+    explain: t.thai + ' ' + t.tr + ' (' + t.en + ')'
+  }));
+  startGenericQuiz(qs, 'Tone drill');
+});
+
+el('tone-rule-btn').addEventListener('click', ()=>{
+  let pool = learnedWords().filter(monoSyllable);
+  if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
+  const qs = sample(pool, 10).map(w=>({
+    kind:'mcq', prompt:w.thai, text:'Which tone? (work it out from class + marks)',
+    answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
+    explain:w.tr + ' — ' + w.en
+  }));
+  startGenericQuiz(qs, 'Tone rules');
+});
+
+/* =====================================================
+   PHRASES TAB
+===================================================== */
+let activeCat = PHRASE_CATS[0];
+function slangOwned(){ return (state.packs||[]).includes('slang'); }
+function renderCats(){
+  el('cat-tabs').innerHTML = PHRASE_CATS.map(c=>
+    `<button class="cat-tab ${c===activeCat?'active':''}" data-cat="${c}">${c==='Slang' && !slangOwned() ? '🔒 Slang' : c}</button>`).join('');
+  el('cat-tabs').querySelectorAll('.cat-tab').forEach(b=>{
+    b.addEventListener('click', ()=>{ activeCat = b.dataset.cat; renderCats(); renderPhrases(); });
+  });
+}
+function renderPhrases(){
+  const inSrs = id => !!state.srs[id];
+  if(activeCat === 'Slang' && !slangOwned()){
+    el('phrase-list').innerHTML = `
+      <div class="card" style="text-align:center;padding:28px 18px">
+        <div style="font-size:34px;margin-bottom:8px">🔒</div>
+        <h2>Street slang pack</h2>
+        <p class="sub" style="margin:8px 0 16px">10 words that make taxi drivers grin. Earned, not given.</p>
+        <button class="btn" id="buy-slang">Unlock for 50฿ (you have ${state.baht||0}฿)</button>
+      </div>`;
+    el('buy-slang').addEventListener('click', ()=>{
+      if((state.baht||0) < 50){ toast('Not enough baht — win some boss runs'); return; }
+      award(-50); state.packs.push('slang'); saveState();
+      toast('Slang pack unlocked');
+      renderCats(); renderPhrases();
+    });
+    return;
+  }
+  const src = activeCat === 'Slang' ? SLANG : PHRASES;
+  el('phrase-list').innerHTML = src.filter(p=>p.cat===activeCat).map(p=>{
+    const id = 'w:'+p.thai, added = inSrs(id);
+    return `<div class="card phrase">
+      <div class="p-meta">
+        <div class="p-thai">${p.thai}</div>
+        <div class="p-tr">${p.tr}</div>
+        <div class="p-en">${p.en}</div>
+        ${p.note?`<div class="p-note">${p.note}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+        ${speakBtn(p.thai)}
+        <button class="btn small ${added?'ghost':''}" data-add="${p.thai}">${added?'✓ in deck':'+ deck'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  el('phrase-list').querySelectorAll('[data-add]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = 'w:'+b.dataset.add;
+      if(state.srs[id]){ toast('Already in your deck'); return; }
+      srsAdd(id); saveState(); bumpStreak();
+      toast('Added to review deck');
+      renderPhrases();
+    });
+  });
+}
+renderCats(); renderPhrases();
+
+/* =====================================================
+   REVIEW TAB — flashcards + mixed quiz
+===================================================== */
+function renderReviewTab(){
+  const due = srsDue().length;
+  el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due — add phrases or finish lessons';
+  const c = state.calib || {};
+  const rows = [1,2,3].map(s=>{
+    const r = c[s] || {n:0,c:0};
+    const pct = r.n ? Math.round(100*r.c/r.n) : null;
+    const target = s===1 ? '~60–75%' : s===2 ? '~75–90%' : '90%+';
+    return `<div class="calib-row">
+      <span>${s}฿ bets <span class="sub" style="font-size:12px">(target ${target})</span></span>
+      <span class="pct">${pct===null ? '—' : pct + '%'} <span class="sub" style="font-size:12px">n=${r.n}</span></span>
+    </div>`;
+  }).join('');
+  el('calib-body').innerHTML = rows;
+}
+el('cta-flash').addEventListener('click', ()=>{
+  const due = srsDue();
+  if(!due.length){ toast('No cards due right now'); return; }
+  const session = shuffle(due).slice(0, 40);
+  if(due.length > 40) toast((due.length - 40) + ' more after this session');
+  startFlashcards(session);
+});
+el('cta-quiz').addEventListener('click', ()=>{
+  const qs = buildMixedQuiz();
+  if(!qs.length){ toast('Finish a lesson first'); return; }
+  startGenericQuiz(qs, 'Mixed quiz');
+});
+
+function startFlashcards(queue){
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0};
+  openOverlay(); renderFlash();
+}
+function renderFlash(){
+  const p = player;
+  if(p.i >= p.queue.length){
+    setProg(100);
+    const d = ensureDay(); d.r += p.reviewed; saveState();
+    bumpStreak(); questCheck();
+    const net = p.net >= 0 ? '+' + p.net : String(p.net);
+    el('stage').innerHTML = `
+      <div class="result-big">เก่งมาก</div>
+      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}฿</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
+    return;
+  }
+  setProg(Math.round(100*p.i/p.queue.length));
+  const id = p.queue[p.i], f = cardFront(id), b = cardBack(id);
+  const sayText = cardSay(id);
+  el('stage').innerHTML = `
+    <div class="flashcard" id="fc">
+      <div class="fc-inner">
+        <div class="fc-face front">
+          <div class="fc-big">${f.big}</div>
+          <div class="fc-hint">${f.hint}</div>
+        </div>
+        <div class="fc-face back">
+          <div class="fc-mid">${esc(b.big)}</div>
+          ${b.tr?`<div class="fc-tr">${b.tr}</div>`:''}
+          ${b.en?`<div class="fc-en">${b.en}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="row" style="justify-content:center">${speakBtn(sayText)}</div>
+    <div id="fc-action">
+      <div class="q-feedback" style="margin-bottom:8px">How sure are you?</div>
+      <div class="wagerrow">
+        <button class="wager" data-w="1">1฿</button>
+        <button class="wager" data-w="2">2฿</button>
+        <button class="wager" data-w="3">3฿</button>
+      </div>
+    </div>
+    <div class="q-feedback">${p.i+1} of ${p.queue.length} · ฿${state.baht||0}</div>`;
+  const fc = el('fc');
+  let stake = 0;
+  el('fc-action').querySelectorAll('.wager').forEach(w=>{
+    w.addEventListener('click', ()=>{
+      stake = +w.dataset.w;
+      fc.classList.add('flipped');
+      el('fc-action').innerHTML = `
+        <div class="rw-grid">
+          <button class="btn" style="background:var(--bad);color:#fff" id="rw-wrong">✗ I was wrong</button>
+          <button class="btn" style="background:var(--good);color:var(--bg)" id="rw-right">✓ I was right</button>
+        </div>`;
+      el('rw-right').onclick = ()=>resolve(true);
+      el('rw-wrong').onclick = ()=>resolve(false);
+    });
+  });
+  function resolve(right){
+    const cal = state.calib[stake] || (state.calib[stake] = {n:0,c:0});
+    cal.n++; if(right) cal.c++;
+    if(right){ award(stake); p.net += stake; srsGrade(id, stake); } // 1=Hard 2=Good 3=Easy
+    else { award(-stake); p.net -= stake; srsGrade(id, 0); p.queue.push(id); }
+    p.reviewed++;
+    p.i++; renderFlash();
+  }
+}
+
+function buildMixedQuiz(){
+  const glyphs = learnedGlyphIds().filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const words = learnedWords();
+  const phraseIds = Object.keys(state.srs).filter(k=>k.startsWith('w:')).map(k=>k.slice(2));
+  const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean);
+  const allWords = words.concat(phrases.filter(p=>!words.some(w=>w.thai===p.thai)));
+  const qs = [];
+  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  glyphs.forEach(ch=>{
+    const g = GLYPHS[ch];
+    const wrong = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3).map(c=>GLYPHS[c].sound);
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
+    qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls],
+      options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
+  });
+  allWords.forEach(w=>{
+    const wrong = sample(allWords.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
+    if(wrong.length===3){
+      qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai});
+      const wrongT = sample(allWords.filter(x=>x.thai!==w.thai),3).map(x=>x.thai);
+      qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
+        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr+' — '+w.en});
+    }
+  });
+  allWords.filter(monoSyllable).forEach(w=>{
+    qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr),
+      options:shuffle(TONE_NAMES.slice()), explain:w.tr + ' — ' + w.en});
+  });
+  return sample(qs, Math.min(10, qs.length));
+}
+
+function startGenericQuiz(qs, label, opts){
+  player = {type:'quiz', qs, i:0, correct:0, label, opts:opts||{}};
+  openOverlay(); nextGenericQ();
+}
+function nextGenericQ(){
+  const p = player;
+  setProg(Math.round(100*p.i/p.qs.length));
+  if(p.i >= p.qs.length){
+    setProg(100);
+    const d = ensureDay(); d.d++; saveState();
+    bumpStreak();
+    const pct = Math.round(100*p.correct/p.qs.length);
+    let subline = pct>=80 ? 'Strong.' : 'Worth another pass — the deck remembers what you miss.';
+    if(p.opts.boss){
+      const u = p.opts.boss;
+      state.boss[u] = state.boss[u] || {};
+      state.boss[u].lastAttempt = todayStr();
+      if(pct >= 80){
+        if(!state.boss[u].passed){ state.boss[u].passed = true; award(20); subline = 'Unit ' + u + ' cleared · +20฿'; }
+        else subline = 'Unit ' + u + ' cleared (again).';
+      } else {
+        subline = 'Boss holds the gate — try again tomorrow.';
+      }
+      saveState();
+    }
+    questCheck();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.correct} / ${p.qs.length}</div>
+      <div class="result-sub">${subline}</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+    return;
+  }
+  renderQuizQ(p.qs[p.i], ok=>{ if(ok) p.correct++; p.i++; nextGenericQ(); }, `${p.label} · ${p.i+1} of ${p.qs.length}`, p.opts.timed);
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+/* flush pending save synchronously when app is backgrounded or closed */
+function flushState(){
+  clearTimeout(saveTimer);
+  try{ localStorage.setItem(SKEY, JSON.stringify(state)); }catch(e){}
+  try{ if(window.storage) window.storage.set(SKEY, JSON.stringify(state)); }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden') flushState();
+  else if('speechSynthesis' in window) speechSynthesis.resume();
+});
+window.addEventListener('pagehide', flushState);
+
+/* iOS requires a user gesture before speechSynthesis works — prime it once */
+let speechPrimed = false;
+document.addEventListener('touchstart', ()=>{
+  if(speechPrimed || !('speechSynthesis' in window)) return;
+  speechPrimed = true;
+  const u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  speechSynthesis.speak(u);
+}, {once:true, passive:true});
+
+/* service worker (only when served over https, e.g. GitHub Pages) */
+if('serviceWorker' in navigator && location.protocol === 'https:'){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW skipped', e));
+  });
+}
+
+(async function init(){
+  await loadState();
+  renderHome(); renderLearn(); renderReviewTab();
+})();
+</script>
+</body>
+</html>
