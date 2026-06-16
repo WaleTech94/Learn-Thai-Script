@@ -107,7 +107,23 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   background:var(--surface);border:1px solid var(--line);
   border-radius:99px;padding:7px 14px;font-family:'Mitr',sans-serif;font-weight:500;font-size:14px;
 }
-.streak .flame{color:var(--low)}
+.streak .flame{color:var(--low);display:inline-block;animation:flick 2.6s ease-in-out infinite}
+/* streak ember: tier-coloured flame (v2.7) */
+.streak.cool .flame{filter:hue-rotate(180deg) saturate(1.1)}
+.streak.warm .flame{filter:none}
+.streak.hot .flame{filter:hue-rotate(-10deg) saturate(1.45) brightness(1.06);animation-duration:1.5s}
+.streak.blazing .flame{filter:hue-rotate(-18deg) saturate(1.8) brightness(1.18) drop-shadow(0 0 5px rgba(255,90,30,.85));animation-duration:.9s}
+.streak.warm .flame{animation-duration:2.1s}
+#streak-chip{cursor:pointer}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-1deg)}50%{transform:scale(1.13) rotate(1deg)}}
+.ember-back{position:fixed;inset:0;z-index:59}
+.ember-pop{position:fixed;z-index:60;left:50%;top:calc(env(safe-area-inset-top) + 60px);transform:translateX(-50%);
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-width:210px;
+  text-align:center;box-shadow:0 12px 34px rgba(0,0,0,.4);animation:pop .18s ease}
+.ember-pop .big{font-size:15px;font-weight:600;margin-bottom:2px}
+.ember-pop .esub{font-size:12px;color:var(--muted)}
+.ember-pop .thai{font-family:'Mitr',sans-serif;font-size:19px;margin-top:8px}
+.ember-pop .etr{font-size:12px;color:var(--muted)}
 
 /* ---------- home ---------- */
 .glyph-hero{
@@ -377,7 +393,7 @@ body[data-theme="songkran"]{
       </div>
       <div class="chips">
         <button class="streak" id="token-chip">💎<span id="baht-num" style="margin-left:4px">0</span></button>
-        <div class="streak"><span class="flame">🔥</span><span id="streak-num">0</span></div>
+        <button class="streak" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span></button>
       </div>
     </header>
     <div class="card glyph-hero" id="hero-card">
@@ -450,7 +466,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.6 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.7 (PWA)</div>
     </div>
   </section>
 
@@ -1374,6 +1390,7 @@ function renderHome(){
   el('streak-num').textContent = state.streak.count;
   el('baht-num').textContent = state.baht || 0;
   el('freeze-n').textContent = state.freeze || 0;
+  el('streak-chip').className = 'streak ' + emberTier(state.streak.count).id;
   ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -1555,6 +1572,30 @@ el('token-chip').addEventListener('click', ()=>{
   player = {type:'earn'};
   openOverlay(); renderEarnBoard();
 });
+
+/* ----- streak ember (v2.7): tier-coloured flame + tap popover ----- */
+const EMBER_TIERS = [
+  {id:'cool',    min:0,   thai:'สู้ๆ ครับ',    tr:'sûu-sûu khráp', en:'keep at it'},
+  {id:'warm',    min:7,   thai:'ดีมากครับ',   tr:'dii mâak khráp', en:'very good'},
+  {id:'hot',     min:30,  thai:'เก่งมากครับ',  tr:'gèng mâak khráp', en:'excellent'},
+  {id:'blazing', min:100, thai:'สุดยอดครับ',   tr:'sùt yôrt khráp', en:"you're on fire"}
+];
+function emberTier(n){ let t = EMBER_TIERS[0]; for(const x of EMBER_TIERS){ if(n >= x.min) t = x; } return t; }
+function showEmber(){
+  document.querySelectorAll('.ember-pop,.ember-back').forEach(e=>e.remove());
+  const t = emberTier(state.streak.count), n = state.streak.count, f = state.freeze || 0;
+  const back = document.createElement('div'); back.className = 'ember-back';
+  const pop = document.createElement('div'); pop.className = 'ember-pop';
+  pop.innerHTML = `<div class="big">🔥 ${n}-day streak</div>`
+    + `<div class="esub">${f} freeze${f===1?'':'s'} in reserve</div>`
+    + `<div class="thai">${t.thai}</div><div class="etr">${t.tr} — ${t.en}</div>`;
+  document.body.append(back, pop);
+  const close = ()=>{ pop.remove(); back.remove(); };
+  back.addEventListener('click', close);
+  pop.addEventListener('click', close);
+  speak(t.thai);
+}
+el('streak-chip').addEventListener('click', showEmber);
 function weekDates(){
   const wk = weekKey(), out = [];
   for(let i=0;i<7;i++){
