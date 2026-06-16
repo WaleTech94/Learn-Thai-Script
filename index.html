@@ -440,6 +440,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .lap-fill{height:100%;border-radius:5px;transition:width .7s ease}
 .lap-fill.last{background:var(--accent2)}
 .lap-fill.best{background:var(--gold)}
+/* session runway + phrase bounty (v2.15) — semantic colours, never the class colours */
+.runway{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.runway-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);margin:7px 0}
+.runway-seg{height:100%}
+.runway-legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.runway-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.lite-btn{margin-top:9px}
+.bounty{margin-bottom:16px;border:1px solid var(--gold);border-radius:16px;padding:13px 15px;background:var(--surface)}
+.bounty-row{display:flex;align-items:center;gap:9px;margin:8px 0}
+.bounty-row.claimed{opacity:.5}
+.bounty-row .b-amt{font-family:'Mitr',sans-serif;font-size:12px;color:var(--gold);flex:none}
 </style>
 </head>
 <body>
@@ -484,7 +495,9 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div class="quest-line" id="quest-b"><span class="qc">✓</span><span id="plan-2">One lesson</span></div>
       <div class="quest-line" id="plan-l3"><span class="qc">✓</span><span id="plan-3">One drill</span></div>
       <div class="sub" style="font-size:12px;margin-top:8px;border-top:1px solid var(--line);padding-top:8px" id="plan-week"></div>
+      <div class="runway" id="runway" style="display:none"></div>
     </div>
+    <div class="bounty" id="bounty-banner" style="display:none"></div>
     <button class="card cta-card" id="wai-banner" style="display:none;border:1px solid var(--gold)">
       <div><div class="t">🌅 Morning warm-up</div><div class="d" id="wai-sub">Replay your trickiest cards</div></div>
       <span style="font-size:20px">→</span>
@@ -560,7 +573,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.14 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.15 (PWA)</div>
     </div>
   </section>
 
@@ -1282,8 +1295,9 @@ function renderPlan(){
     el('plan-2').textContent = 'Spell it or ' + sugg;
     el('plan-3').textContent = 'A story or second drill (bonus)';
   }
+  if(d.lite){ el('plan-3').textContent = '✓ Optional drill deferred — lighter day'; }
   const dThis = d;
-  el('plan-l3').classList.toggle('done', isL ? dThis.d > 0 : dThis.d > 1);
+  el('plan-l3').classList.toggle('done', d.lite || (isL ? dThis.d > 0 : dThis.d > 1));
   // weekly status line
   const bits = [];
   if(state.week && state.week.key === weekKey()){
@@ -1300,6 +1314,63 @@ function renderPlan(){
   }
   el('plan-week').textContent = bits.length ? 'This week: ' + bits.join(' · ') : 'This week: all caught up';
   el('plan-week').style.display = '';
+  renderRunway();
+}
+/* ---- session runway meter (v2.15) — buildless time estimate; semantic colours only ---- */
+function paceSecs(){ return Math.min(30, Math.max(6, Math.round(state.pace || 12))); }
+function everConsolidated(){ return Object.values(state.days||{}).some(x=>x.type==='C' && (x.r+x.l+x.d)>0); }
+function renderRunway(){
+  const host = el('runway'); if(!host) return;
+  const d = ensureDay(), isL = d.type !== 'C', due = srsDue().length;
+  const calibrated = (state.paceN||0) >= 3;
+  const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
+  const srsMin = Math.round(due * paceSecs() / 60);
+  const lessonMin = (isL && nextLesson()) ? 8 : 0;
+  const drillMin = d.lite ? 0 : (isL ? 4 : 8);          // consolidation day leans on drills/stories
+  const segDefs = [
+    {cls:'srs', m:srsMin, label:'cards'},
+    {cls:'lesson', m:lessonMin, label:'lesson'},
+    {cls:'drill', m:drillMin, label:'drill'},
+  ].filter(s=>s.m > 0);
+  const total = segDefs.reduce((a,s)=>a+s.m,0);
+  if(total <= 0){ host.style.display = 'none'; return; }
+  host.style.display = '';
+  const bar = segDefs.map(s=>`<span class="runway-seg" style="flex:${s.m};background:${COL[s.cls]}"></span>`).join('');
+  const legend = segDefs.map(s=>`<span><i style="background:${COL[s.cls]}"></i>${s.label} ~${s.m}m</span>`).join('');
+  const showLite = total > 25 && !d.lite && drillMin > 0 && everConsolidated();
+  host.innerHTML = `
+    <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">~${total} min${calibrated?'':' · est.'}</span></div>
+    <div class="runway-bar">${bar}</div>
+    <div class="runway-legend">${legend}</div>
+    ${showLite ? `<button class="btn small ghost lite-btn" id="lite-btn">Make it a lighter day</button>` : ''}
+    ${d.lite ? `<div class="sub" style="font-size:11px;margin-top:7px">Lighter day on — optional drill deferred to tomorrow. Streak stays safe.</div>` : ''}`;
+  const lb = el('lite-btn');
+  if(lb) lb.onclick = ()=>{ d.lite = true; saveState(); toast('Lighter day — drill deferred, streak safe'); renderPlan(); };
+}
+/* ---- phrase bounty banner (v2.15) — +8💎 vs +5💎 for using flagged phrases IRL ---- */
+function renderBounty(){
+  const host = el('bounty-banner'); if(!host) return;
+  const w = (state.week && state.week.key === weekKey()) ? state.week : null;
+  if(w && !w.bounty){ w.bounty = (w.picks||[]).slice(0,3); saveState(); }   // backfill existing week, don't force-create
+  const bounty = (w && w.bounty) ? w.bounty : [];
+  const unclaimed = bounty.filter(t=>!(w.used||{})[t]);
+  if(!bounty.length || !unclaimed.length){ host.style.display = 'none'; return; }
+  host.style.display = '';
+  const rows = bounty.map(t=>{
+    const p = findWord(t); if(!p) return '';
+    const claimed = !!w.used[t];
+    return `<div class="bounty-row ${claimed?'claimed':''}">
+      <button class="btn small ${claimed?'ghost':''}" data-bounty="${t}" style="flex:none">${claimed?'✓':'used it'}</button>
+      <span style="flex:1"><span style="font-family:'Mitr',sans-serif;font-size:16px">${t}</span> <span class="sub" style="font-size:12px">${p.tr} · ${p.en}</span></span>
+      <span class="b-amt">+8💎</span>
+    </div>`;
+  }).join('');
+  host.innerHTML = `<div class="spread"><span class="eyebrow" style="margin:0">⭐ Phrase bounties</span><span class="sub" style="font-size:12px">${bounty.length-unclaimed.length}/${bounty.length} claimed · this week</span></div>
+    ${rows}
+    <div class="sub" style="font-size:11px;margin-top:4px">Use one of these on a real person this week for +8💎 (vs +5💎). Resets next week.</div>`;
+  host.querySelectorAll('[data-bounty]').forEach(b=>b.addEventListener('click', ()=>{
+    if(claimPhrase(b.dataset.bounty)){ renderBounty(); renderHome(); }
+  }));
 }
 function questCheck(){
   const d = ensureDay();
@@ -1514,7 +1585,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown(); renderConstellation();
+  ensureDay(); questCheck(); renderPlan(); renderBounty(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown(); renderConstellation();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
@@ -2361,7 +2432,10 @@ function weekKey(){
 }
 function ensureWeek(){
   const wk = weekKey();
-  if(state.week && state.week.key === wk) return state.week;
+  if(state.week && state.week.key === wk){
+    if(!state.week.bounty){ state.week.bounty = (state.week.picks||[]).slice(0,3); saveState(); }  // bounty backfill mid-week
+    return state.week;
+  }
   const order = PHRASE_CATS.filter(c=>c!=='Slang')
     .concat((state.packs||[]).includes('teacher')?['Teacher']:[])
     .concat((state.packs||[]).includes('food2')?['Food+']:[])
@@ -2369,9 +2443,18 @@ function ensureWeek(){
   const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c));
   const picks = pool.filter(p=>!state.srs['w:'+p.thai]).slice(0,5).map(p=>p.thai);
   picks.forEach(t=>srsAdd('w:'+t));
-  state.week = {key:wk, picks, used:{}};
+  state.week = {key:wk, picks, used:{}, bounty:picks.slice(0,3)};   // 3 bounty phrases / week (+8💎 vs +5💎)
   saveState();
   return state.week;
+}
+function claimPhrase(t){
+  if(!state.week || (state.week.used||{})[t]) return false;
+  if(!state.week.used) state.week.used = {};
+  state.week.used[t] = todayStr();
+  const isBounty = (state.week.bounty||[]).includes(t);
+  award(isBounty ? 8 : 5); saveState();
+  toast(isBounty ? '⭐ Bounty phrase used in the wild · +8💎' : 'Said it out loud in the wild · +5💎');
+  return true;
 }
 function renderPack(){
   const w = ensureWeek();
@@ -2391,12 +2474,7 @@ function renderPack(){
   }).join('');
   el('pack-list').querySelectorAll('[data-used]').forEach(b=>{
     b.addEventListener('click', ()=>{
-      const t = b.dataset.used;
-      if(state.week.used[t]) return;
-      state.week.used[t] = todayStr();
-      award(5); saveState();
-      toast('Said it out loud in the wild · +5💎');
-      renderPack();
+      if(claimPhrase(b.dataset.used)) renderPack();
     });
   });
 }
@@ -2492,7 +2570,7 @@ el('cta-quiz').addEventListener('click', ()=>{
 });
 
 function startFlashcards(queue){
-  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0, cleanFirst:0, seen:{}};
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0, cleanFirst:0, seen:{}, started:Date.now()};
   openOverlay(); renderFlash();
 }
 function renderFlash(){
@@ -2506,6 +2584,15 @@ function renderFlash(){
       bestLine = `<div class="result-sub" style="color:var(--gold)">🎯 New best wager streak: ${p.wmax} in a row · +3💎</div>`;
     } else if((p.wmax||0) >= 2){
       bestLine = `<div class="result-sub">best wager run this session: ${p.wmax} in a row</div>`;
+    }
+    // session pace EMA (v2.15) — feeds the runway estimate; clamp to ignore backgrounded sessions
+    if(p.reviewed > 0 && p.started){
+      const per = (Date.now() - p.started) / 1000 / p.reviewed;
+      if(per >= 3 && per <= 120){
+        const cl = Math.min(30, Math.max(6, per));
+        state.pace = state.paceN ? (state.pace*0.7 + cl*0.3) : cl;
+        state.paceN = (state.paceN||0) + 1;
+      }
     }
     // personal best lap: clean run = confident-and-right-first-time / cards seen (min 5 cards)
     let lapLine = '';
