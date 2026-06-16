@@ -133,6 +133,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .pc-cap .pc-w{padding:2px 7px;border-radius:8px;cursor:pointer}
 .pc-cap .pc-w.read{background:var(--surface);color:var(--teal)}
 .pc-reveal{color:var(--muted);font-size:14px;min-height:20px;margin-bottom:16px}
+/* progress wall / journey map (v2.10) — neutral blue for "done"; class colours stay reserved for consonants */
+.pw-unit{margin-top:10px}
+.pw-ulabel{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px}
+.pw-tiles{display:flex;gap:5px;flex-wrap:wrap}
+.pw-tile{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);cursor:pointer}
+.pw-tile.done{background:var(--blue);color:#fff;font-weight:700;border-color:var(--blue)}
+.pw-tile.next{border:1px dashed var(--muted);color:var(--text)}
 
 /* ---------- home ---------- */
 .glyph-hero{
@@ -451,6 +458,14 @@ body[data-theme="songkran"]{
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
+        <div class="eyebrow" style="margin:0">Your journey</div>
+        <span class="sub" style="font-size:12px" id="journey-count">0 / 24</span>
+      </div>
+      <div id="progress-wall"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Each tile is a lesson; 🏆 = unit boss cleared. Tap a finished lesson to revisit it.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
         <div class="eyebrow" style="margin:0">The letter wall</div>
         <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
       </div>
@@ -479,7 +494,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.9 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.10 (PWA)</div>
     </div>
   </section>
 
@@ -1425,7 +1440,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap();
+  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
@@ -1755,6 +1770,29 @@ function masteryOf(id){
   if(c.iv >= 7) return 'mastered';
   if(c.iv >= 1) return 'growing';
   return 'learning';
+}
+function renderProgressWall(){
+  const host = el('progress-wall'); if(!host) return;
+  const unitName = {A:'Foundations', B:'Workhorses', C:'Tone engine', D:'Clusters & tail'};
+  const nextId = (LESSONS.find(L=>!state.done.includes(L.id)) || {}).id;
+  host.innerHTML = ['A','B','C','D'].map(u=>{
+    const Ls = LESSONS.filter(L=>L.unit.charAt(0)===u);
+    const doneN = Ls.filter(L=>state.done.includes(L.id)).length;
+    const boss = state.boss && state.boss[u] && state.boss[u].passed;
+    const tiles = Ls.map(L=>{
+      const cls = state.done.includes(L.id) ? 'done' : (L.id===nextId ? 'next' : '');
+      return `<div class="pw-tile ${cls}" data-lesson="${L.id}">${L.id.slice(1)}</div>`;
+    }).join('');
+    return `<div class="pw-unit"><div class="pw-ulabel"><span>${u} · ${unitName[u]} ${boss?'🏆':''}</span><span>${doneN}/${Ls.length}</span></div><div class="pw-tiles">${tiles}</div></div>`;
+  }).join('');
+  el('journey-count').textContent = state.done.length + ' / ' + LESSONS.length;
+  host.querySelectorAll('[data-lesson]').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      const L = LESSONS.find(x=>x.id===t.dataset.lesson);
+      if(state.done.includes(L.id)) startLesson(L);
+      else toast('Lesson ' + L.id.slice(1) + ' · ' + L.title + ' — not unlocked yet');
+    });
+  });
 }
 function renderWall(){
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
