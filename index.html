@@ -140,6 +140,14 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .pw-tile{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);cursor:pointer}
 .pw-tile.done{background:var(--blue);color:#fff;font-weight:700;border-color:var(--blue)}
 .pw-tile.next{border:1px dashed var(--muted);color:var(--text)}
+/* weekly showdown (v2.11) */
+.sd-tiers{display:flex;gap:8px}
+.sd-tier{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 4px;background:var(--surface2)}
+.sd-tier .d{font-size:12px;color:var(--muted)}
+.sd-tier .r{font-weight:700;font-size:13px;margin-top:2px}
+.sd-tier.hit{border-color:var(--blue)}
+.sd-tier.claimed{border-color:var(--blue);background:var(--blue);color:#fff}
+.sd-tier.claimed .d,.sd-tier.claimed .r{color:#fff}
 
 /* ---------- home ---------- */
 .glyph-hero{
@@ -458,6 +466,14 @@ body[data-theme="songkran"]{
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
+        <div class="eyebrow" style="margin:0">Weekly showdown</div>
+        <span class="sub" style="font-size:12px" id="showdown-days">0/7 days</span>
+      </div>
+      <div id="showdown-tiers" class="sd-tiers"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Practise on more days this week to claim escalating bonuses. Resets each week.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
         <div class="eyebrow" style="margin:0">Your journey</div>
         <span class="sub" style="font-size:12px" id="journey-count">0 / 24</span>
       </div>
@@ -494,7 +510,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.10 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.11 (PWA)</div>
     </div>
   </section>
 
@@ -1440,7 +1456,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall();
+  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
@@ -1770,6 +1786,29 @@ function masteryOf(id){
   if(c.iv >= 7) return 'mastered';
   if(c.iv >= 1) return 'growing';
   return 'learning';
+}
+const SHOWDOWN_TIERS = [{d:3,r:5},{d:5,r:10},{d:7,r:20}];
+function activeDaysThisWeek(){
+  return weekDates().filter(dt=>{ const r=(state.days||{})[dt]; return r && (r.r+r.l+r.d)>0; }).length;
+}
+function checkShowdown(){
+  const wk = weekKey();
+  if(!state.showdown || state.showdown.key !== wk) state.showdown = {key:wk, claimed:[]};
+  const active = activeDaysThisWeek(); let awarded = 0;
+  SHOWDOWN_TIERS.forEach(t=>{
+    if(active >= t.d && !state.showdown.claimed.includes(t.d)){ state.showdown.claimed.push(t.d); award(t.r); awarded += t.r; }
+  });
+  if(awarded){ saveState(); toast('Weekly showdown · +' + awarded + '💎'); }
+}
+function renderShowdown(){
+  const host = el('showdown-tiers'); if(!host) return;
+  const active = activeDaysThisWeek();
+  const claimed = (state.showdown && state.showdown.key === weekKey()) ? state.showdown.claimed : [];
+  el('showdown-days').textContent = active + '/7 days';
+  host.innerHTML = SHOWDOWN_TIERS.map(t=>{
+    const cls = claimed.includes(t.d) ? 'claimed' : (active >= t.d ? 'hit' : '');
+    return `<div class="sd-tier ${cls}"><div class="d">${t.d} days</div><div class="r">+${t.r}💎</div></div>`;
+  }).join('');
 }
 function renderProgressWall(){
   const host = el('progress-wall'); if(!host) return;
