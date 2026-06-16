@@ -124,6 +124,15 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .ember-pop .esub{font-size:12px;color:var(--muted)}
 .ember-pop .thai{font-family:'Mitr',sans-serif;font-size:19px;margin-top:8px}
 .ember-pop .etr{font-size:12px;color:var(--muted)}
+/* milestone postcards (v2.9) */
+.postcard-modal{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.82);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadein .25s ease}
+.pc-card{background:linear-gradient(160deg,var(--surface),var(--surface2));border:1px solid var(--line);border-radius:20px;padding:26px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.pc-scene{font-size:70px;line-height:1}
+.pc-eyebrow{color:var(--gold);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:6px 0 14px}
+.pc-cap{font-family:'Mitr',sans-serif;font-size:30px;line-height:1.7;margin-bottom:10px}
+.pc-cap .pc-w{padding:2px 7px;border-radius:8px;cursor:pointer}
+.pc-cap .pc-w.read{background:var(--surface);color:var(--teal)}
+.pc-reveal{color:var(--muted);font-size:14px;min-height:20px;margin-bottom:16px}
 
 /* ---------- home ---------- */
 .glyph-hero{
@@ -470,7 +479,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.8 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.9 (PWA)</div>
     </div>
   </section>
 
@@ -1033,6 +1042,14 @@ const TITLES = [
  {id:"reader", thai:"นักอ่าน", tr:"nák-àan", en:"the reader"}
 ];
 
+/* milestone postcards: decodable caption at the streak's gate lesson (all validated) */
+const POSTCARDS = [
+ {days:7,   gate:'l6',  e:'🌅', cap:[{t:'ดี',tr:'dii',en:'really'},{t:'มาก',tr:'mâak',en:'good!'}]},
+ {days:14,  gate:'l12', e:'🚝', cap:[{t:'เรา',tr:'rao',en:'we'},{t:'ทำ',tr:'tham',en:'can'},{t:'ได้',tr:'dâi',en:'do it!'}]},
+ {days:30,  gate:'l17', e:'🛕', cap:[{t:'เก่ง',tr:'gèng',en:'brilliant'},{t:'มาก',tr:'mâak',en:'— really!'}]},
+ {days:60,  gate:'l24', e:'🛺', cap:[{t:'เรา',tr:'rao',en:'we'},{t:'ทำ',tr:'tham',en:'made'},{t:'ได้',tr:'dâi',en:'it'},{t:'ครับ',tr:'khráp',en:'!'}]},
+ {days:100, gate:'l24', e:'🏆', cap:[{t:'สุด',tr:'sùt',en:'simply'},{t:'ยอด',tr:'yôrt',en:'the best'},{t:'ครับ',tr:'khráp',en:'!'}]}
+];
 const CONF_SETS = [["บ","ป"],["ผ","ฝ","พ","ฟ"],["ด","ต"],["ก","ถ","ภ"],["ข","ช"],["อ","ฮ"]];
 
 /* decodable micro-stories: every character readable at the gate lesson */
@@ -1407,6 +1424,7 @@ function renderHome(){
       el('wai-sub').textContent = 'Replay your ' + _weak.length + ' trickiest card' + (_weak.length>1?'s':'') + ' — quick warm-up';
     } else _wb.style.display = 'none';
   }
+  checkPostcard();
   ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -1618,6 +1636,43 @@ function showEmber(){
   speak(t.thai);
 }
 el('streak-chip').addEventListener('click', showEmber);
+
+/* ----- milestone postcards (v2.9): celebratory decodable caption at streak milestones ----- */
+function checkPostcard(){
+  if(el('overlay') && el('overlay').classList.contains('open')) return;
+  if(document.querySelector('.postcard-modal')) return;
+  const seen = state.postcards || [];
+  const pc = POSTCARDS.find(p => (state.streak.count || 0) >= p.days && state.done.includes(p.gate) && !seen.includes(p.days));
+  if(pc) showPostcard(pc);
+}
+function showPostcard(pc){
+  const tapped = new Set();
+  const wrap = document.createElement('div'); wrap.className = 'postcard-modal';
+  wrap.innerHTML = `<div class="pc-card">
+    <div class="pc-scene">${pc.e}</div>
+    <div class="pc-eyebrow">${pc.days}-day streak 🔥</div>
+    <div class="pc-cap">${pc.cap.map((w,i)=>`<span class="pc-w" data-i="${i}">${w.t}</span>`).join(' ')}</div>
+    <div class="pc-reveal" id="pc-reveal">tap each word to read it aloud</div>
+    <button class="btn full" id="pc-close" disabled>read every word to continue</button>
+  </div>`;
+  document.body.appendChild(wrap);
+  const closeBtn = wrap.querySelector('#pc-close');
+  wrap.querySelectorAll('.pc-w').forEach(sp=>{
+    sp.addEventListener('click', ()=>{
+      const w = pc.cap[+sp.dataset.i];
+      speak(w.t); sp.classList.add('read');
+      wrap.querySelector('#pc-reveal').textContent = w.t + ' · ' + w.tr + ' — ' + w.en;
+      tapped.add(+sp.dataset.i);
+      if(tapped.size === pc.cap.length){ closeBtn.disabled = false; closeBtn.textContent = 'เก่งมาก — continue'; }
+    });
+  });
+  closeBtn.addEventListener('click', ()=>{
+    if(closeBtn.disabled) return;
+    if(!state.postcards) state.postcards = [];
+    if(!state.postcards.includes(pc.days)){ state.postcards.push(pc.days); saveState(); }
+    wrap.remove();
+  });
+}
 function weekDates(){
   const wk = weekKey(), out = [];
   for(let i=0;i<7;i++){
