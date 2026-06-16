@@ -290,6 +290,33 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .danger-link{color:var(--bad);font-size:13px;background:none;text-decoration:underline}
 .settings-row{margin-top:24px;text-align:center}
 
+/* ---------- themes: atmosphere changes, class colours never do ---------- */
+body[data-theme="day"]{
+  --bg:#F4F1E8; --surface:#FFFFFF; --surface2:#ECE8DC; --line:#DCD6C6;
+  --text:#23252F; --muted:#6E7280;
+  --mid:#0E9E84; --high:#D63B79; --low:#C77F12; --blue:#3D6FD6;
+}
+body[data-theme="bts"]{
+  --bg:#0C1722; --surface:#13222F; --surface2:#1A2C3D; --line:#273B4F;
+}
+body[data-theme="songkran"]{
+  --bg:#121024; --surface:#1B1834; --surface2:#241F44; --line:#332C5C;
+  --blue:#8FB8FF;
+}
+#statusbar-scrim{transition:background .2s}
+.album{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.cap{aspect-ratio:1;border-radius:13px;background:var(--surface2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:26px}
+.cap .cnt{font-size:10px;color:var(--muted)}
+.cap.unowned{opacity:.3;font-size:18px;color:var(--muted)}
+.shop-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.shop-row:last-child{border-bottom:none}
+.shop-row .s-meta{flex:1;min-width:0}
+.shop-row .s-t{font-family:'Mitr',sans-serif;font-weight:500;font-size:15px}
+.shop-row .s-d{font-size:12px;color:var(--muted)}
+.pull-stage{text-align:center;padding:18px 0}
+.pull-stage .pull-e{font-size:74px;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+
 /* ---------- v2.1 gamification ---------- */
 .chips{display:flex;gap:8px;align-items:center}
 .quest-line{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px}
@@ -344,9 +371,12 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   <!-- HOME -->
   <section class="view" id="view-home">
     <header>
-      <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan — to read</span></div>
+      <div>
+        <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan — to read</span></div>
+        <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
+      </div>
       <div class="chips">
-        <div class="streak">฿<span id="baht-num" style="margin-left:4px">0</span></div>
+        <button class="streak" id="token-chip">💎<span id="baht-num" style="margin-left:4px">0</span></button>
         <div class="streak"><span class="flame">🔥</span><span id="streak-num">0</span></div>
       </div>
     </header>
@@ -369,11 +399,12 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0" id="plan-title">Today's plan</div>
-        <span class="sub" style="font-size:12px">+10฿</span>
+        <span class="sub" style="font-size:12px">+10💎</span>
       </div>
       <div class="quest-line" id="quest-a"><span class="qc">✓</span><span id="plan-1">Clear your due cards</span></div>
       <div class="quest-line" id="quest-b"><span class="qc">✓</span><span id="plan-2">One lesson</span></div>
       <div class="quest-line" id="plan-l3"><span class="qc">✓</span><span id="plan-3">One drill</span></div>
+      <div class="sub" style="font-size:12px;margin-top:8px;border-top:1px solid var(--line);padding-top:8px" id="plan-week"></div>
     </div>
     <div class="homecta">
       <button class="card cta-card" id="cta-lesson">
@@ -383,6 +414,10 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
       <button class="card cta-card" id="cta-review">
         <div><div class="t">Review due cards</div><div class="d" id="cta-review-sub">Nothing due yet</div></div>
         <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="cta-shop">
+        <div><div class="t">Shop &amp; gachapon</div><div class="d">Spend your tokens — capsules, packs, themes</div></div>
+        <span style="font-size:20px">🎰</span>
       </button>
     </div>
     <div class="card" style="margin-bottom:16px">
@@ -396,7 +431,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0">Last 16 weeks</div>
-        <button class="btn small ghost" id="buy-freeze">Freeze 30฿ (<span id="freeze-n">0</span>)</button>
+        <button class="btn small ghost" id="buy-freeze">Freeze 30💎 (<span id="freeze-n">0</span>)</button>
       </div>
       <div class="heatmap" id="heatmap"></div>
     </div>
@@ -415,7 +450,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.4 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.6 (PWA)</div>
     </div>
   </section>
 
@@ -439,7 +474,20 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
       </div>
       <div class="calib-row"><span>Listening <span class="sub" style="font-size:12px">(target 85%)</span></span><span class="pct" id="lic-listen">—</span></div>
       <div class="calib-row"><span>Rule derivation <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">—</span></div>
-      <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. First licence pays 30฿; it expires after 30 days — re-certify to keep it (10฿). That's your monthly cumulative review, disguised.</div>
+      <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. First licence pays 30💎; it expires after 30 days — re-certify to keep it (10💎). That's your monthly cumulative review, disguised.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="eyebrow">The class cheat code</div>
+      <div class="sub" style="line-height:1.7">
+        Memorise two small sets — everything else is low class by default.<br><br>
+        <b style="color:var(--mid);font-weight:500">Mid (9):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ก จ ฎ ฏ ด ต บ ป อ</span><br>
+        <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง — "the chicken pecks the kid dead on the rim of the jar."</span><br><br>
+        <b style="color:var(--high);font-weight:500">High (11):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ข ฃ ฉ ฐ ถ ผ ฝ ศ ษ ส ห</span><br>
+        <span style="font-size:13px">All breathy or hissy sounds — kh, ch, th, ph, f, s, h.</span><br><br>
+        <b style="color:var(--low);font-weight:500">Low: the other 24.</b> Never memorise them.<br><br>
+        <span style="font-size:13px">The deep pattern: high/low pairs (ข/ค, ถ/ท, ผ/พ, ฝ/ฟ, ส/ซ, ห/ฮ) are the same sounds twice — so every sound can reach every tone.</span>
+      </div>
+      <div style="margin-top:14px"><button class="btn full ghost" id="class-sprint-btn">Class sprint · 15 quick calls</button></div>
     </div>
     <div class="phrase-list" id="tone-list"></div>
     <div class="section-gap"></div>
@@ -461,7 +509,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
     <div class="card" style="margin-bottom:14px" id="pack-card">
       <div class="spread">
         <div class="eyebrow" style="margin:0">This week's five</div>
-        <span class="sub" style="font-size:12px">say each to a real human · +5฿</span>
+        <span class="sub" style="font-size:12px">say each to a real human · +5💎</span>
       </div>
       <div id="pack-list"></div>
     </div>
@@ -498,7 +546,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="eyebrow">Your calibration</div>
-      <div id="calib-body"><div class="sub">Wager on flashcards to build your record. When you bet 3฿ you should be right ~90%+ of the time — if not, you're overconfident.</div></div>
+      <div id="calib-body"><div class="sub">Wager on flashcards to build your record. When you bet 3💎 you should be right ~90%+ of the time — if not, you're overconfident.</div></div>
     </div>
     <div class="card">
       <div class="eyebrow">Transliteration key</div>
@@ -900,6 +948,71 @@ const PHRASES = [
   {cat:"Survival", thai:"ไม่เอาครับ", tr:"mâi ao khráp", en:"no thanks / I don't want it"}
 ];
 
+const GACHA = [
+ {id:"tuktuk", e:"🛺", thai:"ตุ๊กตุ๊ก", tr:"dtúk-dtúk", en:"tuk-tuk", fact:"named after its two-stroke engine sound"},
+ {id:"taxi", e:"🚕", thai:"แท็กซี่", tr:"tháek-sîi", en:"taxi", fact:"the pink ones are individually owned"},
+ {id:"mango", e:"🥭", thai:"ข้าวเหนียวมะม่วง", tr:"khâao-nǐao má-mûang", en:"mango sticky rice", fact:"best April–June, peak mango season"},
+ {id:"soidog", e:"🐕", thai:"หมาจรจัด", tr:"mǎa-jorn-jàt", en:"soi dog", fact:"the true guardians of every soi"},
+ {id:"seven", e:"🏪", thai:"เซเว่น", tr:"see-wên", en:"7-Eleven", fact:"over 14,000 branches — more than Japan"},
+ {id:"bts", e:"🚝", thai:"รถไฟฟ้า", tr:"rót-fai-fáa", en:"the BTS", fact:"literally 'electric vehicle' — sky train"},
+ {id:"market", e:"🏮", thai:"ตลาดนัด", tr:"dtà-làat-nát", en:"pop-up market", fact:"นัด = appointment: a market by appointment"},
+ {id:"moto", e:"🏍️", thai:"มอเตอร์ไซค์", tr:"mor-dtooe-sai", en:"motorbike taxi", fact:"orange vests, soi-end queues, no fear"},
+ {id:"somtam", e:"🥗", thai:"ส้มตำ", tr:"sôm-dtam", en:"papaya salad", fact:"ตำ = to pound, hence the mortar thud"},
+ {id:"chayen", e:"🧋", thai:"ชาเย็น", tr:"chaa-yen", en:"Thai iced tea", fact:"that orange colour is the condensed milk"},
+ {id:"wat", e:"🛕", thai:"วัด", tr:"wát", en:"temple", fact:"40,000+ across Thailand"},
+ {id:"chang", e:"🐘", thai:"ช้าง", tr:"cháang", en:"elephant", fact:"national animal; the white ones are royal"},
+ {id:"durian", e:"🍈", thai:"ทุเรียน", tr:"thú-rian", en:"durian", fact:"banned on the BTS, beloved everywhere else"},
+ {id:"cart", e:"🛒", thai:"รถเข็น", tr:"rót-khěn", en:"street cart", fact:"a kitchen on wheels — เข็น = to push"},
+ {id:"monk", e:"🧘", thai:"พระ", tr:"phrá", en:"monk", fact:"dawn alms rounds, barefoot, every day"},
+ {id:"cat", e:"🐈", thai:"แมวไทย", tr:"maaeo-thai", en:"Siamese cat", fact:"the original Thai export"},
+ {id:"gecko", e:"🦎", thai:"ตุ๊กแก", tr:"dtúk-gaae", en:"gecko", fact:"named after its call — listen tonight"},
+ {id:"rain", e:"🌧️", thai:"ฝนตก", tr:"fǒn-dtòk", en:"rainstorm", fact:"literally 'rain falls' — daily, May to October"},
+ {id:"boat", e:"🛶", thai:"เรือหางยาว", tr:"ruea-hǎang-yaao", en:"longtail boat", fact:"a car engine on a pole, somehow"},
+ {id:"garland", e:"💮", thai:"พวงมาลัย", tr:"phuang-maa-lai", en:"jasmine garland", fact:"also the word for a steering wheel"},
+ {id:"gaiyang", e:"🍗", thai:"ไก่ย่าง", tr:"gài-yâang", en:"grilled chicken", fact:"best bought from a smoking roadside drum"},
+ {id:"traffic", e:"🚦", thai:"รถติด", tr:"rót-dtìt", en:"traffic jam", fact:"'vehicle stuck' — Bangkok's fourth season"},
+ {id:"park", e:"🌳", thai:"สวนลุม", tr:"sǔan-lum", en:"Lumphini Park", fact:"home to monitor lizards the size of dogs"},
+ {id:"river", e:"🌊", thai:"แม่น้ำ", tr:"mâae-náam", en:"river", fact:"literally 'mother of waters'"}
+];
+
+const TEACHER = [
+ {cat:"Teacher", thai:"เงียบๆ ครับ", tr:"ngîap ngîap khráp", en:"quiet please"},
+ {cat:"Teacher", thai:"นั่งลง", tr:"nâng long", en:"sit down"},
+ {cat:"Teacher", thai:"เก่งมาก", tr:"gèng mâak", en:"very good! (your new catchphrase)"},
+ {cat:"Teacher", thai:"ตั้งใจ", tr:"dtâng-jai", en:"pay attention / focus"},
+ {cat:"Teacher", thai:"เข้าใจไหม", tr:"khâo-jai mǎi", en:"do you understand?"},
+ {cat:"Teacher", thai:"มีคำถามไหม", tr:"mii kham-thǎam mǎi", en:"any questions?"},
+ {cat:"Teacher", thai:"ยกมือ", tr:"yók muue", en:"raise your hand"},
+ {cat:"Teacher", thai:"เปิดหนังสือ", tr:"bpèrt nǎng-sǔue", en:"open your books"},
+ {cat:"Teacher", thai:"หมดเวลา", tr:"mòt wee-laa", en:"time's up"},
+ {cat:"Teacher", thai:"เจอกันพรุ่งนี้", tr:"jooe gan phrûng-níi", en:"see you tomorrow"}
+];
+const FOOD2 = [
+ {cat:"Food+", thai:"ใส่ถุงครับ", tr:"sài thǔng khráp", en:"in a bag, please"},
+ {cat:"Food+", thai:"ห่อกลับบ้าน", tr:"hòr glàp bâan", en:"wrap it to take home"},
+ {cat:"Food+", thai:"ไม่ใส่ผงชูรส", tr:"mâi sài phǒng-chuu-rót", en:"no MSG"},
+ {cat:"Food+", thai:"ขอน้ำแข็ง", tr:"khǒr náam-khǎeng", en:"ice, please"},
+ {cat:"Food+", thai:"ไม่ใส่น้ำตาล", tr:"mâi sài náam-dtaan", en:"no sugar"},
+ {cat:"Food+", thai:"เผ็ดมากไหม", tr:"phèt mâak mǎi", en:"is it very spicy?"},
+ {cat:"Food+", thai:"ขออีกหนึ่ง", tr:"khǒr ìik nùeng", en:"one more, please"},
+ {cat:"Food+", thai:"อิ่มแล้ว", tr:"ìm láaeo", en:"I'm full"},
+ {cat:"Food+", thai:"เก็บตังค์", tr:"gèp dtang", en:"the bill (street version)"},
+ {cat:"Food+", thai:"น้ำเปล่าขวดหนึ่ง", tr:"náam-bplàao khùat nùeng", en:"one bottle of water"}
+];
+const THEMES = [
+ {id:"night", name:"Night market", price:0},
+ {id:"day", name:"Day market", price:40},
+ {id:"bts", name:"Skytrain", price:40},
+ {id:"songkran", name:"Songkran", price:40}
+];
+const TITLES = [
+ {id:"student", thai:"นักเรียน", tr:"nák-rian", en:"the student"},
+ {id:"brave", thai:"ผู้กล้า", tr:"phûu-glâa", en:"the brave one"},
+ {id:"toneboss", thai:"เจ้าพ่อโทน", tr:"jâo-phôr-thoon", en:"the tone boss"},
+ {id:"head", thai:"ครูใหญ่", tr:"khruu-yài", en:"the headmaster"},
+ {id:"reader", thai:"นักอ่าน", tr:"nák-àan", en:"the reader"}
+];
+
 const CONF_SETS = [["บ","ป"],["ผ","ฝ","พ","ฟ"],["ด","ต"],["ก","ถ","ภ"],["ข","ช"],["อ","ฮ"]];
 
 /* decodable micro-stories: every character readable at the gate lesson */
@@ -1026,7 +1139,7 @@ function ensureDay(){
   }
   return state.days[t];
 }
-const DRILL_ROTA = ['Confusion clinic','Tone listening drill','Spell it','Tone-rule trainer'];
+const DRILL_ROTA = ['Confusion clinic','Tone listening drill','Spell it','Tone-rule trainer','Class sprint'];
 function renderPlan(){
   const d = ensureDay();
   if(!el('plan-title')) return;
@@ -1045,12 +1158,28 @@ function renderPlan(){
   }
   const dThis = d;
   el('plan-l3').classList.toggle('done', isL ? dThis.d > 0 : dThis.d > 1);
+  // weekly status line
+  const bits = [];
+  if(state.week && state.week.key === weekKey()){
+    const usedN = Object.keys(state.week.used||{}).length;
+    if(state.week.picks.length) bits.push('phrase pack ' + usedN + '/' + state.week.picks.length + ' used');
+  }
+  const unread = STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id]);
+  if(unread) bits.push('story ready: ' + unread.title.split(' — ')[1]);
+  const lic = state.toneLicence;
+  if(lic){
+    const daysLeft = Math.round((new Date(lic.expires) - Date.now())/86400000);
+    if(daysLeft <= 7 && daysLeft >= 0) bits.push('tone licence expires in ' + daysLeft + 'd');
+    else if(daysLeft < 0) bits.push('tone licence expired — re-certify');
+  }
+  el('plan-week').textContent = bits.length ? 'This week: ' + bits.join(' · ') : 'This week: all caught up';
+  el('plan-week').style.display = '';
 }
 function questCheck(){
   const d = ensureDay();
   const A = d.due === 0 || (d.r > 0 && srsDue().length === 0);
   const B = (d.l + d.d) > 0;
-  if(A && B && !d.paid){ d.paid = true; award(10); toast('Daily quest complete · +10฿'); }
+  if(A && B && !d.paid){ d.paid = true; award(10); toast('Daily quest complete · +10💎'); }
   const qa = el('quest-a'), qb = el('quest-b');
   if(qa) qa.classList.toggle('done', A);
   if(qb) qb.classList.toggle('done', B);
@@ -1112,6 +1241,8 @@ function findWord(thai){
   for(const L of LESSONS){ const w = L.words.find(x=>x.thai===thai); if(w) return w; }
   const p = PHRASES.find(x=>x.thai===thai); if(p) return p;
   const s = SLANG.find(x=>x.thai===thai); if(s) return s;
+  const t = TEACHER.find(x=>x.thai===thai); if(t) return t;
+  const f = FOOD2.find(x=>x.thai===thai); if(f) return f;
   return null;
 }
 
@@ -1175,7 +1306,7 @@ function licenceCheck(){
     const ex = new Date(); ex.setDate(ex.getDate()+30);
     state.toneLicence = {earned:todayStr(), expires:ex.toISOString().slice(0,10)};
     award(first ? 30 : 10); saveState();
-    toast(first ? 'Tone licence earned · +30฿' : 'Licence renewed · +10฿');
+    toast(first ? 'Tone licence earned · +30💎' : 'Licence renewed · +10💎');
   }
 }
 function renderTones(){
@@ -1279,6 +1410,197 @@ el('cta-lesson').addEventListener('click', ()=>{
   if(nl) startLesson(nl); else gotoView('learn');
 });
 el('cta-review').addEventListener('click', ()=>{ gotoView('review'); });
+function ownsPack(p){ return (state.packs||[]).includes(p); }
+function ownsTheme(t){ return t==='night' || (state.themes||[]).includes(t); }
+function applyTheme(){
+  document.body.dataset.theme = state.theme || 'night';
+}
+function buy(cost, fn){
+  if((state.baht||0) < cost){ toast('Not enough tokens — need ' + cost + ' 💎'); return false; }
+  award(-cost); fn(); saveState(); return true;
+}
+el('cta-shop').addEventListener('click', ()=>{ player = {type:'shop'}; openOverlay(); renderShop(); });
+
+function renderShop(){
+  setProg(0);
+  if(!state.gacha) state.gacha = {};
+  if(!state.themes) state.themes = [];
+  if(!state.titles) state.titles = [];
+  const ownedCaps = Object.keys(state.gacha).length;
+  el('stage').innerHTML = `
+    <div class="center"><h2>🎰 Shop</h2><p class="sub">Balance: ${state.baht||0} 💎</p></div>
+    <div class="card">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Gachapon · Bangkok streets</div>
+        <span class="sub" style="font-size:12px">${ownedCaps}/${GACHA.length} collected</span>
+      </div>
+      <div id="pull-zone"></div>
+      <div style="margin-top:12px"><button class="btn full" id="pull-btn">Pull a capsule · 10 💎</button></div>
+      <div class="album" id="album"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Duplicates refund 3 💎. Every capsule is a real word — tap owned ones to hear them.</div>
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Phrase packs</div>
+      ${[['teacher','Teacher pack','Classroom Thai — run your room in Thai',60],
+         ['food2','Food deep-dive','Order like a local: bags, ice, no MSG',60],
+         ['slang','Street slang','10 words that make taxi drivers grin',50]].map(([id,t,d,pr])=>`
+        <div class="shop-row">
+          <div class="s-meta"><div class="s-t">${t}</div><div class="s-d">${d}</div></div>
+          <button class="btn small ${ownsPack(id)?'ghost':''}" data-pack="${id}" data-price="${pr}">${ownsPack(id)?'✓ owned':pr+' 💎'}</button>
+        </div>`).join('')}
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Themes</div>
+      ${THEMES.map(t=>{
+        const owned = ownsTheme(t.id), active = (state.theme||'night')===t.id;
+        return `<div class="shop-row">
+          <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'the original':'class colours stay put — that part is pedagogy'}</div></div>
+          <button class="btn small ${owned?'ghost':''}" data-theme-id="${t.id}" data-price="${t.price}">${active?'● active':owned?'use':t.price+' 💎'}</button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Titles · 25 💎</div>
+      ${TITLES.map(t=>{
+        const owned = state.titles.includes(t.id), active = state.title===t.id;
+        return `<div class="shop-row">
+          <div class="s-meta"><div class="s-t thai">${t.thai} <span style="font-weight:400;font-size:12px;color:var(--blue)">${t.tr}</span></div><div class="s-d">${t.en}</div></div>
+          <button class="btn small ${owned?'ghost':''}" data-title-id="${t.id}">${active?'● worn':owned?'wear':'25 💎'}</button>
+        </div>`;
+      }).join('')}
+      ${state.title?'<div class="sub" style="font-size:12px;margin-top:8px"><button class="danger-link" id="title-off">remove title</button></div>':''}
+    </div>
+    <div class="stage-actions"><button class="btn full ghost" id="st-done">Done</button></div>`;
+  renderAlbum();
+  el('pull-btn').onclick = doPull;
+  el('stage').querySelectorAll('[data-pack]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.pack;
+      if(ownsPack(id)){ toast('Already owned'); return; }
+      if(buy(+b.dataset.price, ()=>state.packs.push(id))){
+        toast('Pack unlocked — find it in Phrases'); renderShop(); renderCats(); renderPhrases();
+      }
+    });
+  });
+  el('stage').querySelectorAll('[data-theme-id]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.themeId;
+      if(ownsTheme(id)){
+        state.theme = id; saveState(); applyTheme(); renderShop(); toast('Theme on');
+      } else if(buy(+b.dataset.price, ()=>{ state.themes.push(id); state.theme = id; })){
+        applyTheme(); renderShop(); toast('Theme bought and on');
+      }
+    });
+  });
+  el('stage').querySelectorAll('[data-title-id]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.titleId;
+      if(state.titles.includes(id)){
+        state.title = id; saveState(); renderShop(); renderTitle(); toast('Title equipped');
+      } else if(buy(25, ()=>{ state.titles.push(id); state.title = id; })){
+        renderShop(); renderTitle();
+        const t = TITLES.find(x=>x.id===id);
+        toast('You are now ' + t.thai);
+      }
+    });
+  });
+  const off = el('title-off');
+  if(off) off.addEventListener('click', ()=>{ state.title = null; saveState(); renderShop(); renderTitle(); });
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+}
+function renderAlbum(){
+  el('album').innerHTML = GACHA.map(g=>{
+    const n = state.gacha[g.id] || 0;
+    return n
+      ? `<button class="cap" data-cap="${g.id}">${g.e}<span class="cnt">${g.thai}</span></button>`
+      : `<div class="cap unowned">?</div>`;
+  }).join('');
+  el('album').querySelectorAll('[data-cap]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const g = GACHA.find(x=>x.id===b.dataset.cap);
+      speak(g.thai);
+      toast(g.thai + ' · ' + g.tr + ' — ' + g.en);
+    });
+  });
+}
+function doPull(){
+  if((state.baht||0) < 10){ toast('Not enough tokens — need 10 💎'); return; }
+  award(-10);
+  const g = GACHA[Math.floor(Math.random()*GACHA.length)];
+  const dupe = !!state.gacha[g.id];
+  state.gacha[g.id] = (state.gacha[g.id]||0) + 1;
+  if(dupe) award(3);
+  saveState();
+  el('pull-zone').innerHTML = `
+    <div class="pull-stage">
+      <div class="pull-e">${g.e}</div>
+      <div class="name-thai" style="font-size:22px">${g.thai}</div>
+      <div class="translit" style="color:var(--blue)">${g.tr} — ${g.en}</div>
+      <div class="sub" style="font-size:13px;margin-top:4px">${g.fact}</div>
+      ${dupe?'<div class="sub" style="font-size:12px;color:var(--low);margin-top:4px">duplicate — 3 💎 refunded</div>':''}
+    </div>`;
+  speak(g.thai);
+  renderAlbum();
+  el('stage').querySelector('.sub').textContent = 'Balance: ' + state.baht + ' 💎';
+}
+function renderTitle(){
+  const elT = el('user-title');
+  if(!elT) return;
+  const t = TITLES.find(x=>x.id===state.title);
+  elT.style.display = t ? '' : 'none';
+  if(t) elT.textContent = t.thai + ' · ' + t.en;
+}
+
+el('token-chip').addEventListener('click', ()=>{
+  player = {type:'earn'};
+  openOverlay(); renderEarnBoard();
+});
+function weekDates(){
+  const wk = weekKey(), out = [];
+  for(let i=0;i<7;i++){
+    const d = new Date(Date.now()-i*86400000).toISOString().slice(0,10);
+    out.push(d);
+  }
+  return out;
+}
+function renderEarnBoard(){
+  setProg(0);
+  const days = state.days || {};
+  const wkPaid = weekDates().filter(d=>days[d] && days[d].paid).length;
+  const packUsed = (state.week && state.week.key===weekKey()) ? Object.keys(state.week.used||{}).length : 0;
+  const packN = (state.week && state.week.key===weekKey()) ? state.week.picks.length : 5;
+  const storiesRead = Object.keys(state.stories||{}).length;
+  const bossesWon = Object.keys(state.boss||{}).filter(u=>state.boss[u].passed).length;
+  const lic = state.toneLicence;
+  const row = (label, amount, prog) => `<div class="calib-row"><span>${label}<br><span class="sub" style="font-size:12px">${amount}</span></span><span class="pct">${prog}</span></div>`;
+  el('stage').innerHTML = `
+    <div class="center"><h2>💎 Earnings board</h2><p class="sub">Everything that pays, and where you stand this week.</p></div>
+    <div class="card">
+      <div class="eyebrow">Every day</div>
+      ${row("Complete the daily plan <span class='sub' style='font-size:12px'>(clear due cards + lesson or drill)</span>", "+10 💎 each day", wkPaid + "/7 this week")}
+      ${row("Spell it — first-try words", "+2 💎 per word", "")}
+      ${row("Class sprint at 85%+", "+3 💎", "")}
+      ${row("Flashcard wagers", "win or lose your 1–3 💎 stake", "calibration is the real game")}
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Every week</div>
+      ${row("Say a pack phrase to a real human", "+5 💎 each", packUsed + "/" + packN + " this week")}
+      ${row("Read a new story", "+3 💎 first read", storiesRead + "/" + STORIES.length + " read")}
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Milestones</div>
+      ${row("Beat a unit boss", "+20 💎 first clear", bossesWon + "/4 cleared")}
+      ${row("Tone licence", "+30 💎 first · +10 💎 per renewal", lic ? (lic.expires >= todayStr() ? "✓ valid" : "expired") : "not yet")}
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Spending it</div>
+      ${row("Streak freeze <span class='sub' style='font-size:12px'>(auto-saves a missed day)</span>", "30 💎", (state.freeze||0) + " owned")}
+      ${row("Street slang pack", "50 💎", slangOwned() ? "✓ owned" : "locked")}
+    </div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+}
+
 el('export-btn').addEventListener('click', async ()=>{
   const raw = JSON.stringify(state);
   try{
@@ -1302,7 +1624,7 @@ el('import-btn').addEventListener('click', ()=>{
 });
 
 el('buy-freeze').addEventListener('click', ()=>{
-  if((state.baht||0) < 30){ toast('Not enough baht — need 30฿'); return; }
+  if((state.baht||0) < 30){ toast('Not enough tokens — need 30 💎'); return; }
   award(-30); state.freeze = (state.freeze||0) + 1; saveState();
   el('freeze-n').textContent = state.freeze;
   toast('Streak freeze bought — auto-used if you miss a day');
@@ -1401,7 +1723,7 @@ function renderLearn(){
       else if(ready) stateTxt = 'fight →';
       bossCard.innerHTML = `
         <div class="glyphs">👑</div>
-        <div class="meta"><div class="t">Boss: Unit ${u}</div><div class="d">12 questions · 15s each · 80% to pass · ${b.passed?'cleared':'+20฿ first clear'}</div></div>
+        <div class="meta"><div class="t">Boss: Unit ${u}</div><div class="d">12 questions · 15s each · 80% to pass · ${b.passed?'cleared':'+20💎 first clear'}</div></div>
         <div class="state">${stateTxt}</div>`;
       if(ready && !attemptedToday) bossCard.addEventListener('click', ()=>startBoss(u));
       list.appendChild(bossCard);
@@ -1674,6 +1996,17 @@ function toneRow(t){
 el('tone-list').innerHTML = TONES.map(toneRow).join('');
 el('tone-list2').innerHTML = TONES2.map(toneRow).join('');
 
+el('class-sprint-btn').addEventListener('click', ()=>{
+  const met = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && state.srs['g:'+k]);
+  const pool = met.length >= 8 ? met : Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && !GLYPHS[k].rare);
+  const qs = sample(pool, Math.min(15, pool.length)).map(ch=>({
+    kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
+    options:shuffle(Object.values(CLS_LABEL)),
+    explain: GLYPHS[ch].cls==='mid' ? 'one of the chicken-pecks nine' : GLYPHS[ch].cls==='high' ? 'one of the breathy eleven' : 'not in either set → low by default'
+  }));
+  startGenericQuiz(qs, 'Class sprint', {classSprint:true});
+});
+
 el('tone-drill-btn').addEventListener('click', ()=>{
   const pool = TONES.concat(TONES2);
   const qs = sample(pool, 8).map(t=>({
@@ -1700,6 +2033,13 @@ el('tone-rule-btn').addEventListener('click', ()=>{
 ===================================================== */
 let activeCat = PHRASE_CATS[0];
 function slangOwned(){ return (state.packs||[]).includes('slang'); }
+function activeCats(){
+  const base = PHRASE_CATS.slice();
+  if((state.packs||[]).includes('teacher')) base.push('Teacher');
+  if((state.packs||[]).includes('food2')) base.push('Food+');
+  return base;
+}
+function catSrc(c){ return c==='Slang' ? SLANG : c==='Teacher' ? TEACHER : c==='Food+' ? FOOD2 : PHRASES; }
 function weekKey(){
   const d = new Date();
   const oneJan = new Date(d.getFullYear(),0,1);
@@ -1709,8 +2049,11 @@ function weekKey(){
 function ensureWeek(){
   const wk = weekKey();
   if(state.week && state.week.key === wk) return state.week;
-  const order = PHRASE_CATS.filter(c=>c!=='Slang').concat(slangOwned()?['Slang']:[]);
-  const pool = order.flatMap(c=>(c==='Slang'?SLANG:PHRASES).filter(p=>p.cat===c));
+  const order = PHRASE_CATS.filter(c=>c!=='Slang')
+    .concat((state.packs||[]).includes('teacher')?['Teacher']:[])
+    .concat((state.packs||[]).includes('food2')?['Food+']:[])
+    .concat(slangOwned()?['Slang']:[]);
+  const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c));
   const picks = pool.filter(p=>!state.srs['w:'+p.thai]).slice(0,5).map(p=>p.thai);
   picks.forEach(t=>srsAdd('w:'+t));
   state.week = {key:wk, picks, used:{}};
@@ -1739,17 +2082,17 @@ function renderPack(){
       if(state.week.used[t]) return;
       state.week.used[t] = todayStr();
       award(5); saveState();
-      toast('Said it out loud in the wild · +5฿');
+      toast('Said it out loud in the wild · +5💎');
       renderPack();
     });
   });
 }
 function catMastered(c){
-  const src = (c==='Slang'?SLANG:PHRASES).filter(p=>p.cat===c);
+  const src = catSrc(c).filter(p=>p.cat===c);
   return src.length && src.every(p=>{ const s = state.srs['w:'+p.thai]; return s && s.iv >= 7; });
 }
 function renderCats(){
-  el('cat-tabs').innerHTML = PHRASE_CATS.map(c=>{
+  el('cat-tabs').innerHTML = activeCats().map(c=>{
     const label = (c==='Slang' && !slangOwned()) ? '🔒 Slang' : c + (catMastered(c) ? ' ✓' : '');
     return `<button class="cat-tab ${c===activeCat?'active':''}" data-cat="${c}">${label}</button>`;
   }).join('');
@@ -1765,17 +2108,17 @@ function renderPhrases(){
         <div style="font-size:34px;margin-bottom:8px">🔒</div>
         <h2>Street slang pack</h2>
         <p class="sub" style="margin:8px 0 16px">10 words that make taxi drivers grin. Earned, not given.</p>
-        <button class="btn" id="buy-slang">Unlock for 50฿ (you have ${state.baht||0}฿)</button>
+        <button class="btn" id="buy-slang">Unlock for 50💎 (you have ${state.baht||0}💎)</button>
       </div>`;
     el('buy-slang').addEventListener('click', ()=>{
-      if((state.baht||0) < 50){ toast('Not enough baht — win some boss runs'); return; }
+      if((state.baht||0) < 50){ toast('Not enough tokens — win some boss runs'); return; }
       award(-50); state.packs.push('slang'); saveState();
       toast('Slang pack unlocked');
       renderCats(); renderPhrases(); renderPack();
     });
     return;
   }
-  const src = activeCat === 'Slang' ? SLANG : PHRASES;
+  const src = catSrc(activeCat);
   el('phrase-list').innerHTML = src.filter(p=>p.cat===activeCat).map(p=>{
     const id = 'w:'+p.thai, added = inSrs(id);
     return `<div class="card phrase">
@@ -1815,7 +2158,7 @@ function renderReviewTab(){
     const pct = r.n ? Math.round(100*r.c/r.n) : null;
     const target = s===1 ? '~60–75%' : s===2 ? '~75–90%' : '90%+';
     return `<div class="calib-row">
-      <span>${s}฿ bets <span class="sub" style="font-size:12px">(target ${target})</span></span>
+      <span>${s}💎 bets <span class="sub" style="font-size:12px">(target ${target})</span></span>
       <span class="pct">${pct===null ? '—' : pct + '%'} <span class="sub" style="font-size:12px">n=${r.n}</span></span>
     </div>`;
   }).join('');
@@ -1847,7 +2190,7 @@ function renderFlash(){
     const net = p.net >= 0 ? '+' + p.net : String(p.net);
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}฿</div>
+      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}💎</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
     return;
@@ -1877,12 +2220,12 @@ function renderFlash(){
     <div id="fc-action">
       <div class="q-feedback" style="margin-bottom:8px">How sure are you?</div>
       <div class="wagerrow">
-        <button class="wager" data-w="1">1฿</button>
-        <button class="wager" data-w="2">2฿</button>
-        <button class="wager" data-w="3">3฿</button>
+        <button class="wager" data-w="1">1💎</button>
+        <button class="wager" data-w="2">2💎</button>
+        <button class="wager" data-w="3">3💎</button>
       </div>
     </div>
-    <div class="q-feedback">${p.i+1} of ${p.queue.length} · ฿${state.baht||0}</div>`;
+    <div class="q-feedback">${p.i+1} of ${p.queue.length} · 💎${state.baht||0}</div>`;
   const fc = el('fc');
   if(listen) setTimeout(()=>speak(sayText), 300);
   let stake = 0;
@@ -1953,12 +2296,15 @@ function nextGenericQ(){
     bumpStreak();
     const pct = Math.round(100*p.correct/p.qs.length);
     let subline = pct>=80 ? 'Strong.' : 'Worth another pass — the deck remembers what you miss.';
+    if(p.opts.classSprint && pct >= 85){
+      award(3); subline = 'Sharp class calls · +3💎';
+    }
     if(p.opts.boss){
       const u = p.opts.boss;
       state.boss[u] = state.boss[u] || {};
       state.boss[u].lastAttempt = todayStr();
       if(pct >= 80){
-        if(!state.boss[u].passed){ state.boss[u].passed = true; award(20); subline = 'Unit ' + u + ' cleared · +20฿'; }
+        if(!state.boss[u].passed){ state.boss[u].passed = true; award(20); subline = 'Unit ' + u + ' cleared · +20💎'; }
         else subline = 'Unit ' + u + ' cleared (again).';
       } else {
         subline = 'Boss holds the gate — try again tomorrow.';
@@ -2009,7 +2355,7 @@ function renderSpell(){
     questCheck();
     el('stage').innerHTML = `
       <div class="result-big">${p.correct} / ${p.rounds.length}</div>
-      <div class="result-sub">first-try spellings · +${pay}฿</div>
+      <div class="result-sub">first-try spellings · +${pay}💎</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
     return;
@@ -2159,7 +2505,7 @@ function renderStory(s){
       </div>`).join('')}
     <div class="stage-actions">
       <button class="btn ghost" id="story-play">🔊 Read to me</button>
-      <button class="btn" id="story-done">${(state.stories||{})[s.id] ? 'Read again ✓' : 'I read it · +3฿'}</button>
+      <button class="btn" id="story-done">${(state.stories||{})[s.id] ? 'Read again ✓' : 'I read it · +3💎'}</button>
     </div>
     <div class="q-feedback" id="q-fb">Tap any word for its meaning</div>`;
   el('stage').querySelectorAll('.sw').forEach(sp=>{
@@ -2180,7 +2526,7 @@ function renderStory(s){
     const d = ensureDay(); d.d++; saveState();
     if(first) award(3);
     bumpStreak(); questCheck();
-    toast(first ? 'Story read · +3฿' : 'Read again — เก่งมาก');
+    toast(first ? 'Story read · +3💎' : 'Read again — เก่งมาก');
     renderStoryList();
   };
 }
@@ -2230,6 +2576,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   }
   ['w:นา','w:กา','w:ลาว'].forEach(k=>{ if(state.srs[k]){ delete state.srs[k]; migrated = true; } });
   if(migrated) saveState();
+  applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
 })();
 </script>

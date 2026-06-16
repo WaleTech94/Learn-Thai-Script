@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+*.log
+check.js
+validate*.js
+vdata.js
+vchecks*.js
+
+# local-only project notes (kept off the public repo)
+CLAUDE.md
+PROJECT_NOTES.md
+UPDATE_idea-engine_thai-app.md
