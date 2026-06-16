@@ -420,6 +420,26 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .story-line .sw:active{background:var(--surface2)}
 .story-card{padding:16px 18px;text-align:left}
 .story-card.locked{opacity:.45}
+/* skill constellation + personal-best lap (v2.14) — uses ACCENT palette, never the class colours */
+.constel-wrap{display:flex;gap:16px;align-items:center;margin-top:6px}
+.constel-svg{flex:0 0 132px;width:132px;height:120px}
+.constel-svg .clink{stroke:var(--line);stroke-width:2;transition:stroke .6s,opacity .6s}
+.constel-svg .cnode{transition:r .6s,opacity .6s}
+.constel-svg .cnode.ripple{animation:cripple 1.1s ease-out}
+@keyframes cripple{0%{stroke-width:0;opacity:.9}100%{stroke-width:14px;opacity:0}}
+.constel-legend{flex:1;display:flex;flex-direction:column;gap:9px}
+.cl-row{display:flex;align-items:center;gap:9px;font-size:13px}
+.cl-dot{width:11px;height:11px;border-radius:50%;flex:0 0 11px}
+.cl-bar{flex:1;height:7px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.cl-fill{height:100%;border-radius:4px;transition:width .7s ease}
+.cl-pct{font-family:'Mitr',sans-serif;font-size:12px;color:var(--muted);min-width:34px;text-align:right}
+.constel-card.aligned{border:1px solid var(--gold)}
+.lap-row{margin:10px 0}
+.lap-row .spread{margin-bottom:5px;font-size:13px}
+.lap-bar{height:9px;border-radius:5px;background:var(--surface2);overflow:hidden}
+.lap-fill{height:100%;border-radius:5px;transition:width .7s ease}
+.lap-fill.last{background:var(--accent2)}
+.lap-fill.best{background:var(--gold)}
 </style>
 </head>
 <body>
@@ -491,6 +511,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div id="showdown-tiers" class="sd-tiers"></div>
       <div class="sub" style="font-size:12px;margin-top:10px">Practise on more days this week to claim escalating bonuses. Resets each week.</div>
     </div>
+    <div class="card constel-card" id="constel-card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Your constellation</div>
+        <span class="sub" style="font-size:12px" id="constel-status">building…</span>
+      </div>
+      <div class="constel-wrap">
+        <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
+        <div class="constel-legend" id="constel-legend"></div>
+      </div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary feed each other. Grow all three to light the whole web.</div>
+    </div>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0">Your journey</div>
@@ -529,7 +560,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.13 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.14 (PWA)</div>
     </div>
   </section>
 
@@ -626,6 +657,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="card" style="margin-bottom:16px">
       <div class="eyebrow">Your calibration</div>
       <div id="calib-body"><div class="sub">Wager on flashcards to build your record. When you bet 3💎 you should be right ~90%+ of the time — if not, you're overconfident.</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="eyebrow">Personal best lap</div>
+      <div id="lap-body"><div class="sub">Your "clean run" = cards you bet 2 or 3💎 on and got right first time, out of all cards seen. Finish a flashcard session to set your first lap, then beat it.</div></div>
     </div>
     <div class="card">
       <div class="eyebrow">Transliteration key</div>
@@ -1479,7 +1514,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown();
+  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown(); renderConstellation();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
@@ -1833,6 +1868,65 @@ function renderShowdown(){
     const cls = claimed.includes(t.d) ? 'claimed' : (active >= t.d ? 'hit' : '');
     return `<div class="sd-tier ${cls}"><div class="d">${t.d} days</div><div class="r">+${t.r}💎</div></div>`;
   }).join('');
+}
+/* ---- skill constellation (v2.14) — cross-skill cohesion; accent palette only, class colours stay reserved ---- */
+const CONSTEL_TIER = {locked:0, learning:0.34, growing:0.67, mastered:1};
+function constelScores(){
+  const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  let gs = 0; cons.forEach(ch=>{ gs += CONSTEL_TIER[masteryOf('g:'+ch)]; });
+  const script = Math.round(100 * gs / Math.max(cons.length,1));
+  const li = toneAcc('listen'), ru = toneAcc('rule'), tp = [];
+  if(li.n) tp.push(li.pct); if(ru.n) tp.push(ru.pct);
+  const tone = tp.length ? Math.round(tp.reduce((a,b)=>a+b,0)/tp.length) : 0;
+  const vcards = Object.keys(state.srs).filter(k=>k.startsWith('w:')||k.startsWith('r:'));
+  let vs = 0; vcards.forEach(k=>{ vs += CONSTEL_TIER[masteryOf(k)]; });
+  const vocab = Math.round(100 * vs / Math.max(vcards.length,30));   // soft target ~30 retained words
+  return {script, tone, vocab};
+}
+function renderConstellation(){
+  const svg = el('constel-svg'); if(!svg) return;
+  const s = constelScores();
+  const nodes = [
+    {key:'script', label:'Script', pct:s.script, col:'var(--accent1)', x:66,  y:20},
+    {key:'tone',   label:'Tone',   pct:s.tone,   col:'var(--gold)',    x:22,  y:96},
+    {key:'vocab',  label:'Vocab',  pct:s.vocab,  col:'var(--accent2)', x:110, y:96},
+  ];
+  if(!state.constel) state.constel = {levels:{script:0,tone:0,vocab:0}, aligned:false};
+  if(!state.constel.levels) state.constel.levels = {script:0,tone:0,vocab:0};
+  const lvl = p => Math.floor(p/25);                       // 0..4 quartiles
+  const ripple = {};
+  nodes.forEach(n=>{ const L = lvl(n.pct); if(L > (state.constel.levels[n.key]||0)) ripple[n.key] = true; state.constel.levels[n.key] = L; });
+  const link = (a,b)=>{ const op = 0.12 + 0.88*Math.min(a.pct,b.pct)/100; return `<line class="clink" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" style="opacity:${op.toFixed(2)}"/>`; };
+  const circles = nodes.map(n=>{
+    const r = 5 + 7*n.pct/100, op = 0.35 + 0.65*n.pct/100;
+    const rip = ripple[n.key] ? `<circle class="cnode ripple" cx="${n.x}" cy="${n.y}" r="${r.toFixed(1)}" fill="none" stroke="${n.col}"/>` : '';
+    return `${rip}<circle class="cnode" cx="${n.x}" cy="${n.y}" r="${r.toFixed(1)}" fill="${n.col}" style="opacity:${op.toFixed(2)}"/>`;
+  }).join('');
+  svg.innerHTML = link(nodes[0],nodes[1]) + link(nodes[1],nodes[2]) + link(nodes[0],nodes[2]) + circles;
+  el('constel-legend').innerHTML = nodes.map(n=>
+    `<div class="cl-row"><span class="cl-dot" style="background:${n.col}"></span><span style="min-width:42px">${n.label}</span><span class="cl-bar"><span class="cl-fill" style="width:${n.pct}%;background:${n.col}"></span></span><span class="cl-pct">${n.pct}%</span></div>`).join('');
+  const card = el('constel-card'), aligned = s.script>=55 && s.tone>=55 && s.vocab>=55;
+  if(aligned && !state.constel.aligned){
+    state.constel.aligned = true; if(card) card.classList.add('aligned');
+    el('constel-status').textContent = 'aligned ✦ +15💎';
+    award(15); toast('✦ Constellation aligned — all three skills strong · +15💎');
+  } else {
+    if(card) card.classList.toggle('aligned', !!state.constel.aligned);
+    el('constel-status').textContent = state.constel.aligned ? 'aligned ✦' : Math.round((s.script+s.tone+s.vocab)/3) + '% lit';
+  }
+  saveState();
+}
+/* ---- personal best lap (v2.14) — session clean-run % vs your best ---- */
+function renderLap(){
+  const host = el('lap-body'); if(!host) return;
+  const lap = state.lap;
+  if(!lap || !lap.lastDate){ return; }   // keep the default prompt until first lap
+  const bar = (label, pct, cls) =>
+    `<div class="lap-row"><div class="spread"><span>${label}</span><span class="pct" style="font-family:'Mitr',sans-serif">${pct}%</span></div><div class="lap-bar"><span class="lap-fill ${cls}" style="width:${pct}%"></span></div></div>`;
+  host.innerHTML =
+    bar('Last session' + (lap.lastDate===todayStr()?' (today)':''), lap.last||0, 'last') +
+    bar('All-time best', lap.best||0, 'best') +
+    `<div class="sub" style="font-size:12px;margin-top:4px">Beat your best by betting confidently and being right first time. New records pay +3💎.</div>`;
 }
 function renderProgressWall(){
   const host = el('progress-wall'); if(!host) return;
@@ -2382,6 +2476,7 @@ function renderReviewTab(){
     </div>`;
   }).join('');
   el('calib-body').innerHTML = rows + (state.wagerBest ? `<div class="calib-row"><span>🎯 best wager streak</span><span class="pct">${state.wagerBest} in a row</span></div>` : '');
+  renderLap();
 }
 el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
@@ -2397,7 +2492,7 @@ el('cta-quiz').addEventListener('click', ()=>{
 });
 
 function startFlashcards(queue){
-  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0};
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0, cleanFirst:0, seen:{}};
   openOverlay(); renderFlash();
 }
 function renderFlash(){
@@ -2412,6 +2507,20 @@ function renderFlash(){
     } else if((p.wmax||0) >= 2){
       bestLine = `<div class="result-sub">best wager run this session: ${p.wmax} in a row</div>`;
     }
+    // personal best lap: clean run = confident-and-right-first-time / cards seen (min 5 cards)
+    let lapLine = '';
+    const seenN = Object.keys(p.seen||{}).length;
+    if(seenN >= 5){
+      const lap = Math.round(100 * (p.cleanFirst||0) / seenN);
+      if(!state.lap) state.lap = {best:0, last:0, lastDate:null};
+      state.lap.last = lap; state.lap.lastDate = todayStr();
+      if(lap > (state.lap.best||0)){
+        state.lap.best = lap; award(3); p.net += 3;
+        lapLine = `<div class="result-sub" style="color:var(--gold)">🏁 New personal best lap: ${lap}% clean · +3💎</div>`;
+      } else {
+        lapLine = `<div class="result-sub">clean run this lap: ${lap}% · best ${state.lap.best}%</div>`;
+      }
+    }
     saveState();
     bumpStreak(); questCheck();
     const net = p.net >= 0 ? '+' + p.net : String(p.net);
@@ -2419,6 +2528,7 @@ function renderFlash(){
       <div class="result-big">เก่งมาก</div>
       <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}💎</div>
       ${bestLine}
+      ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
     return;
@@ -2473,6 +2583,8 @@ function renderFlash(){
   function resolve(right){
     const cal = state.calib[stake] || (state.calib[stake] = {n:0,c:0});
     cal.n++; if(right) cal.c++;
+    const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
+    if(firstAttempt && right && stake >= 2) p.cleanFirst++;   // clean run: confident + right first time
     if(right){
       award(stake); p.net += stake; srsGrade(id, stake); // 1=Hard 2=Good 3=Easy
       p.wstreak++; if(p.wstreak > p.wmax) p.wmax = p.wstreak;

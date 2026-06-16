@@ -10,3 +10,9 @@ vchecks*.js
 CLAUDE.md
 PROJECT_NOTES.md
 UPDATE_idea-engine_thai-app.md
+
+# idea-engine experiment harness + its outputs (never on git)
+idea-engine/
+
+# local-only visual look preview (never on git)
+look-preview.html
