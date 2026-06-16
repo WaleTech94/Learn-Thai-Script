@@ -510,7 +510,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.11 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.12 (PWA)</div>
     </div>
   </section>
 
@@ -2357,7 +2357,7 @@ function renderReviewTab(){
       <span class="pct">${pct===null ? '—' : pct + '%'} <span class="sub" style="font-size:12px">n=${r.n}</span></span>
     </div>`;
   }).join('');
-  el('calib-body').innerHTML = rows;
+  el('calib-body').innerHTML = rows + (state.wagerBest ? `<div class="calib-row"><span>🎯 best wager streak</span><span class="pct">${state.wagerBest} in a row</span></div>` : '');
 }
 el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
@@ -2373,19 +2373,28 @@ el('cta-quiz').addEventListener('click', ()=>{
 });
 
 function startFlashcards(queue){
-  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0};
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0};
   openOverlay(); renderFlash();
 }
 function renderFlash(){
   const p = player;
   if(p.i >= p.queue.length){
     setProg(100);
-    const d = ensureDay(); d.r += p.reviewed; saveState();
+    const d = ensureDay(); d.r += p.reviewed;
+    let bestLine = '';
+    if((p.wmax||0) >= 3 && (p.wmax||0) > (state.wagerBest||0)){
+      state.wagerBest = p.wmax; award(3); p.net += 3;
+      bestLine = `<div class="result-sub" style="color:var(--gold)">🎯 New best wager streak: ${p.wmax} in a row · +3💎</div>`;
+    } else if((p.wmax||0) >= 2){
+      bestLine = `<div class="result-sub">best wager run this session: ${p.wmax} in a row</div>`;
+    }
+    saveState();
     bumpStreak(); questCheck();
     const net = p.net >= 0 ? '+' + p.net : String(p.net);
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
       <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}💎</div>
+      ${bestLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
     return;
@@ -2440,8 +2449,14 @@ function renderFlash(){
   function resolve(right){
     const cal = state.calib[stake] || (state.calib[stake] = {n:0,c:0});
     cal.n++; if(right) cal.c++;
-    if(right){ award(stake); p.net += stake; srsGrade(id, stake); } // 1=Hard 2=Good 3=Easy
-    else { award(-stake); p.net -= stake; srsGrade(id, 0); p.queue.push(id); }
+    if(right){
+      award(stake); p.net += stake; srsGrade(id, stake); // 1=Hard 2=Good 3=Easy
+      p.wstreak++; if(p.wstreak > p.wmax) p.wmax = p.wstreak;
+      if(p.wstreak % 5 === 0){ award(2); p.net += 2; toast('🎯 ' + p.wstreak + ' wagers in a row · +2💎'); }
+    } else {
+      award(-stake); p.net -= stake; srsGrade(id, 0); p.queue.push(id);
+      p.wstreak = 0;
+    }
     p.reviewed++;
     p.i++; renderFlash();
   }
