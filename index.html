@@ -25,6 +25,9 @@
   --high:#FF5C9E;     /* high class — pink */
   --low:#FFB23E;      /* low class — marigold */
   --blue:#7FA8FF;
+  --gold:#FFD24A;
+  --accent1:#9A6BFF;
+  --accent2:#5BA8FF;
   --good:#5BD179;
   --bad:#FF6B6B;
   --radius:18px;
@@ -343,6 +346,22 @@ body[data-theme="songkran"]{
   --bg:#121024; --surface:#1B1834; --surface2:#241F44; --line:#332C5C;
   --blue:#8FB8FF;
 }
+/* free appearance looks (v2.13) — class colours (mid/high/low) deliberately untouched */
+body[data-theme="depth"]{ background:radial-gradient(1100px 560px at 50% -8%, #1e2434, #14161D 70%); }
+body[data-theme="depth"] .card{ background:linear-gradient(158deg,#232838,#191c26); box-shadow:0 8px 22px rgba(0,0,0,.38); border-color:#333a4e; }
+body[data-theme="accent"]{ background:radial-gradient(1100px 560px at 50% -8%, #1e2434, #14161D 70%); }
+body[data-theme="accent"] .card{ background:linear-gradient(158deg,#232838,#191c26); box-shadow:0 8px 22px rgba(0,0,0,.38); }
+body[data-theme="accent"] .btn:not(.ghost):not(.small):not(.danger-link),
+body[data-theme="full"] .btn:not(.ghost):not(.small):not(.danger-link){ background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; border:none; box-shadow:0 6px 18px rgba(122,92,255,.35); }
+body[data-theme="accent"] #token-chip, body[data-theme="full"] #token-chip{ background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; border:none; }
+body[data-theme="bangkok"], body[data-theme="full"]{ background:linear-gradient(168deg,#0E1330 0%, #1C1140 46%, #0B1E2C 100%); }
+body[data-theme="bangkok"] .card, body[data-theme="full"] .card{ background:rgba(28,22,52,.66); border:1px solid rgba(150,120,255,.22); backdrop-filter:blur(7px); box-shadow:0 8px 26px rgba(0,0,0,.4); }
+body[data-theme="bangkok"] .glyph-hero, body[data-theme="full"] .glyph-hero{ box-shadow:0 0 34px rgba(154,107,255,.28); }
+body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body[data-theme="full"] .streak, body[data-theme="full"] #token-chip{ box-shadow:0 0 16px rgba(127,168,255,.3); }
+.juice .btn, .juice .cta-card, .juice .wager, .juice .tile{ transition:transform .12s ease, box-shadow .2s ease; }
+.juice .btn:active, .juice .cta-card:active, .juice .wager:active{ transform:scale(.95); }
+.juice #token-chip{ animation:gpulse 2.6s ease-in-out infinite; }
+@keyframes gpulse{ 0%,100%{ box-shadow:0 0 0 rgba(255,210,74,0);} 50%{ box-shadow:0 0 16px rgba(255,210,74,.5);} }
 #statusbar-scrim{transition:background .2s}
 .album{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .cap{aspect-ratio:1;border-radius:13px;background:var(--surface2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:26px}
@@ -510,7 +529,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.12 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.13 (PWA)</div>
     </div>
   </section>
 
@@ -1061,6 +1080,10 @@ const FOOD2 = [
 ];
 const THEMES = [
  {id:"night", name:"Night market", price:0},
+ {id:"depth", name:"Depth", price:0},
+ {id:"accent", name:"Accent", price:0},
+ {id:"bangkok", name:"Bangkok night", price:0},
+ {id:"full", name:"Full bold", price:0},
  {id:"day", name:"Day market", price:40},
  {id:"bts", name:"Skytrain", price:40},
  {id:"songkran", name:"Songkran", price:40}
@@ -1499,9 +1522,10 @@ el('wai-banner').addEventListener('click', ()=>{
   startFlashcards(weak);
 });
 function ownsPack(p){ return (state.packs||[]).includes(p); }
-function ownsTheme(t){ return t==='night' || (state.themes||[]).includes(t); }
+function ownsTheme(t){ const th = THEMES.find(x=>x.id===t); return (th && th.price===0) || (state.themes||[]).includes(t); }
 function applyTheme(){
   document.body.dataset.theme = state.theme || 'night';
+  document.body.classList.toggle('juice', (state.theme || '') === 'full');
 }
 function buy(cost, fn){
   if((state.baht||0) < cost){ toast('Not enough tokens — need ' + cost + ' 💎'); return false; }
