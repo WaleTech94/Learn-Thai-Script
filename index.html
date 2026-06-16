@@ -595,7 +595,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.17 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.18 (PWA)</div>
     </div>
   </section>
 
@@ -641,6 +641,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="phrase-list" id="tone-list2"></div>
     <div class="section-gap"></div>
     <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
+    <button class="btn full" id="twins-btn" style="margin-top:10px">Sound twins · hear tone &amp; length apart</button>
     <div style="height:10px"></div>
     <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
     <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
@@ -1051,6 +1052,23 @@ const TONES2 = [
   {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ไม้", tr:"máai", en:"wood"},
   {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle"}
 ];
+/* minimal pairs/sets — segmentally identical, differ ONLY by tone or vowel length.
+   Every tone verified against the grid via idea-engine/tone-validator.js (Rung 1: hear the difference). */
+const TONE_SETS = [
+  [{t:"ขาว",tr:"khǎao",en:"white"},{t:"ข้าว",tr:"khâao",en:"rice"},{t:"ข่าว",tr:"khàao",en:"news"}],
+  [{t:"เสือ",tr:"sǔea",en:"tiger"},{t:"เสื้อ",tr:"sûea",en:"shirt"},{t:"เสื่อ",tr:"sùea",en:"a mat"}],
+  [{t:"มา",tr:"maa",en:"to come"},{t:"ม้า",tr:"máa",en:"horse"},{t:"หมา",tr:"mǎa",en:"dog"}],
+  [{t:"ปา",tr:"bpaa",en:"to throw"},{t:"ป่า",tr:"bpàa",en:"forest"},{t:"ป้า",tr:"bpâa",en:"aunt"}],
+  [{t:"ไม้",tr:"máai",en:"wood"},{t:"ไม่",tr:"mâi",en:"not"},{t:"ไหม",tr:"mǎi",en:"silk"},{t:"ใหม่",tr:"mài",en:"new"}],
+  [{t:"นา",tr:"naa",en:"rice field"},{t:"น่า",tr:"nâa",en:"worth doing"}],
+];
+const LENGTH_PAIRS = [
+  [{t:"ฝัน",tr:"fǎn",en:"to dream"},{t:"ฝาน",tr:"fǎan",en:"to slice"}],
+  [{t:"ทัน",tr:"than",en:"in time"},{t:"ทาน",tr:"thaan",en:"to eat"}],
+  [{t:"วัน",tr:"wan",en:"day"},{t:"วาน",tr:"waan",en:"yesterday"}],
+  [{t:"กับ",tr:"gàp",en:"with"},{t:"กาบ",tr:"gàap",en:"sheath"}],
+  [{t:"นับ",tr:"náp",en:"to count"},{t:"นาบ",tr:"nâap",en:"to press flat"}],
+];
 
 const PHRASE_CATS = ["Politeness","Numbers","Food","Taxi","Shopping","Survival","Slang"];
 const SLANG = [
@@ -1322,6 +1340,7 @@ const RUNGS = [
 ];
 const DRILLS = [
   {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l1',  go:()=>el('tone-drill-btn').click()},
+  {id:'twins',       title:'Sound twins',       rung:1, gate:'l1',  go:()=>el('twins-btn').click()},
   {id:'phrases',     title:'Phrase pack',       rung:1, gate:'l1',  go:()=>gotoView('phrases')},
   {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
@@ -2485,6 +2504,21 @@ el('tone-drill-btn').addEventListener('click', ()=>{
     explain: t.thai + ' ' + t.tr + ' (' + t.en + ')'
   }));
   startGenericQuiz(qs, 'Tone drill', {toneLog:'listen'});
+});
+
+/* sound twins (v2.18) — Rung 1: hear the tone/length difference between segmentally identical words */
+el('twins-btn').addEventListener('click', ()=>{
+  const pool = TONE_SETS.concat(LENGTH_PAIRS);
+  const sets = sample(pool, Math.min(10, pool.length));
+  const qs = sets.map(set=>{
+    const tgt = sample(set, 1)[0];
+    return {
+      kind:'mcq', text:`Listen — which one means "${tgt.en}"?`, say:tgt.t, autoplay:true,
+      options: shuffle(set.map(m=>m.t)), thaiOpts:true, answer:tgt.t,
+      explain: set.map(m=>`${m.t} ${m.tr} (${m.en})`).join('  ·  ')
+    };
+  });
+  startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
 });
 
 el('tone-rule-btn').addEventListener('click', ()=>{
