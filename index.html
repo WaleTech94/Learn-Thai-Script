@@ -473,6 +473,8 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .path-node.done{border-color:var(--blue)}
 .path-node.next{border-color:var(--gold);background:var(--surface);box-shadow:0 0 0 1px var(--gold)}
 .path-soon{font-size:12px;color:var(--muted)}
+/* echo chamber (v2.19) — shadow & self-rate */
+.echo-word{font-family:'Mitr',sans-serif;font-size:52px;text-align:center;margin:12px 0;line-height:1.3}
 </style>
 </head>
 <body>
@@ -595,7 +597,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.18 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.19 (PWA)</div>
     </div>
   </section>
 
@@ -642,6 +644,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="section-gap"></div>
     <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
     <button class="btn full" id="twins-btn" style="margin-top:10px">Sound twins · hear tone &amp; length apart</button>
+    <button class="btn full ghost" id="echo-btn" style="margin-top:10px">Echo chamber · shadow the tones aloud</button>
     <div style="height:10px"></div>
     <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
     <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
@@ -1341,6 +1344,7 @@ const RUNGS = [
 const DRILLS = [
   {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l1',  go:()=>el('tone-drill-btn').click()},
   {id:'twins',       title:'Sound twins',       rung:1, gate:'l1',  go:()=>el('twins-btn').click()},
+  {id:'echo',        title:'Echo chamber',      rung:1, gate:'l1',  go:()=>el('echo-btn').click()},
   {id:'phrases',     title:'Phrase pack',       rung:1, gate:'l1',  go:()=>gotoView('phrases')},
   {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
@@ -1565,14 +1569,14 @@ if('speechSynthesis' in window){
   pickVoice();
   speechSynthesis.onvoiceschanged = pickVoice;
 }
-function speak(text, btn){
+function speak(text, btn, rate){
   if(!('speechSynthesis' in window)){ toast('Speech not supported on this device'); return; }
   if(!thaiVoice) pickVoice();
   if(!thaiVoice && !voiceWarned){ toast('No Thai voice found — install one in device settings'); voiceWarned = true; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   if(thaiVoice) u.voice = thaiVoice;
-  u.lang = 'th-TH'; u.rate = 0.75;
+  u.lang = 'th-TH'; u.rate = rate || 0.75;
   if(btn){ btn.classList.add('playing'); u.onend = ()=>btn.classList.remove('playing'); u.onerror = ()=>btn.classList.remove('playing'); }
   speechSynthesis.speak(u);
 }
@@ -2520,6 +2524,47 @@ el('twins-btn').addEventListener('click', ()=>{
   });
   startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
 });
+
+/* echo chamber (v2.19) — Rung 1 "say": shadow a model word aloud, replay slow, self-rate */
+el('echo-btn').addEventListener('click', ()=>{
+  const pool = TONES.concat(TONES2).concat(TONE_SETS.flat()).concat(LENGTH_PAIRS.flat())
+    .map(w=>({t:w.thai||w.t, tr:w.tr, en:w.en}));
+  player = {type:'echo', rounds:sample(pool, 8), i:0};
+  openOverlay(); renderEcho();
+});
+function renderEcho(){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    const d = ensureDay(); d.d++; saveState(); bumpStreak(); award(2); questCheck();
+    el('stage').innerHTML = `
+      <div class="result-big">เก่งมาก</div>
+      <div class="result-sub">${p.rounds.length} words shadowed · +2💎</div>
+      <div class="result-sub" style="font-size:12px">Tones from a synthetic voice are approximate — trust your ear over the model.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+    return;
+  }
+  const r = p.rounds[p.i];
+  el('stage').innerHTML = `
+    <div class="q-feedback">Listen, then say it aloud · ${p.i+1} of ${p.rounds.length}</div>
+    <div class="echo-word">${esc(r.t)}</div>
+    <div class="fc-tr" style="text-align:center;color:var(--muted)">${r.tr} · ${r.en}</div>
+    <div class="row" style="justify-content:center;gap:10px;margin:14px 0">
+      ${speakBtn(r.t)}
+      <button class="btn small ghost" id="echo-slow">🐢 slow</button>
+    </div>
+    <div class="q-feedback" style="margin-bottom:8px">Now shadow it — how close were you?</div>
+    <div class="rw-grid" id="echo-rate">
+      <button class="btn" data-r="off">Off</button>
+      <button class="btn" data-r="close">Close</button>
+      <button class="btn" style="background:var(--good);color:var(--bg)" data-r="got">Nailed it</button>
+    </div>`;
+  setTimeout(()=>speak(r.t), 350);
+  el('echo-slow').onclick = ()=>speak(r.t, el('echo-slow'), 0.4);
+  el('echo-rate').querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click', ()=>{ p.i++; renderEcho(); }));
+}
 
 el('tone-rule-btn').addEventListener('click', ()=>{
   let pool = learnedWords().filter(monoSyllable);
