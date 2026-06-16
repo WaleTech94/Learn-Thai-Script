@@ -462,6 +462,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .ghost-opt.low{color:var(--low);border-color:var(--low)}
 .ghost-opt.right{background:var(--good);color:var(--bg);border-color:var(--good)}
 .ghost-opt.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
+/* training path (v2.17) — the 5-rung communication-first drill ladder */
+.path-rung{padding:10px 0;border-bottom:1px solid var(--line)}
+.path-rung:last-child{border-bottom:none}
+.path-rlabel{font-size:13px;margin-bottom:7px}
+.path-rlabel b{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--surface2);color:var(--text);align-items:center;justify-content:center;font-size:12px;font-family:'Mitr',sans-serif;margin-right:7px;vertical-align:middle}
+.path-nodes{display:flex;gap:8px;flex-wrap:wrap}
+.path-node{padding:7px 12px;border-radius:11px;background:var(--surface2);border:1px solid var(--line);font-size:13px;color:var(--text)}
+.path-node.locked{opacity:.42;font-size:12px}
+.path-node.done{border-color:var(--blue)}
+.path-node.next{border-color:var(--gold);background:var(--surface);box-shadow:0 0 0 1px var(--gold)}
+.path-soon{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -584,7 +595,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.16 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.17 (PWA)</div>
     </div>
   </section>
 
@@ -656,6 +667,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="eyebrow">Practice</div>
     <h1 style="margin-bottom:4px">Keep it sticky</h1>
     <p class="sub" style="margin-bottom:18px">Spaced repetition on everything you've learned, plus a mixed quiz.</p>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Your training path</div>
+        <span class="sub" style="font-size:12px" id="path-next">—</span>
+      </div>
+      <div id="path-body"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Hear &amp; say first, edge cases last. The gold drill is your best next move; locked ones open as you reach the lesson.</div>
+    </div>
     <div class="homecta">
       <button class="card cta-card" id="cta-flash">
         <div><div class="t">Flashcards</div><div class="d" id="flash-sub">0 cards due</div></div>
@@ -1293,13 +1312,65 @@ function ensureDay(){
   }
   return state.days[t];
 }
-const DRILL_ROTA = ['Confusion clinic','Glyph ghost','Tone listening drill','Spell it','Tone-rule trainer','Class sprint'];
+/* ---- training path (v2.17): communication-first drill ladder + recommender ---- */
+const RUNGS = [
+  {n:1, title:'Hear & say',        sub:'tones + useful phrases'},
+  {n:2, title:'Build sentences',   sub:'words + patterns'},
+  {n:3, title:'Read what you say', sub:'decode + tone rules'},
+  {n:4, title:'Fluency',           sub:'read & listen at speed'},
+  {n:5, title:'Edge cases',        sub:'rare letters — recognition only'},
+];
+const DRILLS = [
+  {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l1',  go:()=>el('tone-drill-btn').click()},
+  {id:'phrases',     title:'Phrase pack',       rung:1, gate:'l1',  go:()=>gotoView('phrases')},
+  {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
+  {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
+  {id:'sprint',      title:'Class sprint',      rung:3, gate:'l5',  go:()=>el('class-sprint-btn').click()},
+  {id:'ghost',       title:'Glyph ghost',       rung:3, gate:'l7',  go:()=>el('cta-ghost').click()},
+  {id:'tone-rule',   title:'Tone-rule trainer', rung:3, gate:'l13', go:()=>el('tone-rule-btn').click()},
+  {id:'reading',     title:'Reading room',      rung:4, gate:'l4',  go:()=>el('cta-read').click()},
+];
+// edge-case drills (Silent-Letter, rare-letter recognition) register at rung 5 when built — never gating.
+function drillUnlocked(d){ return (state.done||[]).includes(d.gate); }
+function nextDrill(){
+  const avail = DRILLS.filter(drillUnlocked);
+  if(!avail.length) return null;
+  const log = state.drillLog || {};
+  const last = id => (log[id] && log[id].last) || '';                  // '' = never practised → sorts first
+  avail.sort((a,b)=> a.rung - b.rung || last(a.id).localeCompare(last(b.id)) || a.id.localeCompare(b.id));
+  return avail[0];
+}
+function launchDrill(id){
+  const d = DRILLS.find(x=>x.id===id); if(!d) return;
+  if(!state.drillLog) state.drillLog = {};
+  state.drillLog[id] = {n:((state.drillLog[id]||{}).n||0)+1, last:todayStr()};
+  saveState();
+  d.go();
+}
+function renderPath(){
+  const host = el('path-body'); if(!host) return;
+  const next = nextDrill();
+  el('path-next').textContent = next ? 'next: ' + next.title : 'finish lesson 1 to begin';
+  host.innerHTML = RUNGS.map(r=>{
+    const ds = DRILLS.filter(x=>x.rung===r.n);
+    const nodes = ds.length ? ds.map(d=>{
+      const open = drillUnlocked(d), isNext = next && next.id===d.id;
+      const practised = state.drillLog && state.drillLog[d.id];
+      const cls = !open ? 'locked' : isNext ? 'next' : practised ? 'done' : '';
+      const label = open ? d.title : d.title + ' · l' + d.gate.slice(1);
+      return `<button class="path-node ${cls}" ${open ? 'data-drill="'+d.id+'"' : 'disabled'}>${label}</button>`;
+    }).join('') : '<span class="path-soon">coming soon</span>';
+    return `<div class="path-rung"><div class="path-rlabel"><b>${r.n}</b>${r.title} <span class="sub">· ${r.sub}</span></div><div class="path-nodes">${nodes}</div></div>`;
+  }).join('');
+  host.querySelectorAll('[data-drill]').forEach(b=>b.addEventListener('click', ()=>launchDrill(b.dataset.drill)));
+}
 function renderPlan(){
   const d = ensureDay();
   if(!el('plan-title')) return;
   const isL = d.type !== 'C';
   const due = srsDue().length;
-  const sugg = DRILL_ROTA[Math.floor(Date.now()/86400000) % DRILL_ROTA.length];
+  const nd = nextDrill();                                   // progression-aware, not date-random
+  const sugg = nd ? nd.title : 'a quick drill';
   el('plan-title').textContent = isL ? "Today's plan · Lesson day" : "Today's plan · Consolidation day";
   el('plan-1').textContent = due ? 'Clear your due cards (' + due + ' left)' : 'Clear your due cards';
   if(isL){
@@ -2570,6 +2641,7 @@ function renderReviewTab(){
   }).join('');
   el('calib-body').innerHTML = rows + (state.wagerBest ? `<div class="calib-row"><span>🎯 best wager streak</span><span class="pct">${state.wagerBest} in a row</span></div>` : '');
   renderLap();
+  renderPath();
 }
 el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
