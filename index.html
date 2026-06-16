@@ -451,6 +451,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .bounty-row{display:flex;align-items:center;gap:9px;margin:8px 0}
 .bounty-row.claimed{opacity:.5}
 .bounty-row .b-amt{font-family:'Mitr',sans-serif;font-size:12px;color:var(--gold);flex:none}
+/* glyph ghost (v2.16) — lookalike discrimination; option glyphs in their class colours (correct use) */
+.ghost-word{font-family:'Mitr',sans-serif;font-size:46px;text-align:center;margin:14px 0;line-height:1.4}
+.ghost-target{display:inline-block;animation:ghostresolve 1.2s ease forwards}
+@keyframes ghostresolve{0%{filter:blur(2.2px);opacity:.32}70%{filter:blur(1.4px);opacity:.5}100%{filter:blur(0);opacity:1}}
+.ghost-opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.ghost-opt{min-width:62px;height:62px;font-family:'Mitr',sans-serif;font-size:30px;border-radius:14px;background:var(--surface2);border:2px solid var(--line);color:var(--text)}
+.ghost-opt.mid{color:var(--mid);border-color:var(--mid)}
+.ghost-opt.high{color:var(--high);border-color:var(--high)}
+.ghost-opt.low{color:var(--low);border-color:var(--low)}
+.ghost-opt.right{background:var(--good);color:var(--bg);border-color:var(--good)}
+.ghost-opt.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
 </style>
 </head>
 <body>
@@ -573,7 +584,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.15 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.16 (PWA)</div>
     </div>
   </section>
 
@@ -660,6 +671,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </button>
       <button class="card cta-card" id="cta-clinic">
         <div><div class="t">Confusion clinic</div><div class="d">Drill the lookalike letters you mix up</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="cta-ghost">
+        <div><div class="t">Glyph ghost</div><div class="d">Spot the right lookalike before the blur lifts</div></div>
         <span style="font-size:20px">→</span>
       </button>
       <button class="card cta-card" id="cta-read">
@@ -1278,7 +1293,7 @@ function ensureDay(){
   }
   return state.days[t];
 }
-const DRILL_ROTA = ['Confusion clinic','Tone listening drill','Spell it','Tone-rule trainer','Class sprint'];
+const DRILL_ROTA = ['Confusion clinic','Glyph ghost','Tone listening drill','Spell it','Tone-rule trainer','Class sprint'];
 function renderPlan(){
   const d = ensureDay();
   if(!el('plan-title')) return;
@@ -2898,6 +2913,89 @@ el('cta-clinic').addEventListener('click', ()=>{
   }
   startGenericQuiz(qs, 'Clinic', {clinic:true});
 });
+
+/* =====================================================
+   GLYPH GHOST — lookalike discrimination in real words (v2.16)
+===================================================== */
+const GH_COMB = /[ัิ-ฺ็-๎]/;        // Thai combining vowels / tone marks
+function graphemes(thai){
+  const out = [];
+  for(const ch of thai){ if(GH_COMB.test(ch) && out.length) out[out.length-1] += ch; else out.push(ch); }
+  return out;
+}
+const SET_OF = {}; CONF_SETS.forEach(s=>s.forEach(c=>{ SET_OF[c] = s; }));
+function ghostPool(){
+  const met = ch => !!state.srs['g:'+ch];
+  const seen = {}, out = [];
+  Object.keys(state.srs).forEach(k=>{
+    if(!(k.startsWith('w:') || k.startsWith('r:'))) return;
+    const c = state.srs[k]; if(!c || c.iv < 4) return;        // mastery tier: growing/mastered words only
+    const thai = k.slice(2); if(seen[thai]) return; seen[thai] = 1;
+    const w = findWord(thai); if(!w || w.thai.includes(' ')) return;
+    const gs = graphemes(thai), cand = [];
+    gs.forEach((gph,i)=>{ const base = gph[0]; if(SET_OF[base] && met(base)) cand.push(i); });
+    if(cand.length) out.push({thai, tr:w.tr, en:w.en, gs, idx:cand[Math.floor(Math.random()*cand.length)]});
+  });
+  return out;
+}
+el('cta-ghost').addEventListener('click', ()=>{
+  const pool = ghostPool();
+  if(pool.length < 4){ toast('Master a few more words first — Glyph Ghost needs them'); return; }
+  if(!state.confs) state.confs = {};
+  const wgt = it => 1 + (state.confs[(SET_OF[it.gs[it.idx][0]]||[]).join('')] || 0) * 2;
+  const rounds = [], bag = pool.slice(), n = Math.min(12, Math.max(6, pool.length));
+  for(let i=0;i<n;i++){
+    if(!bag.length) bag.push(...pool);
+    const tot = bag.reduce((a,it)=>a+wgt(it),0);
+    let r = Math.random()*tot, pi = 0;
+    for(let j=0;j<bag.length;j++){ r -= wgt(bag[j]); if(r<=0){ pi = j; break; } }
+    rounds.push(bag.splice(pi,1)[0]);
+  }
+  player = {type:'ghost', rounds, i:0, correct:0, fast:0};
+  openOverlay(); renderGhost();
+});
+function renderGhost(){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    const d = ensureDay(); d.d++; saveState(); bumpStreak();
+    if(p.fast) award(p.fast);
+    questCheck();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.correct} / ${p.rounds.length}</div>
+      <div class="result-sub">${p.fast} read before the blur lifted · +${p.fast}💎</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+    return;
+  }
+  const met = ch => !!state.srs['g:'+ch];
+  const it = p.rounds[p.i], base = it.gs[it.idx][0], set = SET_OF[base];
+  let opts = set.filter(met); if(!opts.includes(base)) opts.push(base); if(opts.length < 2) opts = set.slice();
+  const word = it.gs.map((gph,i)=> i===it.idx ? `<span class="ghost-target">${esc(gph)}</span>` : esc(gph)).join('');
+  el('stage').innerHTML = `
+    <div class="q-feedback">Which letter is hidden? Tap before it sharpens · ${p.i+1} of ${p.rounds.length}</div>
+    <div class="ghost-word">${word}</div>
+    <div class="fc-tr" style="text-align:center;color:var(--muted)">${it.tr} · ${it.en}</div>
+    <div class="ghost-opts" id="ghost-opts"></div>`;
+  const host = el('ghost-opts');
+  host.innerHTML = shuffle(opts).map(c=>`<button class="ghost-opt ${GLYPHS[c].cls}" data-c="${c}">${c}</button>`).join('');
+  const t0 = Date.now(); let done = false;
+  host.querySelectorAll('[data-c]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      if(done) return; done = true;
+      const right = b.dataset.c === base, fast = (Date.now()-t0) < 1200;
+      if(right){ b.classList.add('right'); p.correct++; if(fast) p.fast++; speak(it.thai); }
+      else {
+        b.classList.add('wrong');
+        host.querySelectorAll('[data-c="'+base+'"]').forEach(x=>x.classList.add('right'));
+        state.confs[set.join('')] = (state.confs[set.join('')]||0) + 1; saveState();
+        p.rounds.push(it);                                    // requeue the missed word in-session
+      }
+      setTimeout(()=>{ p.i++; renderGhost(); }, right ? 650 : 1100);
+    });
+  });
+}
 
 /* =====================================================
    READING ROOM — decodable stories
