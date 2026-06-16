@@ -385,7 +385,7 @@ body[data-theme="songkran"]{
 <main id="views">
 
   <!-- HOME -->
-  <section class="view" id="view-home">
+  <section class="view active" id="view-home">
     <header>
       <div>
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan — to read</span></div>
@@ -422,6 +422,10 @@ body[data-theme="songkran"]{
       <div class="quest-line" id="plan-l3"><span class="qc">✓</span><span id="plan-3">One drill</span></div>
       <div class="sub" style="font-size:12px;margin-top:8px;border-top:1px solid var(--line);padding-top:8px" id="plan-week"></div>
     </div>
+    <button class="card cta-card" id="wai-banner" style="display:none;border:1px solid var(--gold)">
+      <div><div class="t">🌅 Morning warm-up</div><div class="d" id="wai-sub">Replay your trickiest cards</div></div>
+      <span style="font-size:20px">→</span>
+    </button>
     <div class="homecta">
       <button class="card cta-card" id="cta-lesson">
         <div><div class="t" id="cta-lesson-title">Start Lesson 1</div><div class="d" id="cta-lesson-sub">First sounds: ก น ม</div></div>
@@ -466,7 +470,7 @@ body[data-theme="songkran"]{
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.7 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.8 (PWA)</div>
     </div>
   </section>
 
@@ -1223,6 +1227,11 @@ function srsGrade(id, grade){ // 0 again, 1 hard, 2 good, 3 easy
   c.due = d.toISOString().slice(0,10);
   saveState();
 }
+function weakestCards(n){ // n trickiest cards: most lapses, then lowest interval
+  return Object.keys(state.srs)
+    .sort((a,b)=> (state.srs[b].lapses - state.srs[a].lapses) || (state.srs[a].iv - state.srs[b].iv))
+    .slice(0, n);
+}
 
 /* card content lookup: ids are "g:ก" (glyph) or "w:มา" (word/phrase) */
 const COMBINING = ['ิ','ี','ู','ุ','ึ','ื','ั','ำ','่','้','๊','๋','์'];
@@ -1391,6 +1400,13 @@ function renderHome(){
   el('baht-num').textContent = state.baht || 0;
   el('freeze-n').textContent = state.freeze || 0;
   el('streak-chip').className = 'streak ' + emberTier(state.streak.count).id;
+  const _weak = weakestCards(3), _wb = el('wai-banner');
+  if(_wb){
+    if(_weak.length && (state.wai||'') !== todayStr()){
+      _wb.style.display = '';
+      el('wai-sub').textContent = 'Replay your ' + _weak.length + ' trickiest card' + (_weak.length>1?'s':'') + ' — quick warm-up';
+    } else _wb.style.display = 'none';
+  }
   ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -1427,6 +1443,12 @@ el('cta-lesson').addEventListener('click', ()=>{
   if(nl) startLesson(nl); else gotoView('learn');
 });
 el('cta-review').addEventListener('click', ()=>{ gotoView('review'); });
+el('wai-banner').addEventListener('click', ()=>{
+  const weak = weakestCards(3);
+  if(!weak.length){ toast('No cards yet — finish a lesson first'); return; }
+  state.wai = todayStr(); saveState();
+  startFlashcards(weak);
+});
 function ownsPack(p){ return (state.packs||[]).includes(p); }
 function ownsTheme(t){ return t==='night' || (state.themes||[]).includes(t); }
 function applyTheme(){
