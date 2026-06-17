@@ -622,7 +622,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.22 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.23 (PWA)</div>
     </div>
   </section>
 
@@ -1339,7 +1339,8 @@ let state = {
   baht:0, freeze:0,
   days:{},            // date -> {r,l,d,due,paid}
   calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
-  boss:{},            // unit -> {passed,lastAttempt}
+  boss:{},            // unit -> {passed,lastAttempt}  (legacy; superseded by checks in v2.23)
+  checks:{},          // checkpoint id -> true once passed (≥80% cumulative mastery gate)
   packs:[]
 };
 const SKEY = 'thai_state_v1';
@@ -1401,6 +1402,15 @@ function ensureDay(){
     saveState();
   }
   return state.days[t];
+}
+/* daily pacing governor (v2.23) — unit = 1 new lesson + clear review. Soft: nudges, never locks.
+   evidence: ~5–15 new items/day is the sustainable load (Anki/SLA); same-day review consolidates. */
+function governorPhase(){
+  const d = ensureDay(), due = srsDue().length;
+  if(d.paid) return 'rest';                                   // plan complete (review cleared + lesson/drill) → stop
+  const noNewLeft = d.l > 0 || d.type === 'C';                // did today's new lesson, or a consolidation day
+  if(noNewLeft) return due > 0 ? 'consolidate' : 'rest';
+  return 'learn';
 }
 /* ---- training path (v2.17): communication-first drill ladder + recommender ---- */
 const RUNGS = [
@@ -1806,8 +1816,20 @@ function phraseReadable(thai){
   }
   return true;
 }
+/* ---- mastery checkpoints (v2.23) — cumulative ≥80% gate every 3 lessons; free unlimited retries.
+   evidence: Bloom mastery learning (fixed 80–90% criterion, vary time + remediate) + the 85% rule. ---- */
+const CHK_EVERY = 3;
+function isCheckpointIndex(i){ return i % CHK_EVERY === 2; }       // after lesson indices 2,5,8,… → ~8 across 24
+function checkpointId(i){ return 'chk'+i; }
+function checkpointPassed(i){ return !!(state.checks||{})[checkpointId(i)]; }
+function checkpointReady(i){ return LESSONS.slice(0, i+1).every(L=>state.done.includes(L.id)); }   // its lessons all done
+// a lesson at index `idx` is locked while any earlier ready checkpoint is unpassed — no skipping the gate
+function lessonLockedByCheck(idx){
+  for(let i=0;i<idx;i++){ if(isCheckpointIndex(i) && checkpointReady(i) && !checkpointPassed(i)) return true; }
+  return false;
+}
 /* ---- learning path / guided rail (v2.20) — one ordered journey; Home shows the next step ---- */
-const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜'};
+const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜', checkpoint:'👑'};
 function buildPath(){
   const W_EARLY = [
     {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
@@ -1832,15 +1854,21 @@ function buildPath(){
     N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, go:w.go});
     const story = STORIES.find(s=>s.gate===L.id);
     if(story) N.push({type:'read', label:'Read — '+story.title.split('—').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-read').click(), 60); }});
-    if(i%4===3) N.push({type:'review', label:'Review checkpoint', sub:'lock in what you know', id:'p:rev'+i, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-flash').click(), 60); }});
+    if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'prove ≥80% on everything so far to unlock the next lessons', id:checkpointId(i), checkpoint:i});
   });
   return N;
 }
-function nodeDone(n){ return n.lesson ? state.done.includes(n.lesson.id) : !!(state.pathDone||{})[n.id]; }
+function nodeDone(n){
+  if(n.lesson) return state.done.includes(n.lesson.id);
+  if(n.type === 'checkpoint') return checkpointPassed(n.checkpoint);   // gate: done only once passed
+  return !!(state.pathDone||{})[n.id];
+}
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
 function launchNode(n){
-  if(!n.lesson){ if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState(); }
-  if(n.lesson) startLesson(n.lesson); else if(n.go) n.go();
+  if(n.lesson){ startLesson(n.lesson); return; }
+  if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here — only a ≥80% pass marks it
+  if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState();
+  if(n.go) n.go();
 }
 function renderRail(){
   const host = el('path-now'); if(!host) return;
@@ -1851,12 +1879,41 @@ function renderRail(){
     el('path-map').innerHTML = ''; return;
   }
   const cur = P[ci];
-  host.innerHTML = `<div class="path-now">
-    <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
-    <div class="pn-label">${esc(cur.label)}</div>
-    <div class="pn-sub">${esc(cur.sub||'')}</div>
-    <button class="btn full path-start" id="path-start">Start →</button></div>`;
-  el('path-start').onclick = ()=>launchNode(cur);
+  const phase = governorPhase();
+  const due = srsDue().length;
+  const goReview = ()=>{ gotoView('review'); setTimeout(()=>el('cta-flash').click(), 60); };
+  if(cur.type === 'checkpoint'){
+    // mastery gate always takes priority — it's the blocking ≥80% review, not "new content"
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">👑 mastery gate</div>
+      <div class="pn-label">${esc(cur.label)}</div>
+      <div class="pn-sub">${esc(cur.sub||'')} · free retries</div>
+      <button class="btn full path-start" id="path-start">Take the check →</button></div>`;
+    el('path-start').onclick = ()=>launchNode(cur);
+  } else if(phase === 'rest'){
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">🌙 done for today</div>
+      <div class="pn-label">That's your day — เก่งมาก</div>
+      <div class="pn-sub">You've learned and reviewed enough. Sleep does the rest.</div>
+      <button class="btn full ghost path-start" id="path-keep">Keep going anyway →</button></div>`;
+    el('path-keep').onclick = ()=>launchNode(cur);
+  } else if(phase === 'consolidate'){
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">🌱 lock it in</div>
+      <div class="pn-label">Enough new for today — now review</div>
+      <div class="pn-sub">${due} card${due>1?'s':''} to lock in what you've met.</div>
+      <button class="btn full path-start" id="path-review">Review ${due} →</button>
+      <button class="btn full ghost" id="path-keep" style="margin-top:8px">Keep learning anyway →</button></div>`;
+    el('path-review').onclick = goReview;
+    el('path-keep').onclick = ()=>launchNode(cur);
+  } else {
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
+      <div class="pn-label">${esc(cur.label)}</div>
+      <div class="pn-sub">${esc(cur.sub||'')}</div>
+      <button class="btn full path-start" id="path-start">Start →</button></div>`;
+    el('path-start').onclick = ()=>launchNode(cur);
+  }
   const from = Math.max(0, ci-2), to = Math.min(total, ci+4);
   let map = '';
   for(let i=from;i<to;i++){
@@ -2144,7 +2201,8 @@ function renderEarnBoard(){
   const packUsed = (state.week && state.week.key===weekKey()) ? Object.keys(state.week.used||{}).length : 0;
   const packN = (state.week && state.week.key===weekKey()) ? state.week.picks.length : 5;
   const storiesRead = Object.keys(state.stories||{}).length;
-  const bossesWon = Object.keys(state.boss||{}).filter(u=>state.boss[u].passed).length;
+  const totalChecks = LESSONS.filter((_,i)=>isCheckpointIndex(i)).length;
+  const checksPassed = Object.keys(state.checks||{}).length;
   const lic = state.toneLicence;
   const row = (label, amount, prog) => `<div class="calib-row"><span>${label}<br><span class="sub" style="font-size:12px">${amount}</span></span><span class="pct">${prog}</span></div>`;
   el('stage').innerHTML = `
@@ -2162,7 +2220,7 @@ function renderEarnBoard(){
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Milestones</div>
-      ${row("Beat a unit boss", "+20 💎 first clear", bossesWon + "/4 cleared")}
+      ${row("Pass a mastery check", "+15 💎 first pass", checksPassed + "/" + totalChecks + " passed")}
       ${row("Tone licence", "+30 💎 first · +10 💎 per renewal", lic ? (lic.expires >= todayStr() ? "✓ valid" : "expired") : "not yet")}
     </div>
     <div class="card section-gap">
@@ -2300,7 +2358,7 @@ function renderProgressWall(){
   host.innerHTML = ['A','B','C','D'].map(u=>{
     const Ls = LESSONS.filter(L=>L.unit.charAt(0)===u);
     const doneN = Ls.filter(L=>state.done.includes(L.id)).length;
-    const boss = state.boss && state.boss[u] && state.boss[u].passed;
+    const boss = doneN === Ls.length;   // 👑 when the whole unit is done
     const tiles = Ls.map(L=>{
       const cls = state.done.includes(L.id) ? 'done' : (L.id===nextId ? 'next' : '');
       return `<div class="pw-tile ${cls}" data-lesson="${L.id}">${L.id.slice(1)}</div>`;
@@ -2370,41 +2428,35 @@ function renderLearn(){
       const h = document.createElement('div');
       h.className = 'eyebrow';
       h.style.marginTop = i ? '14px' : '0';
-      const u = unitKey(L);
-      const cleared = state.boss[u] && state.boss[u].passed;
-      h.textContent = 'Unit ' + L.unit + (cleared ? ' · 👑 cleared' : '');
+      h.textContent = 'Unit ' + L.unit + (unitDone(unitKey(L)) ? ' · 👑 cleared' : '');
       list.appendChild(h);
     }
     const done = state.done.includes(L.id);
-    const locked = !done && !prevDone;
+    const gated = !done && lessonLockedByCheck(i);              // a prior mastery check is unmet
+    const locked = !done && (!prevDone || gated);
     const card = document.createElement('button');
     card.className = 'card lesson-card' + (done?' done':'') + (locked?' locked':'');
     card.innerHTML = `
       <div class="glyphs">${L.glyphs.length ? L.glyphs.slice(0,3).map(g=>(GLYPHS[g]&&GLYPHS[g].disp)||g).join(' ') : '💡'}</div>
-      <div class="meta"><div class="t">${i+1}. ${L.title}</div><div class="d">${L.sub}</div></div>
+      <div class="meta"><div class="t">${i+1}. ${L.title}</div><div class="d">${gated ? 'pass the mastery check above to unlock' : L.sub}</div></div>
       <div class="state">${done?'✓ done':(locked?'🔒':'start →')}</div>`;
     if(!locked) card.addEventListener('click', ()=>startLesson(L));
     list.appendChild(card);
     prevDone = done;
-    // boss card at the end of each unit
-    const next = LESSONS[i+1];
-    if(!next || unitKey(next) !== unitKey(L)){
-      const u = unitKey(L);
-      const ready = unitDone(u);
-      const b = state.boss[u] || {};
-      const attemptedToday = b.lastAttempt === todayStr() && !b.passed;
-      const bossCard = document.createElement('button');
-      bossCard.className = 'card lesson-card boss-card' + ((!ready || attemptedToday) ? ' locked' : '');
-      let stateTxt = '🔒 finish unit';
-      if(ready && b.passed) stateTxt = '👑 replay';
-      else if(ready && attemptedToday) stateTxt = '⏳ tomorrow';
-      else if(ready) stateTxt = 'fight →';
-      bossCard.innerHTML = `
+    // mastery checkpoint after every 3rd lesson — cumulative ≥80%, free unlimited retries (v2.23)
+    if(isCheckpointIndex(i)){
+      const ready = checkpointReady(i), passed = checkpointPassed(i);
+      const ck = document.createElement('button');
+      ck.className = 'card lesson-card boss-card' + (!ready ? ' locked' : '');
+      let stateTxt = '🔒 finish lesson ' + (i+1);
+      if(ready && passed) stateTxt = '👑 retake';
+      else if(ready) stateTxt = 'prove it →';
+      ck.innerHTML = `
         <div class="glyphs">👑</div>
-        <div class="meta"><div class="t">Boss: Unit ${u}</div><div class="d">12 questions · 15s each · 80% to pass · ${b.passed?'cleared':'+20💎 first clear'}</div></div>
+        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 questions · 15s each · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
         <div class="state">${stateTxt}</div>`;
-      if(ready && !attemptedToday) bossCard.addEventListener('click', ()=>startBoss(u));
-      list.appendChild(bossCard);
+      if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
+      list.appendChild(ck);
     }
   });
 }
@@ -2436,6 +2488,30 @@ function startBoss(u){
   state.boss[u].lastAttempt = todayStr();
   saveState();
   startGenericQuiz(buildBossQuiz(u), 'Boss · Unit ' + u, {timed:15, boss:u});
+}
+/* mastery checkpoint (v2.23) — cumulative across all lessons met up to index `upTo`; ≥80% to pass */
+function buildCheckpointQuiz(upTo){
+  const Ls = LESSONS.slice(0, upTo+1);
+  const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const words = Ls.flatMap(L=>L.words).filter(w=>w.util!=='practice');
+  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  const allWordsPool = LESSONS.flatMap(x=>x.words);
+  const qs = [];
+  glyphs.forEach(ch=>{
+    const g = GLYPHS[ch];
+    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
+  });
+  words.forEach(w=>{
+    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
+    if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    if(monoSyllable(w)) qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
+  });
+  return sample(qs, Math.min(12, qs.length));
+}
+function startCheckpoint(i){
+  startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
 }
 
 /* =====================================================
@@ -3086,6 +3162,35 @@ function nextGenericQ(){
       }
       saveState();
     }
+    if(p.opts.checkpoint != null){
+      const i = p.opts.checkpoint, passed = pct >= 80;
+      questCheck();
+      if(passed){
+        if(!state.checks) state.checks = {};
+        const first = !state.checks[checkpointId(i)];
+        state.checks[checkpointId(i)] = true; saveState();
+        el('stage').innerHTML = `
+          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+          <div class="result-sub">👑 ${first ? 'Mastery proven — next lessons unlocked · +15💎' : 'Still sharp — unlocked.'}</div>
+          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
+        if(first) award(15);
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+      } else {
+        const missed = (p.missed||[]).slice();
+        el('stage').innerHTML = `
+          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+          <div class="result-sub">Not quite — you need 80%. Review the misses, then retake (free, unlimited).</div>
+          <div class="stage-actions">
+            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the check →</button>
+            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
+          </div>`;
+        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Review the misses', {});
+        el('ck-retake').onclick = ()=>startCheckpoint(i);
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+      }
+      return;
+    }
     questCheck();
     el('stage').innerHTML = `
       <div class="result-big">${p.correct} / ${p.qs.length}</div>
@@ -3094,7 +3199,7 @@ function nextGenericQ(){
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
     return;
   }
-  renderQuizQ(p.qs[p.i], ok=>{ if(ok) p.correct++; if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); }, `${p.label} · ${p.i+1} of ${p.qs.length}`, p.opts.timed);
+  renderQuizQ(p.qs[p.i], ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null){ (p.missed = p.missed || []).push(p.qs[p.i]); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); }, `${p.label} · ${p.i+1} of ${p.qs.length}`, p.opts.timed);
 }
 
 /* =====================================================
@@ -3433,6 +3538,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
     });
   }
   ['w:นา','w:กา','w:ลาว'].forEach(k=>{ if(state.srs[k]){ delete state.srs[k]; migrated = true; } });
+  if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
   if(migrated) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
