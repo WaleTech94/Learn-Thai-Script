@@ -622,7 +622,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.23 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.24 (PWA)</div>
     </div>
   </section>
 
@@ -2453,7 +2453,7 @@ function renderLearn(){
       else if(ready) stateTxt = 'prove it →';
       ck.innerHTML = `
         <div class="glyphs">👑</div>
-        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 questions · 15s each · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
+        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 Qs · build the words from memory + MCQ · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
         <div class="state">${stateTxt}</div>`;
       if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
       list.appendChild(ck);
@@ -2504,11 +2504,20 @@ function buildCheckpointQuiz(upTo){
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
-    if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    const buildable = !w.thai.includes(' ') && [...w.thai].length <= 7;
+    if(buildable){
+      qs.push({kind:'build', word:w});                         // production: build the Thai from tiles (recall, not recognition)
+    } else {
+      const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
+      if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    }
     if(monoSyllable(w)) qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
   });
-  return sample(qs, Math.min(12, qs.length));
+  // guarantee production is the backbone of the gate: up to half the 12 are build-the-word items
+  const builds = qs.filter(q=>q.kind==='build'), others = qs.filter(q=>q.kind!=='build');
+  const nBuild = Math.min(builds.length, 6);
+  const nOther = Math.min(others.length, 12 - nBuild);
+  return shuffle(sample(builds, nBuild).concat(sample(others, nOther)));
 }
 function startCheckpoint(i){
   startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
@@ -2733,6 +2742,57 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
   opts.forEach(b=>{
     b.addEventListener('click', ()=>settle(b.textContent === String(q.answer), b, false));
   });
+}
+/* tile-build question (v2.24) — production: assemble the Thai from tiles given the English meaning.
+   No audio before answering (no leak), untimed, objective: first-try success = ok. onDone(ok) like renderQuizQ. */
+function renderBuildQ(q, onDone, counterLabel){
+  const w = q.word, target = [...w.thai];
+  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  let dis = [];
+  target.forEach(ch=>{ const set = CONF_SETS.find(s=>s.includes(ch)); if(set) dis.push(...set.filter(x=>x!==ch && !target.includes(x))); });
+  dis = [...new Set(dis)];
+  while(dis.length < 3){ const c = sample(allCons,1)[0]; if(!target.includes(c) && !dis.includes(c)) dis.push(c); }
+  const tiles = shuffle(target.concat(dis.slice(0,3)));
+  let built = [], firstTry = true, settled = false;
+  el('stage').innerHTML = `
+    <div class="q-prompt">
+      <div class="eyebrow">${counterLabel||''}</div>
+      <div class="q-text">Build the Thai for "${esc(w.en)}"</div>
+      <div class="sub" style="font-size:12px;margin-top:4px">tap the letters in order</div>
+    </div>
+    <div class="build-area" id="built">&nbsp;</div>
+    <div class="tilebank" id="bank">
+      ${tiles.map((t,ix)=>`<button class="ltile" data-ix="${ix}" data-ch="${t}">${(GLYPHS[t]&&GLYPHS[t].disp)||t}</button>`).join('')}
+    </div>
+    <div class="stage-actions">
+      <button class="btn ghost" id="sp-undo">⌫ Undo</button>
+      <button class="btn ghost" id="sp-skip">Show answer</button>
+    </div>
+    <div class="q-feedback" id="q-fb"></div>`;
+  const builtEl = el('built'), bank = el('bank');
+  function refresh(){ builtEl.innerHTML = built.map(b=>b.ch).join('') || '&nbsp;'; }
+  function finish(ok){
+    settled = true;
+    builtEl.classList.remove('bad'); builtEl.classList.add(ok?'good':'no');
+    el('q-fb').textContent = w.thai + ' · ' + w.tr + ' — ' + w.en;
+    el('q-fb').className = 'q-feedback ' + (ok?'ok':'no');
+    speak(w.thai);                                   // reveal audio only AFTER the attempt — no leak
+    setTimeout(()=>onDone(ok), ok ? 900 : 1500);
+  }
+  function check(){
+    if(built.length !== target.length) return;
+    if(built.map(b=>b.ch).join('') === w.thai){ finish(firstTry); }
+    else {
+      firstTry = false;
+      builtEl.classList.add('bad');
+      setTimeout(()=>{ builtEl.classList.remove('bad'); built.forEach(b=>{ const t=bank.querySelector('[data-ix="'+b.ix+'"]'); if(t) t.disabled=false; }); built=[]; refresh(); }, 650);
+    }
+  }
+  bank.querySelectorAll('.ltile').forEach(t=>{
+    t.addEventListener('click', ()=>{ if(settled) return; t.disabled=true; built.push({ch:t.dataset.ch, ix:t.dataset.ix}); refresh(); check(); });
+  });
+  el('sp-undo').onclick = ()=>{ if(settled) return; const last=built.pop(); if(last){ const t=bank.querySelector('[data-ix="'+last.ix+'"]'); if(t) t.disabled=false; } refresh(); };
+  el('sp-skip').onclick = ()=>{ if(settled) return; builtEl.innerHTML = w.thai; finish(false); };   // showing the answer = not mastered
 }
 
 /* =====================================================
@@ -3199,7 +3259,11 @@ function nextGenericQ(){
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
     return;
   }
-  renderQuizQ(p.qs[p.i], ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null){ (p.missed = p.missed || []).push(p.qs[p.i]); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); }, `${p.label} · ${p.i+1} of ${p.qs.length}`, p.opts.timed);
+  const q = p.qs[p.i];
+  const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); };
+  const label = `${p.label} · ${p.i+1} of ${p.qs.length}`;
+  if(q.kind === 'build') renderBuildQ(q, cb, label);
+  else renderQuizQ(q, cb, label, p.opts.timed);
 }
 
 /* =====================================================
