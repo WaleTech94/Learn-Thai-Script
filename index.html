@@ -270,6 +270,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .phrase .p-tr{color:var(--blue);font-size:14px}
 .phrase .p-en{color:var(--muted);font-size:13px}
 .phrase .p-note{color:var(--low);font-size:12px;margin-top:2px}
+.lvl-head{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
+.lvl-head:first-child{margin-top:2px}
 
 /* ---------- review ---------- */
 .flashcard{
@@ -620,7 +622,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.21 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.22 (PWA)</div>
     </div>
   </section>
 
@@ -1142,11 +1144,59 @@ const PHRASES = [
   {cat:"Shopping", thai:"แพงไป", tr:"phaaeng bpai", en:"too expensive"},
   {cat:"Shopping", thai:"ลดได้ไหม", tr:"lót dâi mǎi", en:"can you lower the price?"},
   {cat:"Shopping", thai:"เอาอันนี้", tr:"ao an níi", en:"I'll take this"},
-  {cat:"Survival", thai:"ไม่เข้าใจ", tr:"mâi khâo-jai", en:"I don't understand"},
-  {cat:"Survival", thai:"พูดช้าๆ ได้ไหม", tr:"phûut cháa cháa dâi mǎi", en:"can you speak slowly?"},
-  {cat:"Survival", thai:"พูดภาษาอังกฤษได้ไหม", tr:"phûut phaa-sǎa ang-grìt dâi mǎi", en:"do you speak English?"},
-  {cat:"Survival", thai:"ห้องน้ำอยู่ไหน", tr:"hôrng-náam yùu nǎi", en:"where is the toilet?"},
-  {cat:"Survival", thai:"ไม่เอาครับ", tr:"mâi ao khráp", en:"no thanks / I don't want it"}
+  // ---- Survival · Level 1 (daily–weekly) ----
+  {cat:"Survival", lvl:1, thai:"ไม่เข้าใจ", tr:"mâi khâo-jai", en:"I don't understand"},
+  {cat:"Survival", lvl:1, thai:"พูดช้าๆ ได้ไหม", tr:"phûut cháa cháa dâi mǎi", en:"can you speak slowly?"},
+  {cat:"Survival", lvl:1, thai:"พูดภาษาอังกฤษได้ไหม", tr:"phûut phaa-sǎa ang-grìt dâi mǎi", en:"do you speak English?"},
+  {cat:"Survival", lvl:1, thai:"ห้องน้ำอยู่ไหน", tr:"hôrng-náam yùu nǎi", en:"where is the toilet?"},
+  {cat:"Survival", lvl:1, thai:"ไม่เอาครับ", tr:"mâi ao khráp", en:"no thanks / I don't want it"},
+  {cat:"Survival", lvl:1, thai:"มีไหมครับ", tr:"mii mǎi khráp", en:"do you have it?"},
+  {cat:"Survival", lvl:1, thai:"ร้อนได้ไหมครับ", tr:"rórn dâi mǎi khráp", en:"can you heat it up?"},
+  {cat:"Survival", lvl:1, thai:"ไม่ต้องใส่ถุง", tr:"mâi dtông sài thǔng", en:"no bag needed"},
+  {cat:"Survival", lvl:1, thai:"จ่ายบัตรได้ไหม", tr:"jàai bàt dâi mǎi", en:"can I pay by card?"},
+  {cat:"Survival", lvl:1, thai:"มีทอนไหม", tr:"mii thorn mǎi", en:"do you have change?"},
+  {cat:"Survival", lvl:1, thai:"ขอเมนูครับ", tr:"khǒr mee-nuu khráp", en:"the menu, please"},
+  {cat:"Survival", lvl:1, thai:"ขอเบียร์ครับ", tr:"khǒr bia khráp", en:"a beer, please"},
+  {cat:"Survival", lvl:1, thai:"ขออีกที่ครับ", tr:"khǒr ìik thîi khráp", en:"one more (serving), please"},
+  {cat:"Survival", lvl:1, thai:"คิดเงินด้วยครับ", tr:"khít ngern dûai khráp", en:"the check, please", note:"the spoken version of เช็คบิล"},
+  {cat:"Survival", lvl:1, thai:"อิ่มแล้วครับ", tr:"ìm láaeo khráp", en:"I'm full"},
+  {cat:"Survival", lvl:1, thai:"มีโต๊ะว่างไหม", tr:"mii dtó wâang mǎi", en:"do you have a free table?"},
+  {cat:"Survival", lvl:1, thai:"ขอช้อนส้อมครับ", tr:"khǒr chórn sôrm khráp", en:"spoon and fork, please"},
+  {cat:"Survival", lvl:1, thai:"เผ็ดมากไหม", tr:"phèt mâak mǎi", en:"is it very spicy?"},
+  {cat:"Survival", lvl:1, thai:"ชื่ออะไรครับ", tr:"chûue a-rai khráp", en:"what's your name?"},
+  {cat:"Survival", lvl:1, thai:"ผมเป็นครูครับ", tr:"phǒm bpen khruu khráp", en:"I'm a teacher"},
+  {cat:"Survival", lvl:1, thai:"มาจากไหนครับ", tr:"maa jàak nǎi khráp", en:"where are you from?"},
+  {cat:"Survival", lvl:1, thai:"ผมอยู่เอกมัย", tr:"phǒm yùu èek-ga-mai", en:"I live in Ekkamai"},
+  {cat:"Survival", lvl:1, thai:"อยู่ใกล้ไหม", tr:"yùu glâi mǎi", en:"is it nearby?"},
+  {cat:"Survival", lvl:1, thai:"เปิดกี่โมง", tr:"bpèrt gìi mohng", en:"what time does it open?"},
+  {cat:"Survival", lvl:1, thai:"ปิดแล้วหรือยัง", tr:"bpìt láaeo rǔe yang", en:"is it closed yet?"},
+  // ---- Survival · Level 2 (now & then) ----
+  {cat:"Survival", lvl:2, thai:"ช่วยด้วยครับ", tr:"chûai dûai khráp", en:"help!"},
+  {cat:"Survival", lvl:2, thai:"ไม่สบายครับ", tr:"mâi sà-baai khráp", en:"I don't feel well"},
+  {cat:"Survival", lvl:2, thai:"ร้านขายยาอยู่ไหน", tr:"ráan khǎai yaa yùu nǎi", en:"where's the pharmacy?"},
+  {cat:"Survival", lvl:2, thai:"น้ำไม่ไหล", tr:"náam mâi lǎi", en:"the water's not running"},
+  {cat:"Survival", lvl:2, thai:"ไฟดับ", tr:"fai dàp", en:"the power's out"},
+  {cat:"Survival", lvl:2, thai:"เน็ตช้า", tr:"nét cháa", en:"the internet's slow"},
+  {cat:"Survival", lvl:2, thai:"ตู้เอทีเอ็มอยู่ไหน", tr:"dtûu ee-thii-em yùu nǎi", en:"where's the ATM?"},
+  {cat:"Survival", lvl:2, thai:"มีไวไฟไหม", tr:"mii wai-fai mǎi", en:"is there wifi?"},
+  {cat:"Survival", lvl:2, thai:"ขอรหัสไวไฟครับ", tr:"khǒr rá-hàt wai-fai khráp", en:"the wifi password, please"},
+  {cat:"Survival", lvl:2, thai:"เรียกแท็กซี่ให้หน่อย", tr:"rîak tháek-sîi hâi nòi", en:"call a taxi for me"},
+  {cat:"Survival", lvl:2, thai:"จองไว้แล้ว", tr:"jorng wái láaeo", en:"I have a booking"},
+  {cat:"Survival", lvl:2, thai:"ขอใบเสร็จครับ", tr:"khǒr bai-sèt khráp", en:"a receipt, please"},
+  {cat:"Survival", lvl:2, thai:"ห้องว่างไหม", tr:"hôrng wâang mǎi", en:"any rooms free?"},
+  {cat:"Survival", lvl:2, thai:"กี่บาท", tr:"gìi bàat", en:"how many baht?"},
+  {cat:"Survival", lvl:2, thai:"ไปสนามบินครับ", tr:"bpai sà-nǎam-bin khráp", en:"to the airport, please"},
+  // ---- Survival · Level 3 (when you need it) ----
+  {cat:"Survival", lvl:3, thai:"เรียกรถพยาบาล", tr:"rîak rót phá-yaa-baan", en:"call an ambulance"},
+  {cat:"Survival", lvl:3, thai:"ผมแพ้ถั่วครับ", tr:"phǒm pháae thùa khráp", en:"I'm allergic to nuts", note:"swap ถั่ว for whatever you react to"},
+  {cat:"Survival", lvl:3, thai:"ปวดตรงนี้", tr:"bpùat dtrong níi", en:"it hurts here"},
+  {cat:"Survival", lvl:3, thai:"เป็นไข้", tr:"bpen khâi", en:"I have a fever"},
+  {cat:"Survival", lvl:3, thai:"ปวดหัว", tr:"bpùat hǔa", en:"headache"},
+  {cat:"Survival", lvl:3, thai:"ปวดท้อง", tr:"bpùat thórng", en:"stomach ache"},
+  {cat:"Survival", lvl:3, thai:"ผมต้องไปหาหมอ", tr:"phǒm dtông bpai hǎa mǒr", en:"I need to see a doctor"},
+  {cat:"Survival", lvl:3, thai:"เรียกตำรวจ", tr:"rîak dtam-rùat", en:"call the police"},
+  {cat:"Survival", lvl:3, thai:"ไฟไหม้", tr:"fai mâi", en:"fire!", note:"shout it — you won't have time to be shy"},
+  {cat:"Survival", lvl:3, thai:"โรงพยาบาลอยู่ไหน", tr:"rohng phá-yaa-baan yùu nǎi", en:"where's the hospital?"}
 ];
 
 const GACHA = [
@@ -1738,6 +1788,23 @@ function learnedWords(){
 }
 function nextLesson(){
   return LESSONS.find(L=>!state.done.includes(L.id)) || null;
+}
+/* decodability gate (v2.22) — a phrase becomes a READING card only once its letters are taught;
+   until then it lives ear-first (listening card + the rote phrasebook). */
+function taughtGlyphSet(){
+  const s = new Set();
+  for(const L of LESSONS){ if(state.done.includes(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)) s.add(ch); }); }
+  return s;
+}
+function isLessonWord(thai){ return LESSONS.some(L=>L.words.some(w=>w.thai===thai)); }
+function phraseReadable(thai){
+  const taught = taughtGlyphSet();
+  for(const ch of String(thai)){
+    if(ch===' ' || ch==='ๆ' || ch==='ฯ' || ch==='็' || ch==='์' || ch==='.' || ch===',') continue;   // spacing / iteration / vowel-shortener / silencer — decode-helpers, not gating glyphs
+    if(!/[฀-๿]/.test(ch)) continue;     // non-Thai — ignore
+    if(!taught.has(ch)) return false;
+  }
+  return true;
 }
 /* ---- learning path / guided rail (v2.20) — one ordered journey; Home shows the next step ---- */
 const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜'};
@@ -2723,7 +2790,7 @@ function ensureWeek(){
     .concat((state.packs||[]).includes('teacher')?['Teacher']:[])
     .concat((state.packs||[]).includes('food2')?['Food+']:[])
     .concat(slangOwned()?['Slang']:[]);
-  const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c));
+  const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c).sort((a,b)=>(a.lvl||1)-(b.lvl||1)));  // within a category, lower levels first
   const picks = pool.filter(p=>!state.srs['w:'+p.thai]).slice(0,5).map(p=>p.thai);
   picks.forEach(t=>srsAdd('w:'+t));
   state.week = {key:wk, picks, used:{}, bounty:picks.slice(0,3)};   // 3 bounty phrases / week (+8💎 vs +5💎)
@@ -2792,9 +2859,8 @@ function renderPhrases(){
     });
     return;
   }
-  const src = catSrc(activeCat);
-  el('phrase-list').innerHTML = src.filter(p=>p.cat===activeCat).map(p=>{
-    const id = 'w:'+p.thai, added = inSrs(id);
+  const card = p => {
+    const added = inSrs('w:'+p.thai);
     return `<div class="card phrase">
       <div class="p-meta">
         <div class="p-thai">${p.thai}</div>
@@ -2807,7 +2873,30 @@ function renderPhrases(){
         <button class="btn small ${added?'ghost':''}" data-add="${p.thai}">${added?'✓ in deck':'+ deck'}</button>
       </div>
     </div>`;
-  }).join('');
+  };
+  const src = catSrc(activeCat).filter(p=>p.cat===activeCat);
+  if(activeCat === 'Survival'){
+    const LVL = {1:'Level 1 · daily–weekly', 2:'Level 2 · now & then', 3:'Level 3 · when you need it'};
+    el('phrase-list').innerHTML = [1,2,3].map(lv=>{
+      const items = src.filter(p=>(p.lvl||1)===lv);
+      if(!items.length) return '';
+      return `<div class="lvl-head">
+          <span class="eyebrow" style="margin:0">${LVL[lv]}</span>
+          <button class="btn small ghost" data-drill="${lv}">🔁 Drill</button>
+        </div>${items.map(card).join('')}`;
+    }).join('');
+  } else {
+    el('phrase-list').innerHTML = src.map(card).join('');
+  }
+  el('phrase-list').querySelectorAll('[data-drill]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const lv = +b.dataset.drill;
+      const items = PHRASES.filter(p=>p.cat==='Survival' && (p.lvl||1)===lv);
+      if(!items.length) return;
+      player = {type:'echo', rounds: sample(items, Math.min(12, items.length)).map(p=>({t:p.thai, tr:p.tr, en:p.en})), i:0};
+      openOverlay(); renderEcho();
+    });
+  });
   el('phrase-list').querySelectorAll('[data-add]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const id = 'w:'+b.dataset.add;
@@ -2887,7 +2976,10 @@ function renderFlash(){
   setProg(Math.round(100*p.i/p.queue.length));
   const id = p.queue[p.i];
   const sayText = cardSay(id);
-  const listen = id.startsWith('w:') && Math.random() < 0.3;   // 30% of word cards → trust-based listening
+  // graduation gate (v2.22): a phrase stays ear-first (listening) until its letters are decodable;
+  // lesson words are decodable by definition. Decodable phrases + words: reading MC, with 30% listening for variety.
+  const gated = id.startsWith('w:') && !isLessonWord(id.slice(2)) && !phraseReadable(id.slice(2));
+  const listen = id.startsWith('w:') && (gated || Math.random() < 0.3);
 
   function advance(right){
     const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
