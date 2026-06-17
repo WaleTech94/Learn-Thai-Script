@@ -228,6 +228,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .q-prompt{text-align:center;margin-bottom:6px}
 .q-prompt .q-big{font-family:'Mitr',sans-serif;font-size:84px;line-height:1.15}
 .q-prompt .q-text{font-size:19px;font-family:'Mitr',sans-serif;font-weight:500}
+.type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:'Mitr',sans-serif;margin:4px 0 2px;outline:none}
+.type-in:focus{border-color:var(--blue)}
 .q-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .q-opt{
   background:var(--surface);border:1px solid var(--line);border-radius:14px;
@@ -622,7 +624,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.24 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.25 (PWA)</div>
     </div>
   </section>
 
@@ -2453,7 +2455,7 @@ function renderLearn(){
       else if(ready) stateTxt = 'prove it →';
       ck.innerHTML = `
         <div class="glyphs">👑</div>
-        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 Qs · build the words from memory + MCQ · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
+        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 Qs · type the sounds from memory + decode · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
         <div class="state">${stateTxt}</div>`;
       if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
       list.appendChild(ck);
@@ -2499,25 +2501,24 @@ function buildCheckpointQuiz(upTo){
   const qs = [];
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
-    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    if(/^[a-z]{1,3}$/.test(g.sound)){                          // clean, typeable sound → RECALL: type it from memory
+      qs.push({kind:'type', prompt:ch, text:'Type the sound', answer:g.sound});
+    } else {
+      const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
+      qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    }
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    const buildable = !w.thai.includes(' ') && [...w.thai].length <= 7;
-    if(buildable){
-      qs.push({kind:'build', word:w});                         // production: build the Thai from tiles (recall, not recognition)
-    } else {
-      const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
-      if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
-    }
+    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);   // READING: decode the script → meaning
+    if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
     if(monoSyllable(w)) qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
   });
-  // guarantee production is the backbone of the gate: up to half the 12 are build-the-word items
-  const builds = qs.filter(q=>q.kind==='build'), others = qs.filter(q=>q.kind!=='build');
-  const nBuild = Math.min(builds.length, 6);
-  const nOther = Math.min(others.length, 12 - nBuild);
-  return shuffle(sample(builds, nBuild).concat(sample(others, nOther)));
+  // gate certifies READING; sound-recall (type it) is the backbone — up to half the 12 — with class/meaning/tone MCQ filling out
+  const types = qs.filter(q=>q.kind==='type'), others = qs.filter(q=>q.kind!=='type');
+  const nType = Math.min(types.length, 6);
+  const nOther = Math.min(others.length, 12 - nType);
+  return shuffle(sample(types, nType).concat(sample(others, nOther)));
 }
 function startCheckpoint(i){
   startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
@@ -2743,56 +2744,32 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     b.addEventListener('click', ()=>settle(b.textContent === String(q.answer), b, false));
   });
 }
-/* tile-build question (v2.24) — production: assemble the Thai from tiles given the English meaning.
-   No audio before answering (no leak), untimed, objective: first-try success = ok. onDone(ok) like renderQuizQ. */
-function renderBuildQ(q, onDone, counterLabel){
-  const w = q.word, target = [...w.thai];
-  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
-  let dis = [];
-  target.forEach(ch=>{ const set = CONF_SETS.find(s=>s.includes(ch)); if(set) dis.push(...set.filter(x=>x!==ch && !target.includes(x))); });
-  dis = [...new Set(dis)];
-  while(dis.length < 3){ const c = sample(allCons,1)[0]; if(!target.includes(c) && !dis.includes(c)) dis.push(c); }
-  const tiles = shuffle(target.concat(dis.slice(0,3)));
-  let built = [], firstTry = true, settled = false;
+/* typed-recall question (v2.25) — READING: see the letter, TYPE its sound (g/kh/bp/dt/ng…).
+   Recall not recognition; strict normalised match (the aspiration/unaspiration distinctions are load-bearing). onDone(ok) like renderQuizQ. */
+function renderTypeQ(q, onDone, counterLabel){
   el('stage').innerHTML = `
     <div class="q-prompt">
       <div class="eyebrow">${counterLabel||''}</div>
-      <div class="q-text">Build the Thai for "${esc(w.en)}"</div>
-      <div class="sub" style="font-size:12px;margin-top:4px">tap the letters in order</div>
+      <div class="q-big">${q.prompt}</div>
+      <div class="q-text">${q.text||'Type the sound'}</div>
     </div>
-    <div class="build-area" id="built">&nbsp;</div>
-    <div class="tilebank" id="bank">
-      ${tiles.map((t,ix)=>`<button class="ltile" data-ix="${ix}" data-ch="${t}">${(GLYPHS[t]&&GLYPHS[t].disp)||t}</button>`).join('')}
-    </div>
-    <div class="stage-actions">
-      <button class="btn ghost" id="sp-undo">⌫ Undo</button>
-      <button class="btn ghost" id="sp-skip">Show answer</button>
-    </div>
+    <input class="type-in" id="type-in" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="type it…">
+    <div class="stage-actions"><button class="btn full" id="type-go">Check</button></div>
     <div class="q-feedback" id="q-fb"></div>`;
-  const builtEl = el('built'), bank = el('bank');
-  function refresh(){ builtEl.innerHTML = built.map(b=>b.ch).join('') || '&nbsp;'; }
-  function finish(ok){
-    settled = true;
-    builtEl.classList.remove('bad'); builtEl.classList.add(ok?'good':'no');
-    el('q-fb').textContent = w.thai + ' · ' + w.tr + ' — ' + w.en;
-    el('q-fb').className = 'q-feedback ' + (ok?'ok':'no');
-    speak(w.thai);                                   // reveal audio only AFTER the attempt — no leak
-    setTimeout(()=>onDone(ok), ok ? 900 : 1500);
+  const inp = el('type-in'); if(inp && inp.focus) inp.focus();
+  let settled = false;
+  const norm = s => String(s||'').trim().toLowerCase().replace(/\s+/g,'');
+  function submit(){
+    if(settled) return; settled = true;
+    const ok = norm(inp.value) === norm(q.answer);
+    if(inp) inp.disabled = true;
+    const fb = el('q-fb');
+    fb.textContent = ok ? 'Correct' : 'Answer: ' + q.answer;
+    fb.className = 'q-feedback ' + (ok?'ok':'no');
+    setTimeout(()=>onDone(ok), ok ? 700 : 1500);
   }
-  function check(){
-    if(built.length !== target.length) return;
-    if(built.map(b=>b.ch).join('') === w.thai){ finish(firstTry); }
-    else {
-      firstTry = false;
-      builtEl.classList.add('bad');
-      setTimeout(()=>{ builtEl.classList.remove('bad'); built.forEach(b=>{ const t=bank.querySelector('[data-ix="'+b.ix+'"]'); if(t) t.disabled=false; }); built=[]; refresh(); }, 650);
-    }
-  }
-  bank.querySelectorAll('.ltile').forEach(t=>{
-    t.addEventListener('click', ()=>{ if(settled) return; t.disabled=true; built.push({ch:t.dataset.ch, ix:t.dataset.ix}); refresh(); check(); });
-  });
-  el('sp-undo').onclick = ()=>{ if(settled) return; const last=built.pop(); if(last){ const t=bank.querySelector('[data-ix="'+last.ix+'"]'); if(t) t.disabled=false; } refresh(); };
-  el('sp-skip').onclick = ()=>{ if(settled) return; builtEl.innerHTML = w.thai; finish(false); };   // showing the answer = not mastered
+  el('type-go').onclick = submit;
+  if(inp && inp.addEventListener) inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') submit(); });
 }
 
 /* =====================================================
@@ -3262,7 +3239,7 @@ function nextGenericQ(){
   const q = p.qs[p.i];
   const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); };
   const label = `${p.label} · ${p.i+1} of ${p.qs.length}`;
-  if(q.kind === 'build') renderBuildQ(q, cb, label);
+  if(q.kind === 'type') renderTypeQ(q, cb, label);                 // typed sound-recall (reading)
   else renderQuizQ(q, cb, label, p.opts.timed);
 }
 
