@@ -230,6 +230,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .q-prompt .q-text{font-size:19px;font-family:'Mitr',sans-serif;font-weight:500}
 .type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:'Mitr',sans-serif;margin:4px 0 2px;outline:none}
 .type-in:focus{border-color:var(--blue)}
+.notes-ta{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:15px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;margin-bottom:10px}
+.notes-ta:focus{border-color:var(--blue)}
+.note-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.note-item .note-body{flex:1;min-width:0}
+.note-item .note-when{font-size:11px;color:var(--muted);margin-bottom:3px}
+.note-item .note-text{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.note-del{flex:none;background:none;border:none;color:var(--muted);font-size:15px;padding:2px 5px;cursor:pointer}
 .q-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .q-opt{
   background:var(--surface);border:1px solid var(--line);border-radius:14px;
@@ -619,12 +626,13 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
+      <button class="btn full ghost" id="notes-btn" style="margin-bottom:12px">📝 Test notes</button>
       <div class="row" style="justify-content:center;gap:10px;margin-bottom:14px">
         <button class="btn small ghost" id="export-btn">Export progress</button>
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.25 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.26 (PWA)</div>
     </div>
   </section>
 
@@ -1343,6 +1351,7 @@ let state = {
   calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
   boss:{},            // unit -> {passed,lastAttempt}  (legacy; superseded by checks in v2.23)
   checks:{},          // checkpoint id -> true once passed (≥80% cumulative mastery gate)
+  notes:[],           // test-notes pad: [{at, text}]  (rides along in Export)
   packs:[]
 };
 const SKEY = 'thai_state_v1';
@@ -2234,6 +2243,48 @@ function renderEarnBoard(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
 
+/* test-notes pad (v2.26) — jot issues while testing; persists in state (so Export captures them) */
+function noteDate(ms){
+  const d = new Date(ms), p = n => String(n).padStart(2,'0');
+  const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return d.getDate() + ' ' + mon + ' · ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function renderNotes(){
+  const notes = state.notes || [];
+  const list = notes.length
+    ? notes.map((n,i)=>`<div class="note-item">
+        <div class="note-body"><div class="note-when">${noteDate(n.at)}</div><div class="note-text">${esc(n.text)}</div></div>
+        <button class="note-del" data-del="${i}" aria-label="Delete">✕</button>
+      </div>`).reverse().join('')
+    : '<div class="sub" style="text-align:center;padding:16px">No notes yet — jot anything odd, confusing, or broken as you test.</div>';
+  el('stage').innerHTML = `
+    <div class="center"><h2>📝 Test notes</h2><p class="sub">Quick jots while you test. They save here and ride along in your Export.</p></div>
+    <textarea class="notes-ta" id="note-in" rows="3" placeholder="What happened? (a bug, a confusing bit, an idea…)"></textarea>
+    <button class="btn full" id="note-add">Add note</button>
+    <div class="spread" style="margin:16px 0 8px">
+      <span class="eyebrow" style="margin:0">${notes.length} note${notes.length===1?'':'s'}</span>
+      ${notes.length ? '<button class="btn small ghost" id="note-copy">Copy all</button>' : ''}
+    </div>
+    <div id="note-list">${list}</div>
+    <div class="stage-actions"><button class="btn full ghost" id="note-done">Done</button></div>`;
+  el('note-add').onclick = ()=>{
+    const v = (el('note-in').value || '').trim();
+    if(!v){ toast('Type something first'); return; }
+    if(!state.notes) state.notes = [];
+    state.notes.push({at: Date.now(), text: v});
+    saveState(); renderNotes();
+  };
+  el('note-done').onclick = ()=>{ closeOverlay(); };
+  if(el('note-copy')) el('note-copy').onclick = async ()=>{
+    const txt = (state.notes||[]).map(n=>'• [' + noteDate(n.at) + '] ' + n.text).join('\n');
+    try{ await navigator.clipboard.writeText(txt); toast('Notes copied to clipboard'); }
+    catch(e){ prompt('Copy your notes:', txt); }
+  };
+  el('note-list').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>{
+    state.notes.splice(+b.dataset.del, 1); saveState(); renderNotes();
+  }));
+}
+el('notes-btn').addEventListener('click', ()=>{ openOverlay(); renderNotes(); });
 el('export-btn').addEventListener('click', async ()=>{
   const raw = JSON.stringify(state);
   try{
@@ -3580,6 +3631,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   }
   ['w:นา','w:กา','w:ลาว'].forEach(k=>{ if(state.srs[k]){ delete state.srs[k]; migrated = true; } });
   if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
+  if(!state.notes){ state.notes = []; migrated = true; }     // v2.26 test-notes pad
   if(migrated) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
