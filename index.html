@@ -475,6 +475,20 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .path-soon{font-size:12px;color:var(--muted)}
 /* echo chamber (v2.19) — shadow & self-rate */
 .echo-word{font-family:'Mitr',sans-serif;font-size:52px;text-align:center;margin:12px 0;line-height:1.3}
+/* learning path / guided rail (v2.20) — Home's front door: one next step at a time */
+.path-card{border:1px solid var(--gold);margin-bottom:18px}
+.path-now .pn-step{font-size:12px;color:var(--gold);font-family:'Mitr',sans-serif;text-transform:lowercase}
+.path-now .pn-label{font-size:21px;font-weight:600;margin:3px 0}
+.path-now .pn-sub{font-size:13px;color:var(--muted);margin-bottom:13px}
+.path-start{width:100%}
+.path-map{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:1px}
+.path-node2{display:flex;align-items:center;gap:11px;padding:7px 2px;font-size:14px;width:100%;text-align:left;background:none;border:none;color:var(--text)}
+.path-node2 .pn-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surface2);font-size:13px;flex:none}
+.path-node2.done{color:var(--muted)}
+.path-node2.done .pn-ic{background:transparent;color:var(--blue)}
+.path-node2.now .pn-ic{background:var(--gold);color:var(--bg)}
+.path-node2.locked{opacity:.45}
+.progress-divider{font-size:12px;color:var(--muted);margin:8px 2px 12px;letter-spacing:.04em}
 </style>
 </head>
 <body>
@@ -494,6 +508,15 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="streak" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span></button>
       </div>
     </header>
+    <div class="card path-card" id="path-card">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Your learning path</div>
+        <span class="sub" style="font-size:12px" id="path-progress">—</span>
+      </div>
+      <div id="path-now"></div>
+      <div id="path-map"></div>
+    </div>
+    <div class="progress-divider">YOUR PROGRESS &amp; STATS ↓</div>
     <div class="card glyph-hero" id="hero-card">
       <div class="eyebrow">Letter of the day</div>
       <span class="bigchar" id="hero-char">ก</span>
@@ -597,7 +620,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.19 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.20 (PWA)</div>
     </div>
   </section>
 
@@ -1681,6 +1704,66 @@ function learnedWords(){
 function nextLesson(){
   return LESSONS.find(L=>!state.done.includes(L.id)) || null;
 }
+/* ---- learning path / guided rail (v2.20) — one ordered journey; Home shows the next step ---- */
+const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜'};
+function buildPath(){
+  const W_EARLY = [
+    {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
+    {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
+    {t:'speak', l:'Echo chamber', s:'shadow the tones aloud', go:()=>el('echo-btn').click()},
+  ];
+  const W_MID = W_EARLY.concat([
+    {t:'drill', l:'Confusion clinic', s:'untangle lookalikes', go:()=>el('cta-clinic').click()},
+    {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
+  ]);
+  const W_LATE = W_MID.concat([
+    {t:'drill', l:'Glyph ghost', s:'spot the lookalike fast', go:()=>el('cta-ghost').click()},
+    {t:'drill', l:'Tone-rule trainer', s:'derive the tone from the script', go:()=>el('tone-rule-btn').click()},
+  ]);
+  const N = [
+    {type:'tone',  label:'Hear the five tones', sub:'your ear comes first',  id:'p:tones', go:()=>el('tone-drill-btn').click()},
+    {type:'speak', label:'Say hello — สวัสดีครับ', sub:'sà-wàt-dii khráp',     id:'p:hello', go:()=>gotoView('phrases')},
+  ];
+  LESSONS.forEach((L,i)=>{
+    N.push({type:'lesson', label:'Learn — '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
+    const pool = i<5 ? W_EARLY : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
+    N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, go:w.go});
+    const story = STORIES.find(s=>s.gate===L.id);
+    if(story) N.push({type:'read', label:'Read — '+story.title.split('—').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-read').click(), 60); }});
+    if(i%4===3) N.push({type:'review', label:'Review checkpoint', sub:'lock in what you know', id:'p:rev'+i, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-flash').click(), 60); }});
+  });
+  return N;
+}
+function nodeDone(n){ return n.lesson ? state.done.includes(n.lesson.id) : !!(state.pathDone||{})[n.id]; }
+function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
+function launchNode(n){
+  if(!n.lesson){ if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState(); }
+  if(n.lesson) startLesson(n.lesson); else if(n.go) n.go();
+}
+function renderRail(){
+  const host = el('path-now'); if(!host) return;
+  const P = buildPath(), ci = pathIndex(P), total = P.length;
+  el('path-progress').textContent = ci >= total ? 'path complete 🎉' : 'step ' + (ci+1) + ' of ' + total;
+  if(ci >= total){
+    host.innerHTML = `<div class="path-now"><div class="pn-label">You've reached the end 🎉</div><div class="pn-sub">More steps are on the way — keep your reviews sharp.</div></div>`;
+    el('path-map').innerHTML = ''; return;
+  }
+  const cur = P[ci];
+  host.innerHTML = `<div class="path-now">
+    <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
+    <div class="pn-label">${esc(cur.label)}</div>
+    <div class="pn-sub">${esc(cur.sub||'')}</div>
+    <button class="btn full path-start" id="path-start">Start →</button></div>`;
+  el('path-start').onclick = ()=>launchNode(cur);
+  const from = Math.max(0, ci-2), to = Math.min(total, ci+4);
+  let map = '';
+  for(let i=from;i<to;i++){
+    const n = P[i], st = i<ci ? 'done' : (i===ci ? 'now' : 'locked');
+    map += `<button class="path-node2 ${st}" ${i<=ci ? 'data-pi="'+i+'"' : 'disabled'}><span class="pn-ic">${i<ci ? '✓' : (PATH_ICONS[n.type]||'•')}</span><span>${esc(n.label)}</span></button>`;
+  }
+  el('path-map').innerHTML = map;
+  el('path-map').querySelectorAll('[data-pi]').forEach(b=>b.addEventListener('click', ()=>{ const n = P[+b.dataset.pi]; if(n) launchNode(n); }));
+}
 function renderHome(){
   el('streak-num').textContent = state.streak.count;
   el('baht-num').textContent = state.baht || 0;
@@ -1694,6 +1777,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
+  renderRail();
   ensureDay(); questCheck(); renderPlan(); renderBounty(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown(); renderConstellation();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
