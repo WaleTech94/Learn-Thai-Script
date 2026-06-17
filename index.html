@@ -620,7 +620,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.20 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.21 (PWA)</div>
     </div>
   </section>
 
@@ -729,12 +729,8 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </button>
     </div>
     <div class="card" style="margin-bottom:16px">
-      <div class="eyebrow">Your calibration</div>
-      <div id="calib-body"><div class="sub">Wager on flashcards to build your record. When you bet 3💎 you should be right ~90%+ of the time — if not, you're overconfident.</div></div>
-    </div>
-    <div class="card" style="margin-bottom:16px">
       <div class="eyebrow">Personal best lap</div>
-      <div id="lap-body"><div class="sub">Your "clean run" = cards you bet 2 or 3💎 on and got right first time, out of all cards seen. Finish a flashcard session to set your first lap, then beat it.</div></div>
+      <div id="lap-body"><div class="sub">Your "clean run" = cards you got right on the first try, out of all cards seen. Finish a flashcard session to set your first lap, then beat it.</div></div>
     </div>
     <div class="card">
       <div class="eyebrow">Transliteration key</div>
@@ -1579,6 +1575,45 @@ function findWord(thai){
   const f = FOOD2.find(x=>x.thai===thai); if(f) return f;
   return null;
 }
+/* MC distractor pools (v2.21) — reading/alphabet cards are objective, never self-graded */
+function rawWordPool(){
+  const out = [];
+  LESSONS.forEach(L=>L.words.forEach(w=>out.push(w)));
+  [PHRASES, SLANG, TEACHER, FOOD2].forEach(a=>{ if(a) a.forEach(w=>out.push(w)); });
+  return out;
+}
+function learnedWordPool(){
+  const out = learnedWords().slice();
+  const have = new Set(out.map(w=>w.thai));
+  Object.keys(state.srs).filter(k=>k.startsWith('w:')).forEach(k=>{
+    const w = findWord(k.slice(2)); if(w && !have.has(w.thai)){ out.push(w); have.add(w.thai); }
+  });
+  return out;
+}
+function pickN(pool, exclude, n){
+  let p = [...new Set(pool)].filter(x=>x!==exclude);
+  return sample(p, n);
+}
+function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?,explain?}
+  if(id.startsWith('g:')){
+    const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
+    const opts = pickN(Object.values(GLYPHS).map(x=>x.sound), correct, 3);
+    return {prompt:(g&&g.disp)||ch, promptBig:true, text:'What sound?', answer:correct,
+      options:shuffle([correct, ...opts]), explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
+  }
+  if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
+    const thai = id.slice(2), w = findWord(thai);
+    let opts = pickN(learnedWordPool().map(x=>x.thai), thai, 3);
+    if(opts.length < 3) opts = pickN(rawWordPool().map(x=>x.thai), thai, 3);
+    return {prompt: w?w.en:'?', text:'Which one in Thai?', answer:thai,
+      options:shuffle([thai, ...opts]), thaiOpts:true, explain: w ? w.tr : ''};
+  }
+  const thai = id.slice(2), w = findWord(thai), correct = w ? w.en : '?';
+  let opts = pickN(learnedWordPool().map(x=>x.en), correct, 3);
+  if(opts.length < 3) opts = pickN(rawWordPool().map(x=>x.en), correct, 3);
+  return {prompt:thai, promptBig:true, text:'What does it mean?', answer:correct,
+    options:shuffle([correct, ...opts]), say:thai, explain: w ? w.tr : ''};
+}
 
 /* =====================================================
    SPEECH
@@ -2052,7 +2087,6 @@ function renderEarnBoard(){
       ${row("Complete the daily plan <span class='sub' style='font-size:12px'>(clear due cards + lesson or drill)</span>", "+10 💎 each day", wkPaid + "/7 this week")}
       ${row("Spell it — first-try words", "+2 💎 per word", "")}
       ${row("Class sprint at 85%+", "+3 💎", "")}
-      ${row("Flashcard wagers", "win or lose your 1–3 💎 stake", "calibration is the real game")}
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Every week</div>
@@ -2190,7 +2224,7 @@ function renderLap(){
   host.innerHTML =
     bar('Last session' + (lap.lastDate===todayStr()?' (today)':''), lap.last||0, 'last') +
     bar('All-time best', lap.best||0, 'best') +
-    `<div class="sub" style="font-size:12px;margin-top:4px">Beat your best by betting confidently and being right first time. New records pay +3💎.</div>`;
+    `<div class="sub" style="font-size:12px;margin-top:4px">Beat your best by getting cards right on the first try. New records pay +3💎.</div>`;
 }
 function renderProgressWall(){
   const host = el('progress-wall'); if(!host) return;
@@ -2792,17 +2826,6 @@ renderCats(); renderPhrases(); renderPack();
 function renderReviewTab(){
   const due = srsDue().length;
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due — add phrases or finish lessons';
-  const c = state.calib || {};
-  const rows = [1,2,3].map(s=>{
-    const r = c[s] || {n:0,c:0};
-    const pct = r.n ? Math.round(100*r.c/r.n) : null;
-    const target = s===1 ? '~60–75%' : s===2 ? '~75–90%' : '90%+';
-    return `<div class="calib-row">
-      <span>${s}💎 bets <span class="sub" style="font-size:12px">(target ${target})</span></span>
-      <span class="pct">${pct===null ? '—' : pct + '%'} <span class="sub" style="font-size:12px">n=${r.n}</span></span>
-    </div>`;
-  }).join('');
-  el('calib-body').innerHTML = rows + (state.wagerBest ? `<div class="calib-row"><span>🎯 best wager streak</span><span class="pct">${state.wagerBest} in a row</span></div>` : '');
   renderLap();
   renderPath();
 }
@@ -2820,7 +2843,7 @@ el('cta-quiz').addEventListener('click', ()=>{
 });
 
 function startFlashcards(queue){
-  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, wstreak:0, wmax:0, cleanFirst:0, seen:{}, started:Date.now()};
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now()};
   openOverlay(); renderFlash();
 }
 function renderFlash(){
@@ -2828,13 +2851,6 @@ function renderFlash(){
   if(p.i >= p.queue.length){
     setProg(100);
     const d = ensureDay(); d.r += p.reviewed;
-    let bestLine = '';
-    if((p.wmax||0) >= 3 && (p.wmax||0) > (state.wagerBest||0)){
-      state.wagerBest = p.wmax; award(3); p.net += 3;
-      bestLine = `<div class="result-sub" style="color:var(--gold)">🎯 New best wager streak: ${p.wmax} in a row · +3💎</div>`;
-    } else if((p.wmax||0) >= 2){
-      bestLine = `<div class="result-sub">best wager run this session: ${p.wmax} in a row</div>`;
-    }
     // session pace EMA (v2.15) — feeds the runway estimate; clamp to ignore backgrounded sessions
     if(p.reviewed > 0 && p.started){
       const per = (Date.now() - p.started) / 1000 / p.reviewed;
@@ -2844,7 +2860,7 @@ function renderFlash(){
         state.paceN = (state.paceN||0) + 1;
       }
     }
-    // personal best lap: clean run = confident-and-right-first-time / cards seen (min 5 cards)
+    // personal best lap: clean run = right on the FIRST try / cards seen (min 5 cards)
     let lapLine = '';
     const seenN = Object.keys(p.seen||{}).length;
     if(seenN >= 5){
@@ -2860,79 +2876,63 @@ function renderFlash(){
     }
     saveState();
     bumpStreak(); questCheck();
-    const net = p.net >= 0 ? '+' + p.net : String(p.net);
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed · net ${net}💎</div>
-      ${bestLine}
+      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed</div>
       ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
     return;
   }
   setProg(Math.round(100*p.i/p.queue.length));
-  const id = p.queue[p.i], f = cardFront(id), b = cardBack(id);
+  const id = p.queue[p.i];
   const sayText = cardSay(id);
-  const listen = id.startsWith('w:') && Math.random() < 0.3;   // 30% of word cards become listening cards
-  const isReverse = id.startsWith('r:');
-  const frontBig = listen ? '🔊' : f.big;
-  const frontHint = listen ? 'What did you hear?' : f.hint;
-  el('stage').innerHTML = `
-    <div class="flashcard" id="fc">
-      <div class="fc-inner">
-        <div class="fc-face front">
-          <div class="${f.small ? 'fc-mid' : 'fc-big'}">${esc(String(frontBig))}</div>
-          <div class="fc-hint">${frontHint}</div>
-        </div>
-        <div class="fc-face back">
-          <div class="fc-mid">${esc(b.big)}</div>
-          ${b.tr?`<div class="fc-tr">${b.tr}</div>`:''}
-          ${b.en?`<div class="fc-en">${b.en}</div>`:''}
+  const listen = id.startsWith('w:') && Math.random() < 0.3;   // 30% of word cards → trust-based listening
+
+  function advance(right){
+    const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
+    if(firstAttempt && right) p.cleanFirst++;        // clean run = right on the FIRST try (no gambling)
+    if(right){ srsGrade(id, 2); }                    // Good — interval advances
+    else { srsGrade(id, 0); p.queue.push(id); }      // Again — requeue this session
+    p.reviewed++; p.i++; renderFlash();
+  }
+
+  if(listen){
+    // LISTENING → trust-based (no objective answer exists): hear it, reveal, self-rate
+    const b = cardBack(id);
+    el('stage').innerHTML = `
+      <div class="flashcard" id="fc">
+        <div class="fc-inner">
+          <div class="fc-face front">
+            <div class="fc-big">🔊</div>
+            <div class="fc-hint">What did you hear?</div>
+          </div>
+          <div class="fc-face back">
+            <div class="fc-mid">${esc(b.big)}</div>
+            ${b.tr?`<div class="fc-tr">${b.tr}</div>`:''}
+            ${b.en?`<div class="fc-en">${b.en}</div>`:''}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row" style="justify-content:center">${(listen || !isReverse) ? speakBtn(sayText) : ''}</div>
-    <div id="fc-action">
-      <div class="q-feedback" style="margin-bottom:8px">How sure are you?</div>
-      <div class="wagerrow">
-        <button class="wager" data-w="1">1💎</button>
-        <button class="wager" data-w="2">2💎</button>
-        <button class="wager" data-w="3">3💎</button>
-      </div>
-    </div>
-    <div class="q-feedback">${p.i+1} of ${p.queue.length} · 💎${state.baht||0}</div>`;
-  const fc = el('fc');
-  if(listen) setTimeout(()=>speak(sayText), 300);
-  let stake = 0;
-  el('fc-action').querySelectorAll('.wager').forEach(w=>{
-    w.addEventListener('click', ()=>{
-      stake = +w.dataset.w;
-      fc.classList.add('flipped');
+      <div class="row" style="justify-content:center">${speakBtn(sayText)}</div>
+      <div id="fc-action"><button class="btn full" id="fc-reveal">Reveal answer</button></div>
+      <div class="q-feedback">${p.i+1} of ${p.queue.length} · listening</div>`;
+    setTimeout(()=>speak(sayText), 300);
+    el('fc-reveal').onclick = ()=>{
+      el('fc').classList.add('flipped');
       el('fc-action').innerHTML = `
         <div class="rw-grid">
-          <button class="btn" style="background:var(--bad);color:#fff" id="rw-wrong">✗ I was wrong</button>
-          <button class="btn" style="background:var(--good);color:var(--bg)" id="rw-right">✓ I was right</button>
+          <button class="btn" style="background:var(--bad);color:#fff" id="rw-miss">Missed it</button>
+          <button class="btn" style="background:var(--good);color:var(--bg)" id="rw-got">Got it</button>
         </div>`;
-      el('rw-right').onclick = ()=>resolve(true);
-      el('rw-wrong').onclick = ()=>resolve(false);
-    });
-  });
-  function resolve(right){
-    const cal = state.calib[stake] || (state.calib[stake] = {n:0,c:0});
-    cal.n++; if(right) cal.c++;
-    const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
-    if(firstAttempt && right && stake >= 2) p.cleanFirst++;   // clean run: confident + right first time
-    if(right){
-      award(stake); p.net += stake; srsGrade(id, stake); // 1=Hard 2=Good 3=Easy
-      p.wstreak++; if(p.wstreak > p.wmax) p.wmax = p.wstreak;
-      if(p.wstreak % 5 === 0){ award(2); p.net += 2; toast('🎯 ' + p.wstreak + ' wagers in a row · +2💎'); }
-    } else {
-      award(-stake); p.net -= stake; srsGrade(id, 0); p.queue.push(id);
-      p.wstreak = 0;
-    }
-    p.reviewed++;
-    p.i++; renderFlash();
+      el('rw-miss').onclick = ()=>advance(false);
+      el('rw-got').onclick = ()=>advance(true);
+    };
+    return;
   }
+
+  // READING / ALPHABET → objective multiple choice (you never rate yourself)
+  renderQuizQ(mcCard(id), advance, `${p.i+1} of ${p.queue.length}`, 0);
 }
 
 function buildMixedQuiz(){
