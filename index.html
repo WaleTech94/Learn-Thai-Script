@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.30 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.31 (PWA)</div>
     </div>
   </section>
 
@@ -1032,7 +1032,7 @@ const LESSONS = [
      {thai:"สร้าง", tr:"sâang", en:"to build"},
      {thai:"อร่อย", tr:"a-ròy", en:"delicious"}
    ]},
-  {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
+  {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit — same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
    note:"◌์ (gaa-ran) silences the letter under it — Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
    words:[
      {thai:"เธอ", tr:"ter", en:"you / she (informal)"},
@@ -1041,7 +1041,7 @@ const LESSONS = [
      {thai:"ศูนย์", tr:"sǔun", en:"zero / centre"}
    ]},
   {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING → chǎn = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ + recognition-only rarities", glyphs:["ฉ"],
-   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise, don't drill:<br><br>ฌ (ch) · ฎ (d) · ฏ (dt) · ฐ ฑ ฒ (th) · ณ (n) · ษ (s) · ฆ (kh) · ฬ (l)<br><br>Two letters are RETIRED — ฃ and ฅ exist on keyboards but no living word uses them. 44 consonants, 42 in service."}],
+   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them — and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED — ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 — the Letters boss will check you know them."}],
    note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
    words:[
      {thai:"ฉัน", tr:"chǎn", en:"I (informal)"},
@@ -1049,7 +1049,7 @@ const LESSONS = [
      {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior"},
      {thai:"สนุก", tr:"sà-nùk", en:"fun"}
    ]},
-  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ◌่ on LOW class → FALLING → phûean = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
+  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ◌่ on LOW class → FALLING → phûean = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels — class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes mái-èek → <b>falling</b>, phûean."}], sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
    note:"ๆ (mái yá-mók) repeats the previous word: ช้าๆ = cháa cháa = slowly. เร็วๆ = quickly. You'll see it everywhere.",
    words:[
      {thai:"เรียน", tr:"rian", en:"to study"},
