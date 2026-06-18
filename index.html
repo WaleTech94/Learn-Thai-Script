@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.26 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.27 (PWA)</div>
     </div>
   </section>
 
@@ -642,47 +642,6 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <h1 style="margin-bottom:4px">Read Thai, fast wins first</h1>
     <p class="sub" style="margin-bottom:18px">24 lessons, 4 units: foundations &rarr; workhorse letters &rarr; the tone engine &rarr; clusters and the long tail. Finish Unit D and you can sound out any sign in Bangkok.</p>
     <div class="lesson-list" id="lesson-list"></div>
-  </section>
-
-  <!-- TONES -->
-  <section class="view" id="view-tones">
-    <div class="eyebrow">The five tones</div>
-    <h1 style="margin-bottom:4px">Same sounds, five words</h1>
-    <p class="sub" style="margin-bottom:18px">Thai is tonal: pitch changes meaning. The classic example — five words that are all "khaa".</p>
-    <div class="card" style="margin-bottom:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Tone licence</div>
-        <span class="sub" style="font-size:12px" id="lic-state">not yet earned</span>
-      </div>
-      <div class="calib-row"><span>Listening <span class="sub" style="font-size:12px">(target 85%)</span></span><span class="pct" id="lic-listen">—</span></div>
-      <div class="calib-row"><span>Rule derivation <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">—</span></div>
-      <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. First licence pays 30💎; it expires after 30 days — re-certify to keep it (10💎). That's your monthly cumulative review, disguised.</div>
-    </div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="eyebrow">The class cheat code</div>
-      <div class="sub" style="line-height:1.7">
-        Memorise two small sets — everything else is low class by default.<br><br>
-        <b style="color:var(--mid);font-weight:500">Mid (9):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ก จ ฎ ฏ ด ต บ ป อ</span><br>
-        <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง — "the chicken pecks the kid dead on the rim of the jar."</span><br><br>
-        <b style="color:var(--high);font-weight:500">High (11):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ข ฃ ฉ ฐ ถ ผ ฝ ศ ษ ส ห</span><br>
-        <span style="font-size:13px">All breathy or hissy sounds — kh, ch, th, ph, f, s, h.</span><br><br>
-        <b style="color:var(--low);font-weight:500">Low: the other 24.</b> Never memorise them.<br><br>
-        <span style="font-size:13px">The deep pattern: high/low pairs (ข/ค, ถ/ท, ผ/พ, ฝ/ฟ, ส/ซ, ห/ฮ) are the same sounds twice — so every sound can reach every tone.</span>
-      </div>
-      <div style="margin-top:14px"><button class="btn full ghost" id="class-sprint-btn">Class sprint · 15 quick calls</button></div>
-    </div>
-    <div class="phrase-list" id="tone-list"></div>
-    <div class="section-gap"></div>
-    <div class="eyebrow">Real-life set</div>
-    <p class="sub" style="margin-bottom:12px">The "mai" family — you'll hear these daily in Bangkok.</p>
-    <div class="phrase-list" id="tone-list2"></div>
-    <div class="section-gap"></div>
-    <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
-    <button class="btn full" id="twins-btn" style="margin-top:10px">Sound twins · hear tone &amp; length apart</button>
-    <button class="btn full ghost" id="echo-btn" style="margin-top:10px">Echo chamber · shadow the tones aloud</button>
-    <div style="height:10px"></div>
-    <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
-    <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
   </section>
 
   <!-- PHRASES -->
@@ -714,6 +673,47 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div id="path-body"></div>
       <div class="sub" style="font-size:12px;margin-top:10px">Hear &amp; say first, edge cases last. The gold drill is your best next move; locked ones open as you reach the lesson.</div>
     </div>
+
+    <!-- tones & class — folded in from the old Tones tab (v2.27): tone isn't a separate destination, it's part of reading -->
+    <div class="eyebrow" style="margin-top:18px">Tones &amp; class</div>
+    <p class="sub" style="margin-bottom:14px">Thai is tonal — pitch changes meaning, and <b style="color:var(--text);font-weight:500">class is the dial that sets the tone</b>. Your reference and ear-training live here, woven into practice instead of a separate tab.</p>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Tone licence</div>
+        <span class="sub" style="font-size:12px" id="lic-state">not yet earned</span>
+      </div>
+      <div class="calib-row"><span>Listening <span class="sub" style="font-size:12px">(target 85%)</span></span><span class="pct" id="lic-listen">—</span></div>
+      <div class="calib-row"><span>Rule derivation <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">—</span></div>
+      <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. First licence pays 30💎; it expires after 30 days — re-certify to keep it (10💎). That's your monthly cumulative review, disguised.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="eyebrow">The class cheat code</div>
+      <div class="sub" style="line-height:1.7">
+        <b style="color:var(--text);font-weight:500">Class is the dial that sets the tone</b> — same letters, different class gives a different tone. Memorise two small sets — everything else is low class by default.<br><br>
+        <b style="color:var(--mid);font-weight:500">Mid (9):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ก จ ฎ ฏ ด ต บ ป อ</span><br>
+        <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง — "the chicken pecks the kid dead on the rim of the jar."</span><br><br>
+        <b style="color:var(--high);font-weight:500">High (11):</b> <span class="thai" style="font-family:'Mitr',sans-serif">ข ฃ ฉ ฐ ถ ผ ฝ ศ ษ ส ห</span><br>
+        <span style="font-size:13px">All breathy or hissy sounds — kh, ch, th, ph, f, s, h.</span><br><br>
+        <b style="color:var(--low);font-weight:500">Low: the other 24.</b> Never memorise them.<br><br>
+        <span style="font-size:13px">The deep pattern: high/low pairs (ข/ค, ถ/ท, ผ/พ, ฝ/ฟ, ส/ซ, ห/ฮ) are the same sounds twice — so every sound can reach every tone.</span>
+      </div>
+      <div style="margin-top:14px"><button class="btn full ghost" id="class-sprint-btn">Class sprint · 15 quick calls</button></div>
+    </div>
+    <div class="eyebrow">The five tones — same sounds, five words</div>
+    <p class="sub" style="margin-bottom:12px">The classic example: five words that are all "khaa".</p>
+    <div class="phrase-list" id="tone-list"></div>
+    <div class="section-gap"></div>
+    <div class="eyebrow">Real-life set</div>
+    <p class="sub" style="margin-bottom:12px">The "mai" family — you'll hear these daily in Bangkok.</p>
+    <div class="phrase-list" id="tone-list2"></div>
+    <div class="section-gap"></div>
+    <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
+    <button class="btn full" id="twins-btn" style="margin-top:10px">Sound twins · hear tone &amp; length apart</button>
+    <button class="btn full ghost" id="echo-btn" style="margin-top:10px">Echo chamber · shadow the tones aloud</button>
+    <div style="height:10px"></div>
+    <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
+    <p class="sub" style="margin-top:10px;font-size:12px;margin-bottom:18px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
+
     <div class="homecta">
       <button class="card cta-card" id="cta-flash">
         <div><div class="t">Flashcards</div><div class="d" id="flash-sub">0 cards due</div></div>
@@ -772,7 +772,6 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <div class="tabbar-inner">
     <button class="tab active" data-view="home"><span class="tab-glyph">บ้</span>Home</button>
     <button class="tab" data-view="learn"><span class="tab-glyph">ก</span>Learn</button>
-    <button class="tab" data-view="tones"><span class="tab-glyph">ห้</span>Tones</button>
     <button class="tab" data-view="phrases"><span class="tab-glyph">พูด</span>Phrases</button>
     <button class="tab" data-view="review"><span class="tab-glyph">ซ้ำ</span>Review</button>
   </div>
@@ -1438,7 +1437,7 @@ const DRILLS = [
   {id:'phrases',     title:'Phrase pack',       rung:1, gate:'l1',  go:()=>gotoView('phrases')},
   {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
-  {id:'sprint',      title:'Class sprint',      rung:3, gate:'l5',  go:()=>el('class-sprint-btn').click()},
+  {id:'sprint',      title:'Class sprint',      rung:1, gate:'l1',  go:()=>el('class-sprint-btn').click()},
   {id:'ghost',       title:'Glyph ghost',       rung:3, gate:'l7',  go:()=>el('cta-ghost').click()},
   {id:'tone-rule',   title:'Tone-rule trainer', rung:3, gate:'l13', go:()=>el('tone-rule-btn').click()},
   {id:'reading',     title:'Reading room',      rung:4, gate:'l4',  go:()=>el('cta-read').click()},
@@ -1778,7 +1777,6 @@ document.querySelectorAll('.tab').forEach(t=>{
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     el('view-'+t.dataset.view).classList.add('active');
     if(t.dataset.view==='home') renderHome();
-    if(t.dataset.view==='tones') renderTones();
     if(t.dataset.view==='learn') renderLearn();
     if(t.dataset.view==='review') renderReviewTab();
     window.scrollTo({top:0});
@@ -1840,16 +1838,35 @@ function lessonLockedByCheck(idx){
   return false;
 }
 /* ---- learning path / guided rail (v2.20) — one ordered journey; Home shows the next step ---- */
-const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜', checkpoint:'👑'};
+const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜', checkpoint:'👑', class:'🗝️'};
+/* class primer (v2.27) — surfaced as an early path node, BEFORE the lessons pile up letters.
+   Teaches the cheat-code AND the why: class is the dial that sets a syllable's tone. */
+function showClassPrimer(){
+  openOverlay(); setProg(100);
+  el('stage').innerHTML = `
+    <div class="center"><h2>The three classes</h2></div>
+    <div class="notebox" style="font-size:15px;line-height:1.85">
+      Every Thai consonant has a <b>class</b> — and class is the dial that sets the <b>tone</b> of a syllable. Same letters, different class &rarr; different tone. So class isn't trivia or just a colour: it's <i>how you read tone</i>.<br><br>
+      You only memorise <b>two small sets</b> — everything else is low class by default:<br><br>
+      <b style="color:var(--mid);font-weight:600">Mid (9):</b> <span style="font-family:'Mitr',sans-serif">ก จ ฎ ฏ ด ต บ ป อ</span><br>
+      <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง — "the chicken pecks the kid dead on the rim of the jar."</span><br><br>
+      <b style="color:var(--high);font-weight:600">High (11):</b> <span style="font-family:'Mitr',sans-serif">ข ฃ ฉ ฐ ถ ผ ฝ ศ ษ ส ห</span><br>
+      <span style="font-size:13px">the breathy / hissy ones — kh, ch, th, ph, f, s, h.</span><br><br>
+      <b style="color:var(--low);font-weight:600">Low: the other 24.</b> Never memorise them — not mid, not high &rarr; it's low.
+    </div>
+    <div class="sub" style="font-size:12px;margin-top:10px">You'll drill this in Class sprint, and the colours (mid teal · high pink · low marigold) are the same everywhere in the app.</div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Got it →</button></div>`;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+}
 function buildPath(){
   const W_EARLY = [
     {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
+    {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
     {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
     {t:'speak', l:'Echo chamber', s:'shadow the tones aloud', go:()=>el('echo-btn').click()},
   ];
   const W_MID = W_EARLY.concat([
     {t:'drill', l:'Confusion clinic', s:'untangle lookalikes', go:()=>el('cta-clinic').click()},
-    {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
   ]);
   const W_LATE = W_MID.concat([
     {t:'drill', l:'Glyph ghost', s:'spot the lookalike fast', go:()=>el('cta-ghost').click()},
@@ -1857,6 +1874,7 @@ function buildPath(){
   ]);
   const N = [
     {type:'tone',  label:'Hear the five tones', sub:'your ear comes first',  id:'p:tones', go:()=>el('tone-drill-btn').click()},
+    {type:'class', label:'Meet the three classes', sub:'the dial that sets every tone', id:'p:class', go:()=>showClassPrimer()},
     {type:'speak', label:'Say hello — สวัสดีครับ', sub:'sà-wàt-dii khráp',     id:'p:hello', go:()=>gotoView('phrases')},
   ];
   LESSONS.forEach((L,i)=>{
@@ -2548,7 +2566,6 @@ function buildCheckpointQuiz(upTo){
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = Ls.flatMap(L=>L.words).filter(w=>w.util!=='practice');
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
-  const allWordsPool = LESSONS.flatMap(x=>x.words);
   const qs = [];
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
@@ -2561,11 +2578,10 @@ function buildCheckpointQuiz(upTo){
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);   // READING: decode the script → meaning
-    if(wrong.length===3) qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    // pure letters (v2.27): no word-meaning recall — keep the read-the-tone check (the letter→class→tone payoff)
     if(monoSyllable(w)) qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
   });
-  // gate certifies READING; sound-recall (type it) is the backbone — up to half the 12 — with class/meaning/tone MCQ filling out
+  // gate certifies READING the script: sound-recall (type it) is the backbone — up to half the 12 — with class + tone MCQ filling out
   const types = qs.filter(q=>q.kind==='type'), others = qs.filter(q=>q.kind!=='type');
   const nType = Math.min(types.length, 6);
   const nOther = Math.min(others.length, 12 - nType);
@@ -2711,16 +2727,14 @@ function finishLesson(){
   if(firstTime){
     state.done.push(L.id);
     L.glyphs.forEach(g=>srsAdd('g:'+g));
-    L.words.forEach(w=>{
-      if(w.util === 'practice') return;     // decode-practice words stay out of the deck
-      srsAdd('w:'+w.thai);
-      srsAdd('r:'+w.thai);                  // reverse card: English -> Thai
-    });
+    // pure letters (v2.27): the review deck is letters-only. Words live IN the lesson as decode
+    // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards —
+    // that was "heavy on definitions of words that don't mean much alone." Letter → class → tone is the spine.
   }
   ensureDay().l++; bumpStreak(); saveState(); questCheck();
   el('stage').innerHTML = `
     <div class="result-big">${p.correct} / ${p.quiz.length}</div>
-    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete — everything added to your review deck.':'Nice refresher.'}</div>
+    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete — the letters are in your review deck.':'Nice refresher.'}</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
@@ -3081,6 +3095,7 @@ function renderReviewTab(){
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due — add phrases or finish lessons';
   renderLap();
   renderPath();
+  renderTones();        // tone licence panel now lives in the Review tab (folded in v2.27)
 }
 el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
@@ -3617,19 +3632,13 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
 
 (async function init(){
   await loadState();
-  // v2.3 migration: reverse cards for completed lessons; practice words out of the deck
   let migrated = false;
-  for(const L of LESSONS){
-    if(!state.done.includes(L.id)) continue;
-    L.words.forEach(w=>{
-      if(w.util === 'practice'){
-        if(state.srs['w:'+w.thai]){ delete state.srs['w:'+w.thai]; migrated = true; }
-      } else if(!state.srs['r:'+w.thai]){
-        srsAdd('r:'+w.thai); migrated = true;
-      }
-    });
+  // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)
+  // cards; KEEP phrase cards (w: whose thai isn't a lesson word). Words stay in lessons as decode practice.
+  for(const id of Object.keys(state.srs)){
+    if(id.startsWith('r:')){ delete state.srs[id]; migrated = true; }                          // every reverse card was a lesson word
+    else if(id.startsWith('w:') && isLessonWord(id.slice(2))){ delete state.srs[id]; migrated = true; }
   }
-  ['w:นา','w:กา','w:ลาว'].forEach(k=>{ if(state.srs[k]){ delete state.srs[k]; migrated = true; } });
   if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
   if(!state.notes){ state.notes = []; migrated = true; }     // v2.26 test-notes pad
   if(migrated) saveState();
