@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.28 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.29 (PWA)</div>
     </div>
   </section>
 
@@ -909,7 +909,7 @@ const LESSONS = [
      {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)"}
    ]},
   /* ---------------- UNIT B — The workhorses ---------------- */
-  {id:"l7", we:{m:"งาน → ง ng STARTS the syllable + าน → live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
+  {id:"l7", we:{m:"งาน → ง ng STARTS the syllable + าน → live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials — class still leads", body:"ง 'ng' can <b>start</b> a syllable — งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take mái-thoo and jump to a <b>high</b> tone — ช้าง cháang. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
    note:"ง 'ng' can START a syllable in Thai — งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
    words:[
      {thai:"งาน", tr:"ngaan", en:"work"},
@@ -917,7 +917,7 @@ const LESSONS = [
      {thai:"จาน", tr:"jaan", en:"plate"},
      {thai:"วันนี้", tr:"wan-níi", en:"today"}
    ]},
-  {id:"l8", we:{m:"ถูก → ถ HIGH class + ูก → ends in a k-stop = dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
+  {id:"l8", we:{m:"ถูก → ถ HIGH class + ูก → ends in a k-stop = dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th — no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก thùuk (it ends in a k-stop). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under mái-èek falls: พ่อ phôr."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
    note:"ต dt is the unaspirated twin of ท th — no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
    words:[
      {thai:"ตา", tr:"dtaa", en:"eye / maternal grandpa"},
@@ -934,7 +934,7 @@ const LESSONS = [
      {thai:"ฝน", tr:"fǒn", en:"rain"},
      {thai:"ซ้าย", tr:"sáai", en:"left"}
    ]},
-  {id:"l10", we:{m:"แม่ → แ written first + ม LOW + ◌่ → FALLING → mâae = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
+  {id:"l10", we:{m:"แม่ → แ written first + ม LOW + ◌่ → FALLING → mâae = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", pre:[{h:"Front vowels — tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have — listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with mái-èek → <b>falling</b>, แม่ mâae."}], sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
    note:"ึ/ื is the vowel English doesn't have: say 'oo' but spread your lips into a flat smile. Listen and copy.",
    words:[
      {thai:"แม่", tr:"mâae", en:"mother"},
@@ -942,7 +942,7 @@ const LESSONS = [
      {thai:"มือ", tr:"muue", en:"hand"},
      {thai:"ลึก", tr:"lúek", en:"deep"}
    ]},
-  {id:"l11", we:{m:"รถ → hidden o + ถ stop → dead SHORT on low class → HIGH → rót = car", twinIdx:0, ask:"tr"}, unit:"B · The workhorses", title:"Short and snappy", sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
+  {id:"l11", we:{m:"รถ → hidden o + ถ stop → dead SHORT on low class → HIGH → rót = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> — like จะ, ทุก, or a hidden 'o' before a stop. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b>, รถ rót, ทุก thúk. (Mid class stays low: จะ jà.)"}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
    note:"◌ะ chops a vowel short and makes the syllable DEAD — which changes its tone. จะ jà (will) is low tone for exactly that reason.",
    words:[
      {thai:"จะ", tr:"jà", en:"will (future marker)"},
@@ -950,7 +950,7 @@ const LESSONS = [
      {thai:"ทุก", tr:"thúk", en:"every"},
      {thai:"กุ้ง", tr:"gûng", en:"shrimp"}
    ]},
-  {id:"l12", we:{m:"เขา → เ◌า wraps the consonant → kh + ao → ข high, live → RISING → khǎo = he/she", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"He, she, water, yes", sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
+  {id:"l12", we:{m:"เขา → เ◌า wraps the consonant → kh + ao → ข high, live → RISING → khǎo = he/she", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"He, she, water, yes", pre:[{h:"Wrap-around vowels — tone from class", body:"เ◌า wraps the consonant — เขา = kh + ao — and ◌ำ is -am: น้ำ náam. ใ sounds exactly like ไ; only ~20 words use it (ใช่, ใหม่, ใจ…). Tone still comes from class: <span style='color:var(--high);font-weight:600'>high</span> ข + live → <b>rising</b>, เขา khǎo."}], sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
    note:"ใ (mái múan) sounds identical to ไ. Only 20 words in the whole language use it — ใช่, ใหม่, ใกล้, ใจ are the ones you'll meet constantly.",
    words:[
      {thai:"เขา", tr:"khǎo", en:"he / she"},
