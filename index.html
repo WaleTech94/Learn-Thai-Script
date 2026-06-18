@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.27 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.28 (PWA)</div>
     </div>
   </section>
 
@@ -855,6 +855,7 @@ const GLYPHS = {
 const LESSONS = [
   /* ---------------- UNIT A — Foundations ---------------- */
   {id:"l1", we:{m:"มา → ม (low class) + า aa → live syllable, no mark → MID tone → maa = to come", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
+   pre:[{h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant — what <b>class</b> is it? The colour tells you: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone. Easiest case first: a plain long-vowel syllable with no mark — มา, มี — is live and sits on the flat <b>mid</b> tone."}],
    note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants — after, above, below, even before.",
    words:[
      {thai:"มา", tr:"maa", en:"to come"},
@@ -863,6 +864,7 @@ const LESSONS = [
      {thai:"กา", tr:"gaa", en:"crow", util:"practice"}
    ]},
   {id:"l2", we:{m:"กิน → ก + ◌ิ + น final → still rings (live) → MID → gin = to eat", twinIdx:2, ask:"tr"}, unit:"A · Foundations", title:"Eat, look, fly", sub:"ด บ อ + short i, long uu", glyphs:["ด","บ","อ","ิ","ู"],
+   pre:[{h:"Endings that ring stay live", body:"A consonant on the end is a <b>final</b>. If it rings on — น (-n), ม (-m) — the syllable is still <b>live</b>: กิน, บิน. Plain, live, no mark, on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial → still the <b>mid</b> tone. Read the class first, every time."}],
    note:"A consonant at the END of a syllable is a 'final'. น as a final is just -n: กิน = g + i + n.",
    words:[
      {thai:"กิน", tr:"gin", en:"to eat"},
@@ -871,6 +873,7 @@ const LESSONS = [
      {thai:"บิน", tr:"bin", en:"to fly"}
    ]},
   {id:"l3", we:{m:"ไป → ไ written FIRST, said after → bp + ai → live → MID → bpai = to go", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
+   pre:[{h:"Dead endings drop the tone", body:"A final <b>stop</b> — ก (-k), ท/ด (-t), บ/ป (-p) — cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. (Vowels ไ โ are written in front but said after: ไป = bp + ai.)"}],
    note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat.",
    words:[
      {thai:"ไป", tr:"bpai", en:"to go"},
@@ -879,6 +882,7 @@ const LESSONS = [
      {thai:"ปี", tr:"bpii", en:"year"}
    ]},
   {id:"l4", we:{m:"ไม่ → ม LOW class + ◌่ mai èek → on low class that's FALLING → mâi = not", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
+   pre:[{h:"Tone marks — the class decides", body:"Two marks sit above the consonant: <b>่</b> (mái èek) and <b>้</b> (mái thoo). The <i>same</i> mark gives a <i>different</i> tone depending on the initial's class — this is exactly why the colours are load-bearing:<br>• <span style='color:var(--mid);font-weight:600'>mid</span> + ้ → <b>falling</b> (บ้าน)<br>• <span style='color:var(--high);font-weight:600'>high</span> + ้ → <b>falling</b> (ห้า)<br>• <span style='color:var(--low);font-weight:600'>low</span> + ่ → <b>falling</b> (ไม่)<br>Read the colour first, then the mark. The full table comes in Unit C."}],
    note:"The SAME mark gives different tones depending on consonant class. On low-class ม: ไม่ = falling. On mid-class บ: บ้าน = falling. This is why the colours matter.",
    words:[
      {thai:"ไม่", tr:"mâi", en:"no / not"},
@@ -887,6 +891,7 @@ const LESSONS = [
      {thai:"ห้า", tr:"hâa", en:"five"}
    ]},
   {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ as a vowel", glyphs:["ร","ล","ว","ย"],
+   pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class — and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) — that flip is the Unit-C payoff."}],
    note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as a final makes -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า — properly yours in lesson 12.)",
    words:[
      {thai:"รอ", tr:"ror", en:"to wait"},
@@ -895,6 +900,7 @@ const LESSONS = [
      {thai:"ลาว", tr:"laao", en:"Lao / Laos", util:"practice"}
    ]},
   {id:"l6", we:{m:"ขอ → ข HIGH class + or → live, no mark → RISING → khǒr = may I have", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"High class, please", sub:"ส ข + asking nicely", glyphs:["ส","ข"],
+   pre:[{h:"High class, plain live = rising", body:"ส ข are <span style='color:var(--high);font-weight:600'>high</span> class. A <span style='color:var(--high);font-weight:600'>high</span>-class initial on a plain live syllable gives a <b>rising</b> tone — the voice dips then lifts, like a question: ขอ khǒr (may I have…), สาม sǎam. Almost every polite request in Thailand opens with a rising ขอ."}],
    note:"High-class consonants with a plain live syllable give a RISING tone: ขอ khǒr (may I have…) starts almost every polite request in Thailand.",
    words:[
      {thai:"ขอ", tr:"khǒr", en:"may I have… (request)"},
@@ -2741,25 +2747,28 @@ function finishLesson(){
 
 /* build per-lesson quiz: glyph->sound, sound->glyph, word->meaning */
 function buildLessonQuiz(L){
-  const qs = [];
-  const cons = L.glyphs.filter(g=>GLYPHS[g].type==='c');
+  const soundQs = [], classQs = [];
+  const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   cons.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    qs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
+    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
     const wrongG = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3);
-    qs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
+    soundQs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
+    // SPINE (v2.28): every consonant is also drilled on its CLASS in-lesson — class is the dial that sets tone
+    classQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)), say:ch,
+      explain: g.cls==='mid'?'one of the mid 9 (ไก่จิก…)':g.cls==='high'?'one of the high set (breathy/hissy)':'not mid or high → low by default'});
   });
-  if(L.extraQuiz) qs.push(...L.extraQuiz);
-  // meaning checks are GUARANTEED — one per word, never sampled away
-  const wordQs = L.words.map(w=>{
+  // GUARANTEED: class (the spine) + word→meaning (encode; core words only, practice words stay decode-only) + any lesson extras.
+  const wordQs = L.words.filter(w=>w.util!=='practice').map(w=>{
     const pool = LESSONS.flatMap(x=>x.words).filter(x=>x.thai!==w.thai && x.en!==w.en);
     const wrong = sample(pool,3).map(x=>x.en);
     return {kind:'mcq', prompt:w.thai, promptBig:true, text:'What does this mean?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai};
   });
-  const fill = Math.max(0, 9 - wordQs.length);
-  return shuffle(wordQs.concat(sample(qs, Math.min(fill, qs.length))));
+  const guaranteed = classQs.concat(wordQs).concat(L.extraQuiz||[]);
+  const fill = Math.max(0, 10 - guaranteed.length);
+  return shuffle(guaranteed.concat(sample(soundQs, Math.min(fill, soundQs.length))));
 }
 
 /* generic MCQ renderer used by lessons, mixed quiz, tone drill */
