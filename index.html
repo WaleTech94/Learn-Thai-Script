@@ -631,8 +631,8 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="export-btn">Export progress</button>
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
-      <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.32 (PWA)</div>
+      <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">↺ Reset all progress</button>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.33 (PWA)</div>
     </div>
   </section>
 
@@ -2486,10 +2486,19 @@ function renderHeatmap(){
 }
 
 el('reset-btn').addEventListener('click', async ()=>{
-  if(!confirm('Wipe all progress, streak and review cards?')) return;
-  state = {streak:{count:0,last:null}, done:[], srs:{}, intro:{}, baht:0, freeze:0, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}}, boss:{}, packs:[]};
-  try{ if(window.storage) await window.storage.set('thai_state_v1', JSON.stringify(state)); }catch(e){}
-  renderHome(); toast('Progress reset');
+  if(!confirm('Reset ALL progress? This clears completed lessons, your review deck, streak, day plan, mastery checks, tokens and shop items — everything goes back to a fresh start. (Your test notes are kept.) This cannot be undone.')) return;
+  const keptNotes = (state.notes||[]).slice();                    // testing feedback survives a progress wipe
+  const fresh = {
+    streak:{count:0,last:null}, done:[], srs:{}, intro:{}, baht:0, freeze:0,
+    days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}}, boss:{}, checks:{},
+    notes:keptNotes, packs:[]
+  };
+  state = fresh;
+  const raw = JSON.stringify(fresh);
+  try{ localStorage.setItem(SKEY, raw); }catch(e){}               // PWA / browser — the store the old handler forgot (so it actually persists on iPhone)
+  try{ if(window.storage) await window.storage.set(SKEY, raw); }catch(e){}   // Claude-artifact fallback
+  toast('Progress reset — starting fresh…');
+  setTimeout(()=>location.reload(), 450);                          // reload → init() rebuilds cleanly, no half-wiped state
 });
 
 /* =====================================================
