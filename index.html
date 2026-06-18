@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.31 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.32 (PWA)</div>
     </div>
   </section>
 
@@ -1891,16 +1891,19 @@ function buildPath(){
     if(story) N.push({type:'read', label:'Read — '+story.title.split('—').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-read').click(), 60); }});
     if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'prove ≥80% on everything so far to unlock the next lessons', id:checkpointId(i), checkpoint:i});
   });
+  N.push({type:'checkpoint', label:'Letters boss — class of all 42', sub:'the Phase-1 capstone · prove ≥90% on every consonant', id:'letters42', letters42:true});
   return N;
 }
 function nodeDone(n){
   if(n.lesson) return state.done.includes(n.lesson.id);
+  if(n.letters42) return !!(state.checks||{}).letters42;               // capstone passed
   if(n.type === 'checkpoint') return checkpointPassed(n.checkpoint);   // gate: done only once passed
   return !!(state.pathDone||{})[n.id];
 }
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
 function launchNode(n){
   if(n.lesson){ startLesson(n.lesson); return; }
+  if(n.letters42){ startLettersBoss(); return; }                          // capstone — only a ≥90% pass marks it
   if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here — only a ≥80% pass marks it
   if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState();
   if(n.go) n.go();
@@ -2536,6 +2539,17 @@ function renderLearn(){
       list.appendChild(ck);
     }
   });
+  // Letters boss — Phase-1 capstone (class of all 42), unlocks once every lesson is done (v2.32)
+  const _allDone = LESSONS.every(L=>state.done.includes(L.id));
+  const _lbPassed = !!(state.checks||{}).letters42;
+  const lb = document.createElement('button');
+  lb.className = 'card lesson-card boss-card' + (!_allDone ? ' locked' : '');
+  lb.innerHTML = `
+    <div class="glyphs">🏆</div>
+    <div class="meta"><div class="t">Letters boss · class of all 42</div><div class="d">${_allDone ? (_lbPassed ? 'passed ✓ — the whole alphabet is yours' : '≥90% on every consonant · +30💎 + a title') : 'finish all 24 lessons to unlock'}</div></div>
+    <div class="state">${_allDone ? (_lbPassed ? '👑 retake' : 'prove it →') : '🔒'}</div>`;
+  if(_allDone) lb.addEventListener('click', startLettersBoss);
+  list.appendChild(lb);
 }
 
 function buildBossQuiz(u){
@@ -2596,6 +2610,18 @@ function buildCheckpointQuiz(upTo){
 function startCheckpoint(i){
   startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
 }
+/* Letters boss (v2.32) — the Phase-1 capstone: prove the CLASS of all 42 consonants.
+   Class is the dial that sets tone, so this certifies the whole reading machine.
+   Untimed (fairness > speed), ≥90% to pass, free unlimited retries (Bloom). */
+function buildLettersBossQuiz(){
+  const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  return shuffle(cons.map(ch=>({
+    kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
+    options:shuffle(Object.values(CLS_LABEL)), say:ch,
+    explain: GLYPHS[ch].cls==='mid' ? 'mid (the chicken-pecks 9)' : GLYPHS[ch].cls==='high' ? 'high (breathy / hissy)' : 'not mid or high → low'
+  })));
+}
+function startLettersBoss(){ startGenericQuiz(buildLettersBossQuiz(), 'Letters boss', {letters42:true}); }
 
 /* =====================================================
    LESSON PLAYER
@@ -3274,6 +3300,36 @@ function nextGenericQ(){
       }
       saveState();
     }
+    if(p.opts.letters42){
+      const passed = pct >= 90;                        // capstone bar is higher than a checkpoint
+      questCheck();
+      if(passed){
+        if(!state.checks) state.checks = {};
+        const first = !state.checks.letters42;
+        state.checks.letters42 = true;
+        if(first){ award(30); if(!state.titles) state.titles = []; if(!state.titles.includes('reader')) state.titles.push('reader'); }
+        saveState();
+        el('stage').innerHTML = `
+          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+          <div class="result-sub">🏆 You know the class of all 42. ${first ? 'The alphabet is yours — Phase 1 complete · +30💎 + the title นักอ่าน (the reader)' : 'Still razor-sharp.'}</div>
+          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+      } else {
+        const missed = (p.missed||[]).slice();
+        el('stage').innerHTML = `
+          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+          <div class="result-sub">The boss needs 90% — you're at ${pct}%. Drill the misses and come back (free, unlimited).</div>
+          <div class="stage-actions">
+            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
+            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
+          </div>`;
+        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
+        el('ck-retake').onclick = ()=>startLettersBoss();
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+      }
+      return;
+    }
     if(p.opts.checkpoint != null){
       const i = p.opts.checkpoint, passed = pct >= 80;
       questCheck();
@@ -3312,7 +3368,7 @@ function nextGenericQ(){
     return;
   }
   const q = p.qs[p.i];
-  const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); };
+  const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null || p.opts.letters42){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); };
   const label = `${p.label} · ${p.i+1} of ${p.qs.length}`;
   if(q.kind === 'type') renderTypeQ(q, cb, label);                 // typed sound-recall (reading)
   else renderQuizQ(q, cb, label, p.opts.timed);
