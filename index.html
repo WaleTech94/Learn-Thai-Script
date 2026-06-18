@@ -632,7 +632,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="danger-link" id="reset-btn">Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.29 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.30 (PWA)</div>
     </div>
   </section>
 
@@ -962,7 +962,7 @@ const LESSONS = [
   {id:"l13", we:{m:"มาก → low class + dead with a LONG vowel → FALLING → mâak. But รัก → dead SHORT → different tone…", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
    pre:[
      {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a sonorant final (n, m, ng, ai, ao…). It can ring on. มา, กิน, งาน — live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ — dead."},
-     {h:"Why you care", body:"A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel — still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
+     {h:"Why you care", body:"<i>Recap — you've read every one of these across Units A–B; here they are in one place.</i><br><br>A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel — still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
    ],
    note:"You now know why มาก is falling and รัก is high — same class, different vowel length. This is the whole trick.",
    words:[
@@ -978,7 +978,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"งาน", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"ends in -n, rings on"}
    ]},
   {id:"l14", we:{m:"ได้ → ด MID class + ◌้ mai thoo → FALLING → dâi = can", twinIdx:3, ask:"tone"}, unit:"C · The tone engine", title:"Mid class: all five", sub:"Tone marks ๊ ๋ complete the set", glyphs:["๊","๋"],
-   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"กา gaa (mid) · ก่า gàa (low) · ก้า gâa (falling) · ก๊า gáa (high) · ก๋า gǎa (rising).<br><br>๊ and ๋ only ever appear on mid-class consonants — mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
+   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"<i>You met ่ and ้ on mid class back in lesson 4 — ๊ and ๋ just finish the set.</i><br><br>กา gaa (mid) · ก่า gàa (low) · ก้า gâa (falling) · ก๊า gáa (high) · ก๋า gǎa (rising).<br><br>๊ and ๋ only ever appear on mid-class consonants — mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
    note:"ได้ dâi after a verb = 'can'. พูดได้ = can speak. The single most useful grammar word in Thai.",
    words:[
      {thai:"เก่า", tr:"gào", en:"old (things)"},
@@ -987,7 +987,7 @@ const LESSONS = [
      {thai:"โต๊ะ", tr:"dtó", en:"table"}
    ]},
   {id:"l15", we:{m:"ข้าว → ข HIGH class + ◌้ → FALLING → khâao = rice", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"High class: the grid", sub:"ข้าว ห้อง and friends", glyphs:[],
-   pre:[{h:"High class makes 3 tones", body:"Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
+   pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) — here's the full row.</i><br><br>Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
    note:"ข้าว khâao = rice, but also 'a meal'. กินข้าว literally 'eat rice' = to eat, full stop.",
    words:[
      {thai:"ข้าว", tr:"khâao", en:"rice / a meal"},
@@ -996,7 +996,7 @@ const LESSONS = [
      {thai:"สี", tr:"sǐi", en:"colour"}
    ]},
   {id:"l16", we:{m:"น้ำ → น LOW class + ◌้ → the flip: HIGH, not falling → náam = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:[],
-   pre:[{h:"Low class shifts everything one notch", body:"+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
+   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 — now the rule itself.</i><br><br>+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
    note:"พี่ phîi (older) and น้อง nórng (younger) — Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu — it shortens the vowel, no tone change.",
    words:[
      {thai:"น้อง", tr:"nórng", en:"younger sibling / junior"},
@@ -1005,7 +1005,7 @@ const LESSONS = [
      {thai:"เล็ก", tr:"lék", en:"small"}
    ]},
   {id:"l17", we:{m:"หมา → silent ห makes ม follow HIGH-class rules → live → RISING → mǎa = dog", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"The silent leaders", sub:"ห nam and อ nam", glyphs:[],
-   pre:[{h:"Silent ห upgrades low class", body:"A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules — but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
+   pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine — these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules — but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
    note:"อยู่ marks location AND continuous action: อยู่ไหน = where are you? กินอยู่ = (I'm) eating.",
    words:[
      {thai:"หมา", tr:"mǎa", en:"dog"},
