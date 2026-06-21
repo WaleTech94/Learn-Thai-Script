@@ -2,6 +2,17 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.0 — 2026-06-22
+
+- Reframed the app around a 45-minute Today plan: warm-up review, one lesson/consolidation block, then a depth block.
+- Added depth-first progression: attempts to start the next lesson redirect into current review, stories or drills when review is due, the day already has a lesson, or it is a consolidation day.
+- Simplified the bottom tabs to Today / Learn / Library / Review and moved the letter wall into Learn.
+- Reworked Phrases into Library with unlockable enrichment packs, Reading room access, settings/export/import/reset, and a diagnostic evidence profile.
+- Retired visible random reward layers: shop/gachapon, weekly showdown, phrase bounties, and constellation payout.
+- Kept useful spenders: Street slang, Teacher, Food deep-dive, streak freezes, titles and quiet visual extras.
+- Added extra lesson-quiz mechanism checks across Units C/D for tone grids, silent leaders, clusters, three-piece vowels and real signage.
+- Kept the v2.36 vocabulary-role contract intact: decode-only words still cannot leak into meaning/listening production tests.
+
 ## v2.36 — 2026-06-22
 
 - Audited all 96 lesson words by instructional purpose: 65 core, 23 recognition and 8 decode-only.

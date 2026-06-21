@@ -143,16 +143,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .pw-tile{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);cursor:pointer}
 .pw-tile.done{background:var(--blue);color:#fff;font-weight:700;border-color:var(--blue)}
 .pw-tile.next{border:1px dashed var(--muted);color:var(--text)}
-/* weekly showdown (v2.11) */
-.sd-tiers{display:flex;gap:8px}
-.sd-tier{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 4px;background:var(--surface2)}
-.sd-tier .d{font-size:12px;color:var(--muted)}
-.sd-tier .r{font-weight:700;font-size:13px;margin-top:2px}
-.sd-tier.hit{border-color:var(--blue)}
-.sd-tier.claimed{border-color:var(--blue);background:var(--blue);color:#fff}
-.sd-tier.claimed .d,.sd-tier.claimed .r{color:#fff}
-
-/* ---------- home ---------- */
+/* ---------- today ---------- */
 .glyph-hero{
   position:relative;overflow:hidden;text-align:center;padding:30px 18px 26px;margin-bottom:16px;
 }
@@ -460,17 +451,13 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .lap-fill{height:100%;border-radius:5px;transition:width .7s ease}
 .lap-fill.last{background:var(--accent2)}
 .lap-fill.best{background:var(--gold)}
-/* session runway + phrase bounty (v2.15) — semantic colours, never the class colours */
+/* session runway (v2.15/v3.0) — semantic colours, never the class colours */
 .runway{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
 .runway-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);margin:7px 0}
 .runway-seg{height:100%}
 .runway-legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
 .runway-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
 .lite-btn{margin-top:9px}
-.bounty{margin-bottom:16px;border:1px solid var(--gold);border-radius:16px;padding:13px 15px;background:var(--surface)}
-.bounty-row{display:flex;align-items:center;gap:9px;margin:8px 0}
-.bounty-row.claimed{opacity:.5}
-.bounty-row .b-amt{font-family:'Mitr',sans-serif;font-size:12px;color:var(--gold);flex:none}
 /* glyph ghost (v2.16) — lookalike discrimination; option glyphs in their class colours (correct use) */
 .ghost-word{font-family:'Mitr',sans-serif;font-size:46px;text-align:center;margin:14px 0;line-height:1.4}
 .ghost-target{display:inline-block;animation:ghostresolve 1.2s ease forwards}
@@ -511,7 +498,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .evidence-bar{height:7px;border-radius:5px;background:var(--surface2);overflow:hidden}
 .evidence-bar span{display:block;height:100%;border-radius:5px;background:var(--accent1)}
 .evidence-value{font-family:'Mitr',sans-serif;font-size:12px;color:var(--muted);text-align:right}
-/* learning path / guided rail (v2.20) — Home's front door: one next step at a time */
+/* learning path / guided rail (v2.20/v3.0) — Today's front door: one next step at a time */
 .path-card{border:1px solid var(--gold);margin-bottom:18px}
 .path-now .pn-step{font-size:12px;color:var(--gold);font-family:'Mitr',sans-serif;text-transform:lowercase}
 .path-now .pn-label{font-size:21px;font-weight:600;margin:3px 0}
@@ -532,7 +519,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 <div id="app">
 <main id="views">
 
-  <!-- HOME -->
+  <!-- TODAY -->
   <section class="view active" id="view-home">
     <header>
       <div>
@@ -546,13 +533,13 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     </header>
     <div class="card path-card" id="path-card">
       <div class="spread">
-        <div class="eyebrow" style="margin:0">Your learning path</div>
+        <div class="eyebrow" style="margin:0">Today</div>
         <span class="sub" style="font-size:12px" id="path-progress">—</span>
       </div>
       <div id="path-now"></div>
       <div id="path-map"></div>
     </div>
-    <div class="progress-divider">YOUR PROGRESS &amp; STATS ↓</div>
+    <div class="progress-divider">45-MINUTE COURSE DAY ↓</div>
     <div class="card glyph-hero" id="hero-card">
       <div class="eyebrow">Letter of the day</div>
       <span class="bigchar" id="hero-char">ก</span>
@@ -572,15 +559,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0" id="plan-title">Today's plan</div>
-        <span class="sub" style="font-size:12px">+10💎</span>
+        <span class="sub" style="font-size:12px">depth before speed · +10💎</span>
       </div>
-      <div class="quest-line" id="quest-a"><span class="qc">✓</span><span id="plan-1">Clear your due cards</span></div>
-      <div class="quest-line" id="quest-b"><span class="qc">✓</span><span id="plan-2">One lesson</span></div>
-      <div class="quest-line" id="plan-l3"><span class="qc">✓</span><span id="plan-3">One drill</span></div>
+      <div class="quest-line" id="quest-a"><span class="qc">✓</span><span id="plan-1">Warm-up review</span></div>
+      <div class="quest-line" id="quest-b"><span class="qc">✓</span><span id="plan-2">Main lesson or consolidation</span></div>
+      <div class="quest-line" id="plan-l3"><span class="qc">✓</span><span id="plan-3">Deepen the current material</span></div>
       <div class="sub" style="font-size:12px;margin-top:8px;border-top:1px solid var(--line);padding-top:8px" id="plan-week"></div>
       <div class="runway" id="runway" style="display:none"></div>
     </div>
-    <div class="bounty" id="bounty-banner" style="display:none"></div>
     <button class="card cta-card" id="wai-banner" style="display:none;border:1px solid var(--gold)">
       <div><div class="t">🌅 Morning warm-up</div><div class="d" id="wai-sub">Replay your trickiest cards</div></div>
       <span style="font-size:20px">→</span>
@@ -594,29 +580,6 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div><div class="t">Review due cards</div><div class="d" id="cta-review-sub">Nothing due yet</div></div>
         <span style="font-size:20px">→</span>
       </button>
-      <button class="card cta-card" id="cta-shop">
-        <div><div class="t">Shop &amp; gachapon</div><div class="d">Spend your tokens — capsules, packs, themes</div></div>
-        <span style="font-size:20px">🎰</span>
-      </button>
-    </div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Weekly showdown</div>
-        <span class="sub" style="font-size:12px" id="showdown-days">0/7 days</span>
-      </div>
-      <div id="showdown-tiers" class="sd-tiers"></div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Practise on more days this week to claim escalating bonuses. Resets each week.</div>
-    </div>
-    <div class="card constel-card" id="constel-card" style="margin-bottom:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Your constellation</div>
-        <span class="sub" style="font-size:12px" id="constel-status">building…</span>
-      </div>
-      <div class="constel-wrap">
-        <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
-        <div class="constel-legend" id="constel-legend"></div>
-      </div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary feed each other. Grow all three to light the whole web.</div>
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
@@ -625,14 +588,6 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
       <div id="progress-wall"></div>
       <div class="sub" style="font-size:12px;margin-top:10px">Each tile is a lesson; 🏆 = unit boss cleared. Tap a finished lesson to revisit it.</div>
-    </div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">The letter wall</div>
-        <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
-      </div>
-      <div class="wall" id="wall"></div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met &middot; outlined = learning &middot; tinted = growing &middot; solid = mastered (7+ day interval). Tap any tile to hear it.</div>
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
@@ -651,13 +606,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <button class="btn full ghost" id="notes-btn" style="margin-bottom:12px">📝 Test notes</button>
-      <div class="row" style="justify-content:center;gap:10px;margin-bottom:14px">
-        <button class="btn small ghost" id="export-btn">Export progress</button>
-        <button class="btn small ghost" id="import-btn">Import progress</button>
-      </div>
-      <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">↺ Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.36 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.0 (PWA)</div>
     </div>
   </section>
 
@@ -667,13 +616,31 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <h1 style="margin-bottom:4px">Hear it, read it, say it</h1>
     <p class="sub" style="margin-bottom:18px">The objective spine remains letter &rarr; class &rarr; tone. Each lesson now carries the same small set through sound, decoding, meaning and spoken retrieval; script mastery still controls progression.</p>
     <div class="lesson-list" id="lesson-list"></div>
+    <div class="card" style="margin-top:18px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">The letter wall</div>
+        <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
+      </div>
+      <div class="wall" id="wall"></div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met &middot; outlined = learning &middot; tinted = growing &middot; solid = mastered (7+ day interval). Tap any tile to hear it.</div>
+    </div>
   </section>
 
-  <!-- PHRASES -->
+  <!-- LIBRARY -->
   <section class="view" id="view-phrases">
-    <div class="eyebrow">Bangkok phrasebook</div>
-    <h1 style="margin-bottom:4px">Say it today</h1>
-    <p class="sub" style="margin-bottom:14px">Tap the speaker to hear it. End with <b style="font-weight:500;color:var(--text)">ครับ khráp</b> to be polite — already added where it matters.</p>
+    <div class="eyebrow">Library</div>
+    <h1 style="margin-bottom:4px">Phrases, stories, unlocks</h1>
+    <p class="sub" style="margin-bottom:14px">Tier 1 language lives here as part of the core journey. Tokens unlock enrichment, not progress.</p>
+    <div class="homecta" style="margin-bottom:14px">
+      <button class="card cta-card" id="cta-shop">
+        <div><div class="t">Unlock packs</div><div class="d">Spend tokens on extra language, not shortcuts</div></div>
+        <span style="font-size:20px">💎</span>
+      </button>
+      <button class="card cta-card" id="library-read">
+        <div><div class="t">Reading room</div><div class="d">Micro-stories from letters you know</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+    </div>
     <div class="card" style="margin-bottom:14px" id="pack-card">
       <div class="spread">
         <div class="eyebrow" style="margin:0">This week's five</div>
@@ -683,6 +650,25 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     </div>
     <div class="cat-tabs" id="cat-tabs"></div>
     <div class="phrase-list" id="phrase-list"></div>
+    <div class="card constel-card" id="constel-card" style="margin-top:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Evidence profile</div>
+        <span class="sub" style="font-size:12px" id="constel-status">building…</span>
+      </div>
+      <div class="constel-wrap">
+        <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
+        <div class="constel-legend" id="constel-legend"></div>
+      </div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary evidence stay separate. This is diagnostic, not a payout.</div>
+    </div>
+    <div class="settings-row">
+      <button class="btn full ghost" id="notes-btn" style="margin-bottom:12px">📝 Test notes</button>
+      <div class="row" style="justify-content:center;gap:10px;margin-bottom:14px">
+        <button class="btn small ghost" id="export-btn">Export progress</button>
+        <button class="btn small ghost" id="import-btn">Import progress</button>
+      </div>
+      <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">↺ Reset all progress</button>
+    </div>
   </section>
 
   <!-- REVIEW -->
@@ -803,9 +789,9 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 
 <nav id="tabbar">
   <div class="tabbar-inner">
-    <button class="tab active" data-view="home"><span class="tab-glyph">บ้</span>Home</button>
+    <button class="tab active" data-view="home"><span class="tab-glyph">บ้</span>Today</button>
     <button class="tab" data-view="learn"><span class="tab-glyph">ก</span>Learn</button>
-    <button class="tab" data-view="phrases"><span class="tab-glyph">พูด</span>Phrases</button>
+    <button class="tab" data-view="phrases"><span class="tab-glyph">พูด</span>Library</button>
     <button class="tab" data-view="review"><span class="tab-glyph">ซ้ำ</span>Review</button>
   </div>
 </nav>
@@ -1067,6 +1053,11 @@ const LESSONS = [
      {thai:"ได้", tr:"dâi", en:"can / to get", vocab:"core"},
      {thai:"ต้อง", tr:"dtôrng", en:"must / have to", vocab:"core"},
      {thai:"โต๊ะ", tr:"dtó", en:"table", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ได้", text:"Mid class + ไม้โท gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"ด is mid class; ◌้ on mid class gives falling"},
+     {kind:"mcq", prompt:"โต๊ะ", text:"Mid class + ไม้ตรี gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"ต is mid class; ◌๊ is the high-tone mark"},
+     {kind:"mcq", prompt:"เก่า", text:"Mid class + ไม้เอก gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ก is mid class; ◌่ on mid class gives low"}
    ]},
   {id:"l15", we:{m:"ข้าว → ข HIGH class + ◌้ → FALLING → khâao = rice", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"High class: the grid", sub:"ข้าว ห้อง and friends", glyphs:[],
    pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) — here's the full row.</i><br><br>Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
@@ -1076,6 +1067,11 @@ const LESSONS = [
      {thai:"ห้อง", tr:"hôrng", en:"room", vocab:"core"},
      {thai:"ถาม", tr:"thǎam", en:"to ask", vocab:"core"},
      {thai:"สี", tr:"sǐi", en:"colour", vocab:"recognition"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ข้าว", text:"High class + ไม้โท gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"ข is high class; ◌้ gives falling"},
+     {kind:"mcq", prompt:"สี", text:"High class, live, no mark gives which tone?", answer:"Rising", options:["Mid","Low","Falling","High","Rising"], explain:"ส is high class; plain live syllables rise"},
+     {kind:"mcq", prompt:"ถูก", text:"High class + dead syllable gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ถ is high class; a dead syllable gives low"}
    ]},
   {id:"l16", we:{m:"น้ำ → น LOW class + ◌้ → the flip: HIGH, not falling → náam = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:[],
    pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 — now the rule itself.</i><br><br>+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
@@ -1085,6 +1081,11 @@ const LESSONS = [
      {thai:"พี่", tr:"phîi", en:"older sibling / senior", vocab:"core"},
      {thai:"ช้า", tr:"cháa", en:"slow", vocab:"core"},
      {thai:"เล็ก", tr:"lék", en:"small", vocab:"recognition"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"น้ำ", text:"Low class + ไม้โท gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low class flips ◌้ up to high"},
+     {kind:"mcq", prompt:"ไม่", text:"Low class + ไม้เอก gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class flips ◌่ to falling"},
+     {kind:"mcq", prompt:"เล็ก", text:"Low class + dead-short gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low dead-short syllables are high"}
    ]},
   {id:"l17", we:{m:"หมา → silent ห makes ม follow HIGH-class rules → live → RISING → mǎa = dog", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"The silent leaders", sub:"ห nam and อ nam", glyphs:[],
    pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine — these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules — but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
@@ -1094,6 +1095,11 @@ const LESSONS = [
      {thai:"ไหน", tr:"nǎi", en:"where / which", vocab:"core"},
      {thai:"อยู่", tr:"yùu", en:"to be at / -ing", vocab:"core"},
      {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"หมา", text:"What does silent ห do here?", answer:"Makes ม follow high-class tone rules", options:["Makes ม follow high-class tone rules","Adds an h sound","Makes the vowel short","Makes the word formal"], explain:"หมา is pronounced mǎa, not h-mǎa"},
+     {kind:"mcq", prompt:"ไหน", text:"Silent ห + live syllable gives which tone?", answer:"Rising", options:["Mid","Low","Falling","High","Rising"], explain:"ห leads น into high-class rules"},
+     {kind:"mcq", prompt:"อยู่", text:"Silent อ in the four special words uses which class row?", answer:"Mid class", options:["Mid class","High class","Low class","No class"], explain:"อย่า อยู่ อย่าง อยาก use อ as the silent leader"}
    ]},
   /* ---------------- UNIT D — Clusters & the long tail ---------------- */
   {id:"l18", we:{m:"ครับ → คร cluster takes its class from ค (low) + ◌ั บ → dead short → HIGH → khráp", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Decode ครับ", sub:"True clusters: กร ปล คร…", glyphs:[],
@@ -1104,6 +1110,11 @@ const LESSONS = [
      {thai:"ปลา", tr:"bplaa", en:"fish", vocab:"recognition"},
      {thai:"ครู", tr:"khruu", en:"teacher", vocab:"core"},
      {thai:"ใกล้", tr:"glâi", en:"near", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ครับ", text:"A true cluster takes its class from which letter?", answer:"ค", options:["ค","ร","บ","◌ั"], thaiOpts:true, explain:"the first consonant drives the tone"},
+     {kind:"mcq", prompt:"ครับ", text:"Which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low class + dead-short gives high"},
+     {kind:"mcq", prompt:"ใกล้", text:"What makes ใกล้ different from ไกล?", answer:"The tone mark", options:["The tone mark","The vowel length","The final consonant","The class colour"], explain:"near vs far is a tone-mark distinction"}
    ]},
   {id:"l19", we:{m:"จริง → the ร is silent → j + ing → live → MID → jing = really", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Fake clusters", sub:"ทร says s, จร drops the r", glyphs:[],
    pre:[{h:"Some clusters are lies", body:"ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Now you can read the most important food word in the country."}],
@@ -1113,6 +1124,11 @@ const LESSONS = [
      {thai:"ทราบ", tr:"sâap", en:"to know (formal)", vocab:"recognition"},
      {thai:"สร้าง", tr:"sâang", en:"to build", vocab:"decode"},
      {thai:"อร่อย", tr:"a-ròy", en:"delicious", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"จริง", text:"What happens to ร here?", answer:"It drops out", options:["It drops out","It says r","It makes the vowel long","It changes the final"], explain:"จริง reads jing"},
+     {kind:"mcq", prompt:"ทราบ", text:"ทร usually begins with which sound?", answer:"s", options:["s","th","tr","r"], explain:"ทราบ reads sâap"},
+     {kind:"mcq", prompt:"อร่อย", text:"What job is อ doing?", answer:"Carrying the opening vowel", options:["Carrying the opening vowel","Making an r sound","Silencing ร","Marking high class"], explain:"อ carries the a- before ร่อย"}
    ]},
   {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit — same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
    note:"◌์ (gaa-ran) silences the letter under it — Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
@@ -1138,6 +1154,11 @@ const LESSONS = [
      {thai:"เพื่อน", tr:"phûean", en:"friend", vocab:"core"},
      {thai:"ตัว", tr:"dtua", en:"body / classifier", vocab:"recognition"},
      {thai:"เสื้อ", tr:"sûea", en:"shirt", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"เพื่อน", text:"What still drives the tone in a three-piece vowel?", answer:"The consonant class", options:["The consonant class","The vowel shape","The English meaning","The word length"], explain:"พ is low class; ◌่ makes falling"},
+     {kind:"mcq", prompt:"เพื่อน", text:"Which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class + ◌่ gives falling"},
+     {kind:"mcq", prompt:"ๆ", text:"What does ๆ do?", answer:"Repeats the previous word", options:["Repeats the previous word","Makes the tone high","Silences a letter","Marks a question"], explain:"ช้าๆ = slowly"}
    ]},
   {id:"l23", we:{m:"ระวัง → ระ dead short on low → HIGH rá, then วัง live → MID wang → rá-wang = caution", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Thai digits & signs", sub:"๑ ๒ ๓ and reading the street", glyphs:[],
    pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and — usefully — <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
@@ -1147,6 +1168,11 @@ const LESSONS = [
      {thai:"ทางออก", tr:"thaang-òrk", en:"exit", vocab:"core"},
      {thai:"ทางเข้า", tr:"thaang-khâo", en:"entrance", vocab:"core"},
      {thai:"ห้องน้ำ", tr:"hôrng-náam", en:"toilet", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ระวัง", text:"The first syllable ระ is live or dead?", answer:"Dead", options:["Live","Dead"], explain:"short vowel, cut off"},
+     {kind:"mcq", prompt:"ทางออก", text:"Which sign meaning?", answer:"exit", options:["exit","entrance","toilet","forbidden"], explain:"ทางออก = exit"},
+     {kind:"mcq", prompt:"ทางเข้า", text:"Which sign meaning?", answer:"entrance", options:["exit","entrance","toilet","open"], explain:"ทางเข้า = entrance"}
    ]},
   {id:"l24", we:{m:"เปิด → เ◌ิ = the er vowel + ด stop → MID class dead → LOW → bpèrt = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
    pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list."}],
@@ -1156,6 +1182,11 @@ const LESSONS = [
      {thai:"ปิด", tr:"bpìt", en:"closed", vocab:"core"},
      {thai:"ห้าม", tr:"hâam", en:"forbidden / do not", vocab:"core"},
      {thai:"อาหาร", tr:"aa-hǎan", en:"food", vocab:"core"}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"เปิด", text:"Which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"mid class + dead syllable gives low"},
+     {kind:"mcq", prompt:"ห้าม", text:"Which sign meaning?", answer:"forbidden / do not", options:["open","closed","forbidden / do not","food"], explain:"ห้าม marks a prohibition"},
+     {kind:"mcq", prompt:"อาหาร", text:"What kind of real-world word is this?", answer:"food", options:["food","exit","toilet","teacher"], explain:"อาหาร = food"}
    ]}
 ];
 
@@ -1502,14 +1533,53 @@ function ensureDay(){
   }
   return state.days[t];
 }
-/* daily pacing governor (v2.23) — unit = 1 new lesson + clear review. Soft: nudges, never locks.
-   evidence: ~5–15 new items/day is the sustainable load (Anki/SLA); same-day review consolidates. */
+/* daily pacing governor (v3.0) — unit = clear review + one main block + one depth block.
+   New lessons are redirected when current material still needs embedding. */
 function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
-  if(d.paid) return 'rest';                                   // plan complete (review cleared + lesson/drill) → stop
-  const noNewLeft = d.l > 0 || d.type === 'C';                // did today's new lesson, or a consolidation day
-  if(noNewLeft) return due > 0 ? 'consolidate' : 'rest';
+  if(d.paid) return 'rest';                                   // plan complete → stop new load
+  if(due > 0) return 'review';                                // warm-up first; don't skip the current deck
+  if(d.type === 'C') return 'deepen';                          // consolidation days go deeper, not further
+  if(d.l > 0) return 'deepen';                                 // one new lesson/day; early finishers deepen
   return 'learn';
+}
+function newLessonBlockReason(L){
+  if(!L || state.done.includes(L.id)) return '';
+  const next = nextLesson();
+  if(!next || L.id !== next.id) return '';
+  const d = ensureDay(), due = srsDue().length;
+  if(d.paid) return 'Today is complete — use a depth block if you want more.';
+  if(due > 0) return 'Warm-up first: clear the current review before new letters.';
+  if(d.type === 'C') return 'Today is a consolidation day — prove the current material first.';
+  if(d.l > 0) return 'One new lesson is enough for today — go deeper now.';
+  return '';
+}
+function startDepthBlock(){
+  const due = srsDue();
+  if(due.length){
+    gotoView('review');
+    setTimeout(()=>el('cta-flash').click(), 60);
+    return;
+  }
+  const unread = STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id]);
+  if(unread){
+    player = {type:'read'};
+    openOverlay();
+    renderStory(unread);
+    return;
+  }
+  const nd = nextDrill();
+  if(nd){ launchDrill(nd.id); return; }
+  gotoView('review');
+}
+function startLessonFromUser(L){
+  const reason = newLessonBlockReason(L);
+  if(reason){
+    toast(reason);
+    startDepthBlock();
+    return;
+  }
+  startLesson(L);
 }
 /* ---- training path (v2.17): communication-first drill ladder + recommender ---- */
 const RUNGS = [
@@ -1523,7 +1593,6 @@ const DRILLS = [
   {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l1',  go:()=>el('tone-drill-btn').click()},
   {id:'twins',       title:'Sound twins',       rung:1, gate:'l1',  go:()=>el('twins-btn').click()},
   {id:'echo',        title:'Echo chamber',      rung:1, gate:'l1',  go:()=>el('echo-btn').click()},
-  {id:'phrases',     title:'Phrase pack',       rung:1, gate:'l1',  go:()=>gotoView('phrases')},
   {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
   {id:'sprint',      title:'Class sprint',      rung:1, gate:'l1',  go:()=>el('class-sprint-btn').click()},
@@ -1570,17 +1639,20 @@ function renderPlan(){
   if(!el('plan-title')) return;
   const isL = d.type !== 'C';
   const due = srsDue().length;
+  const phase = governorPhase();
   const nd = nextDrill();                                   // progression-aware, not date-random
   const sugg = nd ? nd.title : 'a quick drill';
-  el('plan-title').textContent = isL ? "Today's plan · Lesson day" : "Today's plan · Consolidation day";
-  el('plan-1').textContent = due ? 'Clear your due cards (' + due + ' left)' : 'Clear your due cards';
+  el('plan-title').textContent = isL ? "Today's 45 · Lesson day" : "Today's 45 · Consolidation day";
+  el('plan-1').textContent = due ? 'Warm-up: clear due cards (' + due + ' left)' : 'Warm-up: review cleared';
   if(isL){
     const nl = nextLesson();
-    el('plan-2').textContent = nl ? 'Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'One lesson';
-    el('plan-3').textContent = sugg + ' (optional bonus)';
+    if(d.l > 0) el('plan-2').textContent = 'Main: lesson complete — now embed it';
+    else if(phase === 'review') el('plan-2').textContent = 'Main: lesson opens after the warm-up';
+    else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
+    el('plan-3').textContent = 'Deepen: ' + sugg + ' or a readable story';
   } else {
-    el('plan-2').textContent = 'Spell it or ' + sugg;
-    el('plan-3').textContent = 'A story or second drill (bonus)';
+    el('plan-2').textContent = 'Main: consolidate current letters, tones and words';
+    el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
   }
   if(d.lite){ el('plan-3').textContent = '✓ Optional drill deferred — lighter day'; }
   const dThis = d;
@@ -1611,9 +1683,10 @@ function renderRunway(){
   const d = ensureDay(), isL = d.type !== 'C', due = srsDue().length;
   const calibrated = (state.paceN||0) >= 3;
   const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
-  const srsMin = Math.round(due * paceSecs() / 60);
-  const lessonMin = (isL && nextLesson()) ? 12 : 0;          // includes hear-first + spoken retrieval/compare
-  const drillMin = d.lite ? 0 : (isL ? 4 : 8);          // consolidation day leans on drills/stories
+  const srsMin = Math.min(15, Math.round(due * paceSecs() / 60));
+  const lessonMin = (isL && nextLesson() && d.l === 0) ? 20 : 0;          // includes hear-first + spoken retrieval/compare
+  const mainDone = isL ? d.l > 0 : d.d > 0;
+  const drillMin = d.lite ? 0 : (mainDone ? (isL ? 15 : 25) : Math.max(isL ? 15 : 25, 45 - srsMin - lessonMin));
   const segDefs = [
     {cls:'srs', m:srsMin, label:'cards'},
     {cls:'lesson', m:lessonMin, label:'lesson'},
@@ -1626,7 +1699,7 @@ function renderRunway(){
   const legend = segDefs.map(s=>`<span><i style="background:${COL[s.cls]}"></i>${s.label} ~${s.m}m</span>`).join('');
   const showLite = total > 25 && !d.lite && drillMin > 0 && everConsolidated();
   host.innerHTML = `
-    <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">~${total} min${calibrated?'':' · est.'}</span></div>
+    <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">45 min target${calibrated?'':' · est.'}</span></div>
     <div class="runway-bar">${bar}</div>
     <div class="runway-legend">${legend}</div>
     ${showLite ? `<button class="btn small ghost lite-btn" id="lite-btn">Make it a lighter day</button>` : ''}
@@ -1634,41 +1707,18 @@ function renderRunway(){
   const lb = el('lite-btn');
   if(lb) lb.onclick = ()=>{ d.lite = true; saveState(); toast('Lighter day — drill deferred, streak safe'); renderPlan(); };
 }
-/* ---- phrase bounty banner (v2.15) — +8💎 vs +5💎 for using flagged phrases IRL ---- */
-function renderBounty(){
-  const host = el('bounty-banner'); if(!host) return;
-  const w = (state.week && state.week.key === weekKey()) ? state.week : null;
-  if(w && !w.bounty){ w.bounty = (w.picks||[]).slice(0,3); saveState(); }   // backfill existing week, don't force-create
-  const bounty = (w && w.bounty) ? w.bounty : [];
-  const unclaimed = bounty.filter(t=>!(w.used||{})[t]);
-  if(!bounty.length || !unclaimed.length){ host.style.display = 'none'; return; }
-  host.style.display = '';
-  const rows = bounty.map(t=>{
-    const p = findWord(t); if(!p) return '';
-    const claimed = !!w.used[t];
-    return `<div class="bounty-row ${claimed?'claimed':''}">
-      <button class="btn small ${claimed?'ghost':''}" data-bounty="${t}" style="flex:none">${claimed?'✓':'used it'}</button>
-      <span style="flex:1"><span style="font-family:'Mitr',sans-serif;font-size:16px">${t}</span> <span class="sub" style="font-size:12px">${p.tr} · ${p.en}</span></span>
-      <span class="b-amt">+8💎</span>
-    </div>`;
-  }).join('');
-  host.innerHTML = `<div class="spread"><span class="eyebrow" style="margin:0">⭐ Phrase bounties</span><span class="sub" style="font-size:12px">${bounty.length-unclaimed.length}/${bounty.length} claimed · this week</span></div>
-    ${rows}
-    <div class="sub" style="font-size:11px;margin-top:4px">Use one of these on a real person this week for +8💎 (vs +5💎). Resets next week.</div>`;
-  host.querySelectorAll('[data-bounty]').forEach(b=>b.addEventListener('click', ()=>{
-    if(claimPhrase(b.dataset.bounty)){ renderBounty(); renderHome(); }
-  }));
-}
 function questCheck(){
   const d = ensureDay();
-  const A = d.due === 0 || (d.r > 0 && srsDue().length === 0);
-  const B = (d.l + d.d) > 0;
-  if(A && B && !d.paid){ d.paid = true; award(10); toast('Daily quest complete · +10💎'); }
+  const A = srsDue().length === 0;
+  const B = d.type === 'C' ? d.d > 0 : d.l > 0;
+  const C = d.lite || (d.type === 'C' ? d.d > 1 : d.d > 0);
+  if(A && B && C && !d.paid){ d.paid = true; award(10); toast('Daily 45 complete · +10💎'); }
   const qa = el('quest-a'), qb = el('quest-b');
   if(qa) qa.classList.toggle('done', A);
   if(qb) qb.classList.toggle('done', B);
+  const qc = el('plan-l3'); if(qc) qc.classList.toggle('done', C);
   if(el('plan-title')) renderPlan();
-  return A && B;
+  return A && B && C;
 }
 
 /* =====================================================
@@ -1969,6 +2019,7 @@ document.querySelectorAll('.tab').forEach(t=>{
     el('view-'+t.dataset.view).classList.add('active');
     if(t.dataset.view==='home') renderHome();
     if(t.dataset.view==='learn') renderLearn();
+    if(t.dataset.view==='phrases'){ renderCats(); renderPhrases(); renderPack(); renderConstellation(); }
     if(t.dataset.view==='review') renderReviewTab();
     window.scrollTo({top:0});
   });
@@ -1984,7 +2035,7 @@ document.addEventListener('click', e=>{
 });
 
 /* =====================================================
-   HOME
+   TODAY
 ===================================================== */
 function learnedGlyphIds(){
   const out = [];
@@ -2034,7 +2085,7 @@ function lessonLockedByCheck(idx){
   for(let i=0;i<idx;i++){ if(isCheckpointIndex(i) && checkpointReady(i) && !checkpointPassed(i)) return true; }
   return false;
 }
-/* ---- learning path / guided rail (v2.20) — one ordered journey; Home shows the next step ---- */
+/* ---- learning path / guided rail (v2.20/v3.0) — one ordered journey; Today shows the next step ---- */
 const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜', checkpoint:'👑', class:'🗝️'};
 /* class primer (v2.27) — surfaced as an early path node, BEFORE the lessons pile up letters.
    Teaches the cheat-code AND the why: class is the dial that sets a syllable's tone. */
@@ -2093,7 +2144,7 @@ function nodeDone(n){
 }
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
 function launchNode(n){
-  if(n.lesson){ startLesson(n.lesson); return; }
+  if(n.lesson){ startLessonFromUser(n.lesson); return; }
   if(n.letters42){ startLettersBoss(); return; }                          // capstone — only a ≥90% pass marks it
   if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here — only a ≥80% pass marks it
   if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState();
@@ -2123,18 +2174,23 @@ function renderRail(){
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">🌙 done for today</div>
       <div class="pn-label">That's your day — เก่งมาก</div>
-      <div class="pn-sub">You've learned and reviewed enough. Sleep does the rest.</div>
-      <button class="btn full ghost path-start" id="path-keep">Keep going anyway →</button></div>`;
-    el('path-keep').onclick = ()=>launchNode(cur);
-  } else if(phase === 'consolidate'){
+      <div class="pn-sub">You've reviewed, learned and deepened enough. Extra work stays on current material.</div>
+      <button class="btn full ghost path-start" id="path-depth">Bonus depth block →</button></div>`;
+    el('path-depth').onclick = startDepthBlock;
+  } else if(phase === 'review'){
     host.innerHTML = `<div class="path-now">
-      <div class="pn-step">🌱 lock it in</div>
-      <div class="pn-label">Enough new for today — now review</div>
-      <div class="pn-sub">${due} card${due>1?'s':''} to lock in what you've met.</div>
-      <button class="btn full path-start" id="path-review">Review ${due} →</button>
-      <button class="btn full ghost" id="path-keep" style="margin-top:8px">Keep learning anyway →</button></div>`;
+      <div class="pn-step">🌅 warm-up first</div>
+      <div class="pn-label">Clear the current deck</div>
+      <div class="pn-sub">${due} card${due>1?'s':''} waiting. New material opens after the warm-up.</div>
+      <button class="btn full path-start" id="path-review">Review ${due} →</button></div>`;
     el('path-review').onclick = goReview;
-    el('path-keep').onclick = ()=>launchNode(cur);
+  } else if(phase === 'deepen'){
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">🌱 deeper, not further</div>
+      <div class="pn-label">Lock in the current material</div>
+      <div class="pn-sub">Use a story, spelling, tone or lookalike drill before adding more letters.</div>
+      <button class="btn full path-start" id="path-depth">Start depth block →</button></div>`;
+    el('path-depth').onclick = startDepthBlock;
   } else {
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
@@ -2166,7 +2222,7 @@ function renderHome(){
   }
   checkPostcard();
   renderRail();
-  ensureDay(); questCheck(); renderPlan(); renderBounty(); renderWall(); renderHeatmap(); renderProgressWall(); checkShowdown(); renderShowdown(); renderConstellation();
+  ensureDay(); questCheck(); renderPlan(); renderWall(); renderHeatmap(); renderProgressWall(); renderConstellation();
   // letter of the day: deterministic by date from consonants
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const dayIdx = Math.floor(Date.now()/86400000) % cons.length;
@@ -2201,9 +2257,14 @@ function findWordInLessons(thai){
 }
 el('cta-lesson').addEventListener('click', ()=>{
   const nl = nextLesson();
-  if(nl) startLesson(nl); else gotoView('learn');
+  if(nl) startLessonFromUser(nl); else gotoView('learn');
 });
 el('cta-review').addEventListener('click', ()=>{ gotoView('review'); });
+el('library-read').addEventListener('click', ()=>{
+  player = {type:'read'};
+  openOverlay();
+  renderStoryList();
+});
 el('wai-banner').addEventListener('click', ()=>{
   const weak = weakestCards(3);
   if(!weak.length){ toast('No cards yet — finish a lesson first'); return; }
@@ -2227,31 +2288,21 @@ function renderShop(){
   if(!state.gacha) state.gacha = {};
   if(!state.themes) state.themes = [];
   if(!state.titles) state.titles = [];
-  const ownedCaps = Object.keys(state.gacha).length;
   el('stage').innerHTML = `
-    <div class="center"><h2>🎰 Shop</h2><p class="sub">Balance: ${state.baht||0} 💎</p></div>
+    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · extra language, never shortcuts</p></div>
     <div class="card">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Gachapon · Bangkok streets</div>
-        <span class="sub" style="font-size:12px">${ownedCaps}/${GACHA.length} collected</span>
-      </div>
-      <div id="pull-zone"></div>
-      <div style="margin-top:12px"><button class="btn full" id="pull-btn">Pull a capsule · 10 💎</button></div>
-      <div class="album" id="album"></div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Duplicates refund 3 💎. Every capsule is a real word — tap owned ones to hear them.</div>
-    </div>
-    <div class="card section-gap">
       <div class="eyebrow">Phrase packs</div>
       ${[['teacher','Teacher pack','Classroom Thai — run your room in Thai',60],
-         ['food2','Food deep-dive','Order like a local: bags, ice, no MSG',60],
-         ['slang','Street slang','10 words that make taxi drivers grin',50]].map(([id,t,d,pr])=>`
+         ['food2','Food deep-dive','Tier 2 ordering tweaks: bags, ice, no MSG',60],
+         ['slang','Street slang','Casual useful Thai — funny, not rude',50]].map(([id,t,d,pr])=>`
         <div class="shop-row">
           <div class="s-meta"><div class="s-t">${t}</div><div class="s-d">${d}</div></div>
           <button class="btn small ${ownsPack(id)?'ghost':''}" data-pack="${id}" data-price="${pr}">${ownsPack(id)?'✓ owned':pr+' 💎'}</button>
         </div>`).join('')}
+      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in the Library. Packs add useful extras once the work has earned them.</div>
     </div>
     <div class="card section-gap">
-      <div class="eyebrow">Themes</div>
+      <div class="eyebrow">Quiet extras</div>
       ${THEMES.map(t=>{
         const owned = ownsTheme(t.id), active = (state.theme||'night')===t.id;
         return `<div class="shop-row">
@@ -2272,14 +2323,12 @@ function renderShop(){
       ${state.title?'<div class="sub" style="font-size:12px;margin-top:8px"><button class="danger-link" id="title-off">remove title</button></div>':''}
     </div>
     <div class="stage-actions"><button class="btn full ghost" id="st-done">Done</button></div>`;
-  renderAlbum();
-  el('pull-btn').onclick = doPull;
   el('stage').querySelectorAll('[data-pack]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const id = b.dataset.pack;
       if(ownsPack(id)){ toast('Already owned'); return; }
       if(buy(+b.dataset.price, ()=>state.packs.push(id))){
-        toast('Pack unlocked — find it in Phrases'); renderShop(); renderCats(); renderPhrases();
+        toast('Pack unlocked — find it in Library'); renderShop(); renderCats(); renderPhrases();
       }
     });
   });
@@ -2542,29 +2591,6 @@ function masteryOf(id){
   if(c.iv >= 1) return 'growing';
   return 'learning';
 }
-const SHOWDOWN_TIERS = [{d:3,r:5},{d:5,r:10},{d:7,r:20}];
-function activeDaysThisWeek(){
-  return weekDates().filter(dt=>{ const r=(state.days||{})[dt]; return r && (r.r+r.l+r.d)>0; }).length;
-}
-function checkShowdown(){
-  const wk = weekKey();
-  if(!state.showdown || state.showdown.key !== wk) state.showdown = {key:wk, claimed:[]};
-  const active = activeDaysThisWeek(); let awarded = 0;
-  SHOWDOWN_TIERS.forEach(t=>{
-    if(active >= t.d && !state.showdown.claimed.includes(t.d)){ state.showdown.claimed.push(t.d); award(t.r); awarded += t.r; }
-  });
-  if(awarded){ saveState(); toast('Weekly showdown · +' + awarded + '💎'); }
-}
-function renderShowdown(){
-  const host = el('showdown-tiers'); if(!host) return;
-  const active = activeDaysThisWeek();
-  const claimed = (state.showdown && state.showdown.key === weekKey()) ? state.showdown.claimed : [];
-  el('showdown-days').textContent = active + '/7 days';
-  host.innerHTML = SHOWDOWN_TIERS.map(t=>{
-    const cls = claimed.includes(t.d) ? 'claimed' : (active >= t.d ? 'hit' : '');
-    return `<div class="sd-tier ${cls}"><div class="d">${t.d} days</div><div class="r">+${t.r}💎</div></div>`;
-  }).join('');
-}
 /* ---- skill constellation (v2.14) — cross-skill cohesion; accent palette only, class colours stay reserved ---- */
 const CONSTEL_TIER = {locked:0, learning:0.34, growing:0.67, mastered:1};
 function constelScores(){
@@ -2604,11 +2630,10 @@ function renderConstellation(){
   const card = el('constel-card'), aligned = s.script>=55 && s.tone>=55 && s.vocab>=55;
   if(aligned && !state.constel.aligned){
     state.constel.aligned = true; if(card) card.classList.add('aligned');
-    el('constel-status').textContent = 'aligned ✦ +15💎';
-    award(15); toast('✦ Constellation aligned — all three skills strong · +15💎');
+    el('constel-status').textContent = 'balanced evidence';
   } else {
     if(card) card.classList.toggle('aligned', !!state.constel.aligned);
-    el('constel-status').textContent = state.constel.aligned ? 'aligned ✦' : Math.round((s.script+s.tone+s.vocab)/3) + '% lit';
+    el('constel-status').textContent = state.constel.aligned ? 'balanced evidence' : Math.round((s.script+s.tone+s.vocab)/3) + '% lit';
   }
   saveState();
 }
@@ -2723,7 +2748,7 @@ function renderLearn(){
       <div class="glyphs">${L.glyphs.length ? L.glyphs.slice(0,3).map(g=>(GLYPHS[g]&&GLYPHS[g].disp)||g).join(' ') : '💡'}</div>
       <div class="meta"><div class="t">${i+1}. ${L.title}</div><div class="d">${gated ? 'pass the mastery check above to unlock' : L.sub}</div></div>
       <div class="state">${done?'✓ done':(locked?'🔒':'start →')}</div>`;
-    if(!locked) card.addEventListener('click', ()=>startLesson(L));
+    if(!locked) card.addEventListener('click', ()=>startLessonFromUser(L));
     list.appendChild(card);
     prevDone = done;
     // mastery checkpoint after every 3rd lesson — cumulative ≥80%, free unlimited retries (v2.23)
@@ -2768,6 +2793,7 @@ function renderLearn(){
     <div class="state">${_allDone ? (_lbPassed ? '👑 retake' : 'prove it →') : '🔒'}</div>`;
   if(_allDone) lb.addEventListener('click', startLettersBoss);
   list.appendChild(lb);
+  renderWall();
 }
 
 function buildBossQuiz(u){
@@ -3308,7 +3334,7 @@ el('tone-rule-btn').addEventListener('click', ()=>{
 });
 
 /* =====================================================
-   PHRASES TAB
+   LIBRARY TAB
 ===================================================== */
 let activeCat = PHRASE_CATS[0];
 function slangOwned(){ return (state.packs||[]).includes('slang'); }
@@ -3327,10 +3353,7 @@ function weekKey(){
 }
 function ensureWeek(){
   const wk = weekKey();
-  if(state.week && state.week.key === wk){
-    if(!state.week.bounty){ state.week.bounty = (state.week.picks||[]).slice(0,3); saveState(); }  // bounty backfill mid-week
-    return state.week;
-  }
+  if(state.week && state.week.key === wk) return state.week;
   const order = PHRASE_CATS.filter(c=>c!=='Slang')
     .concat((state.packs||[]).includes('teacher')?['Teacher']:[])
     .concat((state.packs||[]).includes('food2')?['Food+']:[])
@@ -3338,7 +3361,7 @@ function ensureWeek(){
   const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c).sort((a,b)=>(a.lvl||1)-(b.lvl||1)));  // within a category, lower levels first
   const picks = pool.filter(p=>!state.srs['w:'+p.thai]).slice(0,5).map(p=>p.thai);
   picks.forEach(t=>srsAdd('w:'+t));
-  state.week = {key:wk, picks, used:{}, bounty:picks.slice(0,3)};   // 3 bounty phrases / week (+8💎 vs +5💎)
+  state.week = {key:wk, picks, used:{}};
   saveState();
   return state.week;
 }
@@ -3346,9 +3369,8 @@ function claimPhrase(t){
   if(!state.week || (state.week.used||{})[t]) return false;
   if(!state.week.used) state.week.used = {};
   state.week.used[t] = todayStr();
-  const isBounty = (state.week.bounty||[]).includes(t);
-  award(isBounty ? 8 : 5); saveState();
-  toast(isBounty ? '⭐ Bounty phrase used in the wild · +8💎' : 'Said it out loud in the wild · +5💎');
+  award(5); saveState();
+  toast('Said it out loud in the wild · +5💎');
   return true;
 }
 function renderPack(){
