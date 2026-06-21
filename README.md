@@ -1,8 +1,8 @@
 # อ่าน (àan) — Learn Thai
 
-A self-contained Thai-learning PWA. Beginner → conversational, phonics-first script mastery with spaced repetition, gamification, and a token economy.
+A self-contained Phase-1 Thai script-mastery PWA: phonics-first reading, tone derivation, useful survival language, spaced repetition, gamification, and a token economy.
 
-**For developers/AI continuing this project: read `CLAUDE.md` first.** It contains architecture, content conventions, pedagogy, state schema, and working agreements.
+**For developers/AI continuing this project: read `AGENTS.md` first.** It is the tracked canonical source for architecture, content conventions, pedagogy, state schema, validation, documentation-sync rules, and working agreements.
 
 ## Run locally
 Just open `index.html` in a browser, or serve the folder:
@@ -18,4 +18,5 @@ Hosted on GitHub Pages (Settings → Pages → deploy from `main`, root). Push t
 - `index.html` — the entire app (vanilla JS, no build step)
 - `manifest.json`, `sw.js` — PWA manifest + service worker
 - `icon-180/192/512.png` — app icons
-- `CLAUDE.md` — full project context and conventions
+- `AGENTS.md` — canonical project context and conventions
+- `CHANGELOG.md` — release-by-release shipped changes
