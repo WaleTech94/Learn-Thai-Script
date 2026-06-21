@@ -16,3 +16,4 @@ idea-engine/
 
 # local-only visual look preview (never on git)
 look-preview.html
+.vercel
