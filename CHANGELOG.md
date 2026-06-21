@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.1 — 2026-06-22
+
+- Reordered the guided path so a brand-new learner starts with the three class colours/code and Lesson 1, not a tone listening drill.
+- Removed the mandatory sound-first lesson preview so script decoding comes before model audio.
+- Reworked lesson word cards into a decode-first interaction: Thai appears first, then the learner reveals transliteration, enables audio, and sees the meaning.
+- Renamed and tightened the worked-example slot to Quick decode, using a lighter class-colour/code reminder before the matched "you do" check.
+
 ## Unversioned deployment config — 2026-06-22
 
 - Added `vercel.json` so the static PWA can deploy on Vercel in parallel with GitHub Pages.

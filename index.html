@@ -221,6 +221,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .word-line .w-tr{color:var(--blue);font-size:15px}
 .word-line .w-en{color:var(--muted);font-size:13px}
 .w-reveal{display:block;text-align:left;color:var(--blue);font-size:13px;padding:4px 0;text-decoration:underline dotted}
+.speak:disabled{opacity:.42;filter:grayscale(1);cursor:not-allowed}
 .stage-actions{display:flex;gap:10px;margin-top:6px}
 .stage-actions .btn{flex:1}
 
@@ -606,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.0 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.1 (PWA)</div>
     </div>
   </section>
 
@@ -2121,9 +2122,7 @@ function buildPath(){
     {t:'drill', l:'Tone-rule trainer', s:'derive the tone from the script', go:()=>el('tone-rule-btn').click()},
   ]);
   const N = [
-    {type:'tone',  label:'Hear the five tones', sub:'your ear comes first',  id:'p:tones', go:()=>el('tone-drill-btn').click()},
     {type:'class', label:'Meet the three classes', sub:'the dial that sets every tone', id:'p:class', go:()=>showClassPrimer()},
-    {type:'speak', label:'Say hello — สวัสดีครับ', sub:'sà-wàt-dii khráp',     id:'p:hello', go:()=>gotoView('phrases')},
   ];
   LESSONS.forEach((L,i)=>{
     N.push({type:'lesson', label:'Learn — '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
@@ -2892,30 +2891,12 @@ function lessonRecognitionWords(L){ return L.words.filter(w=>wordRole(w)==='reco
 function lessonMeaningWords(L){ return L.words.filter(w=>wordRole(w)!=='decode'); }
 
 function startLesson(L){
-  // integrated sequence: hear first → concepts/script → decode → retrieve aloud/compare → objective quiz
+  // integrated sequence: concepts/script → quick decode → decode words → retrieve aloud/compare → objective quiz
   const quiz = buildLessonQuiz(L);
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
-  player = {type:'lesson', L, pre, weN, steps: 1 + pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0};
+  player = {type:'lesson', L, pre, weN, steps: pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0};
   openOverlay(); renderLessonStep();
-}
-function renderLessonHear(p){
-  const words = lessonMeaningWords(p.L), stage = el('stage'), heard = new Set();
-  stage.innerHTML = `
-    <div class="center"><div class="eyebrow">Sound first</div><h2>Hear the language before the spelling</h2>
-      <p class="sub">Tap every sound. For now, attach the sound to its meaning — the script comes next.</p></div>
-    <div class="sound-preview">
-      ${words.map(w=>`<div class="sound-row"><div>${speakBtn(w.thai, 'Hear: '+w.en)}</div><div class="meaning">${esc(w.en)}</div><div class="heard-mark">—</div></div>`).join('')}
-    </div>
-    <div class="sub" style="font-size:12px">The device voice is a model, not a pronunciation examiner. You will compare again after decoding.</div>
-    <div class="stage-actions"><button class="btn full" id="st-next" ${words.length?'disabled':''}>Into the script →</button></div>`;
-  stage.querySelectorAll('.sound-row').forEach((row,i)=>{
-    row.querySelector('.speak').addEventListener('click', ()=>{
-      heard.add(i); row.classList.add('heard'); row.querySelector('.heard-mark').textContent = 'heard ✓';
-      if(heard.size === words.length) el('st-next').disabled = false;
-    });
-  });
-  el('st-next').onclick = ()=>{ p.i++; renderLessonStep(); };
 }
 function renderLessonSpeak(p){
   const words = lessonCoreWords(p.L), stage = el('stage');
@@ -2956,10 +2937,9 @@ function renderLessonSpeak(p){
 function renderLessonStep(){
   const p = player, L = p.L, stage = el('stage');
   const nPre = p.pre.length, nGly = L.glyphs.length, nWe = p.weN;
-  const preStart = 1, glyphStart = preStart+nPre, weIndex = glyphStart+nGly;
+  const preStart = 0, glyphStart = preStart+nPre, weIndex = glyphStart+nGly;
   const wordsIndex = weIndex+nWe, speakIndex = wordsIndex+1, quizStart = speakIndex+1;
   setProg(Math.round(100 * p.i / p.steps));
-  if(p.i === 0){ renderLessonHear(p); return; }
   // concept pages
   if(p.i < preStart + nPre){
     const c = p.pre[p.i-preStart];
@@ -2990,17 +2970,18 @@ function renderLessonStep(){
         <button class="btn" id="st-next">Next</button>
       </div>`;
   }
-  // worked example: I do one, you do the twin
+  // quick decode: model the code once, then ask for the twin
   else if(nWe && p.i === weIndex){
     const tw = L.words[L.we.twinIdx];
     const askTone = L.we.ask === 'tone';
     const answer = askTone ? toneOf(tw.tr) : tw.tr;
+    const model = L.we.m.split(' = ')[0];
     const opts = askTone
       ? shuffle(TONE_NAMES.slice())
       : shuffle([tw.tr, ...sample(LESSONS.flatMap(x=>x.words).filter(w=>w.tr!==tw.tr).map(w=>w.tr), 3)]);
     stage.innerHTML = `
-      <div class="center"><h2>Decode with me</h2></div>
-      <div class="notebox" style="font-size:15px;line-height:1.8"><b>I do:</b><br>${L.we.m}</div>
+      <div class="center"><div class="eyebrow">Class colour check</div><h2>Quick decode</h2></div>
+      <div class="notebox" style="font-size:15px;line-height:1.8">${esc(model)}</div>
       <div class="q-prompt" style="margin-top:6px">
         <div class="eyebrow">You do</div>
         <div class="q-big" style="font-size:56px">${tw.thai}</div>
@@ -3026,27 +3007,34 @@ function renderLessonStep(){
   // words page
   else if(p.i === wordsIndex){
     stage.innerHTML = `
-      <div class="center"><h2>Now read these</h2><p class="sub">Real words built only from what you just learned.</p></div>
+      <div class="center"><h2>Now read these</h2><p class="sub">Sound each word out first. Then reveal the reading, audio and meaning.</p></div>
       ${L.words.map((w,wi)=>`
         <div class="word-line">
           <div class="w-thai">${w.thai}${wordRole(w)==='decode'?'<div style="font-size:10px;color:var(--muted);letter-spacing:.08em">DECODE ONLY</div>':wordRole(w)==='recognition'?'<div style="font-size:10px;color:var(--blue);letter-spacing:.08em">RECOGNISE</div>':''}</div>
           <div class="w-meta">
-            <div class="w-tr">${w.tr}</div>
-            <button class="w-reveal" data-wen="${esc(w.en)}">guess, then tap for meaning</button>
+            <button class="w-reveal" data-wi="${wi}">reveal reading</button>
+            <div class="w-answer" hidden>
+              <div class="w-tr">${w.tr}</div>
+              <div class="w-en">${esc(w.en)}</div>
+            </div>
           </div>
-          ${speakBtn(w.thai)}
+          ${speakBtn(w.thai, 'Hear: '+w.thai).replace('<button class="speak"', '<button class="speak locked" disabled')}
         </div>`).join('')}
       <div class="notebox">${L.note}</div>
       <div class="stage-actions">
         <button class="btn ghost" id="st-back">Back</button>
-        <button class="btn" id="st-next">Retrieve &amp; say →</button>
+        <button class="btn" id="st-next" disabled>Retrieve &amp; say →</button>
       </div>`;
+    const revealed = new Set();
     stage.querySelectorAll('.w-reveal').forEach(b=>{
       b.addEventListener('click', ()=>{
-        const d = document.createElement('div');
-        d.className = 'w-en';
-        d.textContent = b.dataset.wen;
-        b.replaceWith(d);
+        const line = b.closest('.word-line'), idx = b.dataset.wi;
+        const ans = line.querySelector('.w-answer'), audio = line.querySelector('.speak');
+        if(ans) ans.hidden = false;
+        if(audio){ audio.disabled = false; audio.classList.remove('locked'); }
+        revealed.add(idx);
+        b.remove();
+        if(revealed.size === L.words.length) el('st-next').disabled = false;
       });
     });
   }
