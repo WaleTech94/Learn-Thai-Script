@@ -24,7 +24,7 @@
 - **One self-contained file:** `index.html` (vanilla JS, no build step, no frameworks, no runtime API calls). Everything — CSS, data, engines — lives in this file by deliberate choice ("single growing file").
 - **Deployed as a PWA** on GitHub Pages, with Vercel also configured as a parallel static deploy target. Companion files: `manifest.json`, `sw.js` (service worker: network-first for the shell so updates propagate, cache-first for assets), `icon-180/192/512.png`, `vercel.json`.
 - **Deploy loop:** commit and push to `main`; GitHub Pages rebuilds in ~60s and Vercel deploys from the same GitHub repo when its integration is connected. On iPhone: open app online, swipe closed, reopen. Version string is at the bottom of the Today tab.
-- **Persistence:** `localStorage` key `thai_state_v1`, with a fallback to Codex's artifact `window.storage` when run inside Codex. Saves are debounced 350ms and **flushed synchronously on `visibilitychange`/`pagehide`** (iOS swipe-away protection). Export/Import buttons (Library, bottom) move state as a JSON blob.
+- **Persistence:** `localStorage` key `thai_state_v1`, with a fallback to Claude's artifact `window.storage` when run inside Claude. Saves are debounced 350ms and **flushed synchronously on `visibilitychange`/`pagehide`** (iOS swipe-away protection). Export/Import buttons (Library, bottom) move state as a JSON blob.
 - **Audio:** browser `speechSynthesis` with the device Thai voice (iOS: Kanya). Speech is primed on first touch (iOS gesture requirement) and resumed on foreground (iOS leaves it paused). Tones from synthetic voices are approximate — the UI says so. v2.35 also uses `MediaRecorder` for optional, private record/playback comparison; recordings remain local and are discarded when the learner leaves the activity.
 - **iOS chrome:** full-bleed standalone with a fixed opaque status-bar scrim (`env(safe-area-inset-top)`), opaque tab bar with the bottom inset *outside* the fixed 64px bar height, 44pt minimum touch targets, `touch-action: manipulation` everywhere.
 
@@ -93,9 +93,9 @@ v1 phrasebook+6 lessons → **v2.0** full Phase 1 → **2.1–2.19** gamificatio
 
 **Content rules (see section 2 for detail):** male particle ครับ only; or-scheme transliteration; class-colour system load-bearing; NFC-normalise patches; never rename state keys (section 5).
 
-## 9. Deploy process (Codex)
+## 9. Deploy process (Claude)
 
-The repo is the working directory. Codex edits files in place and deploys via git:
+The repo is the working directory. Claude edits files in place and deploys via git:
 ```bash
 # after validation and documentation sync pass:
 git add index.html AGENTS.md CHANGELOG.md README.md CLAUDE.md vercel.json

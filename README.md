@@ -12,11 +12,15 @@ python3 -m http.server 8000
 ```
 
 ## Deploy
-Hosted on GitHub Pages (Settings → Pages → deploy from `main`, root). Push to `main` and Pages rebuilds in ~60s.
+Hosted on GitHub Pages and prepared for Vercel as a parallel static PWA deploy.
+
+- GitHub Pages: Settings → Pages → deploy from `main`, root. Push to `main` and Pages rebuilds in ~60s.
+- Vercel: import the GitHub repo as a static/no-framework project. `vercel.json` pins no build step, root output, and fresh cache checks for `index.html`, `sw.js`, and `manifest.json`.
 
 ## Files
 - `index.html` — the entire app (vanilla JS, no build step)
 - `manifest.json`, `sw.js` — PWA manifest + service worker
+- `vercel.json` — Vercel static deployment config
 - `icon-180/192/512.png` — app icons
 - `AGENTS.md` — canonical project context and conventions
 - `CHANGELOG.md` — release-by-release shipped changes

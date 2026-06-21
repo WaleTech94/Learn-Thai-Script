@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## Unversioned deployment config — 2026-06-22
+
+- Added `vercel.json` so the static PWA can deploy on Vercel in parallel with GitHub Pages.
+- Documented the Vercel deploy path in `README.md`, `AGENTS.md`, and the local `CLAUDE.md` mirror.
+- Left the learner-facing app version at v3.0 because no app behavior or content changed.
+
 ## v3.0 — 2026-06-22
 
 - Reframed the app around a 45-minute Today plan: warm-up review, one lesson/consolidation block, then a depth block.
