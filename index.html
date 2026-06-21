@@ -213,6 +213,15 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .stage .name-thai{font-size:22px;font-family:'Mitr',sans-serif}
 .stage .translit{font-size:17px;color:var(--blue);font-weight:400}
 .stage .gloss{color:var(--muted);font-size:14px}
+.glyph-audio{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.audio-labelled{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px 6px 7px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.audio-labelled .speak{flex:none}
+.audio-labelled .audio-copy{text-align:left;line-height:1.2}
+.audio-labelled .audio-kind{display:block;color:var(--muted);font-size:10px;letter-spacing:.07em;text-transform:uppercase}
+.audio-labelled .audio-value{display:block;color:var(--text);font-family:'Mitr',sans-serif;font-size:14px}
+.audio-help{text-align:center;color:var(--muted);font-size:12px;margin-top:-10px}
+.audio-inline{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+.audio-inline .audio-caption{color:var(--muted);font-size:12px}
 .notebox{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--muted)}
 .notebox b{color:var(--text);font-weight:500}
 .word-line{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
@@ -535,7 +544,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div class="translit" id="hero-sound" style="color:var(--blue)"></div>
       <div class="row" style="justify-content:center;margin-top:10px;gap:10px">
         <span class="classchip" id="hero-class"></span>
-        <button class="speak" id="hero-speak" aria-label="Play sound"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>
+        <button class="speak" id="hero-speak" aria-label="Hear full letter name"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>
       </div>
       <span class="ghost-char" id="hero-ghost">ก</span>
     </div>
@@ -632,7 +641,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">↺ Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.33 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.34 (PWA)</div>
     </div>
   </section>
 
@@ -851,6 +860,55 @@ const GLYPHS = {
   "๋":{disp:"ก๋", type:"m", sound:"mái jàt-dtà-waa", name:"ไม้จัตวา", nameTr:"mái jàt-dtà-waa", gloss:"tone mark 4 — rising, mid class only", demo:"ก๋วยเตี๋ยว"},
   "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it — common in loanwords", demo:"ศูนย์"}
 };
+
+/* AUDIO CONTRACT (v2.34)
+   Never ask a device voice for a bare consonant phoneme: Thai TTS may read an isolated
+   character as a name, a spelling token, or contextual speech. Every glyph instead has
+   an explicit, pronounceable payload whose visible label says exactly what will play. */
+function glyphAudio(ch, mode){
+  const g = GLYPHS[ch];
+  if(!g) return {say:ch, kind:'Audio', value:ch, label:'Hear ' + ch};
+  if(g.type === 'c'){
+    const anchor = g.name.split(/\s+/)[0];               // กอ, นอ, มอ… target sound + stable ออ carrier
+    if(mode === 'name') return {say:g.name, kind:'Full letter name', value:g.name, label:'Hear full letter name: ' + g.name};
+    return {say:anchor, kind:'Sound anchor', value:anchor, label:'Hear sound anchor: ' + anchor};
+  }
+  if(g.type === 'v'){
+    return {say:g.disp, kind:'Vowel sound', value:g.disp, label:'Hear vowel sound: ' + g.disp};
+  }
+  return {say:g.name, kind:g.sound==='silent'?'Sign name':'Mark name', value:g.name, label:'Hear ' + (g.sound==='silent'?'sign':'mark') + ' name: ' + g.name};
+}
+function glyphQuizAudio(ch){
+  const a = glyphAudio(ch, 'sound');
+  return {say:a.say, sayLabel:a.kind + ' · ' + a.value};
+}
+function validateAudioContracts(){
+  const errors = [];
+  Object.entries(GLYPHS).forEach(([ch,g])=>{
+    const sound = glyphAudio(ch, 'sound');
+    if(!sound.say || !sound.label) errors.push(ch + ': missing audio payload/label');
+    if(g.type === 'c'){
+      const full = glyphAudio(ch, 'name');
+      if(sound.say === ch) errors.push(ch + ': bare consonant sent to speech');
+      if(full.say !== g.name) errors.push(ch + ': full-name audio mismatch');
+    } else if(g.type === 'v' && sound.say !== g.disp){
+      errors.push(ch + ': vowel display/audio mismatch (' + g.disp + ' / ' + sound.say + ')');
+    } else if(g.type === 'm' && sound.say !== g.name){
+      errors.push(ch + ': mark must speak its name');
+    }
+  });
+  const quizProbes = Object.keys(GLYPHS).map(ch=>mcCard('g:'+ch))
+    .concat(LESSONS.flatMap(L=>buildLessonQuiz(L)))
+    .concat(buildLettersBossQuiz());
+  quizProbes.forEach(q=>{
+    if(!q.prompt || !GLYPHS[q.prompt] || !q.say) return;
+    const expected = glyphAudio(q.prompt, 'sound').say;
+    if(q.say !== expected) errors.push(q.prompt + ': quiz audio mismatch (' + q.say + ' / ' + expected + ')');
+    if(!q.sayLabel) errors.push(q.prompt + ': quiz audio has no visible label');
+  });
+  if(errors.length) throw new Error('Audio contract failed:\n' + errors.join('\n'));
+  return true;
+}
 
 const LESSONS = [
   /* ---------------- UNIT A — Foundations ---------------- */
@@ -1629,8 +1687,7 @@ function cardFront(id){
 }
 function cardSay(id){
   if(id.startsWith('g:')){
-    const g = GLYPHS[id.slice(2)];
-    return (g && g.demo) ? g.demo : id.slice(2);
+    return glyphAudio(id.slice(2), 'sound').say;
   }
   return id.slice(2); // w: and r: both speak the Thai
 }
@@ -1675,7 +1732,8 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
     const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
     const opts = pickN(Object.values(GLYPHS).map(x=>x.sound), correct, 3);
     return {prompt:(g&&g.disp)||ch, promptBig:true, text:'What sound?', answer:correct,
-      options:shuffle([correct, ...opts]), explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
+      options:shuffle([correct, ...opts]), ...glyphQuizAudio(ch),
+      explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
   }
   if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
     const thai = id.slice(2), w = findWord(thai);
@@ -1714,8 +1772,19 @@ function speak(text, btn, rate){
   if(btn){ btn.classList.add('playing'); u.onend = ()=>btn.classList.remove('playing'); u.onerror = ()=>btn.classList.remove('playing'); }
   speechSynthesis.speak(u);
 }
-function speakBtn(text){
-  return `<button class="speak" data-say="${text}" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>`;
+function speakBtn(text, label){
+  return `<button class="speak" data-say="${esc(text)}" aria-label="${esc(label || ('Hear: ' + text))}"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>`;
+}
+function labelledAudio(a){
+  return `<div class="audio-labelled">${speakBtn(a.say, a.label)}<span class="audio-copy"><span class="audio-kind">${esc(a.kind)}</span><span class="audio-value">${esc(a.value)}</span></span></div>`;
+}
+function glyphAudioPanel(ch){
+  const g = GLYPHS[ch];
+  const sound = glyphAudio(ch, 'sound');
+  const primary = labelledAudio(sound);
+  const name = g && g.type === 'c' ? labelledAudio(glyphAudio(ch, 'name')) : '';
+  const help = g && g.type === 'c' ? `<div class="audio-help">Listen to the beginning of ${esc(sound.value)} for “${esc(g.sound)}”.</div>` : '';
+  return `<div class="glyph-audio">${primary}${name}</div>${help}`;
 }
 
 /* =====================================================
@@ -1986,7 +2055,9 @@ function renderHome(){
   el('hero-sound').textContent = '"' + g.sound + '" — ' + g.nameTr + ' (' + g.gloss + ')';
   const hc = el('hero-class'); hc.className = 'classchip ' + g.cls; hc.textContent = CLS_LABEL[g.cls];
   const hero = el('hero-card'); hero.className = 'card glyph-hero ' + g.cls;
-  el('hero-speak').onclick = ()=>speak(ch + ' ' + g.name, el('hero-speak'));
+  const heroAudio = glyphAudio(ch, 'name');
+  el('hero-speak').setAttribute('aria-label', heroAudio.label);
+  el('hero-speak').onclick = ()=>speak(heroAudio.say, el('hero-speak'));
 
   el('stat-letters').textContent = learnedGlyphIds().filter(x=>GLYPHS[x] && GLYPHS[x].type==='c').length;
   el('stat-words').textContent = learnedWords().length + Object.keys(state.srs).filter(k=>k.startsWith('w:') && !findWordInLessons(k.slice(2))).length;
@@ -2466,7 +2537,7 @@ function renderWall(){
   el('wall').querySelectorAll('[data-tile]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const g = GLYPHS[b.dataset.tile];
-      speak(b.dataset.tile + ' ' + g.name);
+      speak(glyphAudio(b.dataset.tile, 'name').say);
       toast(g.name + ' · "' + g.sound + '" · ' + CLS_LABEL[g.cls]);
     });
   });
@@ -2626,7 +2697,7 @@ function buildLettersBossQuiz(){
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   return shuffle(cons.map(ch=>({
     kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
-    options:shuffle(Object.values(CLS_LABEL)), say:ch,
+    options:shuffle(Object.values(CLS_LABEL)), ...glyphQuizAudio(ch),
     explain: GLYPHS[ch].cls==='mid' ? 'mid (the chicken-pecks 9)' : GLYPHS[ch].cls==='high' ? 'high (breathy / hissy)' : 'not mid or high → low'
   })));
 }
@@ -2678,7 +2749,7 @@ function renderLessonStep(){
         <div class="gloss">${g.type==='c' ? 'name means: ' + g.gloss : g.gloss}${g.demo ? ' · e.g. ' + g.demo : ''}</div>
         <div style="margin-top:12px">${clsHtml}</div>
       </div>
-      <div class="row" style="justify-content:center">${speakBtn(g.demo || ch)}</div>
+      ${glyphAudioPanel(ch)}
       <div class="stage-actions">
         ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
         <button class="btn" id="st-next">Next</button>
@@ -2788,11 +2859,11 @@ function buildLessonQuiz(L){
   cons.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
+    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), ...glyphQuizAudio(ch)});
     const wrongG = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3);
     soundQs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
     // SPINE (v2.28): every consonant is also drilled on its CLASS in-lesson — class is the dial that sets tone
-    classQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)), say:ch,
+    classQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)), ...glyphQuizAudio(ch),
       explain: g.cls==='mid'?'one of the mid 9 (ไก่จิก…)':g.cls==='high'?'one of the high set (breathy/hissy)':'not mid or high → low by default'});
   });
   // GUARANTEED: class (the spine) + word→meaning (encode; core words only, practice words stay decode-only) + any lesson extras.
@@ -2815,7 +2886,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
       <div class="eyebrow">${counterLabel||''}</div>
       ${q.prompt ? `<div class="q-big">${q.prompt}</div>` : ''}
       <div class="q-text">${q.text}</div>
-      ${q.say ? `<div style="margin-top:10px">${speakBtn(q.say)}</div>` : ''}
+      ${q.say ? `<div class="audio-inline">${speakBtn(q.say, q.sayLabel || ('Hear: ' + q.say))}${q.sayLabel?`<span class="audio-caption">${esc(q.sayLabel)}</span>`:''}</div>` : ''}
     </div>
     <div class="q-options">
       ${q.options.map(o=>`<button class="q-opt ${q.thaiOpts?'thai-opt':''}">${esc(String(o))}</button>`).join('')}
@@ -3261,7 +3332,7 @@ function buildMixedQuiz(){
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3).map(c=>GLYPHS[c].sound);
-    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), say:ch});
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), ...glyphQuizAudio(ch)});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls],
       options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
   });
@@ -3705,6 +3776,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
 }
 
 (async function init(){
+  validateAudioContracts();
   await loadState();
   let migrated = false;
   // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)
