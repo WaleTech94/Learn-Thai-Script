@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.1 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.2 (PWA)</div>
     </div>
   </section>
 
@@ -912,6 +912,9 @@ function validateAudioContracts(){
     .concat(LESSONS.flatMap(L=>buildLessonQuiz(L)))
     .concat(buildLettersBossQuiz());
   quizProbes.forEach(q=>{
+    if(q.prompt && GLYPHS[q.prompt] && /^What sound/.test(q.text||'') && q.say){
+      errors.push(q.prompt + ': sound-recall question must not expose audio before answer');
+    }
     if(!q.prompt || !GLYPHS[q.prompt] || !q.say) return;
     const expected = glyphAudio(q.prompt, 'sound').say;
     if(q.say !== expected) errors.push(q.prompt + ': quiz audio mismatch (' + q.say + ' / ' + expected + ')');
@@ -1808,7 +1811,7 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
     const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
     const opts = pickN(Object.values(GLYPHS).map(x=>x.sound), correct, 3);
     return {prompt:(g&&g.disp)||ch, promptBig:true, text:'What sound?', answer:correct,
-      options:shuffle([correct, ...opts]), ...glyphQuizAudio(ch),
+      options:shuffle([correct, ...opts]),
       explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
   }
   if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
@@ -3088,7 +3091,7 @@ function buildLessonQuiz(L){
   cons.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong]), ...glyphQuizAudio(ch)});
+    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong])});
     const wrongG = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3);
     soundQs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
     // SPINE (v2.28): every consonant is also drilled on its CLASS in-lesson — class is the dial that sets tone
@@ -3595,7 +3598,7 @@ function buildMixedQuiz(){
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3).map(c=>GLYPHS[c].sound);
-    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), ...glyphQuizAudio(ch)});
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls],
       options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
   });

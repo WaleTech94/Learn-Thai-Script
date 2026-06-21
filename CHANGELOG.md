@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.2 — 2026-06-22
+
+- Removed pre-answer audio from glyph sound-recall questions such as "What sound?" and "What sound is this?".
+- Kept audio on true listening prompts and class questions where it does not reveal the answer.
+- Added an audio-contract guard so sound-recall questions cannot ship with answer audio attached.
+
 ## v3.1 — 2026-06-22
 
 - Reordered the guided path so a brand-new learner starts with the three class colours/code and Lesson 1, not a tone listening drill.
