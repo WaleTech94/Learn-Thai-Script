@@ -493,8 +493,24 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .path-node.done{border-color:var(--blue)}
 .path-node.next{border-color:var(--gold);background:var(--surface);box-shadow:0 0 0 1px var(--gold)}
 .path-soon{font-size:12px;color:var(--muted)}
-/* echo chamber (v2.19) — shadow & self-rate */
+/* echo chamber — shadow, record and compare */
 .echo-word{font-family:'Mitr',sans-serif;font-size:52px;text-align:center;margin:12px 0;line-height:1.3}
+/* integrated sound → script → speech bridge (v2.35) */
+.sound-preview{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.sound-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.sound-row.heard{border-color:var(--blue)}
+.sound-row .meaning{flex:1;font-size:15px}
+.sound-row .heard-mark{font-size:12px;color:var(--blue);min-width:34px;text-align:right}
+.speak-cue{font-size:27px;font-weight:650;text-align:center;margin:18px 0 8px}
+.compare-box{margin-top:14px;padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.compare-audio{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:10px}
+.record-btn.recording{background:var(--bad);color:#fff;border-color:var(--bad)}
+.own-audio{width:100%;height:38px;margin-top:10px}
+.evidence-row{display:grid;grid-template-columns:92px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.evidence-row:last-child{border-bottom:none}
+.evidence-bar{height:7px;border-radius:5px;background:var(--surface2);overflow:hidden}
+.evidence-bar span{display:block;height:100%;border-radius:5px;background:var(--accent1)}
+.evidence-value{font-family:'Mitr',sans-serif;font-size:12px;color:var(--muted);text-align:right}
 /* learning path / guided rail (v2.20) — Home's front door: one next step at a time */
 .path-card{border:1px solid var(--gold);margin-bottom:18px}
 .path-now .pn-step{font-size:12px;color:var(--gold);font-family:'Mitr',sans-serif;text-transform:lowercase}
@@ -641,15 +657,15 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">↺ Reset all progress</button>
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.34 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v2.35 (PWA)</div>
     </div>
   </section>
 
   <!-- LEARN -->
   <section class="view" id="view-learn">
     <div class="eyebrow">Script course</div>
-    <h1 style="margin-bottom:4px">Read Thai, fast wins first</h1>
-    <p class="sub" style="margin-bottom:18px">24 lessons, 4 units: foundations &rarr; workhorse letters &rarr; the tone engine &rarr; clusters and the long tail. Finish Unit D and you can sound out any sign in Bangkok.</p>
+    <h1 style="margin-bottom:4px">Hear it, read it, say it</h1>
+    <p class="sub" style="margin-bottom:18px">The objective spine remains letter &rarr; class &rarr; tone. Each lesson now carries the same small set through sound, decoding, meaning and spoken retrieval; script mastery still controls progression.</p>
     <div class="lesson-list" id="lesson-list"></div>
   </section>
 
@@ -681,6 +697,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
       <div id="path-body"></div>
       <div class="sub" style="font-size:12px;margin-top:10px">Hear &amp; say first, edge cases last. The gold drill is your best next move; locked ones open as you reach the lesson.</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Three strands · separate evidence</div>
+        <span class="sub" style="font-size:12px">no false mastery</span>
+      </div>
+      <div id="skill-evidence"></div>
+      <div class="sub" style="font-size:12px;margin-top:9px">Script checkpoints unlock lessons because they are objectively marked. Listening is objectively checked but does not gate the script course. Speaking is record-and-compare practice only while the app stays free.</div>
     </div>
 
     <!-- tones & class — folded in from the old Tones tab (v2.27): tone isn't a separate destination, it's part of reading -->
@@ -718,7 +742,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="section-gap"></div>
     <button class="btn full" id="tone-drill-btn">Tone listening drill</button>
     <button class="btn full" id="twins-btn" style="margin-top:10px">Sound twins · hear tone &amp; length apart</button>
-    <button class="btn full ghost" id="echo-btn" style="margin-top:10px">Echo chamber · shadow the tones aloud</button>
+    <button class="btn full ghost" id="echo-btn" style="margin-top:10px">Echo chamber · record &amp; compare aloud</button>
     <div style="height:10px"></div>
     <button class="btn full ghost" id="tone-rule-btn">Tone-rule trainer (read &rarr; derive the tone)</button>
     <p class="sub" style="margin-top:10px;font-size:12px;margin-bottom:18px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
@@ -1414,6 +1438,7 @@ let state = {
   calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
   boss:{},            // unit -> {passed,lastAttempt}  (legacy; superseded by checks in v2.23)
   checks:{},          // checkpoint id -> true once passed (≥80% cumulative mastery gate)
+  skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
   notes:[],           // test-notes pad: [{at, text}]  (rides along in Export)
   packs:[]
 };
@@ -1587,7 +1612,7 @@ function renderRunway(){
   const calibrated = (state.paceN||0) >= 3;
   const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
   const srsMin = Math.round(due * paceSecs() / 60);
-  const lessonMin = (isL && nextLesson()) ? 8 : 0;
+  const lessonMin = (isL && nextLesson()) ? 12 : 0;          // includes hear-first + spoken retrieval/compare
   const drillMin = d.lite ? 0 : (isL ? 4 : 8);          // consolidation day leans on drills/stories
   const segDefs = [
     {cls:'srs', m:srsMin, label:'cards'},
@@ -1787,6 +1812,54 @@ function glyphAudioPanel(ch){
   return `<div class="glyph-audio">${primary}${name}</div>${help}`;
 }
 
+/* local microphone comparison (v2.35) — recording never leaves the device.
+   This is feedback support, not automatic pronunciation scoring. */
+let activeRecorder = null, activeRecordStream = null, activeRecordTimer = null, activeRecordUrl = null;
+function clearLocalRecording(){
+  clearTimeout(activeRecordTimer);
+  if(activeRecorder && activeRecorder.state !== 'inactive'){
+    activeRecorder.ondataavailable = null; activeRecorder.onstop = null;
+    try{ activeRecorder.stop(); }catch(e){}
+  }
+  if(activeRecordStream) activeRecordStream.getTracks().forEach(t=>t.stop());
+  if(activeRecordUrl){ URL.revokeObjectURL(activeRecordUrl); activeRecordUrl = null; }
+  activeRecorder = null; activeRecordStream = null; activeRecordTimer = null;
+}
+async function toggleLocalRecording(btn, audio){
+  if(activeRecorder && activeRecorder.state === 'recording'){
+    activeRecorder.stop();
+    btn.disabled = true;
+    return;
+  }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !('MediaRecorder' in window)){
+    toast('Recording is not supported here — say it aloud and compare with the model');
+    return;
+  }
+  try{
+    clearLocalRecording();
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const chunks = [];
+    const rec = new MediaRecorder(stream);
+    activeRecorder = rec; activeRecordStream = stream;
+    rec.ondataavailable = e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = ()=>{
+      clearTimeout(activeRecordTimer);
+      stream.getTracks().forEach(t=>t.stop());
+      const blob = new Blob(chunks, {type:rec.mimeType || 'audio/webm'});
+      activeRecordUrl = URL.createObjectURL(blob);
+      audio.src = activeRecordUrl; audio.style.display = '';
+      btn.textContent = '● Record again'; btn.classList.remove('recording'); btn.disabled = false;
+      activeRecorder = null; activeRecordStream = null;
+    };
+    rec.start();
+    btn.textContent = '■ Stop recording'; btn.classList.add('recording');
+    activeRecordTimer = setTimeout(()=>{ if(rec.state === 'recording') rec.stop(); }, 5000);
+  }catch(e){
+    btn.classList.remove('recording');
+    toast('Microphone unavailable — you can still say it aloud and compare');
+  }
+}
+
 /* =====================================================
    HELPERS
 ===================================================== */
@@ -1798,6 +1871,27 @@ function toast(msg){
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function sample(a,n){ return shuffle(a).slice(0,n); }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function ensureSkillStats(){
+  if(!state.skillStats) state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null};
+  if(!Array.isArray(state.skillStats.listen)) state.skillStats.listen = [];
+  if(!state.skillStats.speak) state.skillStats.speak = {attempts:0,last:null};
+  return state.skillStats;
+}
+function pushSkillListen(ok){
+  const a = ensureSkillStats().listen;
+  a.push(ok ? 1 : 0);
+  if(a.length > 30) a.shift();
+  saveState();
+}
+function skillListenAcc(){
+  const a = ensureSkillStats().listen;
+  return {n:a.length, pct:a.length ? Math.round(100*a.reduce((x,y)=>x+y,0)/a.length) : null};
+}
+function logSpeakAttempt(){
+  const s = ensureSkillStats().speak;
+  s.attempts = (s.attempts||0) + 1; s.last = todayStr();
+  saveState();
+}
 function pushToneStat(kind, ok){
   if(!state.toneStats) state.toneStats = {listen:[], rule:[]};
   const a = state.toneStats[kind];
@@ -1831,6 +1925,28 @@ function renderTones(){
   const lic = state.toneLicence;
   el('lic-state').textContent = !lic ? 'not yet earned'
     : (lic.expires >= todayStr() ? '✓ valid until ' + lic.expires : 'expired — re-certify');
+}
+function renderSkillEvidence(){
+  const host = el('skill-evidence'); if(!host) return;
+  const checkpointTotal = LESSONS.filter((L,i)=>isCheckpointIndex(i)).length;
+  const checkpointPassedN = LESSONS.filter((L,i)=>isCheckpointIndex(i) && checkpointPassed(i)).length;
+  const scriptPct = Math.round(100 * checkpointPassedN / checkpointTotal);
+  const ear = skillListenAcc();
+  const speak = ensureSkillStats().speak;
+  const earPct = ear.pct == null ? 0 : ear.pct;
+  host.innerHTML = `
+    <div class="evidence-row">
+      <span>Script</span><span class="evidence-bar"><span style="width:${scriptPct}%"></span></span>
+      <span class="evidence-value">${checkpointPassedN}/${checkpointTotal} gates${state.checks&&state.checks.letters42?' · boss ✓':''}</span>
+    </div>
+    <div class="evidence-row">
+      <span>Listening</span><span class="evidence-bar"><span style="width:${earPct}%;background:var(--blue)"></span></span>
+      <span class="evidence-value">${ear.pct==null?'no checks yet':ear.pct+'% · n='+ear.n}</span>
+    </div>
+    <div class="evidence-row">
+      <span>Speaking</span><span class="evidence-bar"><span style="width:${Math.min(100,(speak.attempts||0)*4)}%;background:var(--accent2)"></span></span>
+      <span class="evidence-value">${speak.attempts||0} comparisons · practice</span>
+    </div>`;
 }
 function toneOf(tr){
   const n = tr.normalize('NFD');
@@ -1938,7 +2054,7 @@ function buildPath(){
     {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
     {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
     {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
-    {t:'speak', l:'Echo chamber', s:'shadow the tones aloud', go:()=>el('echo-btn').click()},
+    {t:'speak', l:'Echo chamber', s:'record and compare aloud', go:()=>el('echo-btn').click()},
   ];
   const W_MID = W_EARLY.concat([
     {t:'drill', l:'Confusion clinic', s:'untangle lookalikes', go:()=>el('cta-clinic').click()},
@@ -2562,6 +2678,7 @@ el('reset-btn').addEventListener('click', async ()=>{
   const fresh = {
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, baht:0, freeze:0,
     days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}}, boss:{}, checks:{},
+    skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
     notes:keptNotes, packs:[]
   };
   state = fresh;
@@ -2617,6 +2734,21 @@ function renderLearn(){
         <div class="state">${stateTxt}</div>`;
       if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
       list.appendChild(ck);
+      // First genuine baseline comes after Unit A: script gate + objective ear check.
+      // Speaking remains practice evidence because a free static app cannot grade pronunciation honestly.
+      if(i===5){
+        const baseReady = passed;
+        const ear = ensureSkillStats().foundationEar;
+        const bc = document.createElement('button');
+        bc.className = 'card lesson-card' + (!baseReady ? ' locked' : '');
+        bc.innerHTML = `
+          <div class="glyphs">🎧</div>
+          <div class="meta"><div class="t">Foundations baseline · listening</div>
+          <div class="d">${baseReady ? (ear ? `last result ${ear.pct}% · ${ear.date} · diagnostic only` : '10 familiar words · objective recognition · does not gate lessons') : 'pass the lessons 1–6 script checkpoint first'}</div></div>
+          <div class="state">${baseReady ? (ear?'recheck →':'check →') : '🔒'}</div>`;
+        if(baseReady) bc.addEventListener('click', startFoundationEar);
+        list.appendChild(bc);
+      }
     }
   });
   // Letters boss — Phase-1 capstone (class of all 42), unlocks once every lesson is done (v2.32)
@@ -2690,6 +2822,17 @@ function buildCheckpointQuiz(upTo){
 function startCheckpoint(i){
   startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
 }
+function buildFoundationEarQuiz(){
+  const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
+  return sample(pool, Math.min(10,pool.length)).map(w=>{
+    const wrong = sample(pool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
+    return {kind:'mcq', text:'Listen — what does this familiar word mean?', say:w.thai, autoplay:true,
+      answer:w.en, options:shuffle([w.en,...wrong]), explain:w.thai+' '+w.tr, axis:'listen'};
+  });
+}
+function startFoundationEar(){
+  startGenericQuiz(buildFoundationEarQuiz(), 'Foundations ear baseline', {foundationEar:true});
+}
 /* Letters boss (v2.32) — the Phase-1 capstone: prove the CLASS of all 42 consonants.
    Class is the dial that sets tone, so this certifies the whole reading machine.
    Untimed (fairness > speed), ≥90% to pass, free unlimited retries (Bloom). */
@@ -2708,37 +2851,95 @@ function startLettersBoss(){ startGenericQuiz(buildLettersBossQuiz(), 'Letters b
 ===================================================== */
 let player = null;
 function openOverlay(){ el('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); player=null; }
+function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); player=null; }
 el('overlay-close').addEventListener('click', closeOverlay);
 
 function setProg(pct){ el('overlay-prog').style.width = pct + '%'; }
+function lessonCoreWords(L){ return L.words.filter(w=>w.util!=='practice'); }
 
 function startLesson(L){
-  // steps: concept pages, glyphs, worked example, words page, quiz, result
+  // integrated sequence: hear first → concepts/script → decode → retrieve aloud/compare → objective quiz
   const quiz = buildLessonQuiz(L);
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
-  player = {type:'lesson', L, pre, weN, steps: pre.length + L.glyphs.length + weN + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0};
+  player = {type:'lesson', L, pre, weN, steps: 1 + pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0};
   openOverlay(); renderLessonStep();
+}
+function renderLessonHear(p){
+  const words = lessonCoreWords(p.L), stage = el('stage'), heard = new Set();
+  stage.innerHTML = `
+    <div class="center"><div class="eyebrow">Sound first</div><h2>Hear the language before the spelling</h2>
+      <p class="sub">Tap every sound. For now, attach the sound to its meaning — the script comes next.</p></div>
+    <div class="sound-preview">
+      ${words.map(w=>`<div class="sound-row"><div>${speakBtn(w.thai, 'Hear: '+w.en)}</div><div class="meaning">${esc(w.en)}</div><div class="heard-mark">—</div></div>`).join('')}
+    </div>
+    <div class="sub" style="font-size:12px">The device voice is a model, not a pronunciation examiner. You will compare again after decoding.</div>
+    <div class="stage-actions"><button class="btn full" id="st-next" ${words.length?'disabled':''}>Into the script →</button></div>`;
+  stage.querySelectorAll('.sound-row').forEach((row,i)=>{
+    row.querySelector('.speak').addEventListener('click', ()=>{
+      heard.add(i); row.classList.add('heard'); row.querySelector('.heard-mark').textContent = 'heard ✓';
+      if(heard.size === words.length) el('st-next').disabled = false;
+    });
+  });
+  el('st-next').onclick = ()=>{ p.i++; renderLessonStep(); };
+}
+function renderLessonSpeak(p){
+  const words = lessonCoreWords(p.L), stage = el('stage');
+  if(p.speakIdx >= words.length){
+    p.speakIdx = 0; p.i++; renderLessonStep(); return;
+  }
+  clearLocalRecording();
+  const w = words[p.speakIdx];
+  stage.innerHTML = `
+    <div class="center"><div class="eyebrow">Retrieve &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Say it before you see it</h2></div>
+    <div class="speak-cue">${esc(w.en)}</div>
+    <div class="sub" style="text-align:center">Try the Thai aloud from memory. Then reveal and compare — no self-awarded score.</div>
+    <div id="speak-reveal" class="stage-actions">
+      <button class="btn full" id="speak-show">I said it · reveal the model →</button>
+      <button class="btn full ghost" id="speak-skip" style="margin-top:8px">Skip this one</button>
+    </div>`;
+  el('speak-show').onclick = ()=>{
+    logSpeakAttempt();
+    el('speak-reveal').innerHTML = `
+      <div class="compare-box">
+        <div class="echo-word" style="margin:0">${w.thai}</div>
+        <div class="fc-tr" style="text-align:center">${w.tr} · ${w.en}</div>
+        <div class="compare-audio">
+          <span class="sub">Model</span>${speakBtn(w.thai, 'Hear model: '+w.thai)}
+          <button class="btn small ghost record-btn" id="rec-start">● Record yourself</button>
+        </div>
+        <audio class="own-audio" id="own-audio" controls style="display:none"></audio>
+        <div class="sub" style="font-size:11px;margin-top:8px">Your recording stays on this device and is discarded when you leave. Compare the vowel length, aspiration and pitch movement; the app does not pretend to grade them.</div>
+      </div>
+      <button class="btn full" id="speak-next" style="margin-top:12px">${p.speakIdx+1===words.length?'Start the quiz →':'Next word →'}</button>`;
+    const rb = el('rec-start'), au = el('own-audio');
+    rb.onclick = ()=>toggleLocalRecording(rb, au);
+    el('speak-next').onclick = ()=>{ clearLocalRecording(); p.speakIdx++; renderLessonSpeak(p); };
+    speak(w.thai);
+  };
+  el('speak-skip').onclick = ()=>{ p.speakIdx++; renderLessonSpeak(p); };
 }
 function renderLessonStep(){
   const p = player, L = p.L, stage = el('stage');
   const nPre = p.pre.length, nGly = L.glyphs.length, nWe = p.weN;
+  const preStart = 1, glyphStart = preStart+nPre, weIndex = glyphStart+nGly;
+  const wordsIndex = weIndex+nWe, speakIndex = wordsIndex+1, quizStart = speakIndex+1;
   setProg(Math.round(100 * p.i / p.steps));
+  if(p.i === 0){ renderLessonHear(p); return; }
   // concept pages
-  if(p.i < nPre){
-    const c = p.pre[p.i];
+  if(p.i < preStart + nPre){
+    const c = p.pre[p.i-preStart];
     stage.innerHTML = `
       <div class="center"><h2>${c.h}</h2></div>
       <div class="notebox" style="font-size:15px;line-height:1.7">${c.body}</div>
       <div class="stage-actions">
-        ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
+        <button class="btn ghost" id="st-back">Back</button>
         <button class="btn" id="st-next">Next</button>
       </div>`;
   }
   // glyph intro steps
-  else if(p.i < nPre + nGly){
-    const ch = L.glyphs[p.i - nPre], g = GLYPHS[ch];
+  else if(p.i < glyphStart + nGly){
+    const ch = L.glyphs[p.i-glyphStart], g = GLYPHS[ch];
     const clsHtml = g.type==='c' ? `<span class="classchip ${g.cls}">${CLS_LABEL[g.cls]}</span>` :
       `<span class="classchip" style="color:var(--blue);border-color:var(--blue)">${g.type==='v'?'Vowel':'Tone mark'}</span>`;
     stage.innerHTML = `
@@ -2756,7 +2957,7 @@ function renderLessonStep(){
       </div>`;
   }
   // worked example: I do one, you do the twin
-  else if(nWe && p.i === nPre + nGly){
+  else if(nWe && p.i === weIndex){
     const tw = L.words[L.we.twinIdx];
     const askTone = L.we.ask === 'tone';
     const answer = askTone ? toneOf(tw.tr) : tw.tr;
@@ -2789,7 +2990,7 @@ function renderLessonStep(){
     return;
   }
   // words page
-  else if(p.i === nPre + nGly + nWe){
+  else if(p.i === wordsIndex){
     stage.innerHTML = `
       <div class="center"><h2>Now read these</h2><p class="sub">Real words built only from what you just learned.</p></div>
       ${L.words.map((w,wi)=>`
@@ -2804,7 +3005,7 @@ function renderLessonStep(){
       <div class="notebox">${L.note}</div>
       <div class="stage-actions">
         <button class="btn ghost" id="st-back">Back</button>
-        <button class="btn" id="st-next">Quiz me</button>
+        <button class="btn" id="st-next">Retrieve &amp; say →</button>
       </div>`;
     stage.querySelectorAll('.w-reveal').forEach(b=>{
       b.addEventListener('click', ()=>{
@@ -2815,10 +3016,16 @@ function renderLessonStep(){
       });
     });
   }
+  // speaking bridge: retrieval from meaning, then local record/playback comparison
+  else if(p.i === speakIndex){
+    renderLessonSpeak(p); return;
+  }
   // quiz steps
-  else if(p.i < nPre + nGly + nWe + 1 + p.quiz.length){
-    renderQuizQ(p.quiz[p.qIdx], (ok)=>{
+  else if(p.i < quizStart + p.quiz.length){
+    const q = p.quiz[p.qIdx];
+    renderQuizQ(q, (ok)=>{
       if(ok) p.correct++;
+      if(q.axis === 'listen') pushSkillListen(ok);
       p.qIdx++; p.i++;
       renderLessonStep();
     }, `Question ${p.qIdx+1} of ${p.quiz.length}`);
@@ -2830,7 +3037,7 @@ function renderLessonStep(){
     return;
   }
   const nb = el('st-next'); if(nb) nb.onclick = ()=>{ p.i++; renderLessonStep(); };
-  const bb = el('st-back'); if(bb) bb.onclick = ()=>{ p.i = Math.max(0, p.i-1); if(p.i < nPre + nGly + nWe + 1) renderLessonStep(); };
+  const bb = el('st-back'); if(bb) bb.onclick = ()=>{ p.i = Math.max(0, p.i-1); renderLessonStep(); };
 }
 function finishLesson(){
   const p = player, L = p.L;
@@ -2851,7 +3058,7 @@ function finishLesson(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
 
-/* build per-lesson quiz: glyph->sound, sound->glyph, word->meaning */
+/* build per-lesson quiz: script spine + meaning + objective spoken-word recognition */
 function buildLessonQuiz(L){
   const soundQs = [], classQs = [];
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
@@ -2872,7 +3079,18 @@ function buildLessonQuiz(L){
     const wrong = sample(pool,3).map(x=>x.en);
     return {kind:'mcq', prompt:w.thai, promptBig:true, text:'What does this mean?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai};
   });
-  const guaranteed = classQs.concat(wordQs).concat(L.extraQuiz||[]);
+  // Two objective listening checks per lesson: hear a familiar whole word, retrieve its meaning.
+  // These feed separate listening evidence; they never replace or weaken the script mastery gates.
+  const core = lessonCoreWords(L);
+  const listenQs = core.slice(0,2).map(w=>{
+    let wrong = sample(core.filter(x=>x.thai!==w.thai).map(x=>x.en),3);
+    if(wrong.length < 3){
+      wrong = [...new Set(wrong.concat(sample(LESSONS.flatMap(x=>x.words).filter(x=>x.thai!==w.thai && x.en!==w.en).map(x=>x.en), 3-wrong.length)))];
+    }
+    return {kind:'mcq', text:'Listen — what does this word mean?', say:w.thai, autoplay:true,
+      answer:w.en, options:shuffle([w.en,...wrong]), explain:w.thai+' '+w.tr, axis:'listen'};
+  });
+  const guaranteed = classQs.concat(wordQs).concat(listenQs).concat(L.extraQuiz||[]);
   const fill = Math.max(0, 10 - guaranteed.length);
   return shuffle(guaranteed.concat(sample(soundQs, Math.min(fill, soundQs.length))));
 }
@@ -3003,7 +3221,7 @@ el('twins-btn').addEventListener('click', ()=>{
   startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
 });
 
-/* echo chamber (v2.19) — Rung 1 "say": shadow a model word aloud, replay slow, self-rate */
+/* echo chamber — shadow, record and compare locally; no honesty-based pronunciation score */
 el('echo-btn').addEventListener('click', ()=>{
   const pool = TONES.concat(TONES2).concat(TONE_SETS.flat()).concat(LENGTH_PAIRS.flat())
     .map(w=>({t:w.thai||w.t, tr:w.tr, en:w.en}));
@@ -3012,13 +3230,14 @@ el('echo-btn').addEventListener('click', ()=>{
 });
 function renderEcho(){
   const p = player;
+  clearLocalRecording();
   setProg(Math.round(100*p.i/p.rounds.length));
   if(p.i >= p.rounds.length){
     setProg(100);
     const d = ensureDay(); d.d++; saveState(); bumpStreak(); award(2); questCheck();
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">${p.rounds.length} words shadowed · +2💎</div>
+      <div class="result-sub">${p.rounds.length} words shadowed and compared · +2💎</div>
       <div class="result-sub" style="font-size:12px">Tones from a synthetic voice are approximate — trust your ear over the model.</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
@@ -3033,15 +3252,18 @@ function renderEcho(){
       ${speakBtn(r.t)}
       <button class="btn small ghost" id="echo-slow">🐢 slow</button>
     </div>
-    <div class="q-feedback" style="margin-bottom:8px">Now shadow it — how close were you?</div>
-    <div class="rw-grid" id="echo-rate">
-      <button class="btn" data-r="off">Off</button>
-      <button class="btn" data-r="close">Close</button>
-      <button class="btn" style="background:var(--good);color:var(--bg)" data-r="got">Nailed it</button>
-    </div>`;
+    <div class="compare-box">
+      <div class="q-feedback" style="margin-bottom:8px">Shadow it, record, then play yourself back beside the model.</div>
+      <button class="btn full ghost record-btn" id="echo-record">● Record yourself</button>
+      <audio class="own-audio" id="echo-own" controls style="display:none"></audio>
+      <div class="sub" style="font-size:11px;margin-top:8px">No fake score: listen for vowel length, aspiration and pitch movement. Recording stays on this device.</div>
+    </div>
+    <div class="stage-actions"><button class="btn full" id="echo-next">I said it · next →</button></div>`;
   setTimeout(()=>speak(r.t), 350);
   el('echo-slow').onclick = ()=>speak(r.t, el('echo-slow'), 0.4);
-  el('echo-rate').querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click', ()=>{ p.i++; renderEcho(); }));
+  const rb = el('echo-record'), au = el('echo-own');
+  rb.onclick = ()=>toggleLocalRecording(rb, au);
+  el('echo-next').onclick = ()=>{ logSpeakAttempt(); clearLocalRecording(); p.i++; renderEcho(); };
 }
 
 el('tone-rule-btn').addEventListener('click', ()=>{
@@ -3211,6 +3433,7 @@ function renderReviewTab(){
   renderLap();
   renderPath();
   renderTones();        // tone licence panel now lives in the Review tab (folded in v2.27)
+  renderSkillEvidence();
 }
 el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
@@ -3342,7 +3565,7 @@ function buildMixedQuiz(){
       qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai});
       const wrongT = sample(allWords.filter(x=>x.thai!==w.thai),3).map(x=>x.thai);
       qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
-        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr+' — '+w.en});
+        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr+' — '+w.en, axis:'listen'});
     }
   });
   allWords.filter(monoSyllable).forEach(w=>{
@@ -3410,6 +3633,21 @@ function nextGenericQ(){
       }
       return;
     }
+    if(p.opts.foundationEar){
+      const stats = ensureSkillStats();
+      stats.foundationEar = {pct, date:todayStr()};
+      saveState(); questCheck();
+      const reading = checkpointPassed(5) ? 'Script checkpoint: passed ✓' : 'Script checkpoint: not yet passed';
+      const speaking = (stats.speak.attempts||0) + ' spoken retrieval comparisons logged';
+      el('stage').innerHTML = `
+        <div class="result-big">${pct}%</div>
+        <div class="result-sub">Foundations listening baseline · ${p.correct}/${p.qs.length}</div>
+        <div class="notebox" style="margin-top:14px">${reading}<br>Listening: ${pct}% on familiar words<br>Speaking: ${speaking}</div>
+        <div class="result-sub" style="font-size:12px">Diagnostic only: this identifies the next practice need. It does not unlock or block script lessons.</div>
+        <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+      el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
+      return;
+    }
     if(p.opts.checkpoint != null){
       const i = p.opts.checkpoint, passed = pct >= 80;
       questCheck();
@@ -3448,7 +3686,7 @@ function nextGenericQ(){
     return;
   }
   const q = p.qs[p.i];
-  const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null || p.opts.letters42){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); p.i++; nextGenericQ(); };
+  const cb = ok=>{ if(ok) p.correct++; else if(p.opts.checkpoint != null || p.opts.letters42){ (p.missed = p.missed || []).push(q); } if(p.opts.toneLog) pushToneStat(p.opts.toneLog, ok); if(q.axis==='listen') pushSkillListen(ok); p.i++; nextGenericQ(); };
   const label = `${p.label} · ${p.i+1} of ${p.qs.length}`;
   if(q.kind === 'type') renderTypeQ(q, cb, label);                 // typed sound-recall (reading)
   else renderQuizQ(q, cb, label, p.opts.timed);
@@ -3787,6 +4025,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   }
   if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
   if(!state.notes){ state.notes = []; migrated = true; }     // v2.26 test-notes pad
+  if(!state.skillStats){ state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null}; migrated = true; } // v2.35 separate evidence
   if(migrated) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
