@@ -14,7 +14,7 @@
 - **v2.33** — Reset progress repaired for PWA/localStorage and made visible.
 - **v2.34** — explicit glyph audio contract: consonant sound anchors/full names, exact displayed vowel audio, and app-wide audio-payload validation.
 - **v2.35** — integrated **hear → read → understand → retrieve aloud → compare** lesson flow. Objective listening evidence is tracked separately; speaking uses local record/playback and is explicitly practice, not certified mastery. The checkpoint builder, lesson-lock logic, ≥80% gates, free remediation/retries, and ≥90% Letters boss remain unchanged.
-- **v2.36** — lesson-vocabulary role audit. Every lesson word is explicitly tagged `vocab:"core"|"recognition"|"decode"`: 65 core, 23 recognition, 8 decode-only. Only core words demand English→Thai spoken retrieval or enter Spell it; recognition words are tested only receptively; decode-only examples retain their script job without meaning tests.
+- **v2.36** — lesson-vocabulary role audit. Every lesson word is explicitly tagged `vocab:"core"|"recognition"|"decode"`: 65 core, 23 recognition, 8 decode-only. Only core words demand English→Thai spoken retrieval or enter Spell it; recognition words are tested only receptively; decode-only examples retain their script job without meaning tests. `validateVocabularyContracts()` fails fast on missing roles or decode-word leakage into vocabulary quizzes/distractors.
 
 ---
 
@@ -95,7 +95,7 @@ v1 phrasebook+6 lessons → **v2.0** full Phase 1 → **2.1–2.19** gamificatio
 The repo is the working directory. Codex edits `index.html` in place and deploys via git:
 ```bash
 # after validation and documentation sync pass:
-git add index.html AGENTS.md CHANGELOG.md
+git add index.html AGENTS.md CHANGELOG.md README.md
 git commit -m "vX.Y.Z — <summary>"
 git push
 ```

@@ -9,6 +9,7 @@ Every versioned app release must update this file and `AGENTS.md` in the same co
 - Kept recognition vocabulary receptive: hear it, read it and identify its meaning without requiring production.
 - Removed decode-only words from lesson meaning questions, listening checks and mixed vocabulary review while preserving them as script examples.
 - Added visible RECOGNISE and DECODE ONLY labels on lesson word pages.
+- Added an app-start vocabulary contract that rejects missing roles and decode-word leakage into vocabulary questions or distractors.
 - Replaced the lesson-24 claim that every Thai text can be sounded out correctly with a narrower description of the decoding tools and real-world irregularities.
 
 ## v2.35 — 2026-06-22
