@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.5 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.6 (PWA)</div>
     </div>
   </section>
 
@@ -885,6 +885,7 @@ function glyphAudio(ch, mode){
     return {say:anchor, kind:'Sound anchor', value:anchor, label:'Hear sound anchor: ' + anchor};
   }
   if(g.type === 'v'){
+    if(mode === 'carrier-letter') return {say:'ออ', kind:'Carrier letter', value:'อ', label:'Hear carrier letter: อ'};
     if(mode === 'carrier') return {say:g.disp, kind:'Carrier form', value:g.disp, label:'Hear carrier form: ' + g.disp};
     return {say:g.disp, kind:'Vowel sound', value:g.sound, label:'Hear vowel sound: ' + g.sound};
   }
@@ -1863,8 +1864,9 @@ function glyphAudioPanel(ch){
   const sound = glyphAudio(ch, 'sound');
   const primary = labelledAudio(sound);
   if(g && g.type === 'v'){
+    const carrierLetter = labelledAudio(glyphAudio(ch, 'carrier-letter'));
     const carrier = labelledAudio(glyphAudio(ch, 'carrier'));
-    return `<div class="glyph-audio">${primary}${carrier}</div><div class="audio-help">อ is the carrier here, not an extra consonant sound. Thai uses it to show the vowel by itself.</div>`;
+    return `<div class="glyph-audio">${primary}${carrierLetter}${carrier}</div><div class="audio-help">In ${esc(g.disp)}, อ is a silent carrier. It lets Thai show the vowel by itself, so the full carrier form should still sound like the vowel.</div>`;
   }
   const name = g && g.type === 'c' ? labelledAudio(glyphAudio(ch, 'name')) : '';
   const help = g && g.type === 'c' ? `<div class="audio-help">Listen to the beginning of ${esc(sound.value)} for “${esc(g.sound)}”.</div>` : '';
