@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.4 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.5 (PWA)</div>
     </div>
   </section>
 
@@ -615,7 +615,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <section class="view" id="view-learn">
     <div class="eyebrow">Script course</div>
     <h1 style="margin-bottom:4px">Hear it, read it, say it</h1>
-    <p class="sub" style="margin-bottom:18px">The objective spine remains letter &rarr; class &rarr; tone. Each lesson now carries the same small set through sound, decoding, meaning and spoken retrieval; script mastery still controls progression.</p>
+    <p class="sub" style="margin-bottom:18px">The objective spine remains letter &rarr; class &rarr; tone. Each lesson now carries the same small set through sound, decoding, meaning and read-aloud comparison; script mastery still controls progression.</p>
     <div class="lesson-list" id="lesson-list"></div>
     <div class="card" style="margin-top:18px">
       <div class="spread">
@@ -1689,7 +1689,7 @@ function renderRunway(){
   const calibrated = (state.paceN||0) >= 3;
   const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
   const srsMin = Math.min(15, Math.round(due * paceSecs() / 60));
-  const lessonMin = (isL && nextLesson() && d.l === 0) ? 20 : 0;          // includes hear-first + spoken retrieval/compare
+  const lessonMin = (isL && nextLesson() && d.l === 0) ? 20 : 0;          // includes hear-first + read-aloud compare
   const mainDone = isL ? d.l > 0 : d.d > 0;
   const drillMin = d.lite ? 0 : (mainDone ? (isL ? 15 : 25) : Math.max(isL ? 15 : 25, 45 - srsMin - lessonMin));
   const segDefs = [
@@ -2899,7 +2899,7 @@ function lessonRecognitionWords(L){ return L.words.filter(w=>wordRole(w)==='reco
 function lessonMeaningWords(L){ return L.words.filter(w=>wordRole(w)!=='decode'); }
 
 function startLesson(L){
-  // integrated sequence: concepts/script → quick decode → decode words → retrieve aloud/compare → objective quiz
+  // integrated sequence: concepts/script → quick decode → decode words → read aloud/compare → objective quiz
   const quiz = buildLessonQuiz(L);
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
@@ -2907,18 +2907,18 @@ function startLesson(L){
   openOverlay(); renderLessonStep();
 }
 function renderLessonSpeak(p){
-  const words = lessonCoreWords(p.L), stage = el('stage');
+  const words = p.L.words, stage = el('stage');
   if(p.speakIdx >= words.length){
     p.speakIdx = 0; p.i++; renderLessonStep(); return;
   }
   clearLocalRecording();
   const w = words[p.speakIdx];
   stage.innerHTML = `
-    <div class="center"><div class="eyebrow">Retrieve &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Say it before you see it</h2></div>
-    <div class="speak-cue">${esc(w.en)}</div>
-    <div class="sub" style="text-align:center">Try the Thai aloud from memory. Then reveal and compare — no self-awarded score.</div>
+    <div class="center"><div class="eyebrow">Read &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Read it aloud</h2></div>
+    <div class="speak-cue">${esc(w.thai)}</div>
+    <div class="sub" style="text-align:center">Use the script, not the English meaning. Then reveal the model and compare — no self-awarded score.</div>
     <div id="speak-reveal" class="stage-actions">
-      <button class="btn full" id="speak-show">I said it · reveal the model →</button>
+      <button class="btn full" id="speak-show">I read it · reveal the model →</button>
       <button class="btn full ghost" id="speak-skip" style="margin-top:8px">Skip this one</button>
     </div>`;
   el('speak-show').onclick = ()=>{
@@ -3031,7 +3031,7 @@ function renderLessonStep(){
       <div class="notebox">${L.note}</div>
       <div class="stage-actions">
         <button class="btn ghost" id="st-back">Back</button>
-        <button class="btn" id="st-next" disabled>Retrieve &amp; say →</button>
+        <button class="btn" id="st-next" disabled>Read aloud →</button>
       </div>`;
     const revealed = new Set();
     stage.querySelectorAll('.w-reveal').forEach(b=>{
@@ -3046,7 +3046,7 @@ function renderLessonStep(){
       });
     });
   }
-  // speaking bridge: retrieval from meaning, then local record/playback comparison
+  // speaking bridge: read from script, then local record/playback comparison
   else if(p.i === speakIndex){
     renderLessonSpeak(p); return;
   }
@@ -3695,7 +3695,7 @@ function nextGenericQ(){
       stats.foundationEar = {pct, date:todayStr()};
       saveState(); questCheck();
       const reading = checkpointPassed(5) ? 'Script checkpoint: passed ✓' : 'Script checkpoint: not yet passed';
-      const speaking = (stats.speak.attempts||0) + ' spoken retrieval comparisons logged';
+      const speaking = (stats.speak.attempts||0) + ' read-aloud comparisons logged';
       el('stage').innerHTML = `
         <div class="result-big">${pct}%</div>
         <div class="result-sub">Foundations listening baseline · ${p.correct}/${p.qs.length}</div>

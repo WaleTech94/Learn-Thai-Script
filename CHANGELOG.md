@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.5 — 2026-06-22
+
+- Replaced lesson "Retrieve & say" English-cue production with script-cued "Read & say" practice.
+- The speaking bridge now shows the Thai word, asks the learner to read it aloud, then reveals model audio and optional local recording.
+- Deferred English→Thai vocabulary production out of Phase 1; lesson meaning remains on reveal, not as a spoken recall demand.
+
 ## v3.4 — 2026-06-22
 
 - Split vowel-card audio labels into the target vowel sound and the carrier-form example.
