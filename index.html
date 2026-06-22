@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.2 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.3 (PWA)</div>
     </div>
   </section>
 
@@ -2801,9 +2801,9 @@ function renderLearn(){
 function buildBossQuiz(u){
   const Ls = unitLessons(u);
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
-  const words = Ls.flatMap(lessonMeaningWords);
+  const words = Ls.flatMap(L=>L.words);
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
-  const allWordsPool = LESSONS.flatMap(lessonMeaningWords);
+  const allWordsPool = LESSONS.flatMap(L=>L.words);
   const qs = [];
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
@@ -2812,8 +2812,8 @@ function buildBossQuiz(u){
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    const wrong = sample(allWordsPool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
-    qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong])});
+    const wrong = sample([...new Set(allWordsPool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.en});
     if(monoSyllable(w)){
       qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
     }
@@ -3083,11 +3083,12 @@ function finishLesson(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
 
-/* build per-lesson quiz: script spine + role-filtered meaning + objective core-word listening */
+/* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
 function buildLessonQuiz(L){
   const soundQs = [], classQs = [];
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
+  const allWords = LESSONS.flatMap(x=>x.words);
   cons.forEach(ch=>{
     const g = GLYPHS[ch];
     const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
@@ -3098,27 +3099,34 @@ function buildLessonQuiz(L){
     classQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)), ...glyphQuizAudio(ch),
       explain: g.cls==='mid'?'one of the mid 9 (ไก่จิก…)':g.cls==='high'?'one of the high set (breathy/hissy)':'not mid or high → low by default'});
   });
-  // GUARANTEED: class (the spine) + word→meaning for core/recognition words.
-  // Decode-only words never consume vocabulary-testing space.
-  const wordQs = lessonMeaningWords(L).map(w=>{
-    const pool = LESSONS.flatMap(lessonMeaningWords).filter(x=>x.thai!==w.thai && x.en!==w.en);
-    const wrong = sample(pool,3).map(x=>x.en);
-    return {kind:'mcq', prompt:w.thai, promptBig:true, text:'What does this mean?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai};
+  const readQs = L.words.map(w=>{
+    const wrong = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+    return {kind:'mcq', prompt:w.thai, promptBig:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.en};
   });
-  // Two objective listening checks per lesson: core vocabulary only.
-  // These feed separate listening evidence; they never replace or weaken the script mastery gates.
+  const reverseReadQs = L.words.map(w=>{
+    const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?', answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.en};
+  });
+  const toneQs = L.words.filter(monoSyllable).map(w=>({
+    kind:'mcq', prompt:w.thai, promptBig:true, text:'Which tone?', answer:toneOf(w.tr),
+    options:shuffle(TONE_NAMES.slice()), explain:w.tr
+  }));
+  // Two objective listening checks per lesson: core vocabulary only, heard word → Thai script.
+  // These feed separate listening evidence without turning the lesson quiz into a definition test.
   const core = lessonCoreWords(L);
   const listenQs = core.slice(0,2).map(w=>{
-    let wrong = sample(core.filter(x=>x.thai!==w.thai).map(x=>x.en),3);
-    if(wrong.length < 3){
-      wrong = [...new Set(wrong.concat(sample(LESSONS.flatMap(lessonMeaningWords).filter(x=>x.thai!==w.thai && x.en!==w.en).map(x=>x.en), 3-wrong.length)))];
-    }
-    return {kind:'mcq', text:'Listen — what does this word mean?', say:w.thai, autoplay:true,
-      answer:w.en, options:shuffle([w.en,...wrong]), explain:w.thai+' '+w.tr, axis:'listen'};
+    const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr+' — '+w.en, axis:'listen'};
   });
-  const guaranteed = classQs.concat(wordQs).concat(listenQs).concat(L.extraQuiz||[]);
+  const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
+  const scriptQs = soundQs.concat(readQs).concat(toneQs);
   const fill = Math.max(0, 10 - guaranteed.length);
-  return shuffle(guaranteed.concat(sample(soundQs, Math.min(fill, soundQs.length))));
+  let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
+  if(fillers.length < fill){
+    fillers = fillers.concat(sample(reverseReadQs, Math.min(fill - fillers.length, reverseReadQs.length)));
+  }
+  return shuffle(guaranteed.concat(fillers));
 }
 function validateVocabularyContracts(){
   const roles = new Set(['core','recognition','decode']);
@@ -3132,8 +3140,9 @@ function validateVocabularyContracts(){
   LESSONS.forEach(L=>{
     const coreThai = new Set(lessonCoreWords(L).map(w=>w.thai));
     buildLessonQuiz(L).forEach(q=>{
-      if(q.text==='What does this mean?' && decodeThai.has(q.prompt)) errors.push(L.id + ':' + q.prompt + ' decode word got a meaning question');
+      if(/what does (this|this word).+mean/i.test(q.text||'')) errors.push(L.id + ': routine definition question leaked into lesson quiz');
       if(q.axis==='listen' && !coreThai.has(q.say)) errors.push(L.id + ':' + q.say + ' non-core word got a lesson listening question');
+      if(q.axis==='listen' && (!q.thaiOpts || !coreThai.has(q.answer))) errors.push(L.id + ':' + q.say + ' listening question must answer with a core Thai word');
       if((q.options||[]).some(o=>decodeMeanings.has(o))) errors.push(L.id + ': decode meaning leaked into quiz options');
     });
   });
@@ -3603,9 +3612,9 @@ function buildMixedQuiz(){
       options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
   });
   allWords.forEach(w=>{
-    const wrong = sample(allWords.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
-    if(wrong.length===3){
-      qs.push({kind:'mcq', prompt:w.thai, text:'Meaning?', answer:w.en, options:shuffle([w.en,...wrong]), say:w.thai});
+    const wrongRead = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+    if(wrongRead.length===3){
+      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), explain:w.en});
       const wrongT = sample(allWords.filter(x=>x.thai!==w.thai),3).map(x=>x.thai);
       qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
         answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr+' — '+w.en, axis:'listen'});

@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.3 — 2026-06-22
+
+- Removed routine "What does this mean?" / "Meaning?" definition questions from lesson quizzes and generated quiz-style review checks.
+- Changed lesson listening checks from audio-to-English meaning to audio-to-Thai word recognition, keeping them useful without making early lessons feel vocabulary-tested.
+- Kept important late sign-reading meaning checks where the meaning is the actual lesson objective.
+
 ## v3.2 — 2026-06-22
 
 - Removed pre-answer audio from glyph sound-recall questions such as "What sound?" and "What sound is this?".
