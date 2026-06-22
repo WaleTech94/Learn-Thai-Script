@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.9 — 2026-06-22
+
+- Gated Sound Twins to covered material only: every option in a set must use letters already taught in completed lessons.
+- Moved Sound Twins and tone listening unlocks from Lesson 1 to Lesson 4, when the first usable tone-mark examples are readable.
+- Removed Class Sprint's fallback to the full non-rare alphabet; it now drills learned letters only, even when the early pool is small.
+- Filtered Tone Drill, Echo Chamber and visible tone example lists to covered Thai text.
+- Added an app-start coverage contract that simulates lesson progress and rejects premature global tone/twin content.
+
 ## v3.8 — 2026-06-22
 
 - Made Lesson 1's first tone rule explicit: no tone mark does not mean "no tone"; live unmarked Lesson 1 words read with a mid tone.

@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.8 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.9 (PWA)</div>
     </div>
   </section>
 
@@ -1599,8 +1599,8 @@ const RUNGS = [
   {n:5, title:'Edge cases',        sub:'rare letters — recognition only'},
 ];
 const DRILLS = [
-  {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l1',  go:()=>el('tone-drill-btn').click()},
-  {id:'twins',       title:'Sound twins',       rung:1, gate:'l1',  go:()=>el('twins-btn').click()},
+  {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l4',  go:()=>el('tone-drill-btn').click()},
+  {id:'twins',       title:'Sound twins',       rung:1, gate:'l4',  go:()=>el('twins-btn').click()},
   {id:'echo',        title:'Echo chamber',      rung:1, gate:'l1',  go:()=>el('echo-btn').click()},
   {id:'spell',       title:'Spell it',          rung:2, gate:'l3',  go:()=>el('cta-spell').click()},
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
@@ -2017,6 +2017,7 @@ function licenceCheck(){
 }
 function renderTones(){
   if(!el('lic-listen')) return;
+  renderToneExampleLists();
   const li = toneAcc('listen'), ru = toneAcc('rule');
   el('lic-listen').innerHTML = (li.pct===null?'—':li.pct+'%') + ' <span class="sub" style="font-size:12px">n='+li.n+'</span>';
   el('lic-rule').innerHTML = (ru.pct===null?'—':ru.pct+'%') + ' <span class="sub" style="font-size:12px">n='+ru.n+'</span>';
@@ -2150,20 +2151,48 @@ function nextLesson(){
 }
 /* decodability gate (v2.22) — a phrase becomes a READING card only once its letters are taught;
    until then it lives ear-first (listening card + the rote phrasebook). */
-function taughtGlyphSet(){
+function taughtGlyphSet(doneIds){
+  const doneSet = new Set(doneIds || state.done || []);
   const s = new Set();
-  for(const L of LESSONS){ if(state.done.includes(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)) s.add(ch); }); }
+  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)) s.add(ch); }); }
   return s;
 }
 function isLessonWord(thai){ return LESSONS.some(L=>L.words.some(w=>w.thai===thai)); }
-function phraseReadable(thai){
-  const taught = taughtGlyphSet();
+function thaiTextReadable(thai, taught){
+  taught = taught || taughtGlyphSet();
   for(const ch of String(thai)){
     if(ch===' ' || ch==='ๆ' || ch==='ฯ' || ch==='็' || ch==='์' || ch==='.' || ch===',') continue;   // spacing / iteration / vowel-shortener / silencer — decode-helpers, not gating glyphs
     if(!/[฀-๿]/.test(ch)) continue;     // non-Thai — ignore
     if(!taught.has(ch)) return false;
   }
   return true;
+}
+function phraseReadable(thai){ return thaiTextReadable(thai); }
+function itemThai(x){ return x.thai || x.t || ''; }
+function practiceItemReadable(x, taught){ return thaiTextReadable(itemThai(x), taught); }
+function readableToneItems(taught){
+  taught = taught || taughtGlyphSet();
+  return TONES.concat(TONES2).filter(t=>practiceItemReadable(t, taught));
+}
+function readableTwinSets(taught){
+  taught = taught || taughtGlyphSet();
+  return TONE_SETS.concat(LENGTH_PAIRS).filter(set=>set.every(w=>practiceItemReadable(w, taught)));
+}
+function uniquePracticeItems(items){
+  const seen = new Set(), out = [];
+  items.forEach(it=>{
+    const t = itemThai(it);
+    if(!t || seen.has(t)) return;
+    seen.add(t); out.push(it);
+  });
+  return out;
+}
+function readableEchoItems(){
+  const taught = taughtGlyphSet();
+  const lessonItems = learnedWords().map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+  const toneItems = readableToneItems(taught).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+  const twinItems = readableTwinSets(taught).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
+  return uniquePracticeItems(lessonItems.concat(toneItems, twinItems));
 }
 /* ---- mastery checkpoints (v2.23) — cumulative ≥80% gate every 3 lessons; free unlimited retries.
    evidence: Bloom mastery learning (fixed 80–90% criterion, vary time + remediate) + the 85% rule. ---- */
@@ -2199,13 +2228,18 @@ function showClassPrimer(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
 function buildPath(){
-  const W_EARLY = [
+  const W_START = [
+    {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
+    {t:'speak', l:'Echo chamber', s:'record and compare aloud', go:()=>el('echo-btn').click()},
+    {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
+  ];
+  const W_TONE = [
     {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
     {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
     {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
     {t:'speak', l:'Echo chamber', s:'record and compare aloud', go:()=>el('echo-btn').click()},
   ];
-  const W_MID = W_EARLY.concat([
+  const W_MID = W_TONE.concat([
     {t:'drill', l:'Confusion clinic', s:'untangle lookalikes', go:()=>el('cta-clinic').click()},
   ]);
   const W_LATE = W_MID.concat([
@@ -2217,7 +2251,7 @@ function buildPath(){
   ];
   LESSONS.forEach((L,i)=>{
     N.push({type:'lesson', label:'Learn — '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
-    const pool = i<5 ? W_EARLY : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
+    const pool = i<3 ? W_START : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
     N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, go:w.go});
     const story = STORIES.find(s=>s.gate===L.id);
     if(story) N.push({type:'read', label:'Read — '+story.title.split('—').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('review'); setTimeout(()=>el('cta-read').click(), 60); }});
@@ -3246,6 +3280,33 @@ function validateVocabularyContracts(){
   if(errors.length) throw new Error('Vocabulary contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateCoverageContracts(){
+  const errors = [];
+  for(let n=0;n<=LESSONS.length;n++){
+    const doneIds = LESSONS.slice(0,n).map(L=>L.id);
+    const taught = taughtGlyphSet(doneIds);
+    readableToneItems(taught).forEach(t=>{
+      if(!practiceItemReadable(t, taught)) errors.push('tone item not readable at lesson count ' + n + ': ' + itemThai(t));
+    });
+    readableTwinSets(taught).forEach(set=>{
+      set.forEach(w=>{
+        if(!practiceItemReadable(w, taught)) errors.push('twin item not readable at lesson count ' + n + ': ' + itemThai(w));
+      });
+    });
+  }
+  const afterL1 = taughtGlyphSet(['l1']);
+  if(readableTwinSets(afterL1).length) errors.push('Sound Twins has readable sets too early; expected none after Lesson 1');
+  const afterL4 = taughtGlyphSet(['l1','l2','l3','l4']);
+  if(readableTwinSets(afterL4).length < 2) errors.push('Sound Twins should have at least two covered sets after Lesson 4');
+  const earlyPathTwins = buildPath().some(n=>/^p:w[0-2]$/.test(n.id||'') && n.label === 'Sound twins');
+  if(earlyPathTwins) errors.push('Learn path routes to Sound Twins before Lesson 4');
+  const toneListen = DRILLS.find(d=>d.id==='tone-listen');
+  const twins = DRILLS.find(d=>d.id==='twins');
+  if(!toneListen || toneListen.gate !== 'l4') errors.push('Tone listening drill must be gated to Lesson 4');
+  if(!twins || twins.gate !== 'l4') errors.push('Sound Twins drill must be gated to Lesson 4');
+  if(errors.length) throw new Error('Coverage contract failed:\n' + errors.join('\n'));
+  return true;
+}
 
 /* generic MCQ renderer used by lessons, mixed quiz, tone drill */
 function renderQuizQ(q, onDone, counterLabel, timedSecs){
@@ -3334,12 +3395,22 @@ function toneRow(t){
     ${speakBtn(t.thai)}
   </div>`;
 }
-el('tone-list').innerHTML = TONES.map(toneRow).join('');
-el('tone-list2').innerHTML = TONES2.map(toneRow).join('');
+function renderToneExampleLists(){
+  const taught = taughtGlyphSet();
+  const rowOrWait = (src, label)=>{
+    const rows = src.filter(t=>practiceItemReadable(t, taught));
+    if(rows.length) return rows.map(toneRow).join('');
+    return `<div class="card" style="padding:16px"><div class="sub">More ${label} examples unlock as their letters are taught.</div></div>`;
+  };
+  el('tone-list').innerHTML = rowOrWait(TONES, 'tone');
+  el('tone-list2').innerHTML = rowOrWait(TONES2, 'tone');
+}
+renderToneExampleLists();
 
 el('class-sprint-btn').addEventListener('click', ()=>{
   const met = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && state.srs['g:'+k]);
-  const pool = met.length >= 8 ? met : Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && !GLYPHS[k].rare);
+  const pool = met;
+  if(pool.length < 2){ toast('Finish Lesson 1 first — Class sprint uses learned letters only'); return; }
   const qs = sample(pool, Math.min(15, pool.length)).map(ch=>({
     kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
     options:shuffle(Object.values(CLS_LABEL)),
@@ -3349,7 +3420,8 @@ el('class-sprint-btn').addEventListener('click', ()=>{
 });
 
 el('tone-drill-btn').addEventListener('click', ()=>{
-  const pool = TONES.concat(TONES2);
+  const pool = readableToneItems();
+  if(pool.length < 4){ toast('Tone listening opens once enough tone examples are readable — finish Lesson 4'); return; }
   const qs = sample(pool, 8).map(t=>({
     kind:'mcq', text:'Listen — which tone is it?', say:t.thai, autoplay:true,
     answer:t.name, options: shuffle(TONE_NAMES.slice()),
@@ -3360,7 +3432,8 @@ el('tone-drill-btn').addEventListener('click', ()=>{
 
 /* sound twins (v2.18) — Rung 1: hear the tone/length difference between segmentally identical words */
 el('twins-btn').addEventListener('click', ()=>{
-  const pool = TONE_SETS.concat(LENGTH_PAIRS);
+  const pool = readableTwinSets();
+  if(pool.length < 2){ toast('Sound Twins opens once enough pairs use letters you know — finish Lesson 4'); return; }
   const sets = sample(pool, Math.min(10, pool.length));
   const qs = sets.map(set=>{
     const tgt = sample(set, 1)[0];
@@ -3375,8 +3448,8 @@ el('twins-btn').addEventListener('click', ()=>{
 
 /* echo chamber — shadow, record and compare locally; no honesty-based pronunciation score */
 el('echo-btn').addEventListener('click', ()=>{
-  const pool = TONES.concat(TONES2).concat(TONE_SETS.flat()).concat(LENGTH_PAIRS.flat())
-    .map(w=>({t:w.thai||w.t, tr:w.tr, en:w.en}));
+  const pool = readableEchoItems();
+  if(pool.length < 4){ toast('Finish a lesson first — Echo uses covered words only'); return; }
   player = {type:'echo', rounds:sample(pool, 8), i:0};
   openOverlay(); renderEcho();
 });
@@ -4170,6 +4243,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
 (async function init(){
   validateAudioContracts();
   validateVocabularyContracts();
+  validateCoverageContracts();
   await loadState();
   let migrated = false;
   // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)
