@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.4 — 2026-06-22
+
+- Split vowel-card audio labels into the target vowel sound and the carrier-form example.
+- Added a short vowel-card note that อ is only the display carrier for isolated vowels, not an extra consonant sound.
+- Kept vowel speech using the carrier form shown onscreen so iOS Thai voices have a stable Thai string to pronounce.
+
 ## v3.3 — 2026-06-22
 
 - Removed routine "What does this mean?" / "Meaning?" definition questions from lesson quizzes and generated quiz-style review checks.
