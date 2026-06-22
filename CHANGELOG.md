@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.8 — 2026-06-22
+
+- Made Lesson 1's first tone rule explicit: no tone mark does not mean "no tone"; live unmarked Lesson 1 words read with a mid tone.
+- Gated generated lesson, checkpoint, boss and mixed-review tone questions so they only appear once the matching tone rule has been taught.
+- Kept early useful words like มาก as reading/listening material, but deferred their untaught tone derivation until Unit C.
+- Locked the tone-rule trainer until Lesson 13, where live/dead tone derivation is taught as a full rule set.
+
 ## v3.7 — 2026-06-22
 
 - Removed remaining definition cues from Sound Twins, Foundation Ear, Spell It, tone drills, tone-rule feedback, mixed review, boss quizzes and late sign checks.

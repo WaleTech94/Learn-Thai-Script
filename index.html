@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.7 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.8 (PWA)</div>
     </div>
   </section>
 
@@ -929,7 +929,10 @@ function validateAudioContracts(){
 const LESSONS = [
   /* ---------------- UNIT A — Foundations ---------------- */
   {id:"l1", we:{m:"มา → ม (low class) + า aa → live syllable, no mark → MID tone → maa = to come", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
-   pre:[{h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant — what <b>class</b> is it? The colour tells you: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone. Easiest case first: a plain long-vowel syllable with no mark — มา, มี — is live and sits on the flat <b>mid</b> tone."}],
+   pre:[
+     {h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant — what <b>class</b> is it? The colour tells you: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone."},
+     {h:"No mark still has a tone", body:"Thai does not have a 'no tone' option. A syllable with no tone mark still uses one of the five tones. First rule: the Lesson 1 words are <b>live</b> and <b>unmarked</b>, so they sit on the flat <b>mid</b> tone: มา maa, มี mii, นาน naan, กา gaa. If the quiz asks for tone here, this is the rule it is checking."}
+   ],
    note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants — after, above, below, even before.",
    words:[
      {thai:"มา", tr:"maa", en:"to come", vocab:"core"},
@@ -948,7 +951,7 @@ const LESSONS = [
    ]},
   {id:"l3", we:{m:"ไป → ไ written FIRST, said after → bp + ai → live → MID → bpai = to go", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
    pre:[{h:"Dead endings drop the tone", body:"A final <b>stop</b> — ก (-k), ท/ด (-t), บ/ป (-p) — cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. (Vowels ไ โ are written in front but said after: ไป = bp + ai.)"}],
-   note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat.",
+   note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat. มาก is useful now; its falling-tone rule is taught properly in Unit C.",
    words:[
      {thai:"ไป", tr:"bpai", en:"to go", vocab:"core"},
      {thai:"บาท", tr:"bàat", en:"baht (฿)", vocab:"core"},
@@ -2052,6 +2055,50 @@ function toneOf(tr){
   return 'Mid';
 }
 function monoSyllable(w){ return !w.tr.includes('-') && !w.tr.includes(' '); }
+function lessonNum(id){ return +(String(id||'').match(/\d+/)||[0])[0]; }
+const EARLY_TONE_GATES = {
+  "มา":1, "มี":1, "นาน":1, "กา":1,
+  "กิน":2, "ดี":2, "ดู":2, "บิน":2,
+  "ไป":3, "บาท":3, "ปี":3,
+  "ไม่":4, "บ้าน":4, "นี่":4, "ห้า":4,
+  "รอ":5, "เรา":5, "ยาว":5, "ลาว":5,
+  "ขอ":6, "สาม":6, "ขาว":6, "ไหม":6,
+  "งาน":7, "ช้าง":7, "จาน":7,
+  "ตา":8, "ถูก":8, "พ่อ":8, "ฟัน":8,
+  "คน":9, "ผม":9, "ฝน":9, "ซ้าย":9,
+  "แม่":10, "แพง":10, "มือ":10,
+  "จะ":11, "รถ":11, "ทุก":11, "ลึก":11, "กุ้ง":11,
+  "เขา":12, "น้ำ":12, "ทำ":12, "ใช่":12
+};
+function toneGate(w){ return EARLY_TONE_GATES[w.thai] || 13; }
+function toneTaughtBy(w, upToLessonNum){ return monoSyllable(w) && toneGate(w) <= upToLessonNum; }
+function toneQuestionText(w){
+  const gate = toneGate(w), tone = toneOf(w.tr);
+  const marked = /[่้๊๋]/.test(w.thai);
+  if(gate <= 2 && tone === 'Mid') return 'No tone mark, live syllable: which tone?';
+  if(gate === 3 && tone === 'Low') return 'Mid class + dead syllable: which tone?';
+  if(gate === 6 && tone === 'Rising') return 'High class + plain live: which tone?';
+  if(marked) return 'Tone mark + class: which tone?';
+  if(tone === 'Mid') return 'No tone mark, live syllable: which tone?';
+  if(gate === 11 && tone === 'High') return 'Dead-short syllable: which tone?';
+  return 'No tone mark: use class + live/dead. Which tone?';
+}
+function toneQuestionExplain(w){
+  const gate = toneGate(w), tone = toneOf(w.tr);
+  const marked = /[่้๊๋]/.test(w.thai);
+  if(gate <= 2 && tone === 'Mid') return 'No mark still gives a tone. This live syllable reads mid (' + w.tr + ').';
+  if(gate === 3 && tone === 'Low') return 'Mid class + dead syllable gives low tone (' + w.tr + ').';
+  if(gate === 6 && tone === 'Rising') return 'High class + plain live syllable gives rising tone (' + w.tr + ').';
+  if(marked) return 'Read the class first, then the mark. ' + w.tr + ' is ' + tone.toLowerCase() + '.';
+  if(tone === 'Mid') return 'No mark still gives a tone. This live syllable reads mid (' + w.tr + ').';
+  if(gate === 11 && tone === 'High') return 'Low class + dead-short gives high tone (' + w.tr + ').';
+  return 'No mark means use class + live/dead. ' + w.tr + ' is ' + tone.toLowerCase() + '.';
+}
+function toneQuestion(w, upToLessonNum){
+  if(!toneTaughtBy(w, upToLessonNum)) return null;
+  return {kind:'mcq', prompt:w.thai, promptBig:true, text:toneQuestionText(w), answer:toneOf(w.tr),
+    options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w)};
+}
 
 /* =====================================================
    NAV
@@ -2841,6 +2888,7 @@ function renderLearn(){
 
 function buildBossQuiz(u){
   const Ls = unitLessons(u);
+  const upToLessonNum = Math.max(...Ls.map(L=>lessonNum(L.id)));
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = Ls.flatMap(L=>L.words);
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -2855,9 +2903,8 @@ function buildBossQuiz(u){
   words.forEach(w=>{
     const wrong = sample([...new Set(allWordsPool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
     qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong])});
-    if(monoSyllable(w)){
-      qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
-    }
+    const tq = toneQuestion(w, upToLessonNum);
+    if(tq) qs.push(tq);
   });
   return sample(qs, Math.min(12, qs.length));
 }
@@ -2870,6 +2917,7 @@ function startBoss(u){
 /* mastery checkpoint (v2.23) — cumulative across all lessons met up to index `upTo`; ≥80% to pass */
 function buildCheckpointQuiz(upTo){
   const Ls = LESSONS.slice(0, upTo+1);
+  const upToLessonNum = lessonNum((LESSONS[upTo]||{}).id);
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = Ls.flatMap(L=>L.words);
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -2886,7 +2934,8 @@ function buildCheckpointQuiz(upTo){
   });
   words.forEach(w=>{
     // pure letters (v2.27): no word-meaning recall — keep the read-the-tone check (the letter→class→tone payoff)
-    if(monoSyllable(w)) qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
+    const tq = toneQuestion(w, upToLessonNum);
+    if(tq) qs.push(tq);
   });
   // gate certifies READING the script: sound-recall (type it) is the backbone — up to half the 12 — with class + tone MCQ filling out
   const types = qs.filter(q=>q.kind==='type'), others = qs.filter(q=>q.kind!=='type');
@@ -3018,6 +3067,7 @@ function renderLessonStep(){
   else if(nWe && p.i === weIndex){
     const tw = L.words[L.we.twinIdx];
     const askTone = L.we.ask === 'tone';
+    const toneQ = askTone ? toneQuestion(tw, lessonNum(L.id)) : null;
     const answer = askTone ? toneOf(tw.tr) : tw.tr;
     const model = L.we.m.split(' = ')[0];
     const opts = askTone
@@ -3029,7 +3079,7 @@ function renderLessonStep(){
       <div class="q-prompt" style="margin-top:6px">
         <div class="eyebrow">You do</div>
         <div class="q-big" style="font-size:56px">${tw.thai}</div>
-        <div class="q-text">${askTone ? 'Which tone?' : 'How does it read?'}</div>
+        <div class="q-text">${askTone ? (toneQ ? toneQ.text : 'Which tone? Use the rule above.') : 'How does it read?'}</div>
       </div>
       <div class="q-options">${opts.map(o=>`<button class="q-opt">${esc(String(o))}</button>`).join('')}</div>
       <div class="q-feedback" id="we-fb"></div>
@@ -3040,7 +3090,7 @@ function renderLessonStep(){
       ob.forEach(x=>{ x.disabled = true; if(x.textContent===String(answer)) x.classList.add('correct'); });
       if(!ok) b.classList.add('wrong');
       const fb = el('we-fb');
-      fb.textContent = (ok ? 'Exactly. ' : '') + tw.thai + ' = ' + tw.tr;
+      fb.textContent = (ok ? 'Exactly. ' : '') + tw.thai + ' = ' + tw.tr + (askTone ? ' · ' + toneQuestionExplain(tw) : '');
       fb.className = 'q-feedback ' + (ok?'ok':'no');
       speak(tw.thai);
       el('st-next').disabled = false;
@@ -3127,6 +3177,7 @@ function finishLesson(){
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
 function buildLessonQuiz(L){
   const soundQs = [], classQs = [];
+  const upToLessonNum = lessonNum(L.id);
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const allWords = LESSONS.flatMap(x=>x.words);
@@ -3148,10 +3199,7 @@ function buildLessonQuiz(L){
     const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
     return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?', answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true};
   });
-  const toneQs = L.words.filter(monoSyllable).map(w=>({
-    kind:'mcq', prompt:w.thai, promptBig:true, text:'Which tone?', answer:toneOf(w.tr),
-    options:shuffle(TONE_NAMES.slice()), explain:w.tr
-  }));
+  const toneQs = L.words.map(w=>toneQuestion(w, upToLessonNum)).filter(Boolean);
   // Two objective listening checks per lesson: core vocabulary only, heard word → Thai script.
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
   const core = lessonCoreWords(L);
@@ -3187,6 +3235,8 @@ function validateVocabularyContracts(){
       if(q.axis==='listen' && !coreThai.has(q.say)) errors.push(L.id + ':' + q.say + ' non-core word got a lesson listening question');
       if(q.axis==='listen' && (!q.thaiOpts || !coreThai.has(q.answer))) errors.push(L.id + ':' + q.say + ' listening question must answer with a core Thai word');
       if((q.options||[]).some(o=>decodeMeanings.has(o))) errors.push(L.id + ': decode meaning leaked into quiz options');
+      const tw = L.words.find(w=>w.thai===q.prompt);
+      if(tw && TONE_NAMES.includes(q.answer) && !toneTaughtBy(tw, lessonNum(L.id))) errors.push(L.id + ':' + tw.thai + ' tone question appears before its rule is taught');
     });
   });
   errors.push(...definitionQuizLeaks(buildFoundationEarQuiz(), 'foundation-ear'));
@@ -3369,12 +3419,16 @@ function renderEcho(){
 }
 
 el('tone-rule-btn').addEventListener('click', ()=>{
+  if(!state.done.includes('l13')){
+    toast('Tone-rule trainer unlocks after Lesson 13, once live/dead has been taught.');
+    return;
+  }
   let pool = learnedWords().filter(monoSyllable);
   if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
   const qs = sample(pool, 10).map(w=>({
-    kind:'mcq', prompt:w.thai, text:'Which tone? (work it out from class + marks)',
+    kind:'mcq', prompt:w.thai, text:toneQuestionText(w),
     answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
-    explain:w.tr
+    explain:toneQuestionExplain(w)
   }));
   startGenericQuiz(qs, 'Tone rules', {toneLog:'rule'});
 });
@@ -3645,6 +3699,7 @@ function renderFlash(){
 function buildMixedQuiz(){
   const glyphs = learnedGlyphIds().filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = learnedMeaningWords();
+  const upToLessonNum = state.done.length ? Math.max(...state.done.map(lessonNum)) : 0;
   const phraseIds = Object.keys(state.srs).filter(k=>k.startsWith('w:')).map(k=>k.slice(2));
   const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean);
   const allWords = words.concat(phrases.filter(p=>!words.some(w=>w.thai===p.thai)));
@@ -3666,9 +3721,9 @@ function buildMixedQuiz(){
         answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr, axis:'listen'});
     }
   });
-  allWords.filter(monoSyllable).forEach(w=>{
-    qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr),
-      options:shuffle(TONE_NAMES.slice()), explain:w.tr});
+  allWords.forEach(w=>{
+    const tq = toneQuestion(w, upToLessonNum);
+    if(tq) qs.push(tq);
   });
   return sample(qs, Math.min(10, qs.length));
 }
