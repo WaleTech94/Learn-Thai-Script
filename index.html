@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.6 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.7 (PWA)</div>
     </div>
   </section>
 
@@ -1162,7 +1162,7 @@ const LESSONS = [
      {thai:"เสื้อ", tr:"sûea", en:"shirt", vocab:"core"}
    ],
    extraQuiz:[
-     {kind:"mcq", prompt:"เพื่อน", text:"What still drives the tone in a three-piece vowel?", answer:"The consonant class", options:["The consonant class","The vowel shape","The English meaning","The word length"], explain:"พ is low class; ◌่ makes falling"},
+     {kind:"mcq", prompt:"เพื่อน", text:"What still drives the tone in a three-piece vowel?", answer:"The consonant class", options:["The consonant class","The vowel shape","The word length","The lesson number"], explain:"พ is low class; ◌่ makes falling"},
      {kind:"mcq", prompt:"เพื่อน", text:"Which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class + ◌่ gives falling"},
      {kind:"mcq", prompt:"ๆ", text:"What does ๆ do?", answer:"Repeats the previous word", options:["Repeats the previous word","Makes the tone high","Silences a letter","Marks a question"], explain:"ช้าๆ = slowly"}
    ]},
@@ -1177,8 +1177,8 @@ const LESSONS = [
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"ระวัง", text:"The first syllable ระ is live or dead?", answer:"Dead", options:["Live","Dead"], explain:"short vowel, cut off"},
-     {kind:"mcq", prompt:"ทางออก", text:"Which sign meaning?", answer:"exit", options:["exit","entrance","toilet","forbidden"], explain:"ทางออก = exit"},
-     {kind:"mcq", prompt:"ทางเข้า", text:"Which sign meaning?", answer:"entrance", options:["exit","entrance","toilet","open"], explain:"ทางเข้า = entrance"}
+     {kind:"mcq", prompt:"ทางออก", text:"How does this sign read?", answer:"thaang-òrk", options:["thaang-òrk","thaang-khâo","hôrng-náam","rá-wang"]},
+     {kind:"mcq", prompt:"ทางเข้า", text:"How does this sign read?", answer:"thaang-khâo", options:["thaang-khâo","thaang-òrk","hôrng-náam","rá-wang"]}
    ]},
   {id:"l24", we:{m:"เปิด → เ◌ิ = the er vowel + ด stop → MID class dead → LOW → bpèrt = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
    pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list."}],
@@ -1191,8 +1191,8 @@ const LESSONS = [
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"เปิด", text:"Which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"mid class + dead syllable gives low"},
-     {kind:"mcq", prompt:"ห้าม", text:"Which sign meaning?", answer:"forbidden / do not", options:["open","closed","forbidden / do not","food"], explain:"ห้าม marks a prohibition"},
-     {kind:"mcq", prompt:"อาหาร", text:"What kind of real-world word is this?", answer:"food", options:["food","exit","toilet","teacher"], explain:"อาหาร = food"}
+     {kind:"mcq", prompt:"ห้าม", text:"How does this sign read?", answer:"hâam", options:["hâam","bpèrt","bpìt","aa-hǎan"]},
+     {kind:"mcq", prompt:"อาหาร", text:"How does this read?", answer:"aa-hǎan", options:["aa-hǎan","bpèrt","bpìt","hâam"]}
    ]}
 ];
 
@@ -1795,6 +1795,40 @@ function rawWordPool(){
   LESSONS.forEach(L=>lessonMeaningWords(L).forEach(w=>out.push(w)));
   [PHRASES, SLANG, TEACHER, FOOD2].forEach(a=>{ if(a) a.forEach(w=>out.push(w)); });
   return out;
+}
+function definitionTextSet(){
+  const defs = new Set();
+  const add = w=>{ if(w && w.en){ const s = String(w.en).trim(); if(s) defs.add(s); } };
+  LESSONS.forEach(L=>L.words.forEach(add));
+  [PHRASES, SLANG, TEACHER, FOOD2, TONES, TONES2, TONE_SETS.flat(), LENGTH_PAIRS.flat()].forEach(a=>{ if(a) a.forEach(add); });
+  return defs;
+}
+function definitionCueText(text){
+  return /meaning\?|which sign meaning|which one means|what kind of real-world word|what does (this|this word).+mean|listen — what does .+ mean/i.test(String(text||''));
+}
+function definitionLeakValue(v, defs){
+  if(v == null) return false;
+  const s = String(v).trim();
+  if(!s) return false;
+  if(defs.has(s)) return true;
+  for(const d of defs){
+    if(String(d).length >= 4 && (s.includes('— ' + d) || s.includes('(' + d + ')') || s.includes(': ' + d))) return true;
+  }
+  return false;
+}
+function definitionQuizLeaks(qs, label){
+  const defs = definitionTextSet(), issues = [];
+  (qs||[]).forEach((q,i)=>{
+    if(definitionCueText(q.text)) issues.push(label + ' q' + (i+1) + ': definition cue text (' + q.text + ')');
+    [q.prompt, q.answer, q.explain].concat(q.options||[]).forEach(v=>{
+      if(definitionLeakValue(v, defs)) issues.push(label + ' q' + (i+1) + ': definition value leaked (' + v + ')');
+    });
+  });
+  return issues;
+}
+function assertDefinitionFreeQuiz(qs, label){
+  const leaks = definitionQuizLeaks(qs, label);
+  if(leaks.length) throw new Error('Definition quiz contract failed:\n' + leaks.join('\n'));
 }
 function learnedWordPool(){
   const out = learnedMeaningWords().slice();
@@ -2820,7 +2854,7 @@ function buildBossQuiz(u){
   });
   words.forEach(w=>{
     const wrong = sample([...new Set(allWordsPool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
-    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.en});
+    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong])});
     if(monoSyllable(w)){
       qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()), explain:w.tr});
     }
@@ -2866,9 +2900,9 @@ function startCheckpoint(i){
 function buildFoundationEarQuiz(){
   const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
   return sample(pool, Math.min(10,pool.length)).map(w=>{
-    const wrong = sample(pool.filter(x=>x.thai!==w.thai && x.en!==w.en),3).map(x=>x.en);
-    return {kind:'mcq', text:'Listen — what does this familiar word mean?', say:w.thai, autoplay:true,
-      answer:w.en, options:shuffle([w.en,...wrong]), explain:w.thai+' '+w.tr, axis:'listen'};
+    const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
   });
 }
 function startFoundationEar(){
@@ -2928,7 +2962,7 @@ function renderLessonSpeak(p){
     el('speak-reveal').innerHTML = `
       <div class="compare-box">
         <div class="echo-word" style="margin:0">${w.thai}</div>
-        <div class="fc-tr" style="text-align:center">${w.tr} · ${w.en}</div>
+        <div class="fc-tr" style="text-align:center">${w.tr}</div>
         <div class="compare-audio">
           <span class="sub">Model</span>${speakBtn(w.thai, 'Hear model: '+w.thai)}
           <button class="btn small ghost record-btn" id="rec-start">● Record yourself</button>
@@ -3006,7 +3040,7 @@ function renderLessonStep(){
       ob.forEach(x=>{ x.disabled = true; if(x.textContent===String(answer)) x.classList.add('correct'); });
       if(!ok) b.classList.add('wrong');
       const fb = el('we-fb');
-      fb.textContent = (ok ? 'Exactly. ' : '') + tw.thai + ' = ' + tw.tr + ' — ' + tw.en;
+      fb.textContent = (ok ? 'Exactly. ' : '') + tw.thai + ' = ' + tw.tr;
       fb.className = 'q-feedback ' + (ok?'ok':'no');
       speak(tw.thai);
       el('st-next').disabled = false;
@@ -3108,11 +3142,11 @@ function buildLessonQuiz(L){
   });
   const readQs = L.words.map(w=>{
     const wrong = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
-    return {kind:'mcq', prompt:w.thai, promptBig:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.en};
+    return {kind:'mcq', prompt:w.thai, promptBig:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong])};
   });
   const reverseReadQs = L.words.map(w=>{
     const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
-    return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?', answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.en};
+    return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?', answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true};
   });
   const toneQs = L.words.filter(monoSyllable).map(w=>({
     kind:'mcq', prompt:w.thai, promptBig:true, text:'Which tone?', answer:toneOf(w.tr),
@@ -3124,7 +3158,7 @@ function buildLessonQuiz(L){
   const listenQs = core.slice(0,2).map(w=>{
     const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
     return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr+' — '+w.en, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
   });
   const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
   const scriptQs = soundQs.concat(readQs).concat(toneQs);
@@ -3146,13 +3180,18 @@ function validateVocabularyContracts(){
   }));
   LESSONS.forEach(L=>{
     const coreThai = new Set(lessonCoreWords(L).map(w=>w.thai));
-    buildLessonQuiz(L).forEach(q=>{
+    const lessonQuiz = buildLessonQuiz(L);
+    errors.push(...definitionQuizLeaks(lessonQuiz, L.id));
+    lessonQuiz.forEach(q=>{
       if(/what does (this|this word).+mean/i.test(q.text||'')) errors.push(L.id + ': routine definition question leaked into lesson quiz');
       if(q.axis==='listen' && !coreThai.has(q.say)) errors.push(L.id + ':' + q.say + ' non-core word got a lesson listening question');
       if(q.axis==='listen' && (!q.thaiOpts || !coreThai.has(q.answer))) errors.push(L.id + ':' + q.say + ' listening question must answer with a core Thai word');
       if((q.options||[]).some(o=>decodeMeanings.has(o))) errors.push(L.id + ': decode meaning leaked into quiz options');
     });
   });
+  errors.push(...definitionQuizLeaks(buildFoundationEarQuiz(), 'foundation-ear'));
+  ['A','B','C','D'].forEach(u=>errors.push(...definitionQuizLeaks(buildBossQuiz(u), 'boss-' + u)));
+  errors.push(...definitionQuizLeaks(buildCheckpointQuiz(23), 'checkpoint-all'));
   if(rawWordPool().some(w=>wordRole(w)==='decode')) errors.push('decode word leaked into general vocabulary distractors');
   if(errors.length) throw new Error('Vocabulary contract failed:\n' + errors.join('\n'));
   return true;
@@ -3264,7 +3303,7 @@ el('tone-drill-btn').addEventListener('click', ()=>{
   const qs = sample(pool, 8).map(t=>({
     kind:'mcq', text:'Listen — which tone is it?', say:t.thai, autoplay:true,
     answer:t.name, options: shuffle(TONE_NAMES.slice()),
-    explain: t.thai + ' ' + t.tr + ' (' + t.en + ')'
+    explain: t.thai + ' ' + t.tr
   }));
   startGenericQuiz(qs, 'Tone drill', {toneLog:'listen'});
 });
@@ -3276,9 +3315,9 @@ el('twins-btn').addEventListener('click', ()=>{
   const qs = sets.map(set=>{
     const tgt = sample(set, 1)[0];
     return {
-      kind:'mcq', text:`Listen — which one means "${tgt.en}"?`, say:tgt.t, autoplay:true,
+      kind:'mcq', text:'Listen — which Thai word did you hear?', say:tgt.t, autoplay:true,
       options: shuffle(set.map(m=>m.t)), thaiOpts:true, answer:tgt.t,
-      explain: set.map(m=>`${m.t} ${m.tr} (${m.en})`).join('  ·  ')
+      explain: set.map(m=>`${m.t} ${m.tr}`).join('  ·  ')
     };
   });
   startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
@@ -3310,7 +3349,7 @@ function renderEcho(){
   el('stage').innerHTML = `
     <div class="q-feedback">Listen, then say it aloud · ${p.i+1} of ${p.rounds.length}</div>
     <div class="echo-word">${esc(r.t)}</div>
-    <div class="fc-tr" style="text-align:center;color:var(--muted)">${r.tr} · ${r.en}</div>
+    <div class="fc-tr" style="text-align:center;color:var(--muted)">${r.tr}</div>
     <div class="row" style="justify-content:center;gap:10px;margin:14px 0">
       ${speakBtn(r.t)}
       <button class="btn small ghost" id="echo-slow">🐢 slow</button>
@@ -3335,7 +3374,7 @@ el('tone-rule-btn').addEventListener('click', ()=>{
   const qs = sample(pool, 10).map(w=>({
     kind:'mcq', prompt:w.thai, text:'Which tone? (work it out from class + marks)',
     answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
-    explain:w.tr + ' — ' + w.en
+    explain:w.tr
   }));
   startGenericQuiz(qs, 'Tone rules', {toneLog:'rule'});
 });
@@ -3621,20 +3660,21 @@ function buildMixedQuiz(){
   allWords.forEach(w=>{
     const wrongRead = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
     if(wrongRead.length===3){
-      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), explain:w.en});
+      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead])});
       const wrongT = sample(allWords.filter(x=>x.thai!==w.thai),3).map(x=>x.thai);
       qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
-        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr+' — '+w.en, axis:'listen'});
+        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr, axis:'listen'});
     }
   });
   allWords.filter(monoSyllable).forEach(w=>{
     qs.push({kind:'mcq', prompt:w.thai, text:'Which tone?', answer:toneOf(w.tr),
-      options:shuffle(TONE_NAMES.slice()), explain:w.tr + ' — ' + w.en});
+      options:shuffle(TONE_NAMES.slice()), explain:w.tr});
   });
   return sample(qs, Math.min(10, qs.length));
 }
 
 function startGenericQuiz(qs, label, opts){
+  assertDefinitionFreeQuiz(qs, label || 'quiz');
   player = {type:'quiz', qs, i:0, correct:0, label, opts:opts||{}};
   openOverlay(); nextGenericQ();
 }
@@ -3808,7 +3848,7 @@ function renderSpell(){
   el('stage').innerHTML = `
     <div class="q-prompt">
       <div class="eyebrow">Spell it · ${p.i+1} of ${p.rounds.length}</div>
-      <div class="q-text">${esc(w.en)}</div>
+      <div class="q-text">${esc(w.tr)}</div>
       <div style="margin-top:10px">${speakBtn(w.thai)}</div>
     </div>
     <div class="build-area" id="built">&nbsp;</div>
@@ -3829,7 +3869,7 @@ function renderSpell(){
       settled = true;
       builtEl.classList.add('good');
       if(firstTry) p.correct++;
-      el('q-fb').textContent = w.tr + ' — ' + w.en;
+      el('q-fb').textContent = w.tr;
       el('q-fb').className = 'q-feedback ok';
       speak(w.thai);
       setTimeout(()=>{ p.i++; renderSpell(); }, 1100);
@@ -3860,7 +3900,7 @@ function renderSpell(){
     if(settled) return;
     settled = true; firstTry = false;
     builtEl.innerHTML = w.thai; builtEl.classList.add('good');
-    el('q-fb').textContent = w.tr + ' — ' + w.en;
+    el('q-fb').textContent = w.tr;
     el('q-fb').className = 'q-feedback no';
     speak(w.thai);
     setTimeout(()=>{ p.i++; renderSpell(); }, 1400);
@@ -3957,7 +3997,7 @@ function renderGhost(){
   el('stage').innerHTML = `
     <div class="q-feedback">Which letter is hidden? Tap before it sharpens · ${p.i+1} of ${p.rounds.length}</div>
     <div class="ghost-word">${word}</div>
-    <div class="fc-tr" style="text-align:center;color:var(--muted)">${it.tr} · ${it.en}</div>
+    <div class="fc-tr" style="text-align:center;color:var(--muted)">${it.tr}</div>
     <div class="ghost-opts" id="ghost-opts"></div>`;
   const host = el('ghost-opts');
   host.innerHTML = shuffle(opts).map(c=>`<button class="ghost-opt ${GLYPHS[c].cls}" data-c="${c}">${c}</button>`).join('');
