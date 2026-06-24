@@ -136,6 +136,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .pc-cap .pc-w{padding:2px 7px;border-radius:8px;cursor:pointer}
 .pc-cap .pc-w.read{background:var(--surface);color:var(--teal)}
 .pc-reveal{color:var(--muted);font-size:14px;min-height:20px;margin-bottom:16px}
+.audio-setup-modal{position:fixed;inset:0;z-index:90;background:rgba(8,10,14,.82);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadein .2s ease}
+.audio-setup-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.audio-setup-card h2{margin-bottom:8px}
+.audio-setup-card ol{margin:14px 0 16px 20px;color:var(--muted);font-size:14px;line-height:1.65}
+.audio-setup-card li{padding-left:4px}
+.audio-setup-card .audio-setup-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.audio-setup-card .audio-setup-link{display:block;text-align:center;color:var(--blue);font-size:13px;margin-top:12px}
 /* progress wall / journey map (v2.10) — neutral blue for "done"; class colours stay reserved for consonants */
 .pw-unit{margin-top:10px}
 .pw-ulabel{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px}
@@ -607,7 +614,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.13 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.14 (PWA)</div>
     </div>
   </section>
 
@@ -2058,24 +2065,119 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
 /* =====================================================
    SPEECH
 ===================================================== */
-let thaiVoice = null, voiceWarned = false;
+let thaiVoice = null, voiceWarned = false, audioSetupOpen = false;
 function pickVoice(){
+  if(!('speechSynthesis' in window)) return [];
   const vs = speechSynthesis.getVoices();
   thaiVoice = vs.find(v => v.lang && v.lang.toLowerCase().startsWith('th')) || null;
+  return vs;
 }
 if('speechSynthesis' in window){
   pickVoice();
   speechSynthesis.onvoiceschanged = pickVoice;
 }
+function audioPlatform(){
+  const ua = navigator.userAgent || '';
+  const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = !!navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  const chromeIOS = iOS && /CriOS/.test(ua);
+  const safariIOS = iOS && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  return {iOS, standalone, chromeIOS, safariIOS};
+}
+function audioSetupCopy(reason){
+  const p = audioPlatform();
+  if(reason === 'unsupported'){
+    return {
+      context:'This browser does not expose device speech voices to the app.',
+      steps:['Open the app in Safari or Chrome on iPhone, or Chrome/Edge on desktop.', 'Tap a speaker icon again after opening it there.']
+    };
+  }
+  if(p.iOS){
+    const context = p.standalone ? 'You are using the installed iPhone app. It uses the same iPhone voices as Safari.'
+      : p.chromeIOS ? 'You are using Chrome on iPhone. Chrome still uses the iPhone system voices.'
+      : p.safariIOS ? 'You are using Safari on iPhone, so audio comes from the iPhone system voices.'
+      : 'You are using an iPhone browser, so audio comes from the iPhone system voices.';
+    return {
+      context,
+      steps:[
+        'Open Settings.',
+        'Tap Accessibility.',
+        'Tap Read & Speak. On older iOS versions this may be called Spoken Content.',
+        'Tap Voices.',
+        'Choose Thai, then download or select a Thai voice.',
+        'Return to this app and tap a speaker icon again.'
+      ]
+    };
+  }
+  return {
+    context:'Thai audio uses your browser and operating system text-to-speech voices.',
+    steps:[
+      'Install or enable a Thai text-to-speech voice in your device language or accessibility settings.',
+      'Restart the browser after the voice is installed.',
+      'Return to this app and tap a speaker icon again.'
+    ]
+  };
+}
+function showAudioSetup(reason, sampleText){
+  if(audioSetupOpen) return;
+  audioSetupOpen = true;
+  const copy = audioSetupCopy(reason);
+  const wrap = document.createElement('div');
+  wrap.className = 'audio-setup-modal';
+  wrap.innerHTML = `
+    <div class="audio-setup-card" role="dialog" aria-modal="true" aria-labelledby="audio-setup-title">
+      <div class="eyebrow">Audio setup</div>
+      <h2 id="audio-setup-title">Thai voice needed</h2>
+      <p class="sub">${esc(copy.context)}</p>
+      <ol>${copy.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+      <div class="audio-setup-actions">
+        <button class="btn ghost" id="audio-copy-steps">Copy steps</button>
+        <button class="btn" id="audio-test-again">Test again</button>
+      </div>
+      <a class="audio-setup-link" href="https://support.apple.com/en-gb/guide/iphone/iph96b214f0/ios" target="_blank" rel="noopener">Apple iPhone voice guide</a>
+      <button class="btn ghost full" id="audio-close-help" style="margin-top:12px">Close</button>
+    </div>`;
+  document.body.appendChild(wrap);
+  const stepsText = copy.context + '\n\n' + copy.steps.map((s,i)=>(i+1)+'. '+s).join('\n');
+  el('audio-copy-steps').onclick = async ()=>{
+    try{ await navigator.clipboard.writeText(stepsText); toast('Audio steps copied'); }
+    catch(e){ toast('Copy failed — use the steps shown'); }
+  };
+  el('audio-test-again').onclick = ()=>{
+    closeAudioSetup();
+    pickVoice();
+    if(!thaiVoice){ toast('Thai voice still not available'); return; }
+    speak(sampleText || 'สวัสดีครับ');
+  };
+  el('audio-close-help').onclick = closeAudioSetup;
+}
+function closeAudioSetup(){
+  const modal = document.querySelector('.audio-setup-modal');
+  if(modal) modal.remove();
+  audioSetupOpen = false;
+}
 function speak(text, btn, rate){
-  if(!('speechSynthesis' in window)){ toast('Speech not supported on this device'); return; }
+  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text); return; }
+  try{ speechSynthesis.resume(); }catch(e){}
   if(!thaiVoice) pickVoice();
-  if(!thaiVoice && !voiceWarned){ toast('No Thai voice found — install one in device settings'); voiceWarned = true; }
+  if(!thaiVoice){
+    if(!voiceWarned){ showAudioSetup('missing-thai', text); voiceWarned = true; }
+    return;
+  }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   if(thaiVoice) u.voice = thaiVoice;
   u.lang = 'th-TH'; u.rate = rate || 0.75;
-  if(btn){ btn.classList.add('playing'); u.onend = ()=>btn.classList.remove('playing'); u.onerror = ()=>btn.classList.remove('playing'); }
+  if(btn){
+    btn.classList.add('playing');
+    u.onend = ()=>btn.classList.remove('playing');
+    u.onerror = e=>{
+      btn.classList.remove('playing');
+      if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text);
+    };
+  } else {
+    u.onerror = e=>{ if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text); };
+  }
   speechSynthesis.speak(u);
 }
 function speakBtn(text, label){

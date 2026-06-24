@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.14 — 2026-06-24
+
+- Added guided audio setup when a user taps a speaker icon but the browser/device has no Thai speech voice available.
+- The setup panel now distinguishes iPhone Chrome, iPhone Safari and installed-app mode, while explaining that all use the iPhone system voices.
+- Added current and older iOS voice-install paths, copyable setup steps, an Apple guide link and a test-again button.
+- Speaker taps now call `speechSynthesis.resume()` before speaking and surface real speech errors through the setup panel instead of failing silently.
+
 ## v3.13 — 2026-06-24
 
 - Reworked generated multiple-choice options so wrong answers are chosen as likely misconceptions before falling back to generic same-bucket options.
