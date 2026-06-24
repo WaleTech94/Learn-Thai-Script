@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.9 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.10 (PWA)</div>
     </div>
   </section>
 
@@ -1845,11 +1845,25 @@ function pickN(pool, exclude, n){
   let p = [...new Set(pool)].filter(x=>x!==exclude);
   return sample(p, n);
 }
+function glyphSoundPool(g, correct){
+  if(!g) return [];
+  let pool = [...new Set(Object.values(GLYPHS).filter(x=>x.type===g.type).map(x=>x.sound))];
+  if(g.type === 'c') pool = pool.filter(s=>s === correct || /^[a-z]+$/.test(s));
+  if(g.type === 'm' && correct !== 'silent') pool = pool.filter(s=>s !== 'silent');
+  return pool;
+}
+function glyphSoundPrompt(g){
+  if(!g) return 'What sound?';
+  if(g.type === 'c') return 'What consonant sound?';
+  if(g.type === 'v') return 'What vowel sound?';
+  if(g.sound === 'silent') return 'What does this mark do?';
+  return 'What mark name?';
+}
 function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?,explain?}
   if(id.startsWith('g:')){
     const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
-    const opts = pickN(Object.values(GLYPHS).map(x=>x.sound), correct, 3);
-    return {prompt:(g&&g.disp)||ch, promptBig:true, text:'What sound?', answer:correct,
+    const opts = pickN(glyphSoundPool(g, correct), correct, 3);
+    return {prompt:(g&&g.disp)||ch, promptBig:true, text:glyphSoundPrompt(g), answer:correct,
       options:shuffle([correct, ...opts]),
       explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
   }
@@ -3307,6 +3321,19 @@ function validateCoverageContracts(){
   if(errors.length) throw new Error('Coverage contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateReviewChoiceContracts(){
+  const errors = [];
+  Object.keys(GLYPHS).forEach(ch=>{
+    const g = GLYPHS[ch], q = mcCard('g:'+ch);
+    const pool = new Set(glyphSoundPool(g, g.sound));
+    (q.options||[]).forEach(o=>{
+      if(!pool.has(o)) errors.push(ch + ': review option crosses glyph type (' + o + ')');
+    });
+    if(q.text !== glyphSoundPrompt(g)) errors.push(ch + ': review prompt is not type-specific');
+  });
+  if(errors.length) throw new Error('Review choice contract failed:\n' + errors.join('\n'));
+  return true;
+}
 
 /* generic MCQ renderer used by lessons, mixed quiz, tone drill */
 function renderQuizQ(q, onDone, counterLabel, timedSecs){
@@ -4244,6 +4271,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateAudioContracts();
   validateVocabularyContracts();
   validateCoverageContracts();
+  validateReviewChoiceContracts();
   await loadState();
   let migrated = false;
   // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)

@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.10 — 2026-06-24
+
+- Tightened SRS review multiple-choice logic for glyph cards.
+- Consonant review cards now only offer consonant-sound options, vowel cards only offer vowel-sound options, and tone-mark cards only offer tone-mark-name options.
+- Multi-label consonant sounds such as อ's "or / silent" no longer appear as distractors on ordinary consonant cards.
+- The silencer mark keeps its own "what does this mark do?" prompt instead of leaking into tone-mark cards as an obvious distractor.
+- Added a review-choice startup contract so mixed glyph-type distractors cannot return.
+
 ## v3.9 — 2026-06-22
 
 - Gated Sound Twins to covered material only: every option in a set must use letters already taught in completed lessons.
