@@ -345,6 +345,9 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .word-line .w-meta{flex:1}
 .word-line .w-tr{color:var(--blue);font-size:15px}
 .word-line .w-en{color:var(--muted);font-size:13px}
+.word-line .w-frame{margin-top:6px;color:var(--text);font-size:12px;line-height:1.45;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.final-job{margin-top:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.45;color:var(--muted)}
+.final-job b{color:var(--text);font-weight:500}
 .w-reveal{display:block;text-align:left;color:var(--blue);font-size:13px;padding:4px 0;text-decoration:underline dotted}
 .speak:disabled{opacity:.42;filter:grayscale(1);cursor:not-allowed}
 .stage-actions{display:flex;gap:10px;margin-top:6px}
@@ -665,7 +668,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.0</span>
+      <span class="version-pill">v4.1</span>
     </header>
 
     <section class="today-focus">
@@ -745,7 +748,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.0 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.1 (PWA)</div>
     </div>
   </section>
 
@@ -1065,6 +1068,45 @@ const GLYPHS = {
   "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it - common in loanwords", demo:"ศูนย์"}
 };
 
+const FINAL_JOBS = {
+  "ก":{sound:"-k", group:"stop", effect:"stops the syllable (dead)"},
+  "ข":{sound:"-k", group:"stop", effect:"stops the syllable (dead)"},
+  "ค":{sound:"-k", group:"stop", effect:"stops the syllable (dead)"},
+  "ฆ":{sound:"-k", group:"stop", effect:"stops the syllable (dead)"},
+  "จ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ช":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ซ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฌ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฎ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฏ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฐ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฑ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ฒ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ด":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ต":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ถ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ท":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ธ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ศ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ษ":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "ส":{sound:"-t", group:"stop", effect:"stops the syllable (dead)"},
+  "บ":{sound:"-p", group:"stop", effect:"stops the syllable (dead)"},
+  "ป":{sound:"-p", group:"stop", effect:"stops the syllable (dead)"},
+  "พ":{sound:"-p", group:"stop", effect:"stops the syllable (dead)"},
+  "ฟ":{sound:"-p", group:"stop", effect:"stops the syllable (dead)"},
+  "ภ":{sound:"-p", group:"stop", effect:"stops the syllable (dead)"},
+  "ง":{sound:"-ng", group:"ring", effect:"rings on (live)"},
+  "น":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ณ":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ญ":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ร":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ล":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ฬ":{sound:"-n", group:"ring", effect:"rings on (live)"},
+  "ม":{sound:"-m", group:"ring", effect:"rings on (live)"},
+  "ย":{sound:"-y glide", group:"glide", effect:"glides on (live)"},
+  "ว":{sound:"-ao/-aao", group:"glide", effect:"glides on (live)"}
+};
+
 /* AUDIO CONTRACT (v2.34)
    Never ask a device voice for a bare consonant phoneme: Thai TTS may read an isolated
    character as a name, a spelling token, or contextual speech. Every glyph instead has
@@ -1133,22 +1175,24 @@ const LESSONS = [
      {thai:"นาน", tr:"naan", en:"a long time", vocab:"recognition"},
      {thai:"กา", tr:"gaa", en:"crow", vocab:"decode"}
    ]},
-  {id:"l2", we:{m:"กิน → ก + ◌ิ + น final → still rings (live) → MID → gin = to eat", twinIdx:2, ask:"tr"}, unit:"A · Foundations", title:"Eat, look, fly", sub:"ด บ อ + short i, long uu", glyphs:["ด","บ","อ","ิ","ู"],
-   pre:[{h:"Endings that ring stay live", body:"A consonant on the end is a <b>final</b>. If it rings on - น (-n), ม (-m) - the syllable is still <b>live</b>: กิน, บิน. Plain, live, no mark, on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial → still the <b>mid</b> tone. Read the class first, every time."}],
-   note:"A consonant at the END of a syllable is a 'final'. น as a final is just -n: กิน = g + i + n.",
+  {id:"l2", we:{m:"กิน → ก start job g + ◌ิ vowel i + น ending job -n → rings/live → MID → gin = to eat", twinIdx:3, ask:"tr"}, unit:"A · Foundations", title:"Eat, look, fly", sub:"ด บ อ + short i, long uu", glyphs:["ด","บ","อ","ิ","ู"],
+   pre:[{h:"Same letter, two jobs", body:"From now on, read a consonant by its <b>position</b>. At the start it does its <b>start job</b>: ก starts as g. At the end it does its <b>ending job</b>: น ends as -n. Use the frame <b>start sound + vowel + ending sound</b>: กิน = g + i + -n."},
+     {h:"Endings that ring stay live", body:"Some endings ring on: น (-n), ม (-m), ง (-ng). A ringing ending keeps the syllable <b>live</b>: กิน, บิน. Plain, live, no mark, on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial → still the <b>mid</b> tone. The start consonant gives class; the ending consonant gives the ending sound."}],
+   note:"A consonant at the END of a syllable is a final. Read the frame: start sound + vowel + ending sound. กิน = ก start g + ิ i + น ending -n.",
    words:[
-     {thai:"กิน", tr:"gin", en:"to eat", vocab:"core"},
+     {thai:"กิน", tr:"gin", en:"to eat", vocab:"core", frame:{text:"ก start g + ิ i + น ending -n (rings/live)", final:"น"}},
      {thai:"ดี", tr:"dii", en:"good", vocab:"core"},
      {thai:"ดู", tr:"duu", en:"to look / watch", vocab:"core"},
-     {thai:"บิน", tr:"bin", en:"to fly", vocab:"recognition"}
+     {thai:"บิน", tr:"bin", en:"to fly", vocab:"recognition", frame:{text:"บ start b + ิ i + น ending -n (rings/live)", final:"น"}}
    ]},
-  {id:"l3", we:{m:"ไป → ไ written FIRST, said after → bp + ai → live → MID → bpai = to go", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
-   pre:[{h:"Dead endings drop the tone", body:"A final <b>stop</b> - ก (-k), ท/ด (-t), บ/ป (-p) - cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. (Vowels ไ โ are written in front but said after: ไป = bp + ai.)"}],
-   note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat. มาก is useful now; its falling-tone rule is taught properly in Unit C.",
+  {id:"l3", we:{m:"บาท → บ start job b + า vowel aa + ท ending job -t → stop/dead → LOW → bàat = baht", twinIdx:2, ask:"tr"}, unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
+   pre:[{h:"Some endings change the sound", body:"This is the important alphabet idea: a consonant can sound different at the end. ก starts as g but ends as -k. ด/ท start as d/th but end as -t. บ/ป start as b/bp but end as -p. Read the job from the position."},
+     {h:"Dead endings drop the tone", body:"A final <b>stop</b> - ก (-k), ท/ด (-t), บ/ป (-p) - cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. Vowels ไ โ are written in front but said after: ไป = bp + ai."}],
+   note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are stop endings: มาก ends -k; บาท ends -t.",
    words:[
      {thai:"ไป", tr:"bpai", en:"to go", vocab:"core"},
-     {thai:"บาท", tr:"bàat", en:"baht (฿)", vocab:"core"},
-     {thai:"มาก", tr:"mâak", en:"very / a lot", vocab:"core"},
+     {thai:"บาท", tr:"bàat", en:"baht (฿)", vocab:"core", frame:{text:"บ start b + า aa + ท ending -t (stop/dead)", final:"ท"}},
+     {thai:"มาก", tr:"mâak", en:"very / a lot", vocab:"core", frame:{text:"ม start m + า aa + ก ending -k (stop/dead)", final:"ก"}},
      {thai:"ปี", tr:"bpii", en:"year", vocab:"recognition"}
    ]},
   {id:"l4", we:{m:"ไม่ → ม LOW class + ◌่ mai èek → on low class that's FALLING → mâi = not", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
@@ -1156,90 +1200,90 @@ const LESSONS = [
    note:"The SAME mark gives different tones depending on consonant class. On low-class ม: ไม่ = falling. On mid-class บ: บ้าน = falling. This is why the colours matter.",
    words:[
      {thai:"ไม่", tr:"mâi", en:"no / not", vocab:"core"},
-     {thai:"บ้าน", tr:"bâan", en:"house / home", vocab:"core"},
+     {thai:"บ้าน", tr:"bâan", en:"house / home", vocab:"core", frame:{text:"บ start b + า aa + น ending -n (rings/live) + ้ tone mark", final:"น"}},
      {thai:"นี่", tr:"nîi", en:"this", vocab:"core"},
      {thai:"ห้า", tr:"hâa", en:"five", vocab:"recognition"}
    ]},
   {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ as a vowel", glyphs:["ร","ล","ว","ย"],
    pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class - and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) - that flip is the Unit-C payoff."}],
-   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as a final makes -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า - properly yours in lesson 12.)",
+   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as an ending glides into -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า - properly yours in lesson 12.)",
    words:[
      {thai:"รอ", tr:"ror", en:"to wait", vocab:"core"},
      {thai:"เรา", tr:"rao", en:"we / us", vocab:"core"},
-     {thai:"ยาว", tr:"yaao", en:"long", vocab:"recognition"},
-     {thai:"ลาว", tr:"laao", en:"Lao / Laos", vocab:"decode"}
+     {thai:"ยาว", tr:"yaao", en:"long", vocab:"recognition", frame:{text:"ย start y + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}},
+     {thai:"ลาว", tr:"laao", en:"Lao / Laos", vocab:"decode", frame:{text:"ล start l + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}}
    ]},
   {id:"l6", we:{m:"ขอ → ข HIGH class + or → live, no mark → RISING → khǒr = may I have", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"High class, please", sub:"ส ข + asking nicely", glyphs:["ส","ข"],
    pre:[{h:"High class, plain live = rising", body:"ส ข are <span style='color:var(--high);font-weight:600'>high</span> class. A <span style='color:var(--high);font-weight:600'>high</span>-class initial on a plain live syllable gives a <b>rising</b> tone - the voice dips then lifts, like a question: ขอ khǒr (may I have…), สาม sǎam. Almost every polite request in Thailand opens with a rising ขอ."}],
    note:"High-class consonants with a plain live syllable give a RISING tone: ขอ khǒr (may I have…) starts almost every polite request in Thailand.",
    words:[
      {thai:"ขอ", tr:"khǒr", en:"may I have… (request)", vocab:"core"},
-     {thai:"สาม", tr:"sǎam", en:"three", vocab:"recognition"},
-     {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode"},
+     {thai:"สาม", tr:"sǎam", en:"three", vocab:"recognition", frame:{text:"ส start s + า aa + ม ending -m (rings/live)", final:"ม"}},
+     {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}},
      {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)", vocab:"core"}
    ]},
   /* ---------------- UNIT B - The workhorses ---------------- */
-  {id:"l7", we:{m:"งาน → ง ng STARTS the syllable + าน → live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take mái-thoo and jump to a <b>high</b> tone - ช้าง cháang. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
+  {id:"l7", we:{m:"งาน → ง start job ng + า aa + น ending job -n → rings/live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take mái-thoo and jump to a <b>high</b> tone - ช้าง cháang. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
    note:"ง 'ng' can START a syllable in Thai - งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
    words:[
-     {thai:"งาน", tr:"ngaan", en:"work", vocab:"core"},
-     {thai:"ช้าง", tr:"cháang", en:"elephant", vocab:"decode"},
-     {thai:"จาน", tr:"jaan", en:"plate", vocab:"recognition"},
-     {thai:"วันนี้", tr:"wan-níi", en:"today", vocab:"core"}
+     {thai:"งาน", tr:"ngaan", en:"work", vocab:"core", frame:{text:"ง start ng + า aa + น ending -n (rings/live)", final:"น"}},
+     {thai:"ช้าง", tr:"cháang", en:"elephant", vocab:"decode", frame:{text:"ช start ch + า aa + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
+     {thai:"จาน", tr:"jaan", en:"plate", vocab:"recognition", frame:{text:"จ start j + า aa + น ending -n (rings/live)", final:"น"}},
+     {thai:"วันนี้", tr:"wan-níi", en:"today", vocab:"core", frame:{text:"วัน = ว start w + ั a + น ending -n (rings/live)", final:"น", focus:"วัน"}}
    ]},
-  {id:"l8", we:{m:"ถูก → ถ HIGH class + ูก → ends in a k-stop = dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th - no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก thùuk (it ends in a k-stop). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under mái-èek falls: พ่อ phôr."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
+  {id:"l8", we:{m:"ถูก → ถ start th + ู uu + ก ending -k → stop/dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th - no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก thùuk (ก is doing its ending job: -k). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under mái-èek falls: พ่อ phôr."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
    note:"ต dt is the unaspirated twin of ท th - no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
    words:[
      {thai:"ตา", tr:"dtaa", en:"eye / maternal grandpa", vocab:"recognition"},
-     {thai:"ถูก", tr:"thùuk", en:"cheap / correct", vocab:"core"},
+     {thai:"ถูก", tr:"thùuk", en:"cheap / correct", vocab:"core", frame:{text:"ถ start th + ู uu + ก ending -k (stop/dead)", final:"ก"}},
      {thai:"พ่อ", tr:"phôr", en:"father", vocab:"core"},
-     {thai:"ฟัน", tr:"fan", en:"tooth", vocab:"decode"}
+     {thai:"ฟัน", tr:"fan", en:"tooth", vocab:"decode", frame:{text:"ฟ start f + ั a + น ending -n (rings/live)", final:"น"}}
    ]},
-  {id:"l9", we:{m:"คน → two consonants, no vowel written → free o → kh-o-n → live → MID → khon = person", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"The hidden vowel", sub:"ค ผ ฝ ซ + invisible o", glyphs:["ค","ผ","ฝ","ซ"],
-   pre:[{h:"Some vowels are invisible", body:"Two consonants with no vowel written between them get a free short <b>o</b>: คน = kh + o + n = khon (person). ผม = ph + o + m = phǒm - which happens to be the male word for <b>I</b>. You'll use it constantly."}],
+  {id:"l9", we:{m:"คน → ค start kh + hidden o + น ending -n → rings/live → MID → khon = person", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"The hidden vowel", sub:"ค ผ ฝ ซ + invisible o", glyphs:["ค","ผ","ฝ","ซ"],
+   pre:[{h:"Some vowels are invisible", body:"Two consonants with no vowel written between them get a free short <b>o</b>: คน = ค start kh + hidden o + น ending -n = khon (person). ผม = ผ start ph + hidden o + ม ending -m = phǒm - which happens to be the male word for <b>I</b>. You'll use it constantly."}],
    note:"ผม phǒm = I (for male speakers) and also 'hair'. Same word.",
    words:[
-     {thai:"คน", tr:"khon", en:"person", vocab:"core"},
-     {thai:"ผม", tr:"phǒm", en:"I (male) / hair", vocab:"core"},
-     {thai:"ฝน", tr:"fǒn", en:"rain", vocab:"recognition"},
-     {thai:"ซ้าย", tr:"sáai", en:"left", vocab:"core"}
+     {thai:"คน", tr:"khon", en:"person", vocab:"core", frame:{text:"ค start kh + hidden o + น ending -n (rings/live)", final:"น"}},
+     {thai:"ผม", tr:"phǒm", en:"I (male) / hair", vocab:"core", frame:{text:"ผ start ph + hidden o + ม ending -m (rings/live)", final:"ม"}},
+     {thai:"ฝน", tr:"fǒn", en:"rain", vocab:"recognition", frame:{text:"ฝ start f + hidden o + น ending -n (rings/live)", final:"น"}},
+     {thai:"ซ้าย", tr:"sáai", en:"left", vocab:"core", frame:{text:"ซ start s + า aa + ย ending -ai (glides/live) + ้ tone mark", final:"ย", sound:"-ai"}}
    ]},
   {id:"l10", we:{m:"แม่ → แ written first + ม LOW + ◌่ → FALLING → mâae = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", pre:[{h:"Front vowels - tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have - listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with mái-èek → <b>falling</b>, แม่ mâae."}], sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
    note:"ึ/ื is the vowel English doesn't have: say 'oo' but spread your lips into a flat smile. Listen and copy.",
    words:[
      {thai:"แม่", tr:"mâae", en:"mother", vocab:"core"},
-     {thai:"แพง", tr:"phaaeng", en:"expensive", vocab:"core"},
+     {thai:"แพง", tr:"phaaeng", en:"expensive", vocab:"core", frame:{text:"พ start ph + แ vowel aae + ง ending -ng (rings/live)", final:"ง"}},
      {thai:"มือ", tr:"muue", en:"hand", vocab:"core"},
-     {thai:"ลึก", tr:"lúek", en:"deep", vocab:"decode"}
+     {thai:"ลึก", tr:"lúek", en:"deep", vocab:"decode", frame:{text:"ล start l + ึ ue + ก ending -k (stop/dead)", final:"ก"}}
    ]},
-  {id:"l11", we:{m:"รถ → hidden o + ถ stop → dead SHORT on low class → HIGH → rót = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> - like จะ, ทุก, or a hidden 'o' before a stop. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b>, รถ rót, ทุก thúk. (Mid class stays low: จะ jà.)"}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
+  {id:"l11", we:{m:"รถ → ร start r + hidden o + ถ ending -t → dead short on low class → HIGH → rót = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> - like จะ, ทุก, or a hidden 'o' before a stop. รถ uses ถ as an ending -t, not the start sound th. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b>, รถ rót, ทุก thúk. (Mid class stays low: จะ jà.)"}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
    note:"◌ะ chops a vowel short and makes the syllable DEAD - which changes its tone. จะ jà (will) is low tone for exactly that reason.",
    words:[
      {thai:"จะ", tr:"jà", en:"will (future marker)", vocab:"core"},
-     {thai:"รถ", tr:"rót", en:"car / vehicle", vocab:"core"},
-     {thai:"ทุก", tr:"thúk", en:"every", vocab:"core"},
-     {thai:"กุ้ง", tr:"gûng", en:"shrimp", vocab:"recognition"}
+     {thai:"รถ", tr:"rót", en:"car / vehicle", vocab:"core", frame:{text:"ร start r + hidden o + ถ ending -t (stop/dead)", final:"ถ"}},
+     {thai:"ทุก", tr:"thúk", en:"every", vocab:"core", frame:{text:"ท start th + ุ u + ก ending -k (stop/dead)", final:"ก"}},
+     {thai:"กุ้ง", tr:"gûng", en:"shrimp", vocab:"recognition", frame:{text:"ก start g + ุ u + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}}
    ]},
   {id:"l12", we:{m:"เขา → เ◌า wraps the consonant → kh + ao → ข high, live → RISING → khǎo = he/she", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"He, she, water, yes", pre:[{h:"Wrap-around vowels - tone from class", body:"เ◌า wraps the consonant - เขา = kh + ao - and ◌ำ is -am: น้ำ náam. ใ sounds exactly like ไ; only ~20 words use it (ใช่, ใหม่, ใจ…). Tone still comes from class: <span style='color:var(--high);font-weight:600'>high</span> ข + live → <b>rising</b>, เขา khǎo."}], sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
    note:"ใ (mái múan) sounds identical to ไ. Only 20 words in the whole language use it - ใช่, ใหม่, ใกล้, ใจ are the ones you'll meet constantly.",
    words:[
      {thai:"เขา", tr:"khǎo", en:"he / she", vocab:"core"},
-     {thai:"น้ำ", tr:"náam", en:"water", vocab:"core"},
-     {thai:"ทำ", tr:"tham", en:"to do / make", vocab:"core"},
+     {thai:"น้ำ", tr:"náam", en:"water", vocab:"core", frame:{text:"น start n + ำ am vowel already includes an -m ending sound (rings/live)"}},
+     {thai:"ทำ", tr:"tham", en:"to do / make", vocab:"core", frame:{text:"ท start th + ำ am vowel already includes an -m ending sound (rings/live)"}},
      {thai:"ใช่", tr:"châi", en:"yes / that's right", vocab:"core"}
    ]},
   /* ---------------- UNIT C - The tone engine ---------------- */
-  {id:"l13", we:{m:"มาก → low class + dead with a LONG vowel → FALLING → mâak. But รัก → dead SHORT → different tone…", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
+  {id:"l13", we:{m:"มาก → ม start m + า aa + ก ending -k → dead with a LONG vowel → FALLING → mâak. But รัก → dead SHORT → different tone…", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
    pre:[
-     {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a sonorant final (n, m, ng, ai, ao…). It can ring on. มา, กิน, งาน - live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ - dead."},
+     {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a ringing final (n, m, ng, ai, ao...). It can ring on. มา, กิน, งาน - live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ - dead. Notice the final job first: ก at the end reads -k."},
      {h:"Why you care", body:"<i>Recap - you've read every one of these across Units A-B; here they are in one place.</i><br><br>A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel - still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
    ],
    note:"You now know why มาก is falling and รัก is high - same class, different vowel length. This is the whole trick.",
    words:[
-     {thai:"จาก", tr:"jàak", en:"from", vocab:"core"},
-     {thai:"พูด", tr:"phûut", en:"to speak", vocab:"core"},
-     {thai:"รัก", tr:"rák", en:"to love", vocab:"recognition"},
-     {thai:"นอน", tr:"norn", en:"to sleep / lie down", vocab:"core"}
+     {thai:"จาก", tr:"jàak", en:"from", vocab:"core", frame:{text:"จ start j + า aa + ก ending -k (stop/dead)", final:"ก"}},
+     {thai:"พูด", tr:"phûut", en:"to speak", vocab:"core", frame:{text:"พ start ph + ู uu + ด ending -t (stop/dead)", final:"ด"}},
+     {thai:"รัก", tr:"rák", en:"to love", vocab:"recognition", frame:{text:"ร start r + ั a + ก ending -k (stop/dead)", final:"ก"}},
+     {thai:"นอน", tr:"norn", en:"to sleep / lie down", vocab:"core", frame:{text:"น start n + อ or + น ending -n (rings/live)", final:"น"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"มา", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"long vowel, rings on"},
@@ -1253,7 +1297,7 @@ const LESSONS = [
    words:[
      {thai:"เก่า", tr:"gào", en:"old (things)", vocab:"recognition"},
      {thai:"ได้", tr:"dâi", en:"can / to get", vocab:"core"},
-     {thai:"ต้อง", tr:"dtôrng", en:"must / have to", vocab:"core"},
+     {thai:"ต้อง", tr:"dtôrng", en:"must / have to", vocab:"core", frame:{text:"ต start dt + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
      {thai:"โต๊ะ", tr:"dtó", en:"table", vocab:"core"}
    ],
    extraQuiz:[
@@ -1265,9 +1309,9 @@ const LESSONS = [
    pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) - here's the full row.</i><br><br>Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
    note:"ข้าว khâao = rice, but also 'a meal'. กินข้าว literally 'eat rice' = to eat, full stop.",
    words:[
-     {thai:"ข้าว", tr:"khâao", en:"rice / a meal", vocab:"core"},
-     {thai:"ห้อง", tr:"hôrng", en:"room", vocab:"core"},
-     {thai:"ถาม", tr:"thǎam", en:"to ask", vocab:"core"},
+     {thai:"ข้าว", tr:"khâao", en:"rice / a meal", vocab:"core", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live) + ้ tone mark", final:"ว", sound:"-aao"}},
+     {thai:"ห้อง", tr:"hôrng", en:"room", vocab:"core", frame:{text:"ห start h + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
+     {thai:"ถาม", tr:"thǎam", en:"to ask", vocab:"core", frame:{text:"ถ start th + า aa + ม ending -m (rings/live)", final:"ม"}},
      {thai:"สี", tr:"sǐi", en:"colour", vocab:"recognition"}
    ],
    extraQuiz:[
@@ -1279,10 +1323,10 @@ const LESSONS = [
    pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br>+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
    note:"พี่ phîi (older) and น้อง nórng (younger) - Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu - it shortens the vowel, no tone change.",
    words:[
-     {thai:"น้อง", tr:"nórng", en:"younger sibling / junior", vocab:"core"},
+     {thai:"น้อง", tr:"nórng", en:"younger sibling / junior", vocab:"core", frame:{text:"น start n + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
      {thai:"พี่", tr:"phîi", en:"older sibling / senior", vocab:"core"},
      {thai:"ช้า", tr:"cháa", en:"slow", vocab:"core"},
-     {thai:"เล็ก", tr:"lék", en:"small", vocab:"recognition"}
+     {thai:"เล็ก", tr:"lék", en:"small", vocab:"recognition", frame:{text:"ล start l + เ vowel e + ก ending -k (stop/dead)", final:"ก"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"น้ำ", text:"Low class + ไม้โท gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low class flips ◌้ up to high"},
@@ -1296,7 +1340,7 @@ const LESSONS = [
      {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition"},
      {thai:"ไหน", tr:"nǎi", en:"where / which", vocab:"core"},
      {thai:"อยู่", tr:"yùu", en:"to be at / -ing", vocab:"core"},
-     {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core"}
+     {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core", frame:{text:"อ silent leader + ย start y + า aa + ก ending -k (stop/dead)", final:"ก"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"หมา", text:"What does silent ห do here?", answer:"Makes ม follow high-class tone rules", options:["Makes ม follow high-class tone rules","Adds an h sound","Makes the vowel short","Makes the word formal"], explain:"หมา is pronounced mǎa, not h-mǎa"},
@@ -1304,11 +1348,11 @@ const LESSONS = [
      {kind:"mcq", prompt:"อยู่", text:"Silent อ in the four special words uses which class row?", answer:"Mid class", options:["Mid class","High class","Low class","No class"], explain:"อย่า อยู่ อย่าง อยาก use อ as the silent leader"}
    ]},
   /* ---------------- UNIT D - Clusters & the long tail ---------------- */
-  {id:"l18", we:{m:"ครับ → คร cluster takes its class from ค (low) + ◌ั บ → dead short → HIGH → khráp", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Decode ครับ", sub:"True clusters: กร ปล คร…", glyphs:[],
-   pre:[{h:"Two consonants, one syllable", body:"Thai allows clusters with ร ล ว as the second letter: ปลา bplaa, ครู khruu, กว้าง gwâang.<br><br>The cluster takes its class from the FIRST letter. ครับ: ค (low) + ร + ◌ั + บ → dead short → high tone: khráp. You've been saying it for weeks - now you can read it."}],
+  {id:"l18", we:{m:"ครับ → คร start cluster khr + ◌ั a + บ ending -p → dead short → HIGH → khráp", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Decode ครับ", sub:"True clusters: กร ปล คร…", glyphs:[],
+   pre:[{h:"Two consonants, one syllable", body:"Thai allows clusters with ร ล ว as the second letter: ปลา bplaa, ครู khruu, กว้าง gwâang.<br><br>The cluster takes its class from the FIRST letter. ครับ: คร starts the syllable, บ does the ending job -p, so the syllable is dead short → high tone: khráp. You've been saying it for weeks - now you can read it."}],
    note:"ใกล้ glâi (near) vs ไกล glai (far) - same letters, one tone mark apart. A taxi-critical distinction.",
    words:[
-     {thai:"ครับ", tr:"khráp", en:"polite particle (male)", vocab:"core"},
+     {thai:"ครับ", tr:"khráp", en:"polite particle (male)", vocab:"core", frame:{text:"คร start cluster khr + ั a + บ ending -p (stop/dead)", final:"บ"}},
      {thai:"ปลา", tr:"bplaa", en:"fish", vocab:"recognition"},
      {thai:"ครู", tr:"khruu", en:"teacher", vocab:"core"},
      {thai:"ใกล้", tr:"glâi", en:"near", vocab:"core"}
@@ -1322,38 +1366,38 @@ const LESSONS = [
    pre:[{h:"Some clusters are lies", body:"ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Now you can read the most important food word in the country."}],
    note:"จริง jing on its own = 'really?!' - say it with a rising intonation and you sound instantly more Thai.",
    words:[
-     {thai:"จริง", tr:"jing", en:"true / really", vocab:"core"},
-     {thai:"ทราบ", tr:"sâap", en:"to know (formal)", vocab:"recognition"},
-     {thai:"สร้าง", tr:"sâang", en:"to build", vocab:"decode"},
-     {thai:"อร่อย", tr:"a-ròy", en:"delicious", vocab:"core"}
+     {thai:"จริง", tr:"jing", en:"true / really", vocab:"core", frame:{text:"จ start j + ร drops out + ิ i + ง ending -ng (rings/live)", final:"ง"}},
+     {thai:"ทราบ", tr:"sâap", en:"to know (formal)", vocab:"recognition", frame:{text:"ทร starts as s + า aa + บ ending -p (stop/dead)", final:"บ"}},
+     {thai:"สร้าง", tr:"sâang", en:"to build", vocab:"decode", frame:{text:"ส start s + ร drops out + า aa + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
+     {thai:"อร่อย", tr:"a-ròy", en:"delicious", vocab:"core", frame:{text:"ร่อย = ร start r + อ/ย ending glide -oy (live) + ่ tone mark", final:"ย", sound:"-oy", focus:"ร่อย"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"จริง", text:"What happens to ร here?", answer:"It drops out", options:["It drops out","It says r","It makes the vowel long","It changes the final"], explain:"จริง reads jing"},
      {kind:"mcq", prompt:"ทราบ", text:"ทร usually begins with which sound?", answer:"s", options:["s","th","tr","r"], explain:"ทราบ reads sâap"},
      {kind:"mcq", prompt:"อร่อย", text:"What job is อ doing?", answer:"Carrying the opening vowel", options:["Carrying the opening vowel","Making an r sound","Silencing ร","Marking high class"], explain:"อ carries the a- before ร่อย"}
    ]},
-  {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
+  {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
    note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
    words:[
      {thai:"เธอ", tr:"ter", en:"you / she (informal)", vocab:"recognition"},
      {thai:"ภาษา", tr:"phaa-sǎa", en:"language", vocab:"core"},
-     {thai:"ผู้หญิง", tr:"phûu-yǐng", en:"woman", vocab:"recognition"},
-     {thai:"ศูนย์", tr:"sǔun", en:"zero / centre", vocab:"recognition"}
+     {thai:"ผู้หญิง", tr:"phûu-yǐng", en:"woman", vocab:"recognition", frame:{text:"หญิง = ห leads ญ + ิ i + ง ending -ng (rings/live)", final:"ง", focus:"หญิง"}},
+     {thai:"ศูนย์", tr:"sǔun", en:"zero / centre", vocab:"recognition", frame:{text:"ศ start s + ู uu + น ending -n; ย์ is silent", final:"น"}}
    ]},
   {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING → chǎn = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ + recognition-only rarities", glyphs:["ฉ"],
    pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them - and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED - ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 - the Letters boss will check you know them."}],
    note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
    words:[
-     {thai:"ฉัน", tr:"chǎn", en:"I (informal)", vocab:"recognition"},
+     {thai:"ฉัน", tr:"chǎn", en:"I (informal)", vocab:"recognition", frame:{text:"ฉ start ch + ั a + น ending -n (rings/live)", final:"น"}},
      {thai:"กีฬา", tr:"gii-laa", en:"sport", vocab:"decode"},
      {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior", vocab:"recognition"},
-     {thai:"สนุก", tr:"sà-nùk", en:"fun", vocab:"core"}
+     {thai:"สนุก", tr:"sà-nùk", en:"fun", vocab:"core", frame:{text:"นุก = น start n + ุ u + ก ending -k (stop/dead)", final:"ก", focus:"นุก"}}
    ]},
   {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ◌่ on LOW class → FALLING → phûean = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels - class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes mái-èek → <b>falling</b>, phûean."}], sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
    note:"ๆ (mái yá-mók) repeats the previous word: ช้าๆ = cháa cháa = slowly. เร็วๆ = quickly. You'll see it everywhere.",
    words:[
-     {thai:"เรียน", tr:"rian", en:"to study", vocab:"core"},
-     {thai:"เพื่อน", tr:"phûean", en:"friend", vocab:"core"},
+     {thai:"เรียน", tr:"rian", en:"to study", vocab:"core", frame:{text:"ร start r + เ◌ีย ia + น ending -n (rings/live)", final:"น"}},
+     {thai:"เพื่อน", tr:"phûean", en:"friend", vocab:"core", frame:{text:"พ start ph + เ◌ือ uea + น ending -n (rings/live) + ่ tone mark", final:"น"}},
      {thai:"ตัว", tr:"dtua", en:"body / classifier", vocab:"recognition"},
      {thai:"เสื้อ", tr:"sûea", en:"shirt", vocab:"core"}
    ],
@@ -1366,24 +1410,24 @@ const LESSONS = [
    pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and - usefully - <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
    note:"ระวัง rá-wang appears on every wet floor, low doorway, and BTS platform in Bangkok.",
    words:[
-     {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful", vocab:"core"},
-     {thai:"ทางออก", tr:"thaang-òrk", en:"exit", vocab:"core"},
-     {thai:"ทางเข้า", tr:"thaang-khâo", en:"entrance", vocab:"core"},
-     {thai:"ห้องน้ำ", tr:"hôrng-náam", en:"toilet", vocab:"core"}
+     {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful", vocab:"core", frame:{text:"วัง = ว start w + ั a + ง ending -ng (rings/live)", final:"ง", focus:"วัง"}},
+     {thai:"ทางออก", tr:"thaang-òrk", en:"exit", vocab:"core", frame:{text:"ออก = อ start or + อ or + ก ending -k (stop/dead)", final:"ก", focus:"ออก"}},
+     {thai:"ทางเข้า", tr:"thaang-khâo", en:"entrance", vocab:"core", frame:{text:"ทาง = ท start th + า aa + ง ending -ng (rings/live)", final:"ง", focus:"ทาง"}},
+     {thai:"ห้องน้ำ", tr:"hôrng-náam", en:"toilet", vocab:"core", frame:{text:"ห้อง = ห start h + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง", focus:"ห้อง"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"ระวัง", text:"The first syllable ระ is live or dead?", answer:"Dead", options:["Live","Dead"], explain:"short vowel, cut off"},
      {kind:"mcq", prompt:"ทางออก", text:"How does this sign read?", answer:"thaang-òrk", options:["thaang-òrk","thaang-khâo","hôrng-náam","rá-wang"]},
      {kind:"mcq", prompt:"ทางเข้า", text:"How does this sign read?", answer:"thaang-khâo", options:["thaang-khâo","thaang-òrk","hôrng-náam","rá-wang"]}
    ]},
-  {id:"l24", we:{m:"เปิด → เ◌ิ = the er vowel + ด stop → MID class dead → LOW → bpèrt = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
-   pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list."}],
+  {id:"l24", we:{m:"เปิด → ป start bp + เ◌ิ er + ด ending -t → MID class dead → LOW → bpèrt = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
+   pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list. Keep using the frame: start sound, vowel, ending sound, then live/dead and tone."}],
    note:"That's Phase 1. You now have the letter → class → tone tools to tackle unfamiliar Thai slowly; real-world spelling can still contain ambiguous or irregular words.",
    words:[
-     {thai:"เปิด", tr:"bpèrt", en:"open", vocab:"core"},
-     {thai:"ปิด", tr:"bpìt", en:"closed", vocab:"core"},
-     {thai:"ห้าม", tr:"hâam", en:"forbidden / do not", vocab:"core"},
-     {thai:"อาหาร", tr:"aa-hǎan", en:"food", vocab:"core"}
+     {thai:"เปิด", tr:"bpèrt", en:"open", vocab:"core", frame:{text:"ป start bp + เ◌ิ er + ด ending -t (stop/dead)", final:"ด"}},
+     {thai:"ปิด", tr:"bpìt", en:"closed", vocab:"core", frame:{text:"ป start bp + ิ i + ด ending -t (stop/dead)", final:"ด"}},
+     {thai:"ห้าม", tr:"hâam", en:"forbidden / do not", vocab:"core", frame:{text:"ห start h + า aa + ม ending -m (rings/live) + ้ tone mark", final:"ม"}},
+     {thai:"อาหาร", tr:"aa-hǎan", en:"food", vocab:"core", frame:{text:"หาร = ห start h + า aa + ร ending -n (rings/live)", final:"ร", focus:"หาร"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"เปิด", text:"Which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"mid class + dead syllable gives low"},
@@ -2929,6 +2973,42 @@ function classReason(cls){
     : 'not mid or high, so low by default';
 }
 function classQuestionText(cls){ return 'Which class? Work from memory, not colour.'; }
+function finalJob(ch){ return FINAL_JOBS[ch] || null; }
+function finalJobHtml(ch, lessonId){
+  const g = GLYPHS[ch], job = finalJob(ch);
+  if(!g || g.type !== 'c' || lessonNum(lessonId) < 2) return '';
+  if(!job) return `<div class="final-job"><b>Start job:</b> ${esc(g.sound)}<br><b>Ending job:</b> not used as a normal final in this course yet.</div>`;
+  return `<div class="final-job"><b>Start job:</b> ${esc(g.sound)}<br><b>Ending job:</b> ${esc(job.sound)} - ${esc(job.effect)}</div>`;
+}
+function wordFrame(w){
+  if(!w || !w.frame) return null;
+  return typeof w.frame === 'string' ? {text:w.frame} : w.frame;
+}
+function wordFrameHtml(w){
+  const f = wordFrame(w);
+  return f && f.text ? `<div class="w-frame">${esc(f.text)}</div>` : '';
+}
+function finalSoundDistractors(ch, answer){
+  const g = GLYPHS[ch], out = [];
+  if(g && g.sound && g.sound !== answer) out.push(g.sound);
+  ['-n','-m','-ng','-k','-t','-p','-ao/-aao','-aao','-ai','-oy','-y glide'].forEach(s=>{ if(s !== answer && !out.includes(s)) out.push(s); });
+  return out.slice(0,3);
+}
+function finalSoundQuestion(w){
+  const f = wordFrame(w);
+  if(!f || !f.final) return null;
+  const job = finalJob(f.final);
+  if(!job) return null;
+  const answer = f.sound || job.sound;
+  const focus = f.focus || w.thai;
+  const g = GLYPHS[f.final];
+  const start = g ? g.sound : '';
+  return {kind:'mcq', prompt:focus, promptBig:true,
+    text:'Ending job: what sound does ' + f.final + ' make here?',
+    answer, options:shuffle([answer,...finalSoundDistractors(f.final, answer)]),
+    _choice:'final-sound', axis:'final',
+    explain:(g ? f.final + ' starts as ' + start + ', but ' : '') + 'at the end it reads ' + answer + '. ' + job.effect + '.'};
+}
 /* decodability gate (v2.22) - a phrase becomes a READING card only once its letters are taught;
    until then it lives ear-first (listening card + the rote phrasebook). */
 function taughtGlyphSet(doneIds){
@@ -3910,6 +3990,7 @@ function renderLessonStep(){
 	    const clsHtml = g.type==='c' ? `<span class="classchip ${g.cls}">${CLS_LABEL[g.cls]}</span>` :
 	      `<span class="classchip" style="color:var(--blue);border-color:var(--blue)">${g.type==='v'?'Vowel':'Tone mark'}</span>`;
 	    const clsTeach = g.type==='c' ? `<div class="sub" style="font-size:12px;margin-top:8px">${esc(classReason(g.cls))}</div>` : '';
+	    const finalTeach = finalJobHtml(ch, L.id);
 	    stage.innerHTML = `
 	      ${banner}
 	      <div class="glyph-big ${g.type==='c'?g.cls:''}" style="${(g.disp||ch).length>2?'font-size:84px':''}">${g.disp || ch}</div>
@@ -3919,6 +4000,7 @@ function renderLessonStep(){
         <div class="gloss">${g.type==='c' ? 'name means: ' + g.gloss : g.gloss}${g.demo ? ' · e.g. ' + g.demo : ''}</div>
         <div style="margin-top:12px">${clsHtml}${clsTeach}</div>
       </div>
+      ${finalTeach}
       ${glyphAudioPanel(ch)}
       <div class="stage-actions">
         ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
@@ -3972,6 +4054,7 @@ function renderLessonStep(){
             <div class="w-answer" hidden>
               <div class="w-tr">${w.tr}</div>
               <div class="w-en">${esc(w.en)}</div>
+              ${wordFrameHtml(w)}
             </div>
           </div>
           ${speakBtn(w.thai, 'Hear: '+w.thai).replace('<button class="speak"', '<button class="speak locked" disabled')}
@@ -4119,6 +4202,7 @@ function buildLessonQuiz(L){
     return miniDecodeQuestion(w, coveredWords);
   }).filter(Boolean);
   const reverseReadQs = L.words.map(w=>readingToThaiQuestion(w, coveredWords)).filter(Boolean);
+  const finalQs = L.words.map(w=>finalSoundQuestion(w)).filter(Boolean);
   const toneQs = L.words.map(w=>toneQuestion(w, upToLessonNum)).filter(Boolean);
   // Two objective listening checks per lesson: core vocabulary only, heard word → Thai script.
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
@@ -4128,8 +4212,8 @@ function buildLessonQuiz(L){
     return {kind:'mcq', text:'Listen: which Thai word did you hear?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
-  const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
-  const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(reverseReadQs).concat(classPickQs).concat(toneQs);
+  const guaranteed = classQs.concat(listenQs).concat(finalQs.slice(0,1)).concat(L.extraQuiz||[]);
+  const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(reverseReadQs).concat(classPickQs).concat(finalQs.slice(1)).concat(toneQs);
   const fill = Math.max(0, 10 - guaranteed.length);
   let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
   return shuffle(guaranteed.concat(fillers));
@@ -4215,6 +4299,23 @@ function validateReviewChoiceContracts(){
     if(q.text !== glyphSoundPrompt(g)) errors.push(ch + ': review prompt is not type-specific');
   });
   if(errors.length) throw new Error('Review choice contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateFinalSoundContracts(){
+  const errors = [];
+  LESSONS.forEach(L=>{
+    const frames = L.words.map(w=>wordFrame(w)).filter(Boolean);
+    if(lessonNum(L.id) === 1 && frames.length) errors.push('Lesson 1 must keep finals out of the first buildup');
+    if(lessonNum(L.id) >= 2 && lessonNum(L.id) !== 12){
+      const finalFrames = frames.filter(f=>f.final);
+      if(!finalFrames.length) errors.push(L.id + ': missing final-sound decode frame');
+      finalFrames.forEach(f=>{
+        if(!finalJob(f.final)) errors.push(L.id + ': unknown final job for ' + f.final);
+      });
+      if(!buildLessonQuiz(L).some(q=>q.axis === 'final')) errors.push(L.id + ': missing final-sound quiz check');
+    }
+  });
+  if(errors.length) throw new Error('Final-sound contract failed:\n' + errors.join('\n'));
   return true;
 }
 function wrongOptions(q){ return (q.options||[]).filter(o=>String(o)!==String(q.answer)); }
@@ -5229,6 +5330,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateVocabularyContracts();
   validateCoverageContracts();
   validateReviewChoiceContracts();
+  validateFinalSoundContracts();
   validateMisconceptionChoiceContracts();
   await loadState();
   let migrated = false;

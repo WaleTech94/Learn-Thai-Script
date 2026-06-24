@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.1 — 2026-06-24
+
+- Made consonant finals explicit as alphabet mastery content, not just tone support, starting in Lesson 2 while leaving Lesson 1's buildup unchanged.
+- Added the reusable start job / ending job model: start sound + vowel + ending sound, then live/dead and tone.
+- Updated consonant cards after Lesson 1 so they show each consonant's start job and ending job where applicable.
+- Added decode frames to lesson word reveals across Phase 1, including early anchors such as `กิน`, `บาท`, `มาก`, later hidden-vowel words, clusters, formal spellings and capstone signs.
+- Reworked selected Quick Decode examples and lesson notes so final sounds are named before tone/live-dead reasoning.
+- Added generated final-sound quiz checks and a `validateFinalSoundContracts()` startup guard so the final-sound thread cannot silently disappear from lessons after finals are introduced.
+- Kept the state schema unchanged; this is a content and lesson-engine pass only.
+
 ## v4.0 — 2026-06-24
 
 - Rebuilt Today into a clear four-button route: Review, Main task, Depth block and End today.
