@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.2 — 2026-06-24
+
+- Added a structural clarity pass across Phase 1 for hidden vowels, written-vs-spoken vowel order, live/dead sound feel, short/long vowel length, and true/fake clusters.
+- Marked the relevant lesson word decode frames so these ideas are named at the point of reading, not only learned by getting quiz items wrong.
+- Added direct generated lesson-quiz checks for hidden vowels, vowel order, live/dead, vowel length and clusters.
+- Added `validateStructuralClarityContracts()` so the named structural checks cannot silently disappear from their lesson touchpoints.
+- Kept the lesson order, letter → class → tone spine, mastery gates and state schema unchanged.
+
 ## v4.1 — 2026-06-24
 
 - Made consonant finals explicit as alphabet mastery content, not just tone support, starting in Lesson 2 while leaving Lesson 1's buildup unchanged.
