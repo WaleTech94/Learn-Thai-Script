@@ -1,6 +1,6 @@
 # อ่าน (àan) — Learn Thai
 
-A self-contained Phase-1 Thai script-mastery PWA: phonics-first reading, tone derivation, useful survival language, spaced repetition, a 45-minute depth-first daily plan, and a focused token economy.
+A self-contained Phase-1 Thai script-mastery PWA: phonics-first reading, tone derivation, useful survival language, spaced repetition, honest early-foundation pacing, a 45-minute depth-first course rhythm once enough material is live, and a focused token economy.
 
 **For developers/AI continuing this project: read `AGENTS.md` first.** It is the tracked canonical source for architecture, content conventions, pedagogy, state schema, validation, documentation-sync rules, and working agreements.
 

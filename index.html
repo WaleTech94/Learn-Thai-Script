@@ -540,7 +540,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div id="path-now"></div>
       <div id="path-map"></div>
     </div>
-    <div class="progress-divider">45-MINUTE COURSE DAY ↓</div>
+    <div class="progress-divider" id="course-day-label">COURSE DAY ↓</div>
     <div class="card glyph-hero" id="hero-card">
       <div class="eyebrow">Letter of the day</div>
       <span class="bigchar" id="hero-char">ก</span>
@@ -560,7 +560,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0" id="plan-title">Today's plan</div>
-        <span class="sub" style="font-size:12px">depth before speed · +10💎</span>
+        <span class="sub" style="font-size:12px" id="plan-sub">honest pacing · +10💎</span>
       </div>
       <div class="quest-line" id="quest-a"><span class="qc">✓</span><span id="plan-1">Warm-up review</span></div>
       <div class="quest-line" id="quest-b"><span class="qc">✓</span><span id="plan-2">Main lesson or consolidation</span></div>
@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.11 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.12 (PWA)</div>
     </div>
   </section>
 
@@ -1546,12 +1546,34 @@ function ensureDay(){
   }
   return state.days[t];
 }
+function earlyFoundationWindow(){
+  const next = nextLesson();
+  const d = state.days && state.days[todayStr()];
+  return (!!next && lessonNum(next.id) <= 3) || !!(d && d.l > 0 && !state.done.includes('l4'));
+}
+function earlyBonusLessonCandidate(){
+  const d = ensureDay(), next = nextLesson();
+  if(!next || d.type === 'C' || d.l !== 1 || srsDue().length) return null;
+  const n = lessonNum(next.id);
+  return n >= 2 && n <= 3 ? next : null;                  // never carries into Lesson 4, where stories/tones deepen
+}
+function isEarlyBonusLesson(L){
+  const bonus = earlyBonusLessonCandidate();
+  return !!(bonus && L && bonus.id === L.id);
+}
+function markCurrentPathPracticeDone(){
+  const P = buildPath(), cur = P[pathIndex(P)];
+  if(!cur || cur.lesson || cur.type === 'checkpoint' || cur.letters42) return;
+  if(!state.pathDone) state.pathDone = {};
+  state.pathDone[cur.id] = true;
+}
 /* daily pacing governor (v3.0) — unit = clear review + one main block + one depth block.
    New lessons are redirected when current material still needs embedding. */
 function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
-  if(d.paid) return 'rest';                                   // plan complete → stop new load
   if(due > 0) return 'review';                                // warm-up first; don't skip the current deck
+  if(earlyBonusLessonCandidate()) return 'bonus';              // L1→L2 or L2→L3 only, for honest early pacing
+  if(d.paid) return 'rest';                                   // plan complete → stop new load
   if(d.type === 'C') return 'deepen';                          // consolidation days go deeper, not further
   if(d.l > 0) return 'deepen';                                 // one new lesson/day; early finishers deepen
   return 'learn';
@@ -1561,10 +1583,11 @@ function newLessonBlockReason(L){
   const next = nextLesson();
   if(!next || L.id !== next.id) return '';
   const d = ensureDay(), due = srsDue().length;
+  if(isEarlyBonusLesson(L)) return '';
   if(d.paid) return 'Today is complete — use a depth block if you want more.';
   if(due > 0) return 'Warm-up first: clear the current review before new letters.';
   if(d.type === 'C') return 'Today is a consolidation day — prove the current material first.';
-  if(d.l > 0) return 'One new lesson is enough for today — go deeper now.';
+  if(d.l > 0) return lessonNum(L.id) >= 4 ? 'Lesson 4 and later stay one per day — use story or drill depth now.' : 'One new lesson is enough for today — go deeper now.';
   return '';
 }
 function startDepthBlock(){
@@ -1586,13 +1609,15 @@ function startDepthBlock(){
   gotoView('review');
 }
 function startLessonFromUser(L){
+  const earlyBonus = isEarlyBonusLesson(L);
   const reason = newLessonBlockReason(L);
   if(reason){
     toast(reason);
     startDepthBlock();
     return;
   }
-  startLesson(L);
+  if(earlyBonus) markCurrentPathPracticeDone();
+  startLesson(L, {earlyBonus});
 }
 /* ---- training path (v2.17): communication-first drill ladder + recommender ---- */
 const RUNGS = [
@@ -1655,16 +1680,20 @@ function renderPlan(){
   const isL = d.type !== 'C';
   const due = srsDue().length;
   const phase = governorPhase();
+  const early = earlyFoundationWindow();
+  const bonus = earlyBonusLessonCandidate();
   const nd = nextDrill();                                   // progression-aware, not date-random
   const sugg = nd ? nd.title : 'a quick drill';
-  el('plan-title').textContent = isL ? "Today's 45 · Lesson day" : "Today's 45 · Consolidation day";
+  if(el('course-day-label')) el('course-day-label').textContent = early ? 'FOUNDATION DAY ↓' : '45-MINUTE COURSE DAY ↓';
+  if(el('plan-sub')) el('plan-sub').textContent = early ? '20-30 min core · optional stretch' : 'depth before speed · +10💎';
+  el('plan-title').textContent = isL ? (early ? "Today's foundation · honest pace" : "Today's 45 · Lesson day") : "Today's 45 · Consolidation day";
   el('plan-1').textContent = due ? 'Warm-up: clear due cards (' + due + ' left)' : 'Warm-up: review cleared';
   if(isL){
     const nl = nextLesson();
-    if(d.l > 0) el('plan-2').textContent = 'Main: lesson complete — now embed it';
+    if(d.l > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete — review is clear' : 'Main: lesson complete — now embed it';
     else if(phase === 'review') el('plan-2').textContent = 'Main: lesson opens after the warm-up';
     else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
-    el('plan-3').textContent = 'Deepen: ' + sugg + ' or a readable story';
+    el('plan-3').textContent = bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
   } else {
     el('plan-2').textContent = 'Main: consolidate current letters, tones and words';
     el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
@@ -1699,9 +1728,13 @@ function renderRunway(){
   const calibrated = (state.paceN||0) >= 3;
   const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
   const srsMin = Math.min(15, Math.round(due * paceSecs() / 60));
-  const lessonMin = (isL && nextLesson() && d.l === 0) ? 20 : 0;          // includes hear-first + read-aloud compare
+  const bonus = earlyBonusLessonCandidate();
+  const earlyPace = earlyFoundationWindow();
+  const lessonMin = (isL && nextLesson() && (d.l === 0 || bonus)) ? (bonus ? 15 : 20) : 0;          // includes hear-first + read-aloud compare
   const mainDone = isL ? d.l > 0 : d.d > 0;
-  const drillMin = d.lite ? 0 : (mainDone ? (isL ? 15 : 25) : Math.max(isL ? 15 : 25, 45 - srsMin - lessonMin));
+  const targetMin = earlyPace ? 30 : 45;
+  const minDrill = isL ? (earlyPace ? 10 : 15) : 25;
+  const drillMin = d.lite || bonus ? 0 : (mainDone ? minDrill : Math.max(minDrill, targetMin - srsMin - lessonMin));
   const segDefs = [
     {cls:'srs', m:srsMin, label:'cards'},
     {cls:'lesson', m:lessonMin, label:'lesson'},
@@ -1714,7 +1747,7 @@ function renderRunway(){
   const legend = segDefs.map(s=>`<span><i style="background:${COL[s.cls]}"></i>${s.label} ~${s.m}m</span>`).join('');
   const showLite = total > 25 && !d.lite && drillMin > 0 && everConsolidated();
   host.innerHTML = `
-    <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">45 min target${calibrated?'':' · est.'}</span></div>
+    <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">${earlyPace ? '20-30 min core' : '45 min target'}${calibrated?'':' · est.'}</span></div>
     <div class="runway-bar">${bar}</div>
     <div class="runway-legend">${legend}</div>
     ${showLite ? `<button class="btn small ghost lite-btn" id="lite-btn">Make it a lighter day</button>` : ''}
@@ -1727,7 +1760,7 @@ function questCheck(){
   const A = srsDue().length === 0;
   const B = d.type === 'C' ? d.d > 0 : d.l > 0;
   const C = d.lite || (d.type === 'C' ? d.d > 1 : d.d > 0);
-  if(A && B && C && !d.paid){ d.paid = true; award(10); toast('Daily 45 complete · +10💎'); }
+  if(A && B && C && !d.paid){ d.paid = true; award(10); toast((earlyFoundationWindow() ? 'Foundation day complete' : 'Daily 45 complete') + ' · +10💎'); }
   const qa = el('quest-a'), qb = el('quest-b');
   if(qa) qa.classList.toggle('done', A);
   if(qb) qb.classList.toggle('done', B);
@@ -2369,6 +2402,16 @@ function renderRail(){
       <div class="pn-sub">${due} card${due>1?'s':''} waiting. New material opens after the warm-up.</div>
       <button class="btn full path-start" id="path-review">Review ${due} →</button></div>`;
     el('path-review').onclick = goReview;
+  } else if(phase === 'bonus'){
+    const bonus = earlyBonusLessonCandidate();
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">↗ optional foundation stretch</div>
+      <div class="pn-label">${bonus ? 'Continue to Lesson ' + bonus.id.slice(1) : 'Foundation stretch'}</div>
+      <div class="pn-sub">Early lessons are lighter. Stop here, take a drill, or continue before Lesson 4 unlocks richer depth.</div>
+      <button class="btn full path-start" id="path-start">Start ${bonus ? 'Lesson ' + bonus.id.slice(1) : 'next lesson'} →</button>
+      <button class="btn full ghost path-start" id="path-depth" style="margin-top:8px">Depth drill instead →</button></div>`;
+    el('path-start').onclick = ()=>{ if(bonus) startLessonFromUser(bonus); };
+    el('path-depth').onclick = startDepthBlock;
   } else if(phase === 'deepen'){
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">🌱 deeper, not further</div>
@@ -2426,8 +2469,11 @@ function renderHome(){
   el('stat-words').textContent = learnedWords().length + Object.keys(state.srs).filter(k=>k.startsWith('w:') && !findWordInLessons(k.slice(2))).length;
   const due = srsDue().length;
   el('stat-due').textContent = due;
-  const nl = nextLesson();
-  if(nl){
+  const nl = nextLesson(), bonus = earlyBonusLessonCandidate();
+  if(bonus){
+    el('cta-lesson-title').textContent = 'Optional: Lesson ' + bonus.id.slice(1) + ' · ' + bonus.title;
+    el('cta-lesson-sub').textContent = 'Foundation stretch only — this option ends before Lesson 4';
+  } else if(nl){
     el('cta-lesson-title').textContent = (state.done.length ? 'Continue: ' : 'Start ') + nl.title;
     el('cta-lesson-sub').textContent = nl.sub;
   } else {
@@ -3078,12 +3124,12 @@ function lessonCoreWords(L){ return L.words.filter(w=>wordRole(w)==='core'); }
 function lessonRecognitionWords(L){ return L.words.filter(w=>wordRole(w)==='recognition'); }
 function lessonMeaningWords(L){ return L.words.filter(w=>wordRole(w)!=='decode'); }
 
-function startLesson(L){
+function startLesson(L, opts){
   // integrated sequence: concepts/script → quick decode → decode words → read aloud/compare → objective quiz
   const quiz = buildLessonQuiz(L);
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
-  player = {type:'lesson', L, pre, weN, steps: pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0};
+  player = {type:'lesson', L, pre, weN, steps: pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0, earlyBonus:!!(opts&&opts.earlyBonus)};
   openOverlay(); renderLessonStep();
 }
 function renderLessonSpeak(p){
@@ -3262,7 +3308,13 @@ function finishLesson(){
     // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards —
     // that was "heavy on definitions of words that don't mean much alone." Letter → class → tone is the spine.
   }
-  ensureDay().l++; bumpStreak(); saveState(); questCheck();
+  const d = ensureDay();
+  d.l++;
+  if(p.earlyBonus){
+    d.d++;                                                     // early L2/L3 stretch replaces the shallow depth block
+    markCurrentPathPracticeDone();
+  }
+  bumpStreak(); saveState(); questCheck();
   el('stage').innerHTML = `
     <div class="result-big">${p.correct} / ${p.quiz.length}</div>
     <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete — the letters are in your review deck.':'Nice refresher.'}</div>

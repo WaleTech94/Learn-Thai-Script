@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.12 — 2026-06-24
+
+- Made early pacing honest: Lessons 1–3 now present as shorter foundation days instead of full 45-minute course days.
+- Added an optional second-foundation-lesson stretch: after Lesson 1 or Lesson 2, once review is clear and exactly one lesson has been completed today, the learner can continue to Lesson 2 or Lesson 3 instead of doing another shallow depth drill.
+- Kept the acceleration strictly before Lesson 4; Lesson 4 and later return to one new lesson per day with stories, tone work, review and drills as depth.
+- Counted the optional second foundation lesson as the day's extension block and marked the skipped early practice node complete so the guided path does not loop back to the same early drill.
+
 ## v3.11 — 2026-06-24
 
 - Added Hear & Pick Thai as an optional depth drill: audio/transliteration prompt → choose the covered Thai word, with no definitions and no tone-licence shortcut.
