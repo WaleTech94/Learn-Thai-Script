@@ -18,6 +18,7 @@ Every versioned app release must update this file and `AGENTS.md` in the same co
 - Replaced one-click reset with a four-warning flow whose final step requires typing `I Understand`.
 - Added `days[].m` for non-lesson main blocks such as passed mastery gates, so passing a gate counts as the main task without also satisfying the depth block.
 - Stopped the weekly Library pack from seeding five due phrase cards during startup; the first-use route now stays on the class primer until the learner opens Library.
+- Polished the v4.0 launch copy without changing the visible version: removed long dashes and smart quotes from the app shell, softened heavier task/result wording, and renamed the visible depth step to a clearer Practice block.
 
 ## v3.14 — 2026-06-24
 

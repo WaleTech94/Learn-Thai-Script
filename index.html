@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>อ่าน — Learn Thai</title>
+<title>อ่าน: Learn Thai</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#14161D">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,9 +21,9 @@
   --line:#2E3344;
   --text:#F2EFE6;
   --muted:#9BA0B0;
-  --mid:#2FD4B5;      /* mid class — teal */
-  --high:#FF5C9E;     /* high class — pink */
-  --low:#FFB23E;      /* low class — marigold */
+  --mid:#2FD4B5;      /* mid class - teal */
+  --high:#FF5C9E;     /* high class - pink */
+  --low:#FFB23E;      /* low class - marigold */
   --blue:#7FA8FF;
   --gold:#FFD24A;
   --accent1:#9A6BFF;
@@ -143,7 +143,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .audio-setup-card li{padding-left:4px}
 .audio-setup-card .audio-setup-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .audio-setup-card .audio-setup-link{display:block;text-align:center;color:var(--blue);font-size:13px;margin-top:12px}
-/* progress wall / journey map (v2.10) — neutral blue for "done"; class colours stay reserved for consonants */
+/* progress wall / journey map (v2.10) - neutral blue for "done"; class colours stay reserved for consonants */
 .pw-unit{margin-top:10px}
 .pw-ulabel{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px}
 .pw-tiles{display:flex;gap:5px;flex-wrap:wrap}
@@ -496,7 +496,7 @@ body[data-theme="songkran"]{
   --bg:#121024; --surface:#1B1834; --surface2:#241F44; --line:#332C5C;
   --blue:#8FB8FF;
 }
-/* free appearance looks (v2.13) — class colours (mid/high/low) deliberately untouched */
+/* free appearance looks (v2.13) - class colours (mid/high/low) deliberately untouched */
 body[data-theme="depth"]{ background:radial-gradient(1100px 560px at 50% -8%, #1e2434, #14161D 70%); }
 body[data-theme="depth"] .card{ background:linear-gradient(158deg,#232838,#191c26); box-shadow:0 8px 22px rgba(0,0,0,.38); border-color:#333a4e; }
 body[data-theme="accent"]{ background:radial-gradient(1100px 560px at 50% -8%, #1e2434, #14161D 70%); }
@@ -570,7 +570,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .story-line .sw:active{background:var(--surface2)}
 .story-card{padding:16px 18px;text-align:left}
 .story-card.locked{opacity:.45}
-/* skill constellation + personal-best lap (v2.14) — uses ACCENT palette, never the class colours */
+/* skill constellation + personal-best lap (v2.14) - uses ACCENT palette, never the class colours */
 .constel-wrap{display:flex;gap:16px;align-items:center;margin-top:6px}
 .constel-svg{flex:0 0 132px;width:132px;height:120px}
 .constel-svg .clink{stroke:var(--line);stroke-width:2;transition:stroke .6s,opacity .6s}
@@ -590,14 +590,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .lap-fill{height:100%;border-radius:5px;transition:width .7s ease}
 .lap-fill.last{background:var(--accent2)}
 .lap-fill.best{background:var(--gold)}
-/* session runway (v2.15/v3.0) — semantic colours, never the class colours */
+/* session runway (v2.15/v3.0) - semantic colours, never the class colours */
 .runway{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
 .runway-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);margin:7px 0}
 .runway-seg{height:100%}
 .runway-legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
 .runway-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
 .lite-btn{margin-top:9px}
-/* glyph ghost (v2.16) — lookalike discrimination; option glyphs in their class colours (correct use) */
+/* glyph ghost (v2.16) - lookalike discrimination; option glyphs in their class colours (correct use) */
 .ghost-word{font-family:'Mitr',sans-serif;font-size:46px;text-align:center;margin:14px 0;line-height:1.4}
 .ghost-target{display:inline-block;animation:ghostresolve 1.2s ease forwards}
 @keyframes ghostresolve{0%{filter:blur(2.2px);opacity:.32}70%{filter:blur(1.4px);opacity:.5}100%{filter:blur(0);opacity:1}}
@@ -608,7 +608,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .ghost-opt.low{color:var(--low);border-color:var(--low)}
 .ghost-opt.right{background:var(--good);color:var(--bg);border-color:var(--good)}
 .ghost-opt.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
-/* training path (v2.17) — the 5-rung communication-first drill ladder */
+/* training path (v2.17) - the 5-rung communication-first drill ladder */
 .path-rung{padding:10px 0;border-bottom:1px solid var(--line)}
 .path-rung:last-child{border-bottom:none}
 .path-rlabel{font-size:13px;margin-bottom:7px}
@@ -619,7 +619,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .path-node.done{border-color:var(--blue)}
 .path-node.next{border-color:var(--gold);background:var(--surface);box-shadow:0 0 0 1px var(--gold)}
 .path-soon{font-size:12px;color:var(--muted)}
-/* echo chamber — shadow, record and compare */
+/* echo chamber - shadow, record and compare */
 .echo-word{font-family:'Mitr',sans-serif;font-size:52px;text-align:center;margin:12px 0;line-height:1.3}
 /* integrated sound → script → speech bridge (v2.35) */
 .sound-preview{display:flex;flex-direction:column;gap:10px;margin:14px 0}
@@ -637,7 +637,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .evidence-bar{height:7px;border-radius:5px;background:var(--surface2);overflow:hidden}
 .evidence-bar span{display:block;height:100%;border-radius:5px;background:var(--accent1)}
 .evidence-value{font-family:'Mitr',sans-serif;font-size:12px;color:var(--muted);text-align:right}
-/* learning path / guided rail (v2.20/v3.0) — Today's front door: one next step at a time */
+/* learning path / guided rail (v2.20/v3.0) - Today's front door: one next step at a time */
 .path-card{border:1px solid var(--gold);margin-bottom:18px}
 .path-now .pn-step{font-size:12px;color:var(--gold);font-family:'Mitr',sans-serif;text-transform:lowercase}
 .path-now .pn-label{font-size:21px;font-weight:600;margin:3px 0}
@@ -662,16 +662,16 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <section class="view active" id="view-home">
     <header class="today-header">
       <div>
-        <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan — to read</span></div>
+        <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.0 preview</span>
+      <span class="version-pill">v4.0</span>
     </header>
 
     <section class="today-focus">
       <div class="progress-divider" id="course-day-label">COURSE DAY</div>
       <h1 id="today-heading">Today's route</h1>
-      <p class="sub" id="today-brief">Follow the buttons in order. The app will send you back to the missing step before the day can end.</p>
+      <p class="sub" id="today-brief">Use the buttons in order. If something is missing, End today will send you back to it.</p>
       <div class="today-task-list">
         <button class="task-button" id="today-review-btn">
           <span class="task-kicker" id="today-review-state">Step 1</span>
@@ -685,7 +685,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         </button>
         <button class="task-button" id="today-depth-btn">
           <span class="task-kicker" id="today-depth-state">Step 3</span>
-          <span class="task-title" id="today-depth-title">Depth block</span>
+          <span class="task-title" id="today-depth-title">Practice block</span>
           <span class="task-detail" id="today-depth-detail">Tone, class, spelling, story or listening</span>
         </button>
         <button class="task-button end" id="end-day-btn">
@@ -707,7 +707,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           <div class="eyebrow" style="margin:0">Daily practice</div>
           <h2>Consistent activities</h2>
         </div>
-        <span class="sub" style="font-size:12px" id="practice-next">—</span>
+        <span class="sub" style="font-size:12px" id="practice-next">&nbsp;</span>
       </div>
       <div class="practice-grid" id="daily-practice"></div>
     </section>
@@ -724,7 +724,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <section class="course-block">
           <div class="spread">
             <div class="eyebrow" style="margin:0">Guided path</div>
-            <span class="sub" style="font-size:12px" id="path-progress">—</span>
+            <span class="sub" style="font-size:12px" id="path-progress">&nbsp;</span>
           </div>
           <div class="path-card" id="path-card">
             <div id="path-now"></div>
@@ -753,7 +753,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <section class="view" id="view-streaks">
     <div class="eyebrow">Streaks</div>
     <h1 style="margin-bottom:4px">Momentum and shop</h1>
-    <p class="sub" style="margin-bottom:16px">History, tokens, safety tools and progress controls live here.</p>
+    <p class="sub" style="margin-bottom:16px">Your streak, tokens, shop, letter wall and progress tools.</p>
     <div class="streak-kpis">
       <button class="streak kpi-chip" id="token-chip">💎<span id="baht-num" style="margin-left:4px">0</span><span class="kpi-label">tokens</span></button>
       <button class="streak kpi-chip" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span><span class="kpi-label">days</span></button>
@@ -772,39 +772,39 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
       </div>
       <div class="wall" id="wall"></div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met · outlined = learning · tinted = growing · solid = mastered. Tap any tile to hear it.</div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met · outline = learning · tint = growing · solid = mastered. Tap any tile to hear it.</div>
     </div>
     <details class="review-drawer" style="margin-bottom:16px">
       <summary>
-        <div><b>Progress evidence</b><span class="sub">Practice ladder, skill evidence and clean-run lap</span></div>
+        <div><b>Progress</b><span class="sub">Practice ladder, skill checks and clean-run lap</span></div>
         <span class="sub">open</span>
       </summary>
       <div class="review-drawer-body">
         <div class="review-panel reference">
           <div class="spread">
             <div class="eyebrow" style="margin:0">Your training path</div>
-            <span class="sub" style="font-size:12px" id="path-next">—</span>
+            <span class="sub" style="font-size:12px" id="path-next">&nbsp;</span>
           </div>
           <div id="path-body"></div>
-          <div class="sub" style="font-size:12px;margin-top:10px">Hear &amp; say first, edge cases last. The gold drill is your best next move; locked ones open as you reach the lesson.</div>
+          <div class="sub" style="font-size:12px;margin-top:10px">Start with hearing and speaking. Save edge cases for later. The gold drill is your next best move.</div>
         </div>
         <div class="card">
           <div class="spread">
-            <div class="eyebrow" style="margin:0">Three strands · separate evidence</div>
-            <span class="sub" style="font-size:12px">no false mastery</span>
+            <div class="eyebrow" style="margin:0">Skill checks</div>
+            <span class="sub" style="font-size:12px">kept separate</span>
           </div>
           <div id="skill-evidence"></div>
-          <div class="sub" style="font-size:12px;margin-top:9px">Script checkpoints unlock lessons because they are objectively marked. Listening is objectively checked but does not gate the script course. Speaking is record-and-compare practice only while the app stays free.</div>
+          <div class="sub" style="font-size:12px;margin-top:9px">Script checks unlock lessons because they can be marked. Listening is checked separately. Speaking stays as record-and-compare practice.</div>
         </div>
         <div class="card">
           <div class="eyebrow">Personal best lap</div>
-          <div id="lap-body"><div class="sub">Your "clean run" = cards you got right on the first try, out of all cards seen. Finish a flashcard session to set your first lap, then beat it.</div></div>
+          <div id="lap-body"><div class="sub">Your clean run is the share of cards you got right first time. Finish a flashcard session to set one.</div></div>
         </div>
       </div>
     </details>
     <div class="card" style="margin-bottom:16px">
       <div class="eyebrow">Shop</div>
-      <div class="sub" style="margin-bottom:12px">Spend tokens on useful extras, never progression through the script gates.</div>
+      <div class="sub" style="margin-bottom:12px">Spend tokens on useful extras, not lesson progress.</div>
       <div class="row" style="gap:10px;justify-content:center;flex-wrap:wrap">
         <button class="btn small" id="streak-shop-btn">Open shop</button>
         <button class="btn small ghost" id="earn-board-btn">Earn rules</button>
@@ -825,7 +825,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <section class="view" id="view-phrases">
     <div class="eyebrow">Library</div>
     <h1 style="margin-bottom:4px">Phrases, stories, unlocks</h1>
-    <p class="sub" style="margin-bottom:14px">Tier 1 language lives here as part of the core journey. Tokens unlock enrichment, not progress.</p>
+    <p class="sub" style="margin-bottom:14px">Core phrases and stories live here. Tokens unlock extras, not progress.</p>
     <div class="homecta" style="margin-bottom:14px">
       <button class="card cta-card" id="cta-shop">
         <div><div class="t">Unlock packs</div><div class="d">Spend tokens on extra language, not shortcuts</div></div>
@@ -838,7 +838,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     </div>
     <div class="card" style="margin-bottom:14px">
       <div class="eyebrow">Class reference</div>
-      <div class="sub">Class is the dial that sets the tone. Memorise the two small sets; everything else is low by default.</div>
+      <div class="sub">Class sets the tone. Memorise the two small sets; everything else is low by default.</div>
       <div class="class-set">
         <div class="class-set-label mid">Mid 9</div>
         <div class="class-tiles" id="mid-class-tiles"></div>
@@ -863,28 +863,28 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="phrase-list" id="phrase-list"></div>
     <div class="card constel-card" id="constel-card" style="margin-top:16px">
       <div class="spread">
-        <div class="eyebrow" style="margin:0">Evidence profile</div>
+        <div class="eyebrow" style="margin:0">Skill profile</div>
         <span class="sub" style="font-size:12px" id="constel-status">building…</span>
       </div>
       <div class="constel-wrap">
         <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
         <div class="constel-legend" id="constel-legend"></div>
       </div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary evidence stay separate. This is diagnostic, not a payout.</div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary stay separate. This is a check-in, not a reward.</div>
     </div>
   </section>
 
   <!-- PRACTICE -->
   <section class="view" id="view-practice">
     <div class="eyebrow">Practice</div>
-    <h1 style="margin-bottom:4px">Keep it remembered</h1>
-    <p class="sub" style="margin-bottom:18px">Fast retrieval for letters, reading and covered words. This is the light review room.</p>
+    <h1 style="margin-bottom:4px">Keep it fresh</h1>
+    <p class="sub" style="margin-bottom:18px">Quick practice for letters, reading and words you have already met.</p>
     <div class="review-layout">
       <section class="review-panel core">
         <div class="review-head">
           <div class="eyebrow">Core practice</div>
-          <h2>Keep the script moving</h2>
-          <p class="sub">Short, useful reviews for letters, reading and covered words.</p>
+          <h2>Review the script</h2>
+          <p class="sub">Short practice for letters, reading and covered words.</p>
         </div>
         <div class="review-action-grid">
           <button class="review-action primary" id="cta-flash">
@@ -920,12 +920,12 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <section class="view" id="view-tones">
     <div class="eyebrow">Tone &amp; class</div>
     <h1 style="margin-bottom:4px">Thai Tones</h1>
-    <p class="sub" style="margin-bottom:18px">Train tone, class and listening. Use this when Today recommends tone or class depth.</p>
+    <p class="sub" style="margin-bottom:18px">Tone, class and listening practice. Today will highlight this tab when it is due.</p>
 	    <section class="review-panel tones" style="margin-bottom:16px">
 	      <div class="review-head">
 	        <div class="eyebrow">Tone practice</div>
-	        <h2>Train the tone engine</h2>
-	        <p class="sub" id="tones-next">Daily Practice routes here when tone, class or listening work is due.</p>
+	        <h2>Practise tones and classes</h2>
+	        <p class="sub" id="tones-next">Today sends you here when tone, class or listening work is due.</p>
 	      </div>
 	      <div class="card tone-task-card" id="tone-task-card" style="display:none;margin-bottom:12px"></div>
 	      <div class="tone-button-grid">
@@ -936,31 +936,31 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn ghost" id="echo-btn">Echo chamber</button>
         <button class="btn ghost" id="cta-ghost">Glyph ghost</button>
       </div>
-      <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's synthetic Thai voice — tones are approximate. Treat the drill as ear training, not gospel.</p>
+      <p class="sub" style="margin-top:10px;font-size:12px">Audio uses your device's Thai voice. Tones can be approximate, so treat this as ear practice.</p>
     </section>
     <div class="card" style="margin-bottom:16px">
       <div class="spread">
         <div class="eyebrow" style="margin:0">Tone licence</div>
         <span class="sub" style="font-size:12px" id="lic-state">not yet earned</span>
       </div>
-      <div class="calib-row"><span>Listening <span class="sub" style="font-size:12px">(target 85%)</span></span><span class="pct" id="lic-listen">—</span></div>
-      <div class="calib-row"><span>Rule derivation <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">—</span></div>
+      <div class="calib-row"><span>Listening <span class="sub" style="font-size:12px">(target 85%)</span></span><span class="pct" id="lic-listen">&nbsp;</span></div>
+      <div class="calib-row"><span>Tone rules <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">&nbsp;</span></div>
       <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. First licence pays 30💎; it expires after 30 days.</div>
     </div>
     <div class="card" style="margin-bottom:16px">
-      <div class="eyebrow">The five tones — same sounds, five words</div>
+      <div class="eyebrow">The five tones</div>
       <p class="sub" style="margin-bottom:12px">The classic example: five words that are all "khaa".</p>
       <div class="phrase-list" id="tone-list"></div>
       <div class="section-gap"></div>
       <div class="eyebrow">Real-life set</div>
-      <p class="sub" style="margin-bottom:12px">The "mai" family — you'll hear these daily in Bangkok.</p>
+      <p class="sub" style="margin-bottom:12px">The "mai" family. You'll hear these daily in Bangkok.</p>
       <div class="phrase-list" id="tone-list2"></div>
     </div>
     <div class="card">
       <div class="eyebrow">Transliteration key</div>
       <div class="sub">
         Tone marks on vowels: <b style="color:var(--text);font-weight:500">a</b> mid · <b style="color:var(--text);font-weight:500">à</b> low · <b style="color:var(--text);font-weight:500">â</b> falling · <b style="color:var(--text);font-weight:500">á</b> high · <b style="color:var(--text);font-weight:500">ǎ</b> rising.
-        Doubled vowels (aa, ii, uu) are long. <b style="color:var(--text);font-weight:500">or</b> = the vowel in "for" with no r sound. <b style="color:var(--text);font-weight:500">bp</b>/<b style="color:var(--text);font-weight:500">dt</b> are unaspirated p/t — between English b/p and d/t.
+        Doubled vowels (aa, ii, uu) are long. <b style="color:var(--text);font-weight:500">or</b> = the vowel in "for" with no r sound. <b style="color:var(--text);font-weight:500">bp</b>/<b style="color:var(--text);font-weight:500">dt</b> sit between English b/p and d/t.
       </div>
     </div>
   </section>
@@ -1041,28 +1041,28 @@ const GLYPHS = {
   /* ---- vowels & marks ---- */
   "า":{disp:"อา", type:"v", sound:"aa (long)",  name:"สระอา", nameTr:"sara aa", gloss:"written after the consonant", demo:"กา"},
   "ี":{disp:"อี", type:"v", sound:"ii (long)",  name:"สระอี", nameTr:"sara ii", gloss:"sits on top", demo:"มี"},
-  "ิ":{disp:"อิ", type:"v", sound:"i (short)",  name:"สระอิ", nameTr:"sara i",  gloss:"sits on top — short twin of ี", demo:"กิน"},
+  "ิ":{disp:"อิ", type:"v", sound:"i (short)",  name:"สระอิ", nameTr:"sara i",  gloss:"sits on top - short twin of ี", demo:"กิน"},
   "ู":{disp:"อู", type:"v", sound:"uu (long)",  name:"สระอู", nameTr:"sara uu", gloss:"hangs underneath", demo:"ดู"},
-  "ุ":{disp:"อุ", type:"v", sound:"u (short)",  name:"สระอุ", nameTr:"sara u",  gloss:"hangs underneath — short twin of ู", demo:"ทุก"},
+  "ุ":{disp:"อุ", type:"v", sound:"u (short)",  name:"สระอุ", nameTr:"sara u",  gloss:"hangs underneath - short twin of ู", demo:"ทุก"},
   "เ":{disp:"เอ", type:"v", sound:"ee (long)",  name:"สระเอ", nameTr:"sara ee", gloss:"written BEFORE the consonant", demo:"เท"},
-  "แ":{disp:"แอ", type:"v", sound:"aae (long)", name:"สระแอ", nameTr:"sara aae",gloss:"written BEFORE — wider than เ", demo:"แม่"},
+  "แ":{disp:"แอ", type:"v", sound:"aae (long)", name:"สระแอ", nameTr:"sara aae",gloss:"written BEFORE - wider than เ", demo:"แม่"},
   "ไ":{disp:"ไอ", type:"v", sound:"ai",         name:"สระไอ", nameTr:"sara ai", gloss:"written BEFORE the consonant", demo:"ไป"},
-  "ใ":{disp:"ใอ", type:"v", sound:"ai",         name:"สระใอ ไม้ม้วน", nameTr:"sara ai mái múan", gloss:"same sound as ไ — only 20 words use it", demo:"ใช่"},
+  "ใ":{disp:"ใอ", type:"v", sound:"ai",         name:"สระใอ ไม้ม้วน", nameTr:"sara ai mái múan", gloss:"same sound as ไ - only 20 words use it", demo:"ใช่"},
   "โ":{disp:"โอ", type:"v", sound:"oo (long)",  name:"สระโอ", nameTr:"sara oo", gloss:"written BEFORE the consonant", demo:"โต"},
-  "ะ":{disp:"อะ", type:"v", sound:"a (short)",  name:"สระอะ", nameTr:"sara a",  gloss:"written after — cuts the vowel short", demo:"จะ"},
+  "ะ":{disp:"อะ", type:"v", sound:"a (short)",  name:"สระอะ", nameTr:"sara a",  gloss:"written after - cuts the vowel short", demo:"จะ"},
   "ั":{disp:"อั", type:"v", sound:"a (short)",  name:"ไม้หันอากาศ", nameTr:"mái hǎn-aa-gàat", gloss:"short a when a final consonant follows", demo:"วัน"},
-  "ึ":{disp:"อึ", type:"v", sound:"ue (short)", name:"สระอึ", nameTr:"sara ue", gloss:"on top — say 'u' with a flat smile", demo:"ลึก"},
+  "ึ":{disp:"อึ", type:"v", sound:"ue (short)", name:"สระอึ", nameTr:"sara ue", gloss:"on top - say 'u' with a flat smile", demo:"ลึก"},
   "ื":{disp:"อือ", type:"v", sound:"uue (long)", name:"สระอือ", nameTr:"sara uue", gloss:"on top, usually followed by อ", demo:"มือ"},
   "ำ":{disp:"อำ", type:"v", sound:"am",         name:"สระอำ", nameTr:"sara am", gloss:"after the consonant", demo:"น้ำ"},
   "เ◌า":{disp:"เอา", type:"v", sound:"ao",       name:"สระเอา", nameTr:"sara ao", gloss:"wraps around the consonant", demo:"เขา"},
   "เ◌ีย":{disp:"เอีย", type:"v", sound:"ia",      name:"สระเอีย", nameTr:"sara ia", gloss:"three pieces, one vowel", demo:"เรียน"},
   "เ◌ือ":{disp:"เอือ", type:"v", sound:"uea",     name:"สระเอือ", nameTr:"sara uea", gloss:"three pieces, one vowel", demo:"เพื่อน"},
   "◌ัว":{disp:"อัว", type:"v", sound:"ua",       name:"สระอัว", nameTr:"sara ua", gloss:"two pieces after/above", demo:"ตัว"},
-  "่":{disp:"ก่", type:"m", sound:"mái èek",    name:"ไม้เอก", nameTr:"mái èek", gloss:"tone mark 1 — low tone on mid/high class", demo:"ไม่"},
-  "้":{disp:"ก้", type:"m", sound:"mái thoo",   name:"ไม้โท", nameTr:"mái thoo", gloss:"tone mark 2 — falling on mid class", demo:"บ้าน"},
-  "๊":{disp:"ก๊", type:"m", sound:"mái dtrii",  name:"ไม้ตรี", nameTr:"mái dtrii", gloss:"tone mark 3 — high tone, mid class only", demo:"โต๊ะ"},
-  "๋":{disp:"ก๋", type:"m", sound:"mái jàt-dtà-waa", name:"ไม้จัตวา", nameTr:"mái jàt-dtà-waa", gloss:"tone mark 4 — rising, mid class only", demo:"ก๋วยเตี๋ยว"},
-  "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it — common in loanwords", demo:"ศูนย์"}
+  "่":{disp:"ก่", type:"m", sound:"mái èek",    name:"ไม้เอก", nameTr:"mái èek", gloss:"tone mark 1 - low tone on mid/high class", demo:"ไม่"},
+  "้":{disp:"ก้", type:"m", sound:"mái thoo",   name:"ไม้โท", nameTr:"mái thoo", gloss:"tone mark 2 - falling on mid class", demo:"บ้าน"},
+  "๊":{disp:"ก๊", type:"m", sound:"mái dtrii",  name:"ไม้ตรี", nameTr:"mái dtrii", gloss:"tone mark 3 - high tone, mid class only", demo:"โต๊ะ"},
+  "๋":{disp:"ก๋", type:"m", sound:"mái jàt-dtà-waa", name:"ไม้จัตวา", nameTr:"mái jàt-dtà-waa", gloss:"tone mark 4 - rising, mid class only", demo:"ก๋วยเตี๋ยว"},
+  "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it - common in loanwords", demo:"ศูนย์"}
 };
 
 /* AUDIO CONTRACT (v2.34)
@@ -1120,13 +1120,13 @@ function validateAudioContracts(){
 }
 
 const LESSONS = [
-  /* ---------------- UNIT A — Foundations ---------------- */
+  /* ---------------- UNIT A - Foundations ---------------- */
   {id:"l1", we:{m:"มา → ม (low class) + า aa → live syllable, no mark → MID tone → maa = to come", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
    pre:[
-     {h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant — what <b>class</b> is it? The colour tells you: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone."},
+     {h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant - what <b>class</b> is it? The colour tells you: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone."},
      {h:"No mark still has a tone", body:"Thai does not have a 'no tone' option. A syllable with no tone mark still uses one of the five tones. First rule: the Lesson 1 words are <b>live</b> and <b>unmarked</b>, so they sit on the flat <b>mid</b> tone: มา maa, มี mii, นาน naan, กา gaa. If the quiz asks for tone here, this is the rule it is checking."}
    ],
-   note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants — after, above, below, even before.",
+   note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants - after, above, below, even before.",
    words:[
      {thai:"มา", tr:"maa", en:"to come", vocab:"core"},
      {thai:"มี", tr:"mii", en:"to have", vocab:"core"},
@@ -1134,7 +1134,7 @@ const LESSONS = [
      {thai:"กา", tr:"gaa", en:"crow", vocab:"decode"}
    ]},
   {id:"l2", we:{m:"กิน → ก + ◌ิ + น final → still rings (live) → MID → gin = to eat", twinIdx:2, ask:"tr"}, unit:"A · Foundations", title:"Eat, look, fly", sub:"ด บ อ + short i, long uu", glyphs:["ด","บ","อ","ิ","ู"],
-   pre:[{h:"Endings that ring stay live", body:"A consonant on the end is a <b>final</b>. If it rings on — น (-n), ม (-m) — the syllable is still <b>live</b>: กิน, บิน. Plain, live, no mark, on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial → still the <b>mid</b> tone. Read the class first, every time."}],
+   pre:[{h:"Endings that ring stay live", body:"A consonant on the end is a <b>final</b>. If it rings on - น (-n), ม (-m) - the syllable is still <b>live</b>: กิน, บิน. Plain, live, no mark, on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial → still the <b>mid</b> tone. Read the class first, every time."}],
    note:"A consonant at the END of a syllable is a 'final'. น as a final is just -n: กิน = g + i + n.",
    words:[
      {thai:"กิน", tr:"gin", en:"to eat", vocab:"core"},
@@ -1143,7 +1143,7 @@ const LESSONS = [
      {thai:"บิน", tr:"bin", en:"to fly", vocab:"recognition"}
    ]},
   {id:"l3", we:{m:"ไป → ไ written FIRST, said after → bp + ai → live → MID → bpai = to go", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Street words", sub:"ป ท + vowels written in front", glyphs:["ป","ท","ไ","โ"],
-   pre:[{h:"Dead endings drop the tone", body:"A final <b>stop</b> — ก (-k), ท/ด (-t), บ/ป (-p) — cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. (Vowels ไ โ are written in front but said after: ไป = bp + ai.)"}],
+   pre:[{h:"Dead endings drop the tone", body:"A final <b>stop</b> - ก (-k), ท/ด (-t), บ/ป (-p) - cuts the syllable <b>dead</b>; it can't ring on. A dead syllable on a <span style='color:var(--mid);font-weight:600'>mid</span>-class initial falls to the <b>low</b> tone: บาท bàat. (Vowels ไ โ are written in front but said after: ไป = bp + ai.)"}],
    note:"ไ and โ are written BEFORE the consonant but pronounced after it: ไป = bp + ai. Final ก/ท are unreleased stops: บาท = bàat. มาก is useful now; its falling-tone rule is taught properly in Unit C.",
    words:[
      {thai:"ไป", tr:"bpai", en:"to go", vocab:"core"},
@@ -1152,7 +1152,7 @@ const LESSONS = [
      {thai:"ปี", tr:"bpii", en:"year", vocab:"recognition"}
    ]},
   {id:"l4", we:{m:"ไม่ → ม LOW class + ◌่ mai èek → on low class that's FALLING → mâi = not", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
-   pre:[{h:"Tone marks — the class decides", body:"Two marks sit above the consonant: <b>่</b> (mái èek) and <b>้</b> (mái thoo). The <i>same</i> mark gives a <i>different</i> tone depending on the initial's class — this is exactly why the colours are load-bearing:<br>• <span style='color:var(--mid);font-weight:600'>mid</span> + ้ → <b>falling</b> (บ้าน)<br>• <span style='color:var(--high);font-weight:600'>high</span> + ้ → <b>falling</b> (ห้า)<br>• <span style='color:var(--low);font-weight:600'>low</span> + ่ → <b>falling</b> (ไม่)<br>Read the colour first, then the mark. The full table comes in Unit C."}],
+   pre:[{h:"Tone marks - the class decides", body:"Two marks sit above the consonant: <b>่</b> (mái èek) and <b>้</b> (mái thoo). The <i>same</i> mark gives a <i>different</i> tone depending on the initial's class - this is exactly why the colours are load-bearing:<br>• <span style='color:var(--mid);font-weight:600'>mid</span> + ้ → <b>falling</b> (บ้าน)<br>• <span style='color:var(--high);font-weight:600'>high</span> + ้ → <b>falling</b> (ห้า)<br>• <span style='color:var(--low);font-weight:600'>low</span> + ่ → <b>falling</b> (ไม่)<br>Read the colour first, then the mark. The full table comes in Unit C."}],
    note:"The SAME mark gives different tones depending on consonant class. On low-class ม: ไม่ = falling. On mid-class บ: บ้าน = falling. This is why the colours matter.",
    words:[
      {thai:"ไม่", tr:"mâi", en:"no / not", vocab:"core"},
@@ -1161,8 +1161,8 @@ const LESSONS = [
      {thai:"ห้า", tr:"hâa", en:"five", vocab:"recognition"}
    ]},
   {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ as a vowel", glyphs:["ร","ล","ว","ย"],
-   pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class — and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) — that flip is the Unit-C payoff."}],
-   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as a final makes -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า — properly yours in lesson 12.)",
+   pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class - and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) - that flip is the Unit-C payoff."}],
+   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as a final makes -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า - properly yours in lesson 12.)",
    words:[
      {thai:"รอ", tr:"ror", en:"to wait", vocab:"core"},
      {thai:"เรา", tr:"rao", en:"we / us", vocab:"core"},
@@ -1170,7 +1170,7 @@ const LESSONS = [
      {thai:"ลาว", tr:"laao", en:"Lao / Laos", vocab:"decode"}
    ]},
   {id:"l6", we:{m:"ขอ → ข HIGH class + or → live, no mark → RISING → khǒr = may I have", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"High class, please", sub:"ส ข + asking nicely", glyphs:["ส","ข"],
-   pre:[{h:"High class, plain live = rising", body:"ส ข are <span style='color:var(--high);font-weight:600'>high</span> class. A <span style='color:var(--high);font-weight:600'>high</span>-class initial on a plain live syllable gives a <b>rising</b> tone — the voice dips then lifts, like a question: ขอ khǒr (may I have…), สาม sǎam. Almost every polite request in Thailand opens with a rising ขอ."}],
+   pre:[{h:"High class, plain live = rising", body:"ส ข are <span style='color:var(--high);font-weight:600'>high</span> class. A <span style='color:var(--high);font-weight:600'>high</span>-class initial on a plain live syllable gives a <b>rising</b> tone - the voice dips then lifts, like a question: ขอ khǒr (may I have…), สาม sǎam. Almost every polite request in Thailand opens with a rising ขอ."}],
    note:"High-class consonants with a plain live syllable give a RISING tone: ขอ khǒr (may I have…) starts almost every polite request in Thailand.",
    words:[
      {thai:"ขอ", tr:"khǒr", en:"may I have… (request)", vocab:"core"},
@@ -1178,17 +1178,17 @@ const LESSONS = [
      {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode"},
      {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)", vocab:"core"}
    ]},
-  /* ---------------- UNIT B — The workhorses ---------------- */
-  {id:"l7", we:{m:"งาน → ง ng STARTS the syllable + าน → live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials — class still leads", body:"ง 'ng' can <b>start</b> a syllable — งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take mái-thoo and jump to a <b>high</b> tone — ช้าง cháang. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
-   note:"ง 'ng' can START a syllable in Thai — งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
+  /* ---------------- UNIT B - The workhorses ---------------- */
+  {id:"l7", we:{m:"งาน → ง ng STARTS the syllable + าน → live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take mái-thoo and jump to a <b>high</b> tone - ช้าง cháang. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
+   note:"ง 'ng' can START a syllable in Thai - งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
    words:[
      {thai:"งาน", tr:"ngaan", en:"work", vocab:"core"},
      {thai:"ช้าง", tr:"cháang", en:"elephant", vocab:"decode"},
      {thai:"จาน", tr:"jaan", en:"plate", vocab:"recognition"},
      {thai:"วันนี้", tr:"wan-níi", en:"today", vocab:"core"}
    ]},
-  {id:"l8", we:{m:"ถูก → ถ HIGH class + ูก → ends in a k-stop = dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th — no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก thùuk (it ends in a k-stop). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under mái-èek falls: พ่อ phôr."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
-   note:"ต dt is the unaspirated twin of ท th — no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
+  {id:"l8", we:{m:"ถูก → ถ HIGH class + ูก → ends in a k-stop = dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th - no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก thùuk (it ends in a k-stop). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under mái-èek falls: พ่อ phôr."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
+   note:"ต dt is the unaspirated twin of ท th - no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
    words:[
      {thai:"ตา", tr:"dtaa", en:"eye / maternal grandpa", vocab:"recognition"},
      {thai:"ถูก", tr:"thùuk", en:"cheap / correct", vocab:"core"},
@@ -1196,7 +1196,7 @@ const LESSONS = [
      {thai:"ฟัน", tr:"fan", en:"tooth", vocab:"decode"}
    ]},
   {id:"l9", we:{m:"คน → two consonants, no vowel written → free o → kh-o-n → live → MID → khon = person", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"The hidden vowel", sub:"ค ผ ฝ ซ + invisible o", glyphs:["ค","ผ","ฝ","ซ"],
-   pre:[{h:"Some vowels are invisible", body:"Two consonants with no vowel written between them get a free short <b>o</b>: คน = kh + o + n = khon (person). ผม = ph + o + m = phǒm — which happens to be the male word for <b>I</b>. You'll use it constantly."}],
+   pre:[{h:"Some vowels are invisible", body:"Two consonants with no vowel written between them get a free short <b>o</b>: คน = kh + o + n = khon (person). ผม = ph + o + m = phǒm - which happens to be the male word for <b>I</b>. You'll use it constantly."}],
    note:"ผม phǒm = I (for male speakers) and also 'hair'. Same word.",
    words:[
      {thai:"คน", tr:"khon", en:"person", vocab:"core"},
@@ -1204,7 +1204,7 @@ const LESSONS = [
      {thai:"ฝน", tr:"fǒn", en:"rain", vocab:"recognition"},
      {thai:"ซ้าย", tr:"sáai", en:"left", vocab:"core"}
    ]},
-  {id:"l10", we:{m:"แม่ → แ written first + ม LOW + ◌่ → FALLING → mâae = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", pre:[{h:"Front vowels — tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have — listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with mái-èek → <b>falling</b>, แม่ mâae."}], sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
+  {id:"l10", we:{m:"แม่ → แ written first + ม LOW + ◌่ → FALLING → mâae = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", pre:[{h:"Front vowels - tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have - listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with mái-èek → <b>falling</b>, แม่ mâae."}], sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
    note:"ึ/ื is the vowel English doesn't have: say 'oo' but spread your lips into a flat smile. Listen and copy.",
    words:[
      {thai:"แม่", tr:"mâae", en:"mother", vocab:"core"},
@@ -1212,29 +1212,29 @@ const LESSONS = [
      {thai:"มือ", tr:"muue", en:"hand", vocab:"core"},
      {thai:"ลึก", tr:"lúek", en:"deep", vocab:"decode"}
    ]},
-  {id:"l11", we:{m:"รถ → hidden o + ถ stop → dead SHORT on low class → HIGH → rót = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> — like จะ, ทุก, or a hidden 'o' before a stop. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b>, รถ rót, ทุก thúk. (Mid class stays low: จะ jà.)"}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
-   note:"◌ะ chops a vowel short and makes the syllable DEAD — which changes its tone. จะ jà (will) is low tone for exactly that reason.",
+  {id:"l11", we:{m:"รถ → hidden o + ถ stop → dead SHORT on low class → HIGH → rót = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> - like จะ, ทุก, or a hidden 'o' before a stop. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b>, รถ rót, ทุก thúk. (Mid class stays low: จะ jà.)"}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
+   note:"◌ะ chops a vowel short and makes the syllable DEAD - which changes its tone. จะ jà (will) is low tone for exactly that reason.",
    words:[
      {thai:"จะ", tr:"jà", en:"will (future marker)", vocab:"core"},
      {thai:"รถ", tr:"rót", en:"car / vehicle", vocab:"core"},
      {thai:"ทุก", tr:"thúk", en:"every", vocab:"core"},
      {thai:"กุ้ง", tr:"gûng", en:"shrimp", vocab:"recognition"}
    ]},
-  {id:"l12", we:{m:"เขา → เ◌า wraps the consonant → kh + ao → ข high, live → RISING → khǎo = he/she", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"He, she, water, yes", pre:[{h:"Wrap-around vowels — tone from class", body:"เ◌า wraps the consonant — เขา = kh + ao — and ◌ำ is -am: น้ำ náam. ใ sounds exactly like ไ; only ~20 words use it (ใช่, ใหม่, ใจ…). Tone still comes from class: <span style='color:var(--high);font-weight:600'>high</span> ข + live → <b>rising</b>, เขา khǎo."}], sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
-   note:"ใ (mái múan) sounds identical to ไ. Only 20 words in the whole language use it — ใช่, ใหม่, ใกล้, ใจ are the ones you'll meet constantly.",
+  {id:"l12", we:{m:"เขา → เ◌า wraps the consonant → kh + ao → ข high, live → RISING → khǎo = he/she", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"He, she, water, yes", pre:[{h:"Wrap-around vowels - tone from class", body:"เ◌า wraps the consonant - เขา = kh + ao - and ◌ำ is -am: น้ำ náam. ใ sounds exactly like ไ; only ~20 words use it (ใช่, ใหม่, ใจ…). Tone still comes from class: <span style='color:var(--high);font-weight:600'>high</span> ข + live → <b>rising</b>, เขา khǎo."}], sub:"เ◌า ◌ำ ใ◌", glyphs:["เ◌า","ำ","ใ"],
+   note:"ใ (mái múan) sounds identical to ไ. Only 20 words in the whole language use it - ใช่, ใหม่, ใกล้, ใจ are the ones you'll meet constantly.",
    words:[
      {thai:"เขา", tr:"khǎo", en:"he / she", vocab:"core"},
      {thai:"น้ำ", tr:"náam", en:"water", vocab:"core"},
      {thai:"ทำ", tr:"tham", en:"to do / make", vocab:"core"},
      {thai:"ใช่", tr:"châi", en:"yes / that's right", vocab:"core"}
    ]},
-  /* ---------------- UNIT C — The tone engine ---------------- */
+  /* ---------------- UNIT C - The tone engine ---------------- */
   {id:"l13", we:{m:"มาก → low class + dead with a LONG vowel → FALLING → mâak. But รัก → dead SHORT → different tone…", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
    pre:[
-     {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a sonorant final (n, m, ng, ai, ao…). It can ring on. มา, กิน, งาน — live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ — dead."},
-     {h:"Why you care", body:"<i>Recap — you've read every one of these across Units A–B; here they are in one place.</i><br><br>A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel — still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
+     {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a sonorant final (n, m, ng, ai, ao…). It can ring on. มา, กิน, งาน - live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ - dead."},
+     {h:"Why you care", body:"<i>Recap - you've read every one of these across Units A-B; here they are in one place.</i><br><br>A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel - still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
    ],
-   note:"You now know why มาก is falling and รัก is high — same class, different vowel length. This is the whole trick.",
+   note:"You now know why มาก is falling and รัก is high - same class, different vowel length. This is the whole trick.",
    words:[
      {thai:"จาก", tr:"jàak", en:"from", vocab:"core"},
      {thai:"พูด", tr:"phûut", en:"to speak", vocab:"core"},
@@ -1248,7 +1248,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"งาน", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"ends in -n, rings on"}
    ]},
   {id:"l14", we:{m:"ได้ → ด MID class + ◌้ mai thoo → FALLING → dâi = can", twinIdx:3, ask:"tone"}, unit:"C · The tone engine", title:"Mid class: all five", sub:"Tone marks ๊ ๋ complete the set", glyphs:["๊","๋"],
-   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"<i>You met ่ and ้ on mid class back in lesson 4 — ๊ and ๋ just finish the set.</i><br><br>กา gaa (mid) · ก่า gàa (low) · ก้า gâa (falling) · ก๊า gáa (high) · ก๋า gǎa (rising).<br><br>๊ and ๋ only ever appear on mid-class consonants — mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
+   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"<i>You met ่ and ้ on mid class back in lesson 4 - ๊ and ๋ just finish the set.</i><br><br>กา gaa (mid) · ก่า gàa (low) · ก้า gâa (falling) · ก๊า gáa (high) · ก๋า gǎa (rising).<br><br>๊ and ๋ only ever appear on mid-class consonants - mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
    note:"ได้ dâi after a verb = 'can'. พูดได้ = can speak. The single most useful grammar word in Thai.",
    words:[
      {thai:"เก่า", tr:"gào", en:"old (things)", vocab:"recognition"},
@@ -1262,7 +1262,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"เก่า", text:"Mid class + ไม้เอก gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ก is mid class; ◌่ on mid class gives low"}
    ]},
   {id:"l15", we:{m:"ข้าว → ข HIGH class + ◌้ → FALLING → khâao = rice", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"High class: the grid", sub:"ข้าว ห้อง and friends", glyphs:[],
-   pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) — here's the full row.</i><br><br>Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
+   pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) - here's the full row.</i><br><br>Plain + live → <b>rising</b>: ขอ khǒo<br>Plain + dead → <b>low</b>: ถูก thùuk<br>+ ไม้เอก ่ → <b>low</b>: สี่ sìi<br>+ ไม้โท ้ → <b>falling</b>: ข้าว khâao<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
    note:"ข้าว khâao = rice, but also 'a meal'. กินข้าว literally 'eat rice' = to eat, full stop.",
    words:[
      {thai:"ข้าว", tr:"khâao", en:"rice / a meal", vocab:"core"},
@@ -1276,8 +1276,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"ถูก", text:"High class + dead syllable gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ถ is high class; a dead syllable gives low"}
    ]},
   {id:"l16", we:{m:"น้ำ → น LOW class + ◌้ → the flip: HIGH, not falling → náam = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:[],
-   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 — now the rule itself.</i><br><br>+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
-   note:"พี่ phîi (older) and น้อง nórng (younger) — Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu — it shortens the vowel, no tone change.",
+   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br>+ ไม้เอก ่ → <b>falling</b> (not low): ไม่ mâi<br>+ ไม้โท ้ → <b>high</b> (not falling): น้ำ náam<br>Plain + dead-short → <b>high</b>: เล็ก lék<br>Plain + dead-long → <b>falling</b>: มาก mâak<br><br>This is the flip that breaks most learners. The colours in this app exist for this moment."}],
+   note:"พี่ phîi (older) and น้อง nórng (younger) - Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu - it shortens the vowel, no tone change.",
    words:[
      {thai:"น้อง", tr:"nórng", en:"younger sibling / junior", vocab:"core"},
      {thai:"พี่", tr:"phîi", en:"older sibling / senior", vocab:"core"},
@@ -1290,7 +1290,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"เล็ก", text:"Low class + dead-short gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low dead-short syllables are high"}
    ]},
   {id:"l17", we:{m:"หมา → silent ห makes ม follow HIGH-class rules → live → RISING → mǎa = dog", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"The silent leaders", sub:"ห nam and อ nam", glyphs:[],
-   pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine — these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules — but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
+   pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine - these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow HIGH-class tone rules: หมา mǎa (dog) is rising, ไหน nǎi (where) is rising.<br><br>Silent อ does the same trick with MID-class rules - but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
    note:"อยู่ marks location AND continuous action: อยู่ไหน = where are you? กินอยู่ = (I'm) eating.",
    words:[
      {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition"},
@@ -1303,10 +1303,10 @@ const LESSONS = [
      {kind:"mcq", prompt:"ไหน", text:"Silent ห + live syllable gives which tone?", answer:"Rising", options:["Mid","Low","Falling","High","Rising"], explain:"ห leads น into high-class rules"},
      {kind:"mcq", prompt:"อยู่", text:"Silent อ in the four special words uses which class row?", answer:"Mid class", options:["Mid class","High class","Low class","No class"], explain:"อย่า อยู่ อย่าง อยาก use อ as the silent leader"}
    ]},
-  /* ---------------- UNIT D — Clusters & the long tail ---------------- */
+  /* ---------------- UNIT D - Clusters & the long tail ---------------- */
   {id:"l18", we:{m:"ครับ → คร cluster takes its class from ค (low) + ◌ั บ → dead short → HIGH → khráp", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Decode ครับ", sub:"True clusters: กร ปล คร…", glyphs:[],
-   pre:[{h:"Two consonants, one syllable", body:"Thai allows clusters with ร ล ว as the second letter: ปลา bplaa, ครู khruu, กว้าง gwâang.<br><br>The cluster takes its class from the FIRST letter. ครับ: ค (low) + ร + ◌ั + บ → dead short → high tone: khráp. You've been saying it for weeks — now you can read it."}],
-   note:"ใกล้ glâi (near) vs ไกล glai (far) — same letters, one tone mark apart. A taxi-critical distinction.",
+   pre:[{h:"Two consonants, one syllable", body:"Thai allows clusters with ร ล ว as the second letter: ปลา bplaa, ครู khruu, กว้าง gwâang.<br><br>The cluster takes its class from the FIRST letter. ครับ: ค (low) + ร + ◌ั + บ → dead short → high tone: khráp. You've been saying it for weeks - now you can read it."}],
+   note:"ใกล้ glâi (near) vs ไกล glai (far) - same letters, one tone mark apart. A taxi-critical distinction.",
    words:[
      {thai:"ครับ", tr:"khráp", en:"polite particle (male)", vocab:"core"},
      {thai:"ปลา", tr:"bplaa", en:"fish", vocab:"recognition"},
@@ -1320,7 +1320,7 @@ const LESSONS = [
    ]},
   {id:"l19", we:{m:"จริง → the ร is silent → j + ing → live → MID → jing = really", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Fake clusters", sub:"ทร says s, จร drops the r", glyphs:[],
    pre:[{h:"Some clusters are lies", body:"ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Now you can read the most important food word in the country."}],
-   note:"จริง jing on its own = 'really?!' — say it with a rising intonation and you sound instantly more Thai.",
+   note:"จริง jing on its own = 'really?!' - say it with a rising intonation and you sound instantly more Thai.",
    words:[
      {thai:"จริง", tr:"jing", en:"true / really", vocab:"core"},
      {thai:"ทราบ", tr:"sâap", en:"to know (formal)", vocab:"recognition"},
@@ -1332,8 +1332,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"ทราบ", text:"ทร usually begins with which sound?", answer:"s", options:["s","th","tr","r"], explain:"ทราบ reads sâap"},
      {kind:"mcq", prompt:"อร่อย", text:"What job is อ doing?", answer:"Carrying the opening vowel", options:["Carrying the opening vowel","Making an r sound","Silencing ร","Marking high class"], explain:"อ carries the a- before ร่อย"}
    ]},
-  {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit — same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
-   note:"◌์ (gaa-ran) silences the letter under it — Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
+  {id:"l20", we:{m:"ศูนย์ → ◌์ kills the ย → ศ HIGH + ูน live → RISING → sǔun = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ sǔun (the ย goes silent). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b>, ศูนย์."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
+   note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
    words:[
      {thai:"เธอ", tr:"ter", en:"you / she (informal)", vocab:"recognition"},
      {thai:"ภาษา", tr:"phaa-sǎa", en:"language", vocab:"core"},
@@ -1341,7 +1341,7 @@ const LESSONS = [
      {thai:"ศูนย์", tr:"sǔun", en:"zero / centre", vocab:"recognition"}
    ]},
   {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING → chǎn = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ + recognition-only rarities", glyphs:["ฉ"],
-   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them — and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED — ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 — the Letters boss will check you know them."}],
+   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them - and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED - ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 - the Letters boss will check you know them."}],
    note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
    words:[
      {thai:"ฉัน", tr:"chǎn", en:"I (informal)", vocab:"recognition"},
@@ -1349,7 +1349,7 @@ const LESSONS = [
      {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior", vocab:"recognition"},
      {thai:"สนุก", tr:"sà-nùk", en:"fun", vocab:"core"}
    ]},
-  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ◌่ on LOW class → FALLING → phûean = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels — class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes mái-èek → <b>falling</b>, phûean."}], sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
+  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ◌่ on LOW class → FALLING → phûean = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels - class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes mái-èek → <b>falling</b>, phûean."}], sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
    note:"ๆ (mái yá-mók) repeats the previous word: ช้าๆ = cháa cháa = slowly. เร็วๆ = quickly. You'll see it everywhere.",
    words:[
      {thai:"เรียน", tr:"rian", en:"to study", vocab:"core"},
@@ -1363,7 +1363,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"ๆ", text:"What does ๆ do?", answer:"Repeats the previous word", options:["Repeats the previous word","Makes the tone high","Silences a letter","Marks a question"], explain:"ช้าๆ = slowly"}
    ]},
   {id:"l23", we:{m:"ระวัง → ระ dead short on low → HIGH rá, then วัง live → MID wang → rá-wang = caution", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Thai digits & signs", sub:"๑ ๒ ๓ and reading the street", glyphs:[],
-   pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and — usefully — <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
+   pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and - usefully - <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
    note:"ระวัง rá-wang appears on every wet floor, low doorway, and BTS platform in Bangkok.",
    words:[
      {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful", vocab:"core"},
@@ -1406,7 +1406,7 @@ const TONES2 = [
   {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ไม้", tr:"máai", en:"wood"},
   {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle"}
 ];
-/* minimal pairs/sets — segmentally identical, differ ONLY by tone or vowel length.
+/* minimal pairs/sets - segmentally identical, differ ONLY by tone or vowel length.
    Every tone verified against the grid via idea-engine/tone-validator.js (Rung 1: hear the difference). */
 const TONE_SETS = [
   [{t:"ขาว",tr:"khǎao",en:"white"},{t:"ข้าว",tr:"khâao",en:"rice"},{t:"ข่าว",tr:"khàao",en:"news"}],
@@ -1434,7 +1434,7 @@ const SLANG = [
   {cat:"Slang", thai:"ไม่ไหว", tr:"mâi wǎi", en:"can't even / too much"},
   {cat:"Slang", thai:"งง", tr:"ngong", en:"confused"},
   {cat:"Slang", thai:"ฟิน", tr:"fin", en:"blissed out"},
-  {cat:"Slang", thai:"เดี๋ยว", tr:"dǐao", en:"hang on / in a sec", note:"เดี๋ยวๆ = wait wait! — you'll hear it daily"},
+  {cat:"Slang", thai:"เดี๋ยว", tr:"dǐao", en:"hang on / in a sec", note:"เดี๋ยวๆ = wait wait! - you'll hear it daily"},
   {cat:"Slang", thai:"ของกิน", tr:"khǒrng gin", en:"snacks / things to eat"}
 ];
 const PHRASES = [
@@ -1474,7 +1474,7 @@ const PHRASES = [
   {cat:"Shopping", thai:"แพงไป", tr:"phaaeng bpai", en:"too expensive"},
   {cat:"Shopping", thai:"ลดได้ไหม", tr:"lót dâi mǎi", en:"can you lower the price?"},
   {cat:"Shopping", thai:"เอาอันนี้", tr:"ao an níi", en:"I'll take this"},
-  // ---- Survival · Level 1 (daily–weekly) ----
+  // ---- Survival · Level 1 (daily-weekly) ----
   {cat:"Survival", lvl:1, thai:"ไม่เข้าใจ", tr:"mâi khâo-jai", en:"I don't understand"},
   {cat:"Survival", lvl:1, thai:"พูดช้าๆ ได้ไหม", tr:"phûut cháa cháa dâi mǎi", en:"can you speak slowly?"},
   {cat:"Survival", lvl:1, thai:"พูดภาษาอังกฤษได้ไหม", tr:"phûut phaa-sǎa ang-grìt dâi mǎi", en:"do you speak English?"},
@@ -1525,17 +1525,17 @@ const PHRASES = [
   {cat:"Survival", lvl:3, thai:"ปวดท้อง", tr:"bpùat thórng", en:"stomach ache"},
   {cat:"Survival", lvl:3, thai:"ผมต้องไปหาหมอ", tr:"phǒm dtông bpai hǎa mǒr", en:"I need to see a doctor"},
   {cat:"Survival", lvl:3, thai:"เรียกตำรวจ", tr:"rîak dtam-rùat", en:"call the police"},
-  {cat:"Survival", lvl:3, thai:"ไฟไหม้", tr:"fai mâi", en:"fire!", note:"shout it — you won't have time to be shy"},
+  {cat:"Survival", lvl:3, thai:"ไฟไหม้", tr:"fai mâi", en:"fire!", note:"shout it - you won't have time to be shy"},
   {cat:"Survival", lvl:3, thai:"โรงพยาบาลอยู่ไหน", tr:"rohng phá-yaa-baan yùu nǎi", en:"where's the hospital?"}
 ];
 
 const GACHA = [
  {id:"tuktuk", e:"🛺", thai:"ตุ๊กตุ๊ก", tr:"dtúk-dtúk", en:"tuk-tuk", fact:"named after its two-stroke engine sound"},
  {id:"taxi", e:"🚕", thai:"แท็กซี่", tr:"tháek-sîi", en:"taxi", fact:"the pink ones are individually owned"},
- {id:"mango", e:"🥭", thai:"ข้าวเหนียวมะม่วง", tr:"khâao-nǐao má-mûang", en:"mango sticky rice", fact:"best April–June, peak mango season"},
+ {id:"mango", e:"🥭", thai:"ข้าวเหนียวมะม่วง", tr:"khâao-nǐao má-mûang", en:"mango sticky rice", fact:"best April-June, peak mango season"},
  {id:"soidog", e:"🐕", thai:"หมาจรจัด", tr:"mǎa-jorn-jàt", en:"soi dog", fact:"the true guardians of every soi"},
- {id:"seven", e:"🏪", thai:"เซเว่น", tr:"see-wên", en:"7-Eleven", fact:"over 14,000 branches — more than Japan"},
- {id:"bts", e:"🚝", thai:"รถไฟฟ้า", tr:"rót-fai-fáa", en:"the BTS", fact:"literally 'electric vehicle' — sky train"},
+ {id:"seven", e:"🏪", thai:"เซเว่น", tr:"see-wên", en:"7-Eleven", fact:"over 14,000 branches - more than Japan"},
+ {id:"bts", e:"🚝", thai:"รถไฟฟ้า", tr:"rót-fai-fáa", en:"the BTS", fact:"literally 'electric vehicle' - sky train"},
  {id:"market", e:"🏮", thai:"ตลาดนัด", tr:"dtà-làat-nát", en:"pop-up market", fact:"นัด = appointment: a market by appointment"},
  {id:"moto", e:"🏍️", thai:"มอเตอร์ไซค์", tr:"mor-dtooe-sai", en:"motorbike taxi", fact:"orange vests, soi-end queues, no fear"},
  {id:"somtam", e:"🥗", thai:"ส้มตำ", tr:"sôm-dtam", en:"papaya salad", fact:"ตำ = to pound, hence the mortar thud"},
@@ -1543,15 +1543,15 @@ const GACHA = [
  {id:"wat", e:"🛕", thai:"วัด", tr:"wát", en:"temple", fact:"40,000+ across Thailand"},
  {id:"chang", e:"🐘", thai:"ช้าง", tr:"cháang", en:"elephant", fact:"national animal; the white ones are royal"},
  {id:"durian", e:"🍈", thai:"ทุเรียน", tr:"thú-rian", en:"durian", fact:"banned on the BTS, beloved everywhere else"},
- {id:"cart", e:"🛒", thai:"รถเข็น", tr:"rót-khěn", en:"street cart", fact:"a kitchen on wheels — เข็น = to push"},
+ {id:"cart", e:"🛒", thai:"รถเข็น", tr:"rót-khěn", en:"street cart", fact:"a kitchen on wheels - เข็น = to push"},
  {id:"monk", e:"🧘", thai:"พระ", tr:"phrá", en:"monk", fact:"dawn alms rounds, barefoot, every day"},
  {id:"cat", e:"🐈", thai:"แมวไทย", tr:"maaeo-thai", en:"Siamese cat", fact:"the original Thai export"},
- {id:"gecko", e:"🦎", thai:"ตุ๊กแก", tr:"dtúk-gaae", en:"gecko", fact:"named after its call — listen tonight"},
- {id:"rain", e:"🌧️", thai:"ฝนตก", tr:"fǒn-dtòk", en:"rainstorm", fact:"literally 'rain falls' — daily, May to October"},
+ {id:"gecko", e:"🦎", thai:"ตุ๊กแก", tr:"dtúk-gaae", en:"gecko", fact:"named after its call - listen tonight"},
+ {id:"rain", e:"🌧️", thai:"ฝนตก", tr:"fǒn-dtòk", en:"rainstorm", fact:"literally 'rain falls' - daily, May to October"},
  {id:"boat", e:"🛶", thai:"เรือหางยาว", tr:"ruea-hǎang-yaao", en:"longtail boat", fact:"a car engine on a pole, somehow"},
  {id:"garland", e:"💮", thai:"พวงมาลัย", tr:"phuang-maa-lai", en:"jasmine garland", fact:"also the word for a steering wheel"},
  {id:"gaiyang", e:"🍗", thai:"ไก่ย่าง", tr:"gài-yâang", en:"grilled chicken", fact:"best bought from a smoking roadside drum"},
- {id:"traffic", e:"🚦", thai:"รถติด", tr:"rót-dtìt", en:"traffic jam", fact:"'vehicle stuck' — Bangkok's fourth season"},
+ {id:"traffic", e:"🚦", thai:"รถติด", tr:"rót-dtìt", en:"traffic jam", fact:"'vehicle stuck' - Bangkok's fourth season"},
  {id:"park", e:"🌳", thai:"สวนลุม", tr:"sǔan-lum", en:"Lumphini Park", fact:"home to monitor lizards the size of dogs"},
  {id:"river", e:"🌊", thai:"แม่น้ำ", tr:"mâae-náam", en:"river", fact:"literally 'mother of waters'"}
 ];
@@ -1602,7 +1602,7 @@ const TITLES = [
 const POSTCARDS = [
  {days:7,   gate:'l6',  e:'🌅', cap:[{t:'ดี',tr:'dii',en:'really'},{t:'มาก',tr:'mâak',en:'good!'}]},
  {days:14,  gate:'l12', e:'🚝', cap:[{t:'เรา',tr:'rao',en:'we'},{t:'ทำ',tr:'tham',en:'can'},{t:'ได้',tr:'dâi',en:'do it!'}]},
- {days:30,  gate:'l17', e:'🛕', cap:[{t:'เก่ง',tr:'gèng',en:'brilliant'},{t:'มาก',tr:'mâak',en:'— really!'}]},
+ {days:30,  gate:'l17', e:'🛕', cap:[{t:'เก่ง',tr:'gèng',en:'brilliant'},{t:'มาก',tr:'mâak',en:'- really!'}]},
  {days:60,  gate:'l24', e:'🛺', cap:[{t:'เรา',tr:'rao',en:'we'},{t:'ทำ',tr:'tham',en:'made'},{t:'ได้',tr:'dâi',en:'it'},{t:'ครับ',tr:'khráp',en:'!'}]},
  {days:100, gate:'l24', e:'🏆', cap:[{t:'สุด',tr:'sùt',en:'simply'},{t:'ยอด',tr:'yôrt',en:'the best'},{t:'ครับ',tr:'khráp',en:'!'}]}
 ];
@@ -1610,27 +1610,27 @@ const CONF_SETS = [["บ","ป"],["ผ","ฝ","พ","ฟ"],["ด","ต"],["ก",
 
 /* decodable micro-stories: every character readable at the gate lesson */
 const STORIES = [
- {id:"s1", gate:"l4", title:"กา — The crow", lines:[
+ {id:"s1", gate:"l4", title:"กา - The crow", lines:[
    [{t:"กา",tr:"gaa",en:"crow"},{t:"มา",tr:"maa",en:"comes"},{t:"บ้าน",tr:"bâan",en:"house"}],
    [{t:"กา",tr:"gaa",en:"crow"},{t:"กิน",tr:"gin",en:"eats"},{t:"มาก",tr:"mâak",en:"a lot"}],
    [{t:"กา",tr:"gaa",en:"crow"},{t:"กิน",tr:"gin",en:"eats"},{t:"นาน",tr:"naan",en:"a long time"}],
    [{t:"กา",tr:"gaa",en:"crow"},{t:"บิน",tr:"bin",en:"flies"},{t:"ไป",tr:"bpai",en:"away"}]
  ]},
- {id:"s2", gate:"l6", title:"ยายมีนา — Grandma's field", lines:[
+ {id:"s2", gate:"l6", title:"ยายมีนา - Grandma's field", lines:[
    [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"มี",tr:"mii",en:"has"},{t:"นา",tr:"naa",en:"rice field"}],
    [{t:"นา",tr:"naa",en:"the field"},{t:"มี",tr:"mii",en:"has"},{t:"กา",tr:"gaa",en:"a crow"}],
    [{t:"กา",tr:"gaa",en:"the crow"},{t:"กิน",tr:"gin",en:"eats"},{t:"ข้าว",tr:"khâao",en:"rice"}],
    [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"ไล่",tr:"lâi",en:"chases"},{t:"กา",tr:"gaa",en:"the crow"}],
    [{t:"กา",tr:"gaa",en:"the crow"},{t:"บิน",tr:"bin",en:"flies"},{t:"ไป",tr:"bpai",en:"away"}]
  ]},
- {id:"s3", gate:"l9", title:"ผัก — Vegetables", lines:[
+ {id:"s3", gate:"l9", title:"ผัก - Vegetables", lines:[
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"ชอบ",tr:"chôrp",en:"like"},{t:"ผัก",tr:"phàk",en:"vegetables"}],
    [{t:"ผัก",tr:"phàk",en:"vegetables"},{t:"ดี",tr:"dii",en:"are good"},{t:"มาก",tr:"mâak",en:"very"}],
    [{t:"พ่อ",tr:"phôr",en:"father"},{t:"ไม่",tr:"mâi",en:"doesn't"},{t:"ชอบ",tr:"chôrp",en:"like"},{t:"ผัก",tr:"phàk",en:"vegetables"}],
    [{t:"พ่อ",tr:"phôr",en:"father"},{t:"ชอบ",tr:"chôrp",en:"likes"},{t:"ข้าว",tr:"khâao",en:"rice"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"กิน",tr:"gin",en:"eat"},{t:"นาน",tr:"naan",en:"a long while"}]
  ]},
- {id:"s4", gate:"l13", title:"เขามาบ้านเรา — A guest", lines:[
+ {id:"s4", gate:"l13", title:"เขามาบ้านเรา - A guest", lines:[
    [{t:"เขา",tr:"khǎo",en:"he/she"},{t:"มา",tr:"maa",en:"comes to"},{t:"บ้าน",tr:"bâan",en:"house"},{t:"เรา",tr:"rao",en:"our"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"ทำ",tr:"tham",en:"make"},{t:"ข้าว",tr:"khâao",en:"a meal"}],
    [{t:"เขา",tr:"khǎo",en:"they"},{t:"กิน",tr:"gin",en:"eat"},{t:"มาก",tr:"mâak",en:"a lot"}],
@@ -1638,20 +1638,20 @@ const STORIES = [
    [{t:"เรา",tr:"rao",en:"we"},{t:"ฟัง",tr:"fang",en:"listen"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"ดีใจ",tr:"dii-jai",en:"are happy"}]
  ]},
- {id:"s5", gate:"l17", title:"หมาอยู่ไหน — Where's the dog?", lines:[
+ {id:"s5", gate:"l17", title:"หมาอยู่ไหน - Where's the dog?", lines:[
    [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยู่",tr:"yùu",en:"is"},{t:"ไหน",tr:"nǎi",en:"where?"}],
    [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"ไม่",tr:"mâi",en:"is not"},{t:"อยู่",tr:"yùu",en:"at"},{t:"บ้าน",tr:"bâan",en:"home"}],
    [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยู่",tr:"yùu",en:"is"},{t:"ใน",tr:"nai",en:"in"},{t:"นา",tr:"naa",en:"the field"}],
    [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยาก",tr:"yàak",en:"wants"},{t:"กิน",tr:"gin",en:"to eat"},{t:"ข้าว",tr:"khâao",en:"rice"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"พา",tr:"phaa",en:"bring"},{t:"หมา",tr:"mǎa",en:"the dog"},{t:"มา",tr:"maa",en:"back"},{t:"บ้าน",tr:"bâan",en:"home"}]
  ]},
- {id:"s6", gate:"l24", title:"เรียนภาษาไทย — Learning Thai", lines:[
+ {id:"s6", gate:"l24", title:"เรียนภาษาไทย - Learning Thai", lines:[
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"อยู่",tr:"yùu",en:"is in"},{t:"ห้อง",tr:"hôrng",en:"the room"}],
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"สอน",tr:"sǒrn",en:"teaches"},{t:"ภาษา",tr:"phaa-sǎa",en:"language"},{t:"ไทย",tr:"thai",en:"Thai"}],
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"เรียน",tr:"rian",en:"study"},{t:"ทุก",tr:"thúk",en:"every"},{t:"วัน",tr:"wan",en:"day"}],
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"ใจดี",tr:"jai-dii",en:"is kind"}],
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"อยาก",tr:"yàak",en:"want to"},{t:"พูด",tr:"phûut",en:"speak"},{t:"ได้",tr:"dâi",en:"well"}],
-   [{t:"ไม่",tr:"mâi",en:"not"},{t:"นาน",tr:"naan",en:"long now —"},{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"will speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
+   [{t:"ไม่",tr:"mâi",en:"not"},{t:"นาน",tr:"naan",en:"long now -"},{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"will speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
  ]}
 ];
 
@@ -1715,7 +1715,7 @@ function bumpStreak(){
   if(state.streak.last === y){ state.streak.count++; }
   else if(state.streak.last === y2 && state.freeze > 0){
     state.freeze--; state.streak.count++;
-    toast('Streak freeze used — streak saved');
+    toast('Streak freeze used. Streak saved.');
   }
   else { state.streak.count = 1; }
   state.streak.last = t;
@@ -1761,7 +1761,7 @@ function markCurrentPathPracticeDone(){
   if(!state.pathDone) state.pathDone = {};
   state.pathDone[cur.id] = true;
 }
-/* daily pacing governor (v3.0) — unit = clear review + one main block + one depth block.
+/* daily pacing governor (v3.0) - unit = clear review + one main block + one depth block.
    New lessons are redirected when current material still needs embedding. */
 function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
@@ -1778,11 +1778,11 @@ function newLessonBlockReason(L){
   if(!next || L.id !== next.id) return '';
   const d = ensureDay(), due = srsDue().length;
   if(isEarlyBonusLesson(L)) return '';
-	  if(d.paid) return 'Today is complete — use a depth block if you want more.';
+	  if(d.paid) return 'Today is complete. Use practice if you want more.';
 	  if(due > 0) return 'Warm-up first: clear the current review before new letters.';
-	  if(d.type === 'C') return 'Today is a consolidation day — prove the current material first.';
-	  if((d.m||0) > 0) return 'Main task is complete for today — go deeper now.';
-	  if(d.l > 0) return lessonNum(L.id) >= 4 ? 'Lesson 4 and later stay one per day — use story or drill depth now.' : 'One new lesson is enough for today — go deeper now.';
+	  if(d.type === 'C') return 'Today is a consolidation day. Practise the current material first.';
+	  if((d.m||0) > 0) return 'Main task is complete for today. Do the practice block now.';
+	  if(d.l > 0) return lessonNum(L.id) >= 4 ? 'Lesson 4 and later stay one per day. Use a story or drill now.' : 'One new lesson is enough for today. Practise it now.';
   return '';
 }
 function startDepthBlock(){
@@ -1813,7 +1813,7 @@ const RUNGS = [
   {n:2, title:'Build sentences',   sub:'words + patterns'},
   {n:3, title:'Read what you say', sub:'decode + tone rules'},
   {n:4, title:'Fluency',           sub:'read & listen at speed'},
-  {n:5, title:'Edge cases',        sub:'rare letters — recognition only'},
+  {n:5, title:'Edge cases',        sub:'rare letters, recognition only'},
 ];
 const DRILLS = [
   {id:'hear-thai',   title:'Hear & pick Thai',  rung:1, gate:'l1',  go:()=>el('cta-hear-thai').click()},
@@ -1828,7 +1828,7 @@ const DRILLS = [
   {id:'reading',     title:'Reading room',      rung:4, gate:'l4',  go:()=>el('cta-read').click()},
 ];
 const TONE_DEPTH_IDS = new Set(['tone-listen','twins','echo','sprint','ghost','tone-rule']);
-// edge-case drills (Silent-Letter, rare-letter recognition) register at rung 5 when built — never gating.
+// edge-case drills (Silent-Letter, rare-letter recognition) register at rung 5 when built - never gating.
 function drillUnlocked(d){ return (state.done||[]).includes(d.gate); }
 function nextDrill(){
   const avail = DRILLS.filter(drillUnlocked);
@@ -1870,7 +1870,7 @@ function todayDepthTask(){
     kind:tone ? 'tone' : 'practice',
     tab:tone ? 'tones' : 'practice',
     title:tone ? 'Thai Tones: ' + drill.title : drill.title,
-    detail:tone ? 'Tone, class or listening depth for today.' : 'Current-material depth for today.',
+    detail:tone ? 'Work on tone, class or listening today.' : "Practise today's material.",
     drill,
     go:()=>launchDrill(drill.id)
   };
@@ -1973,7 +1973,7 @@ function showEndDayModal(){
     <h2>Mastery beats breadth.</h2>
     <p class="sub">You have cleared today's required work. Extra study should stay on review, stories or drills, not new material.</p>
     <div class="confirm-actions">
-      <button class="btn ghost" id="end-more">Bonus depth</button>
+      <button class="btn ghost" id="end-more">Bonus practice</button>
       <button class="btn" id="end-close">Done for today</button>
     </div>
   </div>`;
@@ -1985,8 +1985,8 @@ function showEndDayModal(){
 function handleEndDay(){
   const missing = dailyMissingStep();
   if(missing){
-    const msg = missing === 'review' ? 'Review is still due' : missing === 'main' ? 'Main task is still due' : 'Depth block is still due';
-    toast(msg + ' — routing you there');
+    const msg = missing === 'review' ? 'Review is still due' : missing === 'main' ? 'Main task is still due' : 'Practice block is still due';
+    toast(msg + '. Opening it now.');
     routeToDailyStep(missing);
     return;
   }
@@ -2013,7 +2013,7 @@ function renderTodayActions(){
   const main = mainTaskNode();
   if(el('course-day-label')) el('course-day-label').textContent = d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = d.type === 'C' ? "Today's consolidation" : early ? "Today's foundation" : "Today's route";
-  el('today-brief').textContent = early ? 'Shorter foundation day. Clear review, take the main step, then deepen before ending.' : 'Follow the buttons in order. Ending the day routes back to any missing step.';
+  el('today-brief').textContent = early ? 'Shorter foundation day. Clear review, take the main step, then practise before ending.' : 'Use the buttons in order. End today sends you back to anything missing.';
   setTaskButton('today-review-btn', {
     state: reviewDone ? 'Done' : 'Due',
     title: reviewDone ? 'Review clear' : 'Review due cards',
@@ -2029,21 +2029,21 @@ function renderTodayActions(){
   setTaskButton('today-main-btn', {
     state: mainDone ? 'Done' : 'Next',
     title: mainDone ? (d.type === 'C' ? 'Consolidation started' : 'Main task complete') : mainTitle,
-    detail: mainDone ? 'Now embed it with a depth block.' : mainDetail,
+    detail: mainDone ? 'Now practise it before ending the day.' : mainDetail,
     kind: !mainDone && missing === 'main' ? 'primary' : mainDone ? 'done' : due ? 'locked' : ''
   });
   const depthTask = todayDepthTask();
   setTaskButton('today-depth-btn', {
-    state: depthDone ? 'Done' : 'Depth',
-    title: depthDone ? 'Depth complete' : (depthTask ? depthTask.title : 'Depth block'),
-    detail: depthDone ? (d.lite ? 'Optional depth deferred for a lighter day.' : 'Current material has been embedded today.') : (depthTask ? depthTask.detail : 'Story, spelling, tone, class or listening practice.'),
+    state: depthDone ? 'Done' : (!mainDone || due) ? 'Locked' : 'Next',
+    title: depthDone ? 'Practice complete' : (depthTask ? depthTask.title : 'Practice block'),
+    detail: depthDone ? (d.lite ? 'Optional practice moved to tomorrow.' : 'Practice is done for today.') : (depthTask ? depthTask.detail : 'Story, spelling, tone, class or listening practice.'),
     kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || due) ? 'locked' : ''
   });
   const end = el('end-day-btn');
   if(end){
     end.className = 'task-button end' + (!missing ? ' primary' : ' locked');
     el('end-day-state').textContent = missing ? 'Locked' : 'Ready';
-	    el('end-day-detail').textContent = missing ? 'Finish the highlighted task first.' : 'Mastery beats breadth. Close the day here.';
+	    el('end-day-detail').textContent = missing ? 'Finish the highlighted task first.' : 'Mastery beats breadth. Stop here for today.';
 	  }
   syncTabRecommendations();
 	}
@@ -2065,7 +2065,7 @@ function practiceState(p){
   }
 	  if(p.id === 'reading'){
     const active = activeDepthTask();
-    if(active && active.id === 'reading') return {cls:'recommended', text:"Today's depth"};
+    if(active && active.id === 'reading') return {cls:'recommended', text:"Today's practice"};
     if(nextUnreadStory()) return {cls:'', text:'Story ready'};
 	    const readToday = Object.values(state.stories||{}).includes(todayStr());
 	    if(readToday) return {cls:'done', text:'Done today'};
@@ -2073,7 +2073,7 @@ function practiceState(p){
 	  const log = state.drillLog && state.drillLog[p.id];
 	  if(log && log.last === todayStr()) return {cls:'done', text:'Done today'};
   const active = activeDepthTask();
-  if(active && active.id === p.id) return {cls:'recommended', text:"Today's depth"};
+  if(active && active.id === p.id) return {cls:'recommended', text:"Today's practice"};
 	  return {cls:'', text:'Available'};
 	}
 function renderDailyPractice(){
@@ -2127,7 +2127,7 @@ function renderPlan(){
   el('plan-1').textContent = due ? 'Warm-up: clear due cards (' + due + ' left)' : 'Warm-up: review cleared';
   if(isL){
     const nl = nextLesson();
-	    if(d.l > 0 || (d.m||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete — review is clear' : 'Main: task complete — now embed it';
+	    if(d.l > 0 || (d.m||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Practise it now.';
     else if(phase === 'review') el('plan-2').textContent = 'Main: lesson opens after the warm-up';
     else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
     el('plan-3').textContent = bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
@@ -2135,7 +2135,7 @@ function renderPlan(){
     el('plan-2').textContent = 'Main: consolidate current letters, tones and words';
     el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
   }
-  if(d.lite){ el('plan-3').textContent = '✓ Optional drill deferred — lighter day'; }
+  if(d.lite){ el('plan-3').textContent = '✓ Optional drill moved to tomorrow'; }
   const dThis = d;
   el('plan-l3').classList.toggle('done', d.lite || (isL ? dThis.d > 0 : dThis.d > 1));
   // weekly status line
@@ -2145,18 +2145,18 @@ function renderPlan(){
     if(state.week.picks.length) bits.push('phrase pack ' + usedN + '/' + state.week.picks.length + ' used');
   }
   const unread = STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id]);
-  if(unread) bits.push('story ready: ' + unread.title.split(' — ')[1]);
+  if(unread) bits.push('story ready: ' + unread.title.split(' - ')[1]);
   const lic = state.toneLicence;
   if(lic){
     const daysLeft = Math.round((new Date(lic.expires) - Date.now())/86400000);
     if(daysLeft <= 7 && daysLeft >= 0) bits.push('tone licence expires in ' + daysLeft + 'd');
-    else if(daysLeft < 0) bits.push('tone licence expired — re-certify');
+    else if(daysLeft < 0) bits.push('tone licence expired. Re-certify');
   }
   el('plan-week').textContent = bits.length ? 'This week: ' + bits.join(' · ') : 'This week: all caught up';
   el('plan-week').style.display = '';
   renderRunway();
 }
-/* ---- session runway meter (v2.15) — buildless time estimate; semantic colours only ---- */
+/* ---- session runway meter (v2.15) - buildless time estimate; semantic colours only ---- */
 function paceSecs(){ return Math.min(30, Math.max(6, Math.round(state.pace || 12))); }
 function everConsolidated(){ return Object.values(state.days||{}).some(x=>x.type==='C' && (x.r+x.l+x.d)>0); }
 function renderRunway(){
@@ -2188,9 +2188,9 @@ function renderRunway(){
     <div class="runway-bar">${bar}</div>
     <div class="runway-legend">${legend}</div>
     ${showLite ? `<button class="btn small ghost lite-btn" id="lite-btn">Make it a lighter day</button>` : ''}
-    ${d.lite ? `<div class="sub" style="font-size:11px;margin-top:7px">Lighter day on — optional drill deferred to tomorrow. Streak stays safe.</div>` : ''}`;
+    ${d.lite ? `<div class="sub" style="font-size:11px;margin-top:7px">Lighter day on. Optional drill moved to tomorrow. Streak stays safe.</div>` : ''}`;
   const lb = el('lite-btn');
-  if(lb) lb.onclick = ()=>{ d.lite = true; saveState(); toast('Lighter day — drill deferred, streak safe'); renderPlan(); };
+  if(lb) lb.onclick = ()=>{ d.lite = true; saveState(); toast('Lighter day on. Streak stays safe.'); renderPlan(); };
 }
 function questCheck(){
   const d = ensureDay();
@@ -2268,7 +2268,7 @@ function findWord(thai){
   const f = FOOD2.find(x=>x.thai===thai); if(f) return f;
   return null;
 }
-/* MC distractor pools (v2.21) — reading/alphabet cards are objective, never self-graded */
+/* MC distractor pools (v2.21) - reading/alphabet cards are objective, never self-graded */
 function rawWordPool(){
   const out = [];
   LESSONS.forEach(L=>lessonMeaningWords(L).forEach(w=>out.push(w)));
@@ -2283,7 +2283,7 @@ function definitionTextSet(){
   return defs;
 }
 function definitionCueText(text){
-  return /meaning\?|which sign meaning|which one means|what kind of real-world word|what does (this|this word).+mean|listen — what does .+ mean/i.test(String(text||''));
+  return /meaning\?|which sign meaning|which one means|what kind of real-world word|what does (this|this word).+mean|listen\s*[:\-]\s*what does .+ mean/i.test(String(text||''));
 }
 function definitionLeakValue(v, defs){
   if(v == null) return false;
@@ -2292,7 +2292,7 @@ function definitionLeakValue(v, defs){
   if(Object.values(GLYPHS).some(g=>g.sound === s)) return false;
   if(defs.has(s)) return true;
   for(const d of defs){
-    if(String(d).length >= 4 && (s.includes('— ' + d) || s.includes('(' + d + ')') || s.includes(': ' + d))) return true;
+    if(String(d).length >= 4 && (s.includes('- ' + d) || s.includes('· ' + d) || s.includes('(' + d + ')') || s.includes(': ' + d))) return true;
   }
   return false;
 }
@@ -2571,7 +2571,7 @@ function showAudioSetup(reason, sampleText){
   const stepsText = copy.context + '\n\n' + copy.steps.map((s,i)=>(i+1)+'. '+s).join('\n');
   el('audio-copy-steps').onclick = async ()=>{
     try{ await navigator.clipboard.writeText(stepsText); toast('Audio steps copied'); }
-    catch(e){ toast('Copy failed — use the steps shown'); }
+    catch(e){ toast('Copy failed. Use the steps shown.'); }
   };
   el('audio-test-again').onclick = ()=>{
     closeAudioSetup();
@@ -2626,11 +2626,11 @@ function glyphAudioPanel(ch){
     return `<div class="glyph-audio">${primary}${carrierLetter}${carrier}</div><div class="audio-help">In ${esc(g.disp)}, อ is a silent carrier. It lets Thai show the vowel by itself, so the full carrier form should still sound like the vowel.</div>`;
   }
   const name = g && g.type === 'c' ? labelledAudio(glyphAudio(ch, 'name')) : '';
-  const help = g && g.type === 'c' ? `<div class="audio-help">Listen to the beginning of ${esc(sound.value)} for “${esc(g.sound)}”.</div>` : '';
+  const help = g && g.type === 'c' ? `<div class="audio-help">Listen to the beginning of ${esc(sound.value)} for "${esc(g.sound)}".</div>` : '';
   return `<div class="glyph-audio">${primary}${name}</div>${help}`;
 }
 
-/* local microphone comparison (v2.35) — recording never leaves the device.
+/* local microphone comparison (v2.35) - recording never leaves the device.
    This is feedback support, not automatic pronunciation scoring. */
 let activeRecorder = null, activeRecordStream = null, activeRecordTimer = null, activeRecordUrl = null;
 function clearLocalRecording(){
@@ -2650,7 +2650,7 @@ async function toggleLocalRecording(btn, audio){
     return;
   }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !('MediaRecorder' in window)){
-    toast('Recording is not supported here — say it aloud and compare with the model');
+    toast('Recording is not supported here. Say it aloud and compare with the model.');
     return;
   }
   try{
@@ -2674,7 +2674,7 @@ async function toggleLocalRecording(btn, audio){
     activeRecordTimer = setTimeout(()=>{ if(rec.state === 'recording') rec.stop(); }, 5000);
   }catch(e){
     btn.classList.remove('recording');
-    toast('Microphone unavailable — you can still say it aloud and compare');
+    toast('Microphone unavailable. You can still say it aloud and compare.');
   }
 }
 
@@ -2769,11 +2769,11 @@ function renderTones(){
   }
   syncTabRecommendations();
   const li = toneAcc('listen'), ru = toneAcc('rule');
-  el('lic-listen').innerHTML = (li.pct===null?'—':li.pct+'%') + ' <span class="sub" style="font-size:12px">n='+li.n+'</span>';
-  el('lic-rule').innerHTML = (ru.pct===null?'—':ru.pct+'%') + ' <span class="sub" style="font-size:12px">n='+ru.n+'</span>';
+  el('lic-listen').innerHTML = (li.pct===null?'-':li.pct+'%') + ' <span class="sub" style="font-size:12px">n='+li.n+'</span>';
+  el('lic-rule').innerHTML = (ru.pct===null?'-':ru.pct+'%') + ' <span class="sub" style="font-size:12px">n='+ru.n+'</span>';
   const lic = state.toneLicence;
   el('lic-state').textContent = !lic ? 'not yet earned'
-    : (lic.expires >= todayStr() ? '✓ valid until ' + lic.expires : 'expired — re-certify');
+    : (lic.expires >= todayStr() ? '✓ valid until ' + lic.expires : 'expired. Re-certify');
 }
 function renderSkillEvidence(){
   const host = el('skill-evidence'); if(!host) return;
@@ -2929,7 +2929,7 @@ function classReason(cls){
     : 'not mid or high, so low by default';
 }
 function classQuestionText(cls){ return 'Which class? Work from memory, not colour.'; }
-/* decodability gate (v2.22) — a phrase becomes a READING card only once its letters are taught;
+/* decodability gate (v2.22) - a phrase becomes a READING card only once its letters are taught;
    until then it lives ear-first (listening card + the rote phrasebook). */
 function taughtGlyphSet(doneIds){
   const doneSet = new Set(doneIds || state.done || []);
@@ -2941,8 +2941,8 @@ function isLessonWord(thai){ return LESSONS.some(L=>L.words.some(w=>w.thai===tha
 function thaiTextReadable(thai, taught){
   taught = taught || taughtGlyphSet();
   for(const ch of String(thai)){
-    if(ch===' ' || ch==='ๆ' || ch==='ฯ' || ch==='็' || ch==='์' || ch==='.' || ch===',') continue;   // spacing / iteration / vowel-shortener / silencer — decode-helpers, not gating glyphs
-    if(!/[฀-๿]/.test(ch)) continue;     // non-Thai — ignore
+    if(ch===' ' || ch==='ๆ' || ch==='ฯ' || ch==='็' || ch==='์' || ch==='.' || ch===',') continue;   // spacing / iteration / vowel-shortener / silencer - decode-helpers, not gating glyphs
+    if(!/[฀-๿]/.test(ch)) continue;     // non-Thai - ignore
     if(!taught.has(ch)) return false;
   }
   return true;
@@ -2984,34 +2984,34 @@ function coveredSoundThaiItems(){
   const seen = new Set();
   return out.filter(w=>{ if(seen.has(w.thai)) return false; seen.add(w.thai); return true; });
 }
-/* ---- mastery checkpoints (v2.23) — cumulative ≥80% gate every 3 lessons; free unlimited retries.
-   evidence: Bloom mastery learning (fixed 80–90% criterion, vary time + remediate) + the 85% rule. ---- */
+/* ---- mastery checkpoints (v2.23) - cumulative ≥80% gate every 3 lessons; free unlimited retries.
+   evidence: Bloom mastery learning (fixed 80-90% criterion, vary time + remediate) + the 85% rule. ---- */
 const CHK_EVERY = 3;
 function isCheckpointIndex(i){ return i % CHK_EVERY === 2; }       // after lesson indices 2,5,8,… → ~8 across 24
 function checkpointId(i){ return 'chk'+i; }
 function checkpointPassed(i){ return !!(state.checks||{})[checkpointId(i)]; }
 function checkpointReady(i){ return LESSONS.slice(0, i+1).every(L=>state.done.includes(L.id)); }   // its lessons all done
-// a lesson at index `idx` is locked while any earlier ready checkpoint is unpassed — no skipping the gate
+// a lesson at index `idx` is locked while any earlier ready checkpoint is unpassed - no skipping the gate
 function lessonLockedByCheck(idx){
   for(let i=0;i<idx;i++){ if(isCheckpointIndex(i) && checkpointReady(i) && !checkpointPassed(i)) return true; }
   return false;
 }
-/* ---- learning path / guided rail (v2.20/v3.0) — one ordered journey; Today shows the next step ---- */
+/* ---- learning path / guided rail (v2.20/v3.0) - one ordered journey; Today shows the next step ---- */
 const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', review:'🔁', read:'📜', checkpoint:'👑', class:'🗝️'};
-/* class primer (v2.27) — surfaced as an early path node, BEFORE the lessons pile up letters.
+/* class primer (v2.27) - surfaced as an early path node, BEFORE the lessons pile up letters.
    Teaches the cheat-code AND the why: class is the dial that sets a syllable's tone. */
 function showClassPrimer(){
   openOverlay(); setProg(100);
   el('stage').innerHTML = `
     <div class="center"><h2>The three classes</h2></div>
     <div class="notebox" style="font-size:15px;line-height:1.85">
-	      Every Thai consonant has a <b>class</b> — and class is the dial that sets the <b>tone</b> of a syllable. Same letters, different class &rarr; different tone. So class isn't trivia or just a colour: it's <i>how you read tone</i>.<br><br>
-	      You only memorise <b>two small sets</b> — everything else is low class by default:<br><br>
+	      Every Thai consonant has a <b>class</b>. Class sets the <b>tone</b> of a syllable. Same letters, different class &rarr; different tone. This is why the colours matter.<br><br>
+	      You only need <b>two small sets</b>. Everything else is low class by default:<br><br>
 	      <b style="color:var(--mid);font-weight:600">Mid (9):</b>${classTilesHtml(MID_CLASS_SET, 'mid')}
-	      <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง — "the chicken pecks the kid dead on the rim of the jar."</span><br><br>
+	      <span style="font-size:13px">Thai kids chant: ไก่จิกเด็กตายบนปากโอ่ง. "The chicken pecks the kid dead on the rim of the jar."</span><br><br>
 	      <b style="color:var(--high);font-weight:600">High (11):</b>${classTilesHtml(HIGH_CLASS_SET, 'high')}
-	      <span style="font-size:13px">the breathy / hissy ones — kh, ch, th, ph, f, s, h.</span><br><br>
-	      <b style="color:var(--low);font-weight:600">Low: the other 24.</b> Never memorise them — not mid, not high &rarr; it's low.
+	      <span style="font-size:13px">The breathy and hissy ones: kh, ch, th, ph, f, s, h.</span><br><br>
+	      <b style="color:var(--low);font-weight:600">Low: the other 24.</b> If it is not mid or high, it is low.
     </div>
     <div class="sub" style="font-size:12px;margin-top:10px">You'll drill this in Class sprint, and the colours (mid teal · high pink · low marigold) are the same everywhere in the app.</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Got it →</button></div>`;
@@ -3042,14 +3042,14 @@ function buildPath(){
     {type:'class', label:'Meet the three classes', sub:'the dial that sets every tone', id:'p:class', go:()=>showClassPrimer()},
   ];
   LESSONS.forEach((L,i)=>{
-	    N.push({type:'lesson', label:'Lesson — '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
+	    N.push({type:'lesson', label:'Lesson: '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
     const pool = i<3 ? W_START : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
     N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, go:w.go});
     const story = STORIES.find(s=>s.gate===L.id);
-    if(story) N.push({type:'read', label:'Read — '+story.title.split('—').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
+    if(story) N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
     if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'prove ≥80% on everything so far to unlock the next lessons', id:checkpointId(i), checkpoint:i});
   });
-  N.push({type:'checkpoint', label:'Letters boss — class of all 42', sub:'the Phase-1 capstone · prove ≥90% on every consonant', id:'letters42', letters42:true});
+  N.push({type:'checkpoint', label:'Letters boss: class of all 42', sub:'Phase 1 capstone · prove ≥90% on every consonant', id:'letters42', letters42:true});
   return N;
 }
 function nodeDone(n){
@@ -3061,8 +3061,8 @@ function nodeDone(n){
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
 function launchNode(n){
   if(n.lesson){ startLessonFromUser(n.lesson); return; }
-  if(n.letters42){ startLettersBoss(); return; }                          // capstone — only a ≥90% pass marks it
-  if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here — only a ≥80% pass marks it
+  if(n.letters42){ startLettersBoss(); return; }                          // capstone - only a ≥90% pass marks it
+  if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here - only a ≥80% pass marks it
   if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState();
   if(n.go) n.go();
 }
@@ -3071,7 +3071,7 @@ function renderRail(){
   const P = buildPath(), ci = pathIndex(P), total = P.length;
   el('path-progress').textContent = ci >= total ? 'path complete 🎉' : 'step ' + (ci+1) + ' of ' + total;
   if(ci >= total){
-    host.innerHTML = `<div class="path-now"><div class="pn-label">You've reached the end 🎉</div><div class="pn-sub">More steps are on the way — keep your reviews sharp.</div></div>`;
+    host.innerHTML = `<div class="path-now"><div class="pn-label">You've reached the end 🎉</div><div class="pn-sub">More steps are on the way. Keep your reviews sharp.</div></div>`;
     el('path-map').innerHTML = ''; return;
   }
   const cur = P[ci];
@@ -3079,7 +3079,7 @@ function renderRail(){
   const due = srsDue().length;
   const goReview = ()=>{ gotoView('practice'); setTimeout(()=>el('cta-flash').click(), 60); };
   if(cur.type === 'checkpoint'){
-    // mastery gate always takes priority — it's the blocking ≥80% review, not "new content"
+    // mastery gate always takes priority - it's the blocking ≥80% review, not "new content"
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">👑 mastery gate</div>
       <div class="pn-label">${esc(cur.label)}</div>
@@ -3089,9 +3089,9 @@ function renderRail(){
   } else if(phase === 'rest'){
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">🌙 done for today</div>
-      <div class="pn-label">That's your day — เก่งมาก</div>
-      <div class="pn-sub">You've reviewed, learned and deepened enough. Extra work stays on current material.</div>
-      <button class="btn full ghost path-start" id="path-depth">Bonus depth block →</button></div>`;
+      <div class="pn-label">That is enough for today</div>
+      <div class="pn-sub">You reviewed, learned and practised. Extra work should stay on current material.</div>
+      <button class="btn full ghost path-start" id="path-depth">Bonus practice →</button></div>`;
     el('path-depth').onclick = startDepthBlock;
   } else if(phase === 'review'){
     host.innerHTML = `<div class="path-now">
@@ -3105,17 +3105,17 @@ function renderRail(){
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">↗ optional foundation stretch</div>
       <div class="pn-label">${bonus ? 'Continue to Lesson ' + bonus.id.slice(1) : 'Foundation stretch'}</div>
-      <div class="pn-sub">Early lessons are lighter. Stop here, take a drill, or continue before Lesson 4 unlocks richer depth.</div>
+      <div class="pn-sub">Early lessons are lighter. Stop here, take a drill, or continue before Lesson 4 unlocks stories and richer practice.</div>
       <button class="btn full path-start" id="path-start">Start ${bonus ? 'Lesson ' + bonus.id.slice(1) : 'next lesson'} →</button>
-      <button class="btn full ghost path-start" id="path-depth" style="margin-top:8px">Depth drill instead →</button></div>`;
+      <button class="btn full ghost path-start" id="path-depth" style="margin-top:8px">Practice instead →</button></div>`;
     el('path-start').onclick = ()=>{ if(bonus) startLessonFromUser(bonus); };
     el('path-depth').onclick = startDepthBlock;
   } else if(phase === 'deepen'){
     host.innerHTML = `<div class="path-now">
-      <div class="pn-step">🌱 deeper, not further</div>
-      <div class="pn-label">Lock in the current material</div>
+      <div class="pn-step">🌱 practise before moving on</div>
+      <div class="pn-label">Use today's material</div>
       <div class="pn-sub">Use a story, spelling, tone or lookalike drill before adding more letters.</div>
-      <button class="btn full path-start" id="path-depth">Start depth block →</button></div>`;
+      <button class="btn full path-start" id="path-depth">Start practice →</button></div>`;
     el('path-depth').onclick = startDepthBlock;
   } else {
     host.innerHTML = `<div class="path-now">
@@ -3143,7 +3143,7 @@ function renderHome(){
   if(_wb){
     if(_weak.length && (state.wai||'') !== todayStr()){
       _wb.style.display = '';
-      el('wai-sub').textContent = 'Replay your ' + _weak.length + ' trickiest card' + (_weak.length>1?'s':'') + ' — quick warm-up';
+      el('wai-sub').textContent = 'Replay your ' + _weak.length + ' trickiest card' + (_weak.length>1?'s':'') + ' for a quick warm-up';
     } else _wb.style.display = 'none';
   }
   checkPostcard();
@@ -3166,7 +3166,7 @@ el('library-read').addEventListener('click', ()=>{
 });
 el('wai-banner').addEventListener('click', ()=>{
   const weak = weakestCards(3);
-  if(!weak.length){ toast('No cards yet — finish a lesson first'); return; }
+  if(!weak.length){ toast('No cards yet. Finish a lesson first.'); return; }
   state.wai = todayStr(); saveState();
   startFlashcards(weak);
 });
@@ -3177,7 +3177,7 @@ function applyTheme(){
   document.body.classList.toggle('juice', (state.theme || '') === 'full');
 }
 function buy(cost, fn){
-  if((state.baht||0) < cost){ toast('Not enough tokens — need ' + cost + ' 💎'); return false; }
+  if((state.baht||0) < cost){ toast('Not enough tokens. Need ' + cost + ' 💎.'); return false; }
   award(-cost); fn(); saveState(); return true;
 }
 function openShop(){
@@ -3192,24 +3192,24 @@ function renderShop(){
   if(!state.themes) state.themes = [];
   if(!state.titles) state.titles = [];
   el('stage').innerHTML = `
-    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · extra language, never shortcuts</p></div>
+    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · extra language, not shortcuts</p></div>
     <div class="card">
       <div class="eyebrow">Phrase packs</div>
-      ${[['teacher','Teacher pack','Classroom Thai — run your room in Thai',60],
+      ${[['teacher','Teacher pack','Classroom Thai for running your room',60],
          ['food2','Food deep-dive','Tier 2 ordering tweaks: bags, ice, no MSG',60],
-         ['slang','Street slang','Casual useful Thai — funny, not rude',50]].map(([id,t,d,pr])=>`
+         ['slang','Street slang','Casual useful Thai. Funny, not rude.',50]].map(([id,t,d,pr])=>`
         <div class="shop-row">
           <div class="s-meta"><div class="s-t">${t}</div><div class="s-d">${d}</div></div>
           <button class="btn small ${ownsPack(id)?'ghost':''}" data-pack="${id}" data-price="${pr}">${ownsPack(id)?'✓ owned':pr+' 💎'}</button>
         </div>`).join('')}
-      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in the Library. Packs add useful extras once the work has earned them.</div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in the Library. Packs add useful extras.</div>
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Quiet extras</div>
       ${THEMES.map(t=>{
         const owned = ownsTheme(t.id), active = (state.theme||'night')===t.id;
         return `<div class="shop-row">
-          <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'the original':'class colours stay put — that part is pedagogy'}</div></div>
+          <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'the original':'class colours stay the same'}</div></div>
           <button class="btn small ${owned?'ghost':''}" data-theme-id="${t.id}" data-price="${t.price}">${active?'● active':owned?'use':t.price+' 💎'}</button>
         </div>`;
       }).join('')}
@@ -3231,7 +3231,7 @@ function renderShop(){
       const id = b.dataset.pack;
       if(ownsPack(id)){ toast('Already owned'); return; }
       if(buy(+b.dataset.price, ()=>state.packs.push(id))){
-        toast('Pack unlocked — find it in Library'); renderShop(); renderCats(); renderPhrases();
+        toast('Pack unlocked. Find it in Library.'); renderShop(); renderCats(); renderPhrases();
       }
     });
   });
@@ -3272,12 +3272,12 @@ function renderAlbum(){
     b.addEventListener('click', ()=>{
       const g = GACHA.find(x=>x.id===b.dataset.cap);
       speak(g.thai);
-      toast(g.thai + ' · ' + g.tr + ' — ' + g.en);
+      toast(g.thai + ' · ' + g.tr + ' · ' + g.en);
     });
   });
 }
 function doPull(){
-  if((state.baht||0) < 10){ toast('Not enough tokens — need 10 💎'); return; }
+  if((state.baht||0) < 10){ toast('Not enough tokens. Need 10 💎.'); return; }
   award(-10);
   const g = GACHA[Math.floor(Math.random()*GACHA.length)];
   const dupe = !!state.gacha[g.id];
@@ -3288,9 +3288,9 @@ function doPull(){
     <div class="pull-stage">
       <div class="pull-e">${g.e}</div>
       <div class="name-thai" style="font-size:22px">${g.thai}</div>
-      <div class="translit" style="color:var(--blue)">${g.tr} — ${g.en}</div>
+      <div class="translit" style="color:var(--blue)">${g.tr} · ${g.en}</div>
       <div class="sub" style="font-size:13px;margin-top:4px">${g.fact}</div>
-      ${dupe?'<div class="sub" style="font-size:12px;color:var(--low);margin-top:4px">duplicate — 3 💎 refunded</div>':''}
+      ${dupe?'<div class="sub" style="font-size:12px;color:var(--low);margin-top:4px">Duplicate. 3 💎 refunded.</div>':''}
     </div>`;
   speak(g.thai);
   renderAlbum();
@@ -3328,7 +3328,7 @@ function showEmber(){
   const pop = document.createElement('div'); pop.className = 'ember-pop';
   pop.innerHTML = `<div class="big">🔥 ${n}-day streak</div>`
     + `<div class="esub">${f} freeze${f===1?'':'s'} in reserve</div>`
-    + `<div class="thai">${t.thai}</div><div class="etr">${t.tr} — ${t.en}</div>`;
+    + `<div class="thai">${t.thai}</div><div class="etr">${t.tr} · ${t.en}</div>`;
   document.body.append(back, pop);
   const close = ()=>{ pop.remove(); back.remove(); };
   back.addEventListener('click', close);
@@ -3361,9 +3361,9 @@ function showPostcard(pc){
     sp.addEventListener('click', ()=>{
       const w = pc.cap[+sp.dataset.i];
       speak(w.t); sp.classList.add('read');
-      wrap.querySelector('#pc-reveal').textContent = w.t + ' · ' + w.tr + ' — ' + w.en;
+      wrap.querySelector('#pc-reveal').textContent = w.t + ' · ' + w.tr + ' · ' + w.en;
       tapped.add(+sp.dataset.i);
-      if(tapped.size === pc.cap.length){ closeBtn.disabled = false; closeBtn.textContent = 'เก่งมาก — continue'; }
+      if(tapped.size === pc.cap.length){ closeBtn.disabled = false; closeBtn.textContent = 'Continue'; }
     });
   });
   closeBtn.addEventListener('click', ()=>{
@@ -3397,7 +3397,7 @@ function renderEarnBoard(){
     <div class="card">
       <div class="eyebrow">Every day</div>
       ${row("Complete the daily plan <span class='sub' style='font-size:12px'>(clear due cards + lesson or drill)</span>", "+10 💎 each day", wkPaid + "/7 this week")}
-      ${row("Spell it — first-try words", "+2 💎 per word", "")}
+      ${row("Spell it: first-try words", "+2 💎 per word", "")}
       ${row("Class sprint at 85%+", "+3 💎", "")}
     </div>
     <div class="card section-gap">
@@ -3419,7 +3419,7 @@ function renderEarnBoard(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
 
-/* test-notes pad (v2.26) — jot issues while testing; persists in state (so Export captures them) */
+/* test-notes pad (v2.26) - jot issues while testing; persists in state (so Export captures them) */
 function noteDate(ms){
   const d = new Date(ms), p = n => String(n).padStart(2,'0');
   const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
@@ -3432,7 +3432,7 @@ function renderNotes(){
         <div class="note-body"><div class="note-when">${noteDate(n.at)}</div><div class="note-text">${esc(n.text)}</div></div>
         <button class="note-del" data-del="${i}" aria-label="Delete">✕</button>
       </div>`).reverse().join('')
-    : '<div class="sub" style="text-align:center;padding:16px">No notes yet — jot anything odd, confusing, or broken as you test.</div>';
+    : '<div class="sub" style="text-align:center;padding:16px">No notes yet. Jot anything odd, confusing, or broken as you test.</div>';
   el('stage').innerHTML = `
     <div class="center"><h2>📝 Test notes</h2><p class="sub">Quick jots while you test. They save here and ride along in your Export.</p></div>
     <textarea class="notes-ta" id="note-in" rows="3" placeholder="What happened? (a bug, a confusing bit, an idea…)"></textarea>
@@ -3480,14 +3480,14 @@ el('import-btn').addEventListener('click', ()=>{
     saveState();
     renderHome(); renderLearn(); renderReviewTab(); renderCats(); renderPhrases(); renderPack();
     toast('Progress imported');
-  }catch(e){ toast('Import failed — not valid progress data'); }
+  }catch(e){ toast('Import failed. That is not valid progress data.'); }
 });
 
 el('buy-freeze').addEventListener('click', ()=>{
-  if((state.baht||0) < 30){ toast('Not enough tokens — need 30 💎'); return; }
+  if((state.baht||0) < 30){ toast('Not enough tokens. Need 30 💎.'); return; }
   award(-30); state.freeze = (state.freeze||0) + 1; saveState();
   el('freeze-n').textContent = state.freeze;
-  toast('Streak freeze bought — auto-used if you miss a day');
+  toast('Streak freeze bought. It will be used if you miss a day.');
 });
 
 /* ----- letter wall ----- */
@@ -3498,7 +3498,7 @@ function masteryOf(id){
   if(c.iv >= 1) return 'growing';
   return 'learning';
 }
-/* ---- skill constellation (v2.14) — cross-skill cohesion; accent palette only, class colours stay reserved ---- */
+/* ---- skill constellation (v2.14) - cross-skill cohesion; accent palette only, class colours stay reserved ---- */
 const CONSTEL_TIER = {locked:0, learning:0.34, growing:0.67, mastered:1};
 function constelScores(){
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
@@ -3544,7 +3544,7 @@ function renderConstellation(){
   }
   saveState();
 }
-/* ---- personal best lap (v2.14) — session clean-run % vs your best ---- */
+/* ---- personal best lap (v2.14) - session clean-run % vs your best ---- */
 function renderLap(){
   const host = el('lap-body'); if(!host) return;
   const lap = state.lap;
@@ -3575,7 +3575,7 @@ function renderProgressWall(){
     t.addEventListener('click', ()=>{
       const L = LESSONS.find(x=>x.id===t.dataset.lesson);
       if(state.done.includes(L.id)) startLesson(L);
-      else toast('Lesson ' + L.id.slice(1) + ' · ' + L.title + ' — not unlocked yet');
+      else toast('Lesson ' + L.id.slice(1) + ' · ' + L.title + ' is not unlocked yet.');
     });
   });
 }
@@ -3627,9 +3627,9 @@ async function resetProgressNow(){
   };
   state = fresh;
   const raw = JSON.stringify(fresh);
-  try{ localStorage.setItem(SKEY, raw); }catch(e){}               // PWA / browser — the store the old handler forgot (so it actually persists on iPhone)
+  try{ localStorage.setItem(SKEY, raw); }catch(e){}               // PWA / browser - the store the old handler forgot (so it actually persists on iPhone)
   try{ if(window.storage) await window.storage.set(SKEY, raw); }catch(e){}   // Claude-artifact fallback
-  toast('Progress reset — starting fresh…');
+  toast('Progress reset. Starting fresh...');
   setTimeout(()=>location.reload(), 450);                          // reload → init() rebuilds cleanly, no half-wiped state
 }
 function showResetFlow(){
@@ -3701,7 +3701,7 @@ function renderLearn(){
     if(!locked) card.addEventListener('click', ()=>startLessonFromUser(L));
     list.appendChild(card);
     prevDone = done;
-    // mastery checkpoint after every 3rd lesson — cumulative ≥80%, free unlimited retries (v2.23)
+    // mastery checkpoint after every 3rd lesson - cumulative ≥80%, free unlimited retries (v2.23)
     if(isCheckpointIndex(i)){
       const ready = checkpointReady(i), passed = checkpointPassed(i);
       const ck = document.createElement('button');
@@ -3711,7 +3711,7 @@ function renderLearn(){
       else if(ready) stateTxt = 'prove it →';
       ck.innerHTML = `
         <div class="glyphs">👑</div>
-        <div class="meta"><div class="t">Mastery check · lessons 1–${i+1}</div><div class="d">~12 Qs · type the sounds from memory + decode · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
+        <div class="meta"><div class="t">Mastery check · lessons 1-${i+1}</div><div class="d">~12 Qs · type the sounds from memory + decode · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
         <div class="state">${stateTxt}</div>`;
       if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
       list.appendChild(ck);
@@ -3725,21 +3725,21 @@ function renderLearn(){
         bc.innerHTML = `
           <div class="glyphs">🎧</div>
           <div class="meta"><div class="t">Foundations baseline · listening</div>
-          <div class="d">${baseReady ? (ear ? `last result ${ear.pct}% · ${ear.date} · diagnostic only` : '10 familiar words · objective recognition · does not gate lessons') : 'pass the lessons 1–6 script checkpoint first'}</div></div>
+          <div class="d">${baseReady ? (ear ? `last result ${ear.pct}% · ${ear.date} · diagnostic only` : '10 familiar words · objective recognition · does not gate lessons') : 'pass the lessons 1-6 script checkpoint first'}</div></div>
           <div class="state">${baseReady ? (ear?'recheck →':'check →') : '🔒'}</div>`;
         if(baseReady) bc.addEventListener('click', startFoundationEar);
         list.appendChild(bc);
       }
     }
   });
-  // Letters boss — Phase-1 capstone (class of all 42), unlocks once every lesson is done (v2.32)
+  // Letters boss - Phase-1 capstone (class of all 42), unlocks once every lesson is done (v2.32)
   const _allDone = LESSONS.every(L=>state.done.includes(L.id));
   const _lbPassed = !!(state.checks||{}).letters42;
   const lb = document.createElement('button');
   lb.className = 'card lesson-card boss-card' + (!_allDone ? ' locked' : '');
   lb.innerHTML = `
     <div class="glyphs">🏆</div>
-    <div class="meta"><div class="t">Letters boss · class of all 42</div><div class="d">${_allDone ? (_lbPassed ? 'passed ✓ — the whole alphabet is yours' : '≥90% on every consonant · +30💎 + a title') : 'finish all 24 lessons to unlock'}</div></div>
+    <div class="meta"><div class="t">Letters boss · class of all 42</div><div class="d">${_allDone ? (_lbPassed ? 'passed ✓ · the whole alphabet is yours' : '≥90% on every consonant · +30💎 + a title') : 'finish all 24 lessons to unlock'}</div></div>
     <div class="state">${_allDone ? (_lbPassed ? '👑 retake' : 'prove it →') : '🔒'}</div>`;
   if(_allDone) lb.addEventListener('click', startLettersBoss);
   list.appendChild(lb);
@@ -3773,7 +3773,7 @@ function startBoss(u){
   saveState();
   startGenericQuiz(buildBossQuiz(u), 'Boss · Unit ' + u, {timed:15, boss:u});
 }
-/* mastery checkpoint (v2.23) — cumulative across all lessons met up to index `upTo`; ≥80% to pass */
+/* mastery checkpoint (v2.23) - cumulative across all lessons met up to index `upTo`; ≥80% to pass */
 function buildCheckpointQuiz(upTo){
   const Ls = LESSONS.slice(0, upTo+1);
   const upToLessonNum = lessonNum((LESSONS[upTo]||{}).id);
@@ -3791,11 +3791,11 @@ function buildCheckpointQuiz(upTo){
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    // pure letters (v2.27): no word-meaning recall — keep the read-the-tone check (the letter→class→tone payoff)
+    // pure letters (v2.27): no word-meaning recall - keep the read-the-tone check (the letter→class→tone payoff)
     const tq = toneQuestion(w, upToLessonNum);
     if(tq) qs.push(tq);
   });
-  // gate certifies READING the script: sound-recall (type it) is the backbone — up to half the 12 — with class + tone MCQ filling out
+  // gate certifies READING the script: sound-recall (type it) is the backbone - up to half the 12 - with class + tone MCQ filling out
   const types = qs.filter(q=>q.kind==='type'), others = qs.filter(q=>q.kind!=='type');
   const nType = Math.min(types.length, 6);
   const nOther = Math.min(others.length, 12 - nType);
@@ -3808,14 +3808,14 @@ function buildFoundationEarQuiz(){
   const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
   return sample(pool, Math.min(10,pool.length)).map(w=>{
     const wrong = wordThaiDistractors(w, pool, 3);
-    return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
+    return {kind:'mcq', text:'Listen: which Thai word did you hear?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
 }
 function startFoundationEar(){
   startGenericQuiz(buildFoundationEarQuiz(), 'Foundations ear baseline', {foundationEar:true});
 }
-/* Letters boss (v2.32) — the Phase-1 capstone: prove the CLASS of all 42 consonants.
+/* Letters boss (v2.32) - the Phase-1 capstone: prove the CLASS of all 42 consonants.
    Class is the dial that sets tone, so this certifies the whole reading machine.
    Untimed (fairness > speed), ≥90% to pass, free unlimited retries (Bloom). */
 function buildLettersBossQuiz(){
@@ -3859,7 +3859,7 @@ function renderLessonSpeak(p){
   stage.innerHTML = `
     <div class="center"><div class="eyebrow">Read &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Read it aloud</h2></div>
     <div class="speak-cue">${esc(w.thai)}</div>
-    <div class="sub" style="text-align:center">Use the script, not the English meaning. Then reveal the model and compare — no self-awarded score.</div>
+    <div class="sub" style="text-align:center">Use the script, not the English meaning. Then reveal the model and compare. No score needed.</div>
     <div id="speak-reveal" class="stage-actions">
       <button class="btn full" id="speak-show">I read it · reveal the model →</button>
       <button class="btn full ghost" id="speak-skip" style="margin-top:8px">Skip this one</button>
@@ -4025,7 +4025,7 @@ function finishLesson(){
     state.done.push(L.id);
     L.glyphs.forEach(g=>srsAdd('g:'+g));
     // pure letters (v2.27): the review deck is letters-only. Words live IN the lesson as decode
-    // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards —
+    // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards -
     // that was "heavy on definitions of words that don't mean much alone." Letter → class → tone is the spine.
   }
   const d = ensureDay();
@@ -4037,7 +4037,7 @@ function finishLesson(){
   bumpStreak(); saveState(); questCheck();
   el('stage').innerHTML = `
     <div class="result-big">${p.correct} / ${p.quiz.length}</div>
-    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete — the letters are in your review deck.':'Nice refresher.'}</div>
+    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete. The letters are in your review deck.':'Nice refresher.'}</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
@@ -4111,7 +4111,7 @@ function buildLessonQuiz(L){
     const spot = spotDifferenceQuestion(ch, L); if(spot) spotQs.push(spot);
   });
   cons.forEach(ch=>{
-    // SPINE (v2.28): every consonant is drilled on CLASS from neutral glyphs — class is the dial that sets tone
+    // SPINE (v2.28): every consonant is drilled on CLASS from neutral glyphs - class is the dial that sets tone
     classQs.push(classFromMemoryQuestion(ch));
     const pick = classPickQuestion(ch, L); if(pick) classPickQs.push(pick);
   });
@@ -4125,7 +4125,7 @@ function buildLessonQuiz(L){
   const core = lessonCoreWords(L);
   const listenQs = core.slice(0,2).map(w=>{
     const wrong = wordThaiDistractors(w, L.words, 3);
-    return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
+    return {kind:'mcq', text:'Listen: which Thai word did you hear?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
@@ -4308,7 +4308,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
     const fb = el('q-fb');
-    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (q.explain ? ' — ' + q.explain : '');
+    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (q.explain ? '. ' + q.explain : '');
     fb.className = 'q-feedback ' + (ok?'ok':'no');
     setTimeout(()=>onDone(ok), ok ? 700 : 1700);
   }
@@ -4326,7 +4326,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     b.addEventListener('click', ()=>settle(b.textContent === String(q.answer), b, false));
   });
 }
-/* typed-recall question (v2.25) — READING: see the letter, TYPE its sound (g/kh/bp/dt/ng…).
+/* typed-recall question (v2.25) - READING: see the letter, TYPE its sound (g/kh/bp/dt/ng…).
    Recall not recognition; strict normalised match (the aspiration/unaspiration distinctions are load-bearing). onDone(ok) like renderQuizQ. */
 function renderTypeQ(q, onDone, counterLabel){
   el('stage').innerHTML = `
@@ -4381,7 +4381,7 @@ renderToneExampleLists();
 el('class-sprint-btn').addEventListener('click', ()=>{
   const met = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && state.srs['g:'+k]);
   const pool = met;
-  if(pool.length < 2){ toast('Finish Lesson 1 first — Class sprint uses learned letters only'); return; }
+  if(pool.length < 2){ toast('Finish Lesson 1 first. Class sprint uses learned letters only.'); return; }
   const qs = sample(pool, Math.min(15, pool.length)).map(ch=>({
     kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
     options:shuffle(Object.values(CLS_LABEL)),
@@ -4392,24 +4392,24 @@ el('class-sprint-btn').addEventListener('click', ()=>{
 
 el('tone-drill-btn').addEventListener('click', ()=>{
   const pool = readableToneItems();
-  if(pool.length < 4){ toast('Tone listening opens once enough tone examples are readable — finish Lesson 4'); return; }
+  if(pool.length < 4){ toast('Tone listening opens once enough tone examples are readable. Finish Lesson 4.'); return; }
   const qs = sample(pool, 8).map(t=>({
-    kind:'mcq', text:'Listen — which tone is it?', say:t.thai, autoplay:true,
+    kind:'mcq', text:'Listen: which tone is it?', say:t.thai, autoplay:true,
     answer:t.name, options: shuffle(TONE_NAMES.slice()),
     explain: t.thai + ' ' + t.tr
   }));
   startGenericQuiz(qs, 'Tone drill', {toneLog:'listen'});
 });
 
-/* sound twins (v2.18) — Rung 1: hear the tone/length difference between segmentally identical words */
+/* sound twins (v2.18) - Rung 1: hear the tone/length difference between segmentally identical words */
 el('twins-btn').addEventListener('click', ()=>{
   const pool = readableTwinSets();
-  if(pool.length < 2){ toast('Sound Twins opens once enough pairs use letters you know — finish Lesson 4'); return; }
+  if(pool.length < 2){ toast('Sound Twins opens once enough pairs use letters you know. Finish Lesson 4.'); return; }
   const sets = sample(pool, Math.min(10, pool.length));
   const qs = sets.map(set=>{
     const tgt = sample(set, 1)[0];
     return {
-      kind:'mcq', text:'Listen — which Thai word did you hear?', say:tgt.t, autoplay:true,
+      kind:'mcq', text:'Listen: which Thai word did you hear?', say:tgt.t, autoplay:true,
       options: shuffle(set.map(m=>m.t)), thaiOpts:true, answer:tgt.t,
       explain: set.map(m=>`${m.t} ${m.tr}`).join('  ·  ')
     };
@@ -4417,10 +4417,10 @@ el('twins-btn').addEventListener('click', ()=>{
   startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
 });
 
-/* echo chamber — shadow, record and compare locally; no honesty-based pronunciation score */
+/* echo chamber - shadow, record and compare locally; no honesty-based pronunciation score */
 el('echo-btn').addEventListener('click', ()=>{
   const pool = readableEchoItems();
-  if(pool.length < 4){ toast('Finish a lesson first — Echo uses covered words only'); return; }
+  if(pool.length < 4){ toast('Finish a lesson first. Echo uses covered words only.'); return; }
   player = {type:'echo', rounds:sample(pool, 8), i:0};
   openOverlay(); renderEcho();
 });
@@ -4434,7 +4434,7 @@ function renderEcho(){
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
       <div class="result-sub">${p.rounds.length} words shadowed and compared · +2💎</div>
-      <div class="result-sub" style="font-size:12px">Tones from a synthetic voice are approximate — trust your ear over the model.</div>
+      <div class="result-sub" style="font-size:12px">Tones from a synthetic voice are approximate. Trust your ear over the model.</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
     return;
@@ -4520,7 +4520,7 @@ function claimPhrase(t){
 function renderPack(){
   const w = ensureWeek();
   if(!w.picks.length){
-    el('pack-card').innerHTML = '<div class="sub">Every phrase is already in your deck — เก่งมาก. New packs resume in Phase 2.</div>';
+    el('pack-card').innerHTML = '<div class="sub">Every phrase is already in your deck. เก่งมาก. New packs resume in Phase 2.</div>';
     return;
   }
   el('pack-list').innerHTML = w.picks.map(t=>{
@@ -4563,7 +4563,7 @@ function renderPhrases(){
         <button class="btn" id="buy-slang">Unlock for 50💎 (you have ${state.baht||0}💎)</button>
       </div>`;
     el('buy-slang').addEventListener('click', ()=>{
-      if((state.baht||0) < 50){ toast('Not enough tokens — win some boss runs'); return; }
+      if((state.baht||0) < 50){ toast('Not enough tokens. Earn more first.'); return; }
       award(-50); state.packs.push('slang'); saveState();
       toast('Slang pack unlocked');
       renderCats(); renderPhrases(); renderPack();
@@ -4587,7 +4587,7 @@ function renderPhrases(){
   };
   const src = catSrc(activeCat).filter(p=>p.cat===activeCat);
   if(activeCat === 'Survival'){
-    const LVL = {1:'Level 1 · daily–weekly', 2:'Level 2 · now & then', 3:'Level 3 · when you need it'};
+    const LVL = {1:'Level 1 · daily-weekly', 2:'Level 2 · now & then', 3:'Level 3 · when you need it'};
     el('phrase-list').innerHTML = [1,2,3].map(lv=>{
       const items = src.filter(p=>(p.lvl||1)===lv);
       if(!items.length) return '';
@@ -4619,11 +4619,11 @@ function renderPhrases(){
   });
 }
 /* =====================================================
-   REVIEW TAB — flashcards + mixed quiz
+   REVIEW TAB - flashcards + mixed quiz
 ===================================================== */
 function renderReviewTab(){
   const due = srsDue().length;
-  el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due — add phrases or finish lessons';
+  el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due. Add phrases or finish lessons.';
   renderLap();
   renderPath();
   renderTones();        // tone licence panel now lives in the Review tab (folded in v2.27)
@@ -4643,7 +4643,7 @@ el('cta-quiz').addEventListener('click', ()=>{
 });
 el('cta-hear-thai').addEventListener('click', ()=>{
   const qs = buildHearPickThaiQuiz();
-  if(qs.length < 4){ toast('Finish Lesson 1 first — this uses covered words only'); return; }
+  if(qs.length < 4){ toast('Finish Lesson 1 first. This uses covered words only.'); return; }
   startGenericQuiz(qs, 'Hear & pick Thai');
 });
 
@@ -4656,7 +4656,7 @@ function renderFlash(){
   if(p.i >= p.queue.length){
     setProg(100);
     const d = ensureDay(); d.r += p.reviewed;
-    // session pace EMA (v2.15) — feeds the runway estimate; clamp to ignore backgrounded sessions
+    // session pace EMA (v2.15) - feeds the runway estimate; clamp to ignore backgrounded sessions
     if(p.reviewed > 0 && p.started){
       const per = (Date.now() - p.started) / 1000 / p.reviewed;
       if(per >= 3 && per <= 120){
@@ -4683,7 +4683,7 @@ function renderFlash(){
     bumpStreak(); questCheck();
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak — ${p.reviewed} cards reviewed</div>
+      <div class="result-sub">gèng mâak · ${p.reviewed} cards reviewed</div>
       ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
@@ -4700,8 +4700,8 @@ function renderFlash(){
   function advance(right){
     const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
     if(firstAttempt && right) p.cleanFirst++;        // clean run = right on the FIRST try (no gambling)
-    if(right){ srsGrade(id, 2); }                    // Good — interval advances
-    else { srsGrade(id, 0); p.queue.push(id); }      // Again — requeue this session
+    if(right){ srsGrade(id, 2); }                    // Good - interval advances
+    else { srsGrade(id, 0); p.queue.push(id); }      // Again - requeue this session
     p.reviewed++; p.i++; renderFlash();
   }
 
@@ -4763,7 +4763,7 @@ function buildMixedQuiz(){
     if(wrongRead.length===3){
       qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), _choice:'word-reading'});
       const wrongT = wordThaiDistractors(w, allWords, 3);
-      qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
+      qs.push({kind:'mcq', text:'Listen: which one did you hear?', say:w.thai, autoplay:true,
         answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'});
     }
   });
@@ -4797,7 +4797,7 @@ function nextGenericQ(){
 	    saveState();
     bumpStreak();
     const pct = Math.round(100*p.correct/p.qs.length);
-    let subline = pct>=80 ? 'Strong.' : 'Worth another pass — the deck remembers what you miss.';
+    let subline = pct>=80 ? 'Strong.' : 'Worth another pass. The deck remembers what you miss.';
     if(p.opts.classSprint && pct >= 85){
       award(3); subline = 'Sharp class calls · +3💎';
     }
@@ -4809,7 +4809,7 @@ function nextGenericQ(){
         if(!state.boss[u].passed){ state.boss[u].passed = true; award(20); subline = 'Unit ' + u + ' cleared · +20💎'; }
         else subline = 'Unit ' + u + ' cleared (again).';
       } else {
-        subline = 'Boss holds the gate — try again tomorrow.';
+        subline = 'Boss holds the gate. Try again tomorrow.';
       }
       saveState();
     }
@@ -4825,14 +4825,14 @@ function nextGenericQ(){
 	        saveState();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">🏆 You know the class of all 42. ${first ? 'The alphabet is yours — Phase 1 complete · +30💎 + the title นักอ่าน (the reader)' : 'Still razor-sharp.'}</div>
+          <div class="result-sub">🏆 You know the class of all 42. ${first ? 'The alphabet is yours. Phase 1 complete · +30💎 + the title นักอ่าน (the reader)' : 'Still sharp.'}</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
       } else {
         const missed = (p.missed||[]).slice();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">The boss needs 90% — you're at ${pct}%. Drill the misses and come back (free, unlimited).</div>
+          <div class="result-sub">The boss needs 90%. You are at ${pct}%. Drill the misses and come back.</div>
           <div class="stage-actions">
             ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
             <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
@@ -4868,7 +4868,7 @@ function nextGenericQ(){
 	        state.checks[checkpointId(i)] = true; d.m = (d.m||0) + 1; saveState();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">👑 ${first ? 'Mastery proven — next lessons unlocked · +15💎' : 'Still sharp — unlocked.'}</div>
+          <div class="result-sub">👑 ${first ? 'Mastery proven. Next lessons unlocked · +15💎' : 'Still sharp. Unlocked.'}</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
         if(first) award(15);
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
@@ -4876,7 +4876,7 @@ function nextGenericQ(){
         const missed = (p.missed||[]).slice();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">Not quite — you need 80%. Review the misses, then retake (free, unlimited).</div>
+          <div class="result-sub">Not quite. You need 80%. Review the misses, then retake.</div>
           <div class="stage-actions">
             ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
             <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the check →</button>
@@ -4907,7 +4907,7 @@ function nextGenericQ(){
    INIT
 ===================================================== */
 /* =====================================================
-   SPELL IT — tile builder (production practice)
+   SPELL IT - tile builder (production practice)
 ===================================================== */
 function spellPool(){
   const out = [];
@@ -5020,12 +5020,12 @@ function renderSpell(){
 }
 
 /* =====================================================
-   CONFUSION CLINIC — lookalike discrimination
+   CONFUSION CLINIC - lookalike discrimination
 ===================================================== */
 el('cta-clinic').addEventListener('click', ()=>{
   const met = ch => !!state.srs['g:'+ch];
   const live = CONF_SETS.map(s=>s.filter(met)).filter(s=>s.length>=2);
-  if(!live.length){ toast('Meet more letters first — finish a lesson'); return; }
+  if(!live.length){ toast('Meet more letters first. Finish a lesson.'); return; }
   if(!state.confs) state.confs = {};
   const weight = s => 1 + (state.confs[s.join('')] || 0) * 2;
   const qs = [];
@@ -5040,7 +5040,7 @@ el('cta-clinic').addEventListener('click', ()=>{
         options:shuffle([...new Set(set.map(c=>GLYPHS[c].sound))]),
         _set:set.join(''), explain:g.name});
     } else {
-      qs.push({kind:'mcq', text:`Which one is "${g.sound}" — ${g.name}?`, answer:ch,
+      qs.push({kind:'mcq', text:`Which one is "${g.sound}": ${g.name}?`, answer:ch,
         options:shuffle(set.slice()), thaiOpts:true, _set:set.join('')});
     }
   }
@@ -5048,7 +5048,7 @@ el('cta-clinic').addEventListener('click', ()=>{
 });
 
 /* =====================================================
-   GLYPH GHOST — lookalike discrimination in real words (v2.16)
+   GLYPH GHOST - lookalike discrimination in real words (v2.16)
 ===================================================== */
 const GH_COMB = /[ัิ-ฺ็-๎]/;        // Thai combining vowels / tone marks
 function graphemes(thai){
@@ -5073,7 +5073,7 @@ function ghostPool(){
 }
 el('cta-ghost').addEventListener('click', ()=>{
   const pool = ghostPool();
-  if(pool.length < 4){ toast('Master a few more words first — Glyph Ghost needs them'); return; }
+  if(pool.length < 4){ toast('Master a few more words first. Glyph Ghost needs them.'); return; }
   if(!state.confs) state.confs = {};
   const wgt = it => 1 + (state.confs[(SET_OF[it.gs[it.idx][0]]||[]).join('')] || 0) * 2;
   const rounds = [], bag = pool.slice(), n = Math.min(12, Math.max(6, pool.length));
@@ -5131,7 +5131,7 @@ function renderGhost(){
 }
 
 /* =====================================================
-   READING ROOM — decodable stories
+   READING ROOM - decodable stories
 ===================================================== */
 function storyUnlocked(s){
   const gi = LESSONS.findIndex(L=>L.id===s.gate);
@@ -5176,7 +5176,7 @@ function renderStory(s){
     sp.addEventListener('click', ()=>{
       const w = s.lines[+sp.dataset.li][+sp.dataset.wi];
       speak(w.t);
-      toast(w.t + ' · ' + w.tr + ' — ' + w.en);
+      toast(w.t + ' · ' + w.tr + ' · ' + w.en);
     });
   });
   el('story-play').onclick = ()=>{
@@ -5190,7 +5190,7 @@ function renderStory(s){
     const d = ensureDay(); d.d++; saveState();
     if(first) award(3);
     bumpStreak(); questCheck();
-    toast(first ? 'Story read · +3💎' : 'Read again — เก่งมาก');
+    toast(first ? 'Story read · +3💎' : 'Read again. เก่งมาก');
     renderStoryList();
   };
 }
@@ -5207,7 +5207,7 @@ document.addEventListener('visibilitychange', ()=>{
 });
 window.addEventListener('pagehide', flushState);
 
-/* iOS requires a user gesture before speechSynthesis works — prime it once */
+/* iOS requires a user gesture before speechSynthesis works - prime it once */
 let speechPrimed = false;
 document.addEventListener('touchstart', ()=>{
   if(speechPrimed || !('speechSynthesis' in window)) return;
