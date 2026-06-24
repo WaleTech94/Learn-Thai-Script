@@ -2,6 +2,23 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.0 — 2026-06-24
+
+- Rebuilt Today into a clear four-button route: Review, Main task, Depth block and End today.
+- Added a Daily Practice strip so stable habits such as Tone drill, Class sprint, Hear & Pick Thai, Spell it, Reading and Echo are visible every day with locked/recommended/done states.
+- Removed the Learn tab and moved lesson archive, guided path and journey progress into an expandable Course Map on Today.
+- Split the old Review surface into a light Practice tab for retrieval/reading drills and a Thai Tones tab for tone, class and listening work.
+- Made Today's depth block name the actual required task, including directing the learner to unread Reading Room stories as soon as they are available.
+- Added a highlighted Today's tone task state: Thai Tones lights up and shows a start card when tone/class/listening is the required depth block.
+- Moved the class reference into Library and the letter wall into Streaks.
+- Added a Streaks tab for tokens, streak history, freezes, Shop, practice evidence, notes, import/export and reset controls.
+- Added clearer bottom-tab colour accents for Today, Practice, Thai Tones, Library and Streaks.
+- Made class more explicit: new consonant teaching cards now start with a large Mid/High/Low class banner, and class reference lists use spaced letter tiles instead of dense inline strings.
+- Changed End Today into a guard: if review, the main task or depth is missing, it routes the learner back to that task before showing the “Mastery beats breadth” closeout.
+- Replaced one-click reset with a four-warning flow whose final step requires typing `I Understand`.
+- Added `days[].m` for non-lesson main blocks such as passed mastery gates, so passing a gate counts as the main task without also satisfying the depth block.
+- Stopped the weekly Library pack from seeding five due phrase cards during startup; the first-use route now stays on the class primer until the learner opens Library.
+
 ## v3.14 — 2026-06-24
 
 - Added guided audio setup when a user taps a speaker icon but the browser/device has no Thai speech voice available.
