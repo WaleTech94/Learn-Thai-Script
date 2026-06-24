@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.13 — 2026-06-24
+
+- Reworked generated multiple-choice options so wrong answers are chosen as likely misconceptions before falling back to generic same-bucket options.
+- Applied the pass across glyph sound checks, hear→glyph checks, Quick decode, mini decode, reading→Thai, listening→Thai, boss/checkpoint questions, mixed review, Hear & Pick Thai and SRS glyph cards.
+- Prioritised visual glyph neighbours, same-type glyphs, class traps, close readings, tone/length neighbours and similar covered Thai words instead of unrelated random choices.
+- Added `validateMisconceptionChoiceContracts()` at app start so generated MCQs fail fast when they miss an available misconception-based distractor.
+
 ## v3.12 — 2026-06-24
 
 - Made early pacing honest: Lessons 1–3 now present as shorter foundation days instead of full 45-minute course days.

@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.12 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.13 (PWA)</div>
     </div>
   </section>
 
@@ -1885,6 +1885,63 @@ function pickN(pool, exclude, n){
   let p = [...new Set(pool)].filter(x=>x!==exclude);
   return sample(p, n);
 }
+function addUniqueOption(out, value, answer){
+  if(value == null) return;
+  const s = String(value);
+  if(!s || s === String(answer) || out.some(x=>String(x)===s)) return;
+  out.push(value);
+}
+function fillOptionValues(out, values, answer, n){
+  values.forEach(v=>{ if(out.length < n) addUniqueOption(out, v, answer); });
+  return out;
+}
+function rankedOptionValues(items, answer, n, scoreFn, valueFn, fallbackValues){
+  const best = new Map();
+  (items||[]).forEach((item,i)=>{
+    const value = valueFn ? valueFn(item) : item;
+    if(value == null || String(value) === String(answer)) return;
+    const score = scoreFn ? scoreFn(item, value) : 0;
+    if(score <= 0) return;
+    const key = String(value), prev = best.get(key);
+    if(!prev || score > prev.score) best.set(key, {value, score, i});
+  });
+  const out = [...best.values()].sort((a,b)=>b.score-a.score || a.i-b.i).slice(0,n).map(x=>x.value);
+  return fillOptionValues(out, fallbackValues||[], answer, n).slice(0,n);
+}
+function sameConfSet(a, b){
+  return CONF_SETS.some(set=>set.includes(a) && set.includes(b));
+}
+function bareSound(s){
+  return String(s||'').replace(/\s*\((long|short)\)/g,'').replace(/\s+/g,' ').trim();
+}
+function soundFamily(s){
+  s = bareSound(s);
+  const map = {bp:'p', b:'p', p:'p', ph:'p', dt:'t', d:'t', t:'t', th:'t', g:'k', k:'k', kh:'k', j:'ch', ch:'ch', s:'s', h:'h', f:'f', r:'r', l:'l', n:'n', m:'m', ng:'ng', y:'y', w:'w'};
+  return map[s] || s;
+}
+function vowelFamily(s){
+  s = bareSound(s);
+  const map = {aa:'a', a:'a', ii:'i', i:'i', uu:'u', u:'u', uue:'ue', ue:'ue', ee:'e', aae:'ae', oo:'o', ai:'ai', ao:'ao', am:'am', ia:'ia', uea:'uea', ua:'ua'};
+  return map[s] || s;
+}
+function glyphMisconceptionScore(ch, other){
+  const g = GLYPHS[ch], o = GLYPHS[other];
+  if(!g || !o || ch===other || g.type !== o.type) return 0;
+  let score = 1;
+  if(sameConfSet(ch, other)) score += 10;
+  if(g.type === 'c'){
+    if(soundFamily(g.sound) === soundFamily(o.sound)) score += 5;
+    if(g.cls === o.cls) score += 2;
+    if((g.rare && o.rare) || (!g.rare && !o.rare)) score += 1;
+  } else if(g.type === 'v'){
+    if(vowelFamily(g.sound) === vowelFamily(o.sound)) score += 8;
+    if((/short/.test(g.sound) && /long/.test(o.sound)) || (/long/.test(g.sound) && /short/.test(o.sound))) score += 3;
+    if(String(g.disp||'').slice(0,1) === String(o.disp||'').slice(0,1)) score += 2;
+  } else {
+    score += 8; // tone-mark names and the silencer are a deliberately tight family.
+  }
+  return score;
+}
 function glyphSoundPool(g, correct){
   if(!g) return [];
   let pool = [...new Set(Object.values(GLYPHS).filter(x=>x.type===g.type).map(x=>x.sound))];
@@ -1899,26 +1956,103 @@ function glyphSoundPrompt(g){
   if(g.sound === 'silent') return 'What does this mark do?';
   return 'What mark name?';
 }
+function sameTypeGlyphs(type){
+  return Object.keys(GLYPHS).filter(k=>GLYPHS[k] && GLYPHS[k].type===type);
+}
+function glyphSoundDistractors(ch, n, poolGlyphs){
+  const g = GLYPHS[ch], correct = g ? g.sound : '?';
+  if(!g) return [];
+  const legal = new Set(glyphSoundPool(g, correct));
+  const scoped = (poolGlyphs&&poolGlyphs.length?poolGlyphs:sameTypeGlyphs(g.type)).filter(x=>GLYPHS[x] && GLYPHS[x].type===g.type && x!==ch && legal.has(GLYPHS[x].sound));
+  const all = sameTypeGlyphs(g.type).filter(x=>x!==ch && legal.has(GLYPHS[x].sound));
+  const score = x=>glyphMisconceptionScore(ch, x);
+  const value = x=>GLYPHS[x].sound;
+  const scopedRanked = rankedOptionValues(scoped, correct, n, score, value, []);
+  const allRanked = rankedOptionValues(all, correct, n, score, value, []);
+  return fillOptionValues(scopedRanked, allRanked.concat(all.map(value)), correct, n).slice(0,n);
+}
+function glyphChoiceDistractors(ch, poolGlyphs, n){
+  const g = GLYPHS[ch];
+  const scoped = (poolGlyphs||[]).filter(x=>GLYPHS[x] && GLYPHS[x].type===g.type && x!==ch && GLYPHS[x].sound!==g.sound);
+  return rankedOptionValues(scoped, glyphLabel(ch), n, x=>glyphMisconceptionScore(ch, x), glyphLabel, scoped.map(glyphLabel));
+}
+function classPickDistractors(ch, L, n){
+  const g = GLYPHS[ch];
+  const scoped = coveredGlyphsForLesson(L, 'c').filter(x=>x!==ch && GLYPHS[x].cls !== g.cls);
+  return rankedOptionValues(scoped, ch, n, x=>glyphMisconceptionScore(ch, x) + (soundFamily(g.sound)===soundFamily(GLYPHS[x].sound) ? 4 : 0), x=>x, scoped);
+}
+function stripToneMarks(s){
+  return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function trLetters(s){ return stripToneMarks(s).toLowerCase().replace(/[^a-z]/g,''); }
+function firstTrChunk(tr){
+  const s = trLetters(String(tr||'').split(/[ -]/)[0]||'');
+  const two = s.slice(0,2);
+  return ['bp','dt','kh','ch','ng','ph','th'].includes(two) ? two : s.slice(0,1);
+}
+function trRime(tr){
+  const s = trLetters(String(tr||'').split(/[ -]/)[0]||'');
+  const head = firstTrChunk(tr);
+  return head ? s.slice(head.length) : s;
+}
+function syllableCount(tr){ return String(tr||'').split(/[ -]/).filter(Boolean).length; }
+function thaiGlyphOverlap(a, b){
+  const A = new Set([...String(a||'')].filter(ch=>/[฀-๿]/.test(ch)));
+  let n = 0;
+  [...String(b||'')].forEach(ch=>{ if(A.has(ch)) n++; });
+  return n;
+}
+function wordMisconceptionScore(w, x){
+  if(!w || !x || itemThai(w)===itemThai(x)) return 0;
+  const wt = w.tr || '', xt = x.tr || '';
+  let score = 0;
+  if(stripToneMarks(wt) === stripToneMarks(xt)) score += 12;       // same reading shape, wrong tone.
+  if(firstTrChunk(wt) && firstTrChunk(wt) === firstTrChunk(xt)) score += 4;
+  if(trRime(wt) && trRime(wt) === trRime(xt)) score += 5;
+  if(toneOf(wt) === toneOf(xt)) score += 2;
+  score += Math.min(4, thaiGlyphOverlap(itemThai(w), itemThai(x)) * 2);
+  if(Math.abs([...itemThai(w)].length - [...itemThai(x)].length) <= 1) score += 1;
+  if(syllableCount(wt) === syllableCount(xt)) score += 1;
+  return score;
+}
+function wordValue(w, field){
+  return field === 'tr' ? w.tr : field === 'en' ? w.en : itemThai(w);
+}
+function wordDistractors(w, pool, n, field){
+  const answer = wordValue(w, field);
+  const scored = (pool||[]).filter(x=>itemThai(x)!==itemThai(w) && wordValue(x, field));
+  return rankedOptionValues(scored, answer, n, x=>wordMisconceptionScore(w, x), x=>wordValue(x, field), scored.map(x=>wordValue(x, field)));
+}
+function wordReadingDistractors(w, pool, n){ return wordDistractors(w, pool, n, 'tr'); }
+function wordThaiDistractors(w, pool, n){ return wordDistractors(w, pool, n, 'thai'); }
+function wordMeaningDistractors(w, pool, n){
+  const scored = (pool||[]).filter(x=>itemThai(x)!==itemThai(w) && x.en);
+  return rankedOptionValues(scored, w.en, n, x=>(x.cat&&w.cat&&x.cat===w.cat ? 10 : 0) + Math.ceil(wordMisconceptionScore(w, x)/3), x=>x.en, scored.map(x=>x.en));
+}
 function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?,explain?}
   if(id.startsWith('g:')){
     const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
-    const opts = pickN(glyphSoundPool(g, correct), correct, 3);
+    if(!g) return {prompt:ch, promptBig:true, text:glyphSoundPrompt(g), answer:correct, options:[correct]};
+    const learned = learnedGlyphIds().filter(x=>GLYPHS[x] && GLYPHS[x].type===g.type);
+    const opts = glyphSoundDistractors(ch, 3, learned.length>=4 ? learned : sameTypeGlyphs(g.type));
     return {prompt:(g&&g.disp)||ch, promptBig:true, text:glyphSoundPrompt(g), answer:correct,
-      options:shuffle([correct, ...opts]),
+      options:shuffle([correct, ...opts]), _choice:'glyph-sound',
       explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
   }
   if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
     const thai = id.slice(2), w = findWord(thai);
-    let opts = pickN(learnedWordPool().map(x=>x.thai), thai, 3);
-    if(opts.length < 3) opts = pickN(rawWordPool().map(x=>x.thai), thai, 3);
+    let pool = learnedWordPool();
+    let opts = w ? wordThaiDistractors(w, pool, 3) : pickN(pool.map(x=>x.thai), thai, 3);
+    if(opts.length < 3) opts = w ? wordThaiDistractors(w, rawWordPool(), 3) : pickN(rawWordPool().map(x=>x.thai), thai, 3);
     return {prompt: w?w.en:'?', text:'Which one in Thai?', answer:thai,
-      options:shuffle([thai, ...opts]), thaiOpts:true, explain: w ? w.tr : ''};
+      options:shuffle([thai, ...opts]), thaiOpts:true, _choice:'word-thai', explain: w ? w.tr : ''};
   }
   const thai = id.slice(2), w = findWord(thai), correct = w ? w.en : '?';
-  let opts = pickN(learnedWordPool().map(x=>x.en), correct, 3);
-  if(opts.length < 3) opts = pickN(rawWordPool().map(x=>x.en), correct, 3);
+  let pool = learnedWordPool();
+  let opts = w ? wordMeaningDistractors(w, pool, 3) : pickN(pool.map(x=>x.en), correct, 3);
+  if(opts.length < 3) opts = w ? wordMeaningDistractors(w, rawWordPool(), 3) : pickN(rawWordPool().map(x=>x.en), correct, 3);
   return {prompt:thai, promptBig:true, text:'What does it mean?', answer:correct,
-    options:shuffle([correct, ...opts]), say:thai, explain: w ? w.tr : ''};
+    options:shuffle([correct, ...opts]), say:thai, _choice:'word-meaning', explain: w ? w.tr : ''};
 }
 
 /* =====================================================
@@ -3032,18 +3166,17 @@ function buildBossQuiz(u){
   const upToLessonNum = Math.max(...Ls.map(L=>lessonNum(L.id)));
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = Ls.flatMap(L=>L.words);
-  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const allWordsPool = LESSONS.flatMap(L=>L.words);
   const qs = [];
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
-    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    const wrong = glyphSoundDistractors(ch, 3, glyphs);
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
   words.forEach(w=>{
-    const wrong = sample([...new Set(allWordsPool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
-    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong])});
+    const wrong = wordReadingDistractors(w, allWordsPool, 3);
+    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading'});
     const tq = toneQuestion(w, upToLessonNum);
     if(tq) qs.push(tq);
   });
@@ -3061,15 +3194,14 @@ function buildCheckpointQuiz(upTo){
   const upToLessonNum = lessonNum((LESSONS[upTo]||{}).id);
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = Ls.flatMap(L=>L.words);
-  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   const qs = [];
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
     if(/^[a-z]{1,3}$/.test(g.sound)){                          // clean, typeable sound → RECALL: type it from memory
       qs.push({kind:'type', prompt:ch, text:'Type the sound', answer:g.sound});
     } else {
-      const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-      qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+      const wrong = glyphSoundDistractors(ch, 3, glyphs);
+      qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     }
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
   });
@@ -3090,9 +3222,9 @@ function startCheckpoint(i){
 function buildFoundationEarQuiz(){
   const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
   return sample(pool, Math.min(10,pool.length)).map(w=>{
-    const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    const wrong = wordThaiDistractors(w, pool, 3);
     return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
 }
 function startFoundationEar(){
@@ -3214,7 +3346,7 @@ function renderLessonStep(){
     const model = L.we.m.split(' = ')[0];
     const opts = askTone
       ? shuffle(TONE_NAMES.slice())
-      : shuffle([tw.tr, ...sample(LESSONS.flatMap(x=>x.words).filter(w=>w.tr!==tw.tr).map(w=>w.tr), 3)]);
+      : shuffle([tw.tr, ...wordReadingDistractors(tw, coveredWordsForLesson(L), 3)]);
     stage.innerHTML = `
       <div class="center"><div class="eyebrow">Class colour check</div><h2>Quick decode</h2></div>
       <div class="notebox" style="font-size:15px;line-height:1.8">${esc(model)}</div>
@@ -3322,23 +3454,24 @@ function finishLesson(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
 
-function glyphToSoundQuestion(ch){
+function glyphToSoundQuestion(ch, L){
   const g = GLYPHS[ch], correct = g ? g.sound : '?';
-  const opts = pickN(glyphSoundPool(g, correct), correct, 3);
+  const pool = L ? coveredGlyphsForLesson(L, g.type) : sameTypeGlyphs(g.type);
+  const opts = glyphSoundDistractors(ch, 3, pool);
   return {kind:'mcq', prompt:glyphLabel(ch), promptBig:true, text:glyphSoundPrompt(g),
-    answer:correct, options:shuffle([correct,...opts]),
+    answer:correct, options:shuffle([correct,...opts]), _choice:'glyph-sound',
     explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
 }
 function hearToGlyphQuestion(ch, L){
   const g = GLYPHS[ch]; if(!g) return null;
   const covered = coveredGlyphsForLesson(L, g.type)
     .filter(x=>x!==ch && GLYPHS[x] && GLYPHS[x].sound !== g.sound);
-  const wrong = sample(covered, 3).map(glyphLabel);
+  const wrong = glyphChoiceDistractors(ch, covered, 3);
   if(wrong.length < 2) return null;
   const audio = glyphQuizAudio(ch);
   const type = g.type==='c' ? 'consonant' : g.type==='v' ? 'vowel' : 'mark';
   return {kind:'mcq', text:'Hear it. Which ' + type + ' is it?', say:audio.say, sayLabel:audio.sayLabel,
-    autoplay:true, answer:glyphLabel(ch), options:shuffle([glyphLabel(ch),...wrong]), thaiOpts:true,
+    autoplay:true, answer:glyphLabel(ch), options:shuffle([glyphLabel(ch),...wrong]), thaiOpts:true, _choice:'glyph-choice',
     explain:g.type==='c' ? g.name+' · '+g.nameTr : g.sound};
 }
 function spotDifferenceQuestion(ch, L){
@@ -3358,23 +3491,23 @@ function classFromMemoryQuestion(ch){
 }
 function classPickQuestion(ch, L){
   const g = GLYPHS[ch]; if(!g || g.type!=='c') return null;
-  const wrong = sample(coveredGlyphsForLesson(L, 'c').filter(x=>x!==ch && GLYPHS[x].cls !== g.cls), 3);
+  const wrong = classPickDistractors(ch, L, 3);
   if(wrong.length < 2) return null;
   return {kind:'mcq', text:'Pick the ' + CLS_LABEL[g.cls] + ' class consonant', answer:ch,
-    options:shuffle([ch,...wrong]), thaiOpts:true,
+    options:shuffle([ch,...wrong]), thaiOpts:true, _choice:'class-pick',
     explain:ch + ' is ' + CLS_LABEL[g.cls] + ': ' + classReason(g.cls)};
 }
 function miniDecodeQuestion(w, pool){
-  const wrong = sample([...new Set(pool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+  const wrong = wordReadingDistractors(w, pool, 3);
   if(wrong.length < 2) return null;
   return {kind:'mcq', prompt:w.thai, promptBig:true, text:'Mini decode: how does this read?',
-    answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.tr};
+    answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
 }
 function readingToThaiQuestion(w, pool){
-  const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+  const wrong = wordThaiDistractors(w, pool, 3);
   if(wrong.length < 2) return null;
   return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?',
-    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr};
+    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr};
 }
 
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
@@ -3385,7 +3518,7 @@ function buildLessonQuiz(L){
   const coveredWords = coveredWordsForLesson(L);
   L.glyphs.forEach(ch=>{
     if(!GLYPHS[ch]) return;
-    glyphQs.push(glyphToSoundQuestion(ch));
+    glyphQs.push(glyphToSoundQuestion(ch, L));
     const heard = hearToGlyphQuestion(ch, L); if(heard) glyphQs.push(heard);
     const spot = spotDifferenceQuestion(ch, L); if(spot) spotQs.push(spot);
   });
@@ -3403,9 +3536,9 @@ function buildLessonQuiz(L){
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
   const core = lessonCoreWords(L);
   const listenQs = core.slice(0,2).map(w=>{
-    const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    const wrong = wordThaiDistractors(w, L.words, 3);
     return {kind:'mcq', text:'Listen — which Thai word did you hear?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
   const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(reverseReadQs).concat(classPickQs).concat(toneQs);
@@ -3494,6 +3627,67 @@ function validateReviewChoiceContracts(){
     if(q.text !== glyphSoundPrompt(g)) errors.push(ch + ': review prompt is not type-specific');
   });
   if(errors.length) throw new Error('Review choice contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function wrongOptions(q){ return (q.options||[]).filter(o=>String(o)!==String(q.answer)); }
+function bestGlyphSoundScore(ch, pool, value){
+  let best = 0;
+  (pool||[]).forEach(x=>{
+    if(GLYPHS[x] && GLYPHS[x].sound === value) best = Math.max(best, glyphMisconceptionScore(ch, x));
+  });
+  return best;
+}
+function checkGlyphSoundDistractors(errors, label, ch, pool){
+  const g = GLYPHS[ch], opts = glyphSoundDistractors(ch, 3, pool);
+  const legal = new Set(glyphSoundPool(g, g.sound));
+  const available = new Set((pool||[]).filter(x=>GLYPHS[x] && x!==ch && legal.has(GLYPHS[x].sound)).map(x=>GLYPHS[x].sound));
+  available.delete(g.sound);
+  if(opts.length < Math.min(3, available.size)) errors.push(label + ': not enough sound distractors');
+  const best = Math.max(0, ...(pool||[]).filter(x=>GLYPHS[x] && GLYPHS[x].sound !== g.sound).map(x=>glyphMisconceptionScore(ch, x)));
+  if(best > 1 && !opts.some(o=>bestGlyphSoundScore(ch, pool, o) > 1)) errors.push(label + ': missed available glyph misconception');
+}
+function bestWordValueScore(w, pool, value, field){
+  let best = 0;
+  (pool||[]).forEach(x=>{
+    if(String(wordValue(x, field)) === String(value)) best = Math.max(best, wordMisconceptionScore(w, x));
+  });
+  return best;
+}
+function checkWordDistractors(errors, label, w, pool, field){
+  const opts = wordDistractors(w, pool, 3, field);
+  const answer = wordValue(w, field);
+  const values = new Set((pool||[]).map(x=>wordValue(x, field)).filter(v=>v && String(v)!==String(answer)));
+  if(opts.length < Math.min(3, values.size)) errors.push(label + ': not enough word distractors');
+  const best = Math.max(0, ...(pool||[]).map(x=>wordMisconceptionScore(w, x)));
+  if(best >= 6 && !opts.some(o=>bestWordValueScore(w, pool, o, field) >= 6)) errors.push(label + ': missed available word misconception');
+}
+function validateMisconceptionChoiceContracts(){
+  const errors = [];
+  Object.keys(GLYPHS).forEach(ch=>{
+    const g = GLYPHS[ch];
+    checkGlyphSoundDistractors(errors, ch + ' review sound', ch, sameTypeGlyphs(g.type));
+  });
+  LESSONS.forEach(L=>{
+    L.glyphs.forEach(ch=>{
+      const g = GLYPHS[ch]; if(!g) return;
+      checkGlyphSoundDistractors(errors, L.id + ':' + ch + ' lesson sound', ch, coveredGlyphsForLesson(L, g.type));
+    });
+    L.words.forEach(w=>{
+      const pool = coveredWordsForLesson(L);
+      checkWordDistractors(errors, L.id + ':' + w.thai + ' reading', w, pool, 'tr');
+      checkWordDistractors(errors, L.id + ':' + w.thai + ' Thai pick', w, pool, 'thai');
+    });
+    const quiz = buildLessonQuiz(L);
+    quiz.forEach((q,i)=>{
+      if(q.kind==='mcq' && /(Mini decode|Which Thai word|Listen|Hear it|What .*sound|Pick the .*class consonant)/.test(q.text||'') && !q._choice){
+        errors.push(L.id + ' q' + (i+1) + ': generated MCQ missing misconception-choice tag');
+      }
+      if(q._choice && wrongOptions(q).length < Math.min(3, (q.options||[]).length-1) && !/^Pick the /.test(q.text||'')){
+        errors.push(L.id + ' q' + (i+1) + ': tagged MCQ has too few wrong options');
+      }
+    });
+  });
+  if(errors.length) throw new Error('Misconception choice contract failed:\n' + errors.join('\n'));
   return true;
 }
 
@@ -3971,21 +4165,20 @@ function buildMixedQuiz(){
   const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean);
   const allWords = words.concat(phrases.filter(p=>!words.some(w=>w.thai===p.thai)));
   const qs = [];
-  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
   glyphs.forEach(ch=>{
     const g = GLYPHS[ch];
-    const wrong = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3).map(c=>GLYPHS[c].sound);
-    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong])});
+    const wrong = glyphSoundDistractors(ch, 3, glyphs);
+    qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls],
       options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
   });
   allWords.forEach(w=>{
-    const wrongRead = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+    const wrongRead = wordReadingDistractors(w, allWords, 3);
     if(wrongRead.length===3){
-      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead])});
-      const wrongT = sample(allWords.filter(x=>x.thai!==w.thai),3).map(x=>x.thai);
+      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), _choice:'word-reading'});
+      const wrongT = wordThaiDistractors(w, allWords, 3);
       qs.push({kind:'mcq', text:'Listen — which one did you hear?', say:w.thai, autoplay:true,
-        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, explain:w.tr, axis:'listen'});
+        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'});
     }
   });
   allWords.forEach(w=>{
@@ -3997,9 +4190,9 @@ function buildMixedQuiz(){
 function buildHearPickThaiQuiz(){
   const pool = coveredSoundThaiItems();
   return sample(pool, Math.min(10, pool.length)).map(w=>{
-    const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    const wrong = wordThaiDistractors(w, pool, 3);
     return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai word is it?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
 }
 
@@ -4447,6 +4640,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateVocabularyContracts();
   validateCoverageContracts();
   validateReviewChoiceContracts();
+  validateMisconceptionChoiceContracts();
   await loadState();
   let migrated = false;
   // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)
