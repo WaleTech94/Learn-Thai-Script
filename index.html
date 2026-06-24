@@ -607,7 +607,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </div>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.10 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v3.11 (PWA)</div>
     </div>
   </section>
 
@@ -741,6 +741,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </button>
       <button class="card cta-card" id="cta-quiz">
         <div><div class="t">Mixed quiz</div><div class="d">10 questions from what you know</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="cta-hear-thai">
+        <div><div class="t">Hear &amp; pick Thai</div><div class="d">Sound to script, covered words only</div></div>
         <span style="font-size:20px">→</span>
       </button>
       <button class="card cta-card" id="cta-spell">
@@ -1599,6 +1603,7 @@ const RUNGS = [
   {n:5, title:'Edge cases',        sub:'rare letters — recognition only'},
 ];
 const DRILLS = [
+  {id:'hear-thai',   title:'Hear & pick Thai',  rung:1, gate:'l1',  go:()=>el('cta-hear-thai').click()},
   {id:'tone-listen', title:'Tone listening',    rung:1, gate:'l4',  go:()=>el('tone-drill-btn').click()},
   {id:'twins',       title:'Sound twins',       rung:1, gate:'l4',  go:()=>el('twins-btn').click()},
   {id:'echo',        title:'Echo chamber',      rung:1, gate:'l1',  go:()=>el('echo-btn').click()},
@@ -1616,7 +1621,8 @@ function nextDrill(){
   if(!avail.length) return null;
   const log = state.drillLog || {};
   const last = id => (log[id] && log[id].last) || '';                  // '' = never practised → sorts first
-  avail.sort((a,b)=> a.rung - b.rung || last(a.id).localeCompare(last(b.id)) || a.id.localeCompare(b.id));
+  const order = id => DRILLS.findIndex(d=>d.id===id);
+  avail.sort((a,b)=> a.rung - b.rung || last(a.id).localeCompare(last(b.id)) || order(a.id) - order(b.id));
   return avail[0];
 }
 function launchDrill(id){
@@ -1813,6 +1819,7 @@ function definitionLeakValue(v, defs){
   if(v == null) return false;
   const s = String(v).trim();
   if(!s) return false;
+  if(Object.values(GLYPHS).some(g=>g.sound === s)) return false;
   if(defs.has(s)) return true;
   for(const d of defs){
     if(String(d).length >= 4 && (s.includes('— ' + d) || s.includes('(' + d + ')') || s.includes(': ' + d))) return true;
@@ -2163,6 +2170,34 @@ function learnedMeaningWords(){
 function nextLesson(){
   return LESSONS.find(L=>!state.done.includes(L.id)) || null;
 }
+function lessonIndexById(id){ return LESSONS.findIndex(L=>L.id===id); }
+function lessonIdsThrough(L){
+  const idx = lessonIndexById(L.id);
+  return idx < 0 ? state.done.slice() : LESSONS.slice(0, idx+1).map(x=>x.id);
+}
+function glyphLabel(ch){ return (GLYPHS[ch] && GLYPHS[ch].disp) || ch; }
+function coveredGlyphsForLesson(L, type){
+  const done = new Set(lessonIdsThrough(L));
+  const out = [];
+  LESSONS.forEach(x=>{
+    if(!done.has(x.id)) return;
+    (x.glyphs||[]).forEach(g=>{
+      if(GLYPHS[g] && (!type || GLYPHS[g].type === type) && !out.includes(g)) out.push(g);
+    });
+  });
+  return out;
+}
+function coveredWordsForLesson(L){
+  const done = new Set(lessonIdsThrough(L)), out = [];
+  LESSONS.forEach(x=>{ if(done.has(x.id)) out.push(...x.words); });
+  return out;
+}
+function classReason(cls){
+  return cls === 'mid' ? 'one of the mid 9 (ไก่จิกเด็กตายบนปากโอ่ง)'
+    : cls === 'high' ? 'one of the high set (breathy/hissy letters)'
+    : 'not mid or high, so low by default';
+}
+function classQuestionText(cls){ return 'Which class? Work from memory, not colour.'; }
 /* decodability gate (v2.22) — a phrase becomes a READING card only once its letters are taught;
    until then it lives ear-first (listening card + the rote phrasebook). */
 function taughtGlyphSet(doneIds){
@@ -2208,6 +2243,16 @@ function readableEchoItems(){
   const twinItems = readableTwinSets(taught).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
   return uniquePracticeItems(lessonItems.concat(toneItems, twinItems));
 }
+function coveredSoundThaiItems(){
+  const taught = taughtGlyphSet();
+  const out = learnedWords().map(w=>({thai:w.thai, tr:w.tr, en:w.en}));
+  Object.keys(state.srs||{}).filter(k=>k.startsWith('w:')).forEach(k=>{
+    const w = findWord(k.slice(2));
+    if(w && thaiTextReadable(w.thai, taught)) out.push({thai:w.thai, tr:w.tr, en:w.en});
+  });
+  const seen = new Set();
+  return out.filter(w=>{ if(seen.has(w.thai)) return false; seen.add(w.thai); return true; });
+}
 /* ---- mastery checkpoints (v2.23) — cumulative ≥80% gate every 3 lessons; free unlimited retries.
    evidence: Bloom mastery learning (fixed 80–90% criterion, vary time + remediate) + the 85% rule. ---- */
 const CHK_EVERY = 3;
@@ -2243,11 +2288,13 @@ function showClassPrimer(){
 }
 function buildPath(){
   const W_START = [
+    {t:'drill', l:'Hear & pick Thai', s:'sound → script from covered words', go:()=>el('cta-hear-thai').click()},
     {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
     {t:'speak', l:'Echo chamber', s:'record and compare aloud', go:()=>el('echo-btn').click()},
     {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
   ];
   const W_TONE = [
+    {t:'drill', l:'Hear & pick Thai', s:'sound → script from covered words', go:()=>el('cta-hear-thai').click()},
     {t:'drill', l:'Sound twins', s:'hear tone & length apart', go:()=>el('twins-btn').click()},
     {t:'drill', l:'Class sprint', s:'mid / high / low at speed', go:()=>el('class-sprint-btn').click()},
     {t:'drill', l:'Spell it', s:'build the word from tiles', go:()=>el('cta-spell').click()},
@@ -3097,13 +3144,14 @@ function renderLessonStep(){
     const ch = L.glyphs[p.i-glyphStart], g = GLYPHS[ch];
     const clsHtml = g.type==='c' ? `<span class="classchip ${g.cls}">${CLS_LABEL[g.cls]}</span>` :
       `<span class="classchip" style="color:var(--blue);border-color:var(--blue)">${g.type==='v'?'Vowel':'Tone mark'}</span>`;
+    const clsTeach = g.type==='c' ? `<div class="sub" style="font-size:12px;margin-top:8px">${esc(classReason(g.cls))}</div>` : '';
     stage.innerHTML = `
       <div class="glyph-big ${g.type==='c'?g.cls:''}" style="${(g.disp||ch).length>2?'font-size:84px':''}">${g.disp || ch}</div>
       <div class="center">
         <div class="name-thai">${g.name}</div>
         <div class="translit">"${g.sound}" · ${g.nameTr}</div>
         <div class="gloss">${g.type==='c' ? 'name means: ' + g.gloss : g.gloss}${g.demo ? ' · e.g. ' + g.demo : ''}</div>
-        <div style="margin-top:12px">${clsHtml}</div>
+        <div style="margin-top:12px">${clsHtml}${clsTeach}</div>
       </div>
       ${glyphAudioPanel(ch)}
       <div class="stage-actions">
@@ -3222,31 +3270,82 @@ function finishLesson(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
 
+function glyphToSoundQuestion(ch){
+  const g = GLYPHS[ch], correct = g ? g.sound : '?';
+  const opts = pickN(glyphSoundPool(g, correct), correct, 3);
+  return {kind:'mcq', prompt:glyphLabel(ch), promptBig:true, text:glyphSoundPrompt(g),
+    answer:correct, options:shuffle([correct,...opts]),
+    explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
+}
+function hearToGlyphQuestion(ch, L){
+  const g = GLYPHS[ch]; if(!g) return null;
+  const covered = coveredGlyphsForLesson(L, g.type)
+    .filter(x=>x!==ch && GLYPHS[x] && GLYPHS[x].sound !== g.sound);
+  const wrong = sample(covered, 3).map(glyphLabel);
+  if(wrong.length < 2) return null;
+  const audio = glyphQuizAudio(ch);
+  const type = g.type==='c' ? 'consonant' : g.type==='v' ? 'vowel' : 'mark';
+  return {kind:'mcq', text:'Hear it. Which ' + type + ' is it?', say:audio.say, sayLabel:audio.sayLabel,
+    autoplay:true, answer:glyphLabel(ch), options:shuffle([glyphLabel(ch),...wrong]), thaiOpts:true,
+    explain:g.type==='c' ? g.name+' · '+g.nameTr : g.sound};
+}
+function spotDifferenceQuestion(ch, L){
+  const g = GLYPHS[ch], set = CONF_SETS.find(s=>s.includes(ch));
+  if(!g || !set) return null;
+  const covered = set.filter(x=>coveredGlyphsForLesson(L, 'c').includes(x));
+  if(covered.length < 2) return null;
+  return {kind:'mcq', text:'Spot the letter: ' + g.name, answer:ch,
+    options:shuffle(covered.slice()), thaiOpts:true,
+    explain:g.sound + ' · ' + CLS_LABEL[g.cls]};
+}
+function classFromMemoryQuestion(ch){
+  const g = GLYPHS[ch];
+  return {kind:'mcq', prompt:ch, promptBig:true, text:classQuestionText(g.cls),
+    answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)),
+    explain:classReason(g.cls)};
+}
+function classPickQuestion(ch, L){
+  const g = GLYPHS[ch]; if(!g || g.type!=='c') return null;
+  const wrong = sample(coveredGlyphsForLesson(L, 'c').filter(x=>x!==ch && GLYPHS[x].cls !== g.cls), 3);
+  if(wrong.length < 2) return null;
+  return {kind:'mcq', text:'Pick the ' + CLS_LABEL[g.cls] + ' class consonant', answer:ch,
+    options:shuffle([ch,...wrong]), thaiOpts:true,
+    explain:ch + ' is ' + CLS_LABEL[g.cls] + ': ' + classReason(g.cls)};
+}
+function miniDecodeQuestion(w, pool){
+  const wrong = sample([...new Set(pool.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
+  if(wrong.length < 2) return null;
+  return {kind:'mcq', prompt:w.thai, promptBig:true, text:'Mini decode: how does this read?',
+    answer:w.tr, options:shuffle([w.tr,...wrong]), explain:w.tr};
+}
+function readingToThaiQuestion(w, pool){
+  const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+  if(wrong.length < 2) return null;
+  return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?',
+    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr};
+}
+
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
 function buildLessonQuiz(L){
-  const soundQs = [], classQs = [];
+  const glyphQs = [], classQs = [], classPickQs = [], spotQs = [];
   const upToLessonNum = lessonNum(L.id);
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
-  const allCons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
-  const allWords = LESSONS.flatMap(x=>x.words);
+  const coveredWords = coveredWordsForLesson(L);
+  L.glyphs.forEach(ch=>{
+    if(!GLYPHS[ch]) return;
+    glyphQs.push(glyphToSoundQuestion(ch));
+    const heard = hearToGlyphQuestion(ch, L); if(heard) glyphQs.push(heard);
+    const spot = spotDifferenceQuestion(ch, L); if(spot) spotQs.push(spot);
+  });
   cons.forEach(ch=>{
-    const g = GLYPHS[ch];
-    const wrong = sample([...new Set(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound).map(c=>GLYPHS[c].sound))],3);
-    soundQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'What sound is this?', answer:g.sound, options:shuffle([g.sound,...wrong])});
-    const wrongG = sample(allCons.filter(c=>c!==ch && GLYPHS[c].sound!==g.sound),3);
-    soundQs.push({kind:'mcq', text:`Which letter makes the "${g.sound}" sound?`, answer:ch, options:shuffle([ch,...wrongG]), thaiOpts:true});
-    // SPINE (v2.28): every consonant is also drilled on its CLASS in-lesson — class is the dial that sets tone
-    classQs.push({kind:'mcq', prompt:ch, promptBig:true, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)), ...glyphQuizAudio(ch),
-      explain: g.cls==='mid'?'one of the mid 9 (ไก่จิก…)':g.cls==='high'?'one of the high set (breathy/hissy)':'not mid or high → low by default'});
+    // SPINE (v2.28): every consonant is drilled on CLASS from neutral glyphs — class is the dial that sets tone
+    classQs.push(classFromMemoryQuestion(ch));
+    const pick = classPickQuestion(ch, L); if(pick) classPickQs.push(pick);
   });
   const readQs = L.words.map(w=>{
-    const wrong = sample([...new Set(allWords.filter(x=>x.thai!==w.thai && x.tr!==w.tr).map(x=>x.tr))],3);
-    return {kind:'mcq', prompt:w.thai, promptBig:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong])};
-  });
-  const reverseReadQs = L.words.map(w=>{
-    const wrong = sample(L.words.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
-    return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?', answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true};
-  });
+    return miniDecodeQuestion(w, coveredWords);
+  }).filter(Boolean);
+  const reverseReadQs = L.words.map(w=>readingToThaiQuestion(w, coveredWords)).filter(Boolean);
   const toneQs = L.words.map(w=>toneQuestion(w, upToLessonNum)).filter(Boolean);
   // Two objective listening checks per lesson: core vocabulary only, heard word → Thai script.
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
@@ -3257,12 +3356,9 @@ function buildLessonQuiz(L){
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
   });
   const guaranteed = classQs.concat(listenQs).concat(L.extraQuiz||[]);
-  const scriptQs = soundQs.concat(readQs).concat(toneQs);
+  const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(reverseReadQs).concat(classPickQs).concat(toneQs);
   const fill = Math.max(0, 10 - guaranteed.length);
   let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
-  if(fillers.length < fill){
-    fillers = fillers.concat(sample(reverseReadQs, Math.min(fill - fillers.length, reverseReadQs.length)));
-  }
   return shuffle(guaranteed.concat(fillers));
 }
 function validateVocabularyContracts(){
@@ -3308,6 +3404,20 @@ function validateCoverageContracts(){
       });
     });
   }
+  LESSONS.forEach(L=>{
+    const taught = taughtGlyphSet(lessonIdsThrough(L));
+    const wordThai = new Set(coveredWordsForLesson(L).map(w=>w.thai));
+    const labels = new Set();
+    coveredGlyphsForLesson(L).forEach(g=>{ labels.add(g); labels.add(glyphLabel(g)); });
+    buildLessonQuiz(L).forEach((q,i)=>{
+      if(!q.thaiOpts) return;
+      [q.answer].concat(q.options||[]).forEach(o=>{
+        if(!labels.has(o) && !wordThai.has(o) && !thaiTextReadable(o, taught)){
+          errors.push(L.id + ' q' + (i+1) + ': Thai option is not covered (' + o + ')');
+        }
+      });
+    });
+  });
   const afterL1 = taughtGlyphSet(['l1']);
   if(readableTwinSets(afterL1).length) errors.push('Sound Twins has readable sets too early; expected none after Lesson 1');
   const afterL4 = taughtGlyphSet(['l1','l2','l3','l4']);
@@ -3699,6 +3809,11 @@ el('cta-quiz').addEventListener('click', ()=>{
   if(!qs.length){ toast('Finish a lesson first'); return; }
   startGenericQuiz(qs, 'Mixed quiz');
 });
+el('cta-hear-thai').addEventListener('click', ()=>{
+  const qs = buildHearPickThaiQuiz();
+  if(qs.length < 4){ toast('Finish Lesson 1 first — this uses covered words only'); return; }
+  startGenericQuiz(qs, 'Hear & pick Thai');
+});
 
 function startFlashcards(queue){
   player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now()};
@@ -3826,6 +3941,14 @@ function buildMixedQuiz(){
     if(tq) qs.push(tq);
   });
   return sample(qs, Math.min(10, qs.length));
+}
+function buildHearPickThaiQuiz(){
+  const pool = coveredSoundThaiItems();
+  return sample(pool, Math.min(10, pool.length)).map(w=>{
+    const wrong = sample(pool.filter(x=>x.thai!==w.thai).map(x=>x.thai),3);
+    return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai word is it?', say:w.thai, autoplay:true,
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, explain:w.tr, axis:'listen'};
+  }).filter(q=>q.options.length >= 4);
 }
 
 function startGenericQuiz(qs, label, opts){

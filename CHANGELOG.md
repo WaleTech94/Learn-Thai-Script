@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v3.11 — 2026-06-24
+
+- Added Hear & Pick Thai as an optional depth drill: audio/transliteration prompt → choose the covered Thai word, with no definitions and no tone-licence shortcut.
+- Rebalanced generated lesson quizzes across the whole course so checks rotate retrieval direction: hear→glyph, glyph→sound, spot-the-letter, mini decode, reading→Thai, tone and listening.
+- Made class teaching more explicit on consonant teaching cards and kept class checks visually neutral: choose class from memory, with feedback explaining mid/high/low logic.
+- Added class-from-category checks where the covered-letter pool makes a single correct answer possible.
+- Kept all new lesson/depth activity pools restricted to covered lesson content.
+
 ## v3.10 — 2026-06-24
 
 - Tightened SRS review multiple-choice logic for glyph cards.
