@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.5 — 2026-06-25
+
+- Reworked tone teaching so Thai tone marks (`่ ้ ๊ ๋`) and consonant class are the visible route to tone, with transliteration tone signs treated as reading hints only.
+- Enlarged Lesson 4's class/mark/tone comparison into readable Thai-script tiles for `บ้าน`, `ห้า` and `ไม่`.
+- Changed tone-focused Quick Decode checks to answer with tone names instead of transliteration spellings.
+- Added visible class-colour badges to generated tone-rule questions and key manual tone-grid questions.
+- Renamed the Thai Tones transliteration key so Latin diacritics are no longer called tone marks.
+- Removed AI-ish wording from current app and project copy.
+- Kept lesson order, mastery gates and the state schema unchanged.
+
 ## v4.4 — 2026-06-25
 
 - Completed the balanced multiple-choice pass for Thai-script choices, not just Mini decode / Quick decode transliteration choices.
