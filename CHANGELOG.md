@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.7 — 2026-06-25
+
+- Removed transliteration-cued `reading → Thai` questions from generated lesson quizzes, including Lesson 4 cases such as `bâan` → `บ้าน`.
+- Kept Thai-script-first lesson checks in place through Mini Decode, tone, listening, class, final-sound and structural mechanism questions.
+- Left Thai-choice practice available in sound-cued and review contexts where the prompt is not a Latin transliteration.
+- Kept lesson order, mastery gates and the state schema unchanged.
+
 ## v4.6 — 2026-06-25
 
 - Added shared class-colour rendering for connected Thai so consonant letters show mid/high/low colours on teaching and practice surfaces.

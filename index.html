@@ -677,7 +677,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.6</span>
+      <span class="version-pill">v4.7</span>
     </header>
 
     <section class="today-focus">
@@ -757,7 +757,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.6 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.7 (PWA)</div>
     </div>
   </section>
 
@@ -4479,13 +4479,6 @@ function miniDecodeQuestion(w, pool){
   return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:'Mini decode: how does this read?',
     answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
 }
-function readingToThaiQuestion(w, pool, taught){
-  const wrong = wordThaiDistractors(w, pool, 3, taught);
-  if(wrong.length < 2) return null;
-  return {kind:'mcq', prompt:w.tr, text:'Which Thai matches this reading?',
-    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr};
-}
-
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
 function buildLessonQuiz(L){
   const glyphQs = [], classQs = [], classPickQs = [], spotQs = [];
@@ -4507,7 +4500,6 @@ function buildLessonQuiz(L){
   const readQs = L.words.map(w=>{
     return miniDecodeQuestion(w, coveredWords);
   }).filter(Boolean);
-  const reverseReadQs = L.words.map(w=>readingToThaiQuestion(w, coveredWords, taught)).filter(Boolean);
   const finalQs = L.words.map(w=>finalSoundQuestion(w)).filter(Boolean);
   const hiddenQs = L.words.map(w=>hiddenVowelQuestion(w)).filter(Boolean);
   const orderQs = L.words.map(w=>vowelOrderQuestion(w)).filter(Boolean);
@@ -4525,7 +4517,7 @@ function buildLessonQuiz(L){
   });
   const structureQs = [hiddenQs[0], orderQs[0], liveDeadQs[0], lengthQs[0], clusterQs[0]].filter(Boolean);
   const guaranteed = classQs.concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(L.extraQuiz||[]);
-  const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(reverseReadQs).concat(classPickQs)
+  const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(classPickQs)
     .concat(finalQs.slice(1)).concat(hiddenQs.slice(1)).concat(orderQs.slice(1)).concat(liveDeadQs.slice(1))
     .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs);
   const fill = Math.max(0, 10 - guaranteed.length);
@@ -4670,9 +4662,8 @@ function validateBalancedComponentChoiceContracts(){
       }
       const thaiGrid = componentGridThaiDistractors(w, pool, 3, taught);
       if(thaiGrid.length >= 3){
-        const q = readingToThaiQuestion(w, pool, taught);
-        if(!q) errors.push(L.id + ':' + w.thai + ' missing eligible Thai-choice question');
-        else if(!hasBalancedThaiGrid(w.thai, q.options||[])){
+        const opts = [w.thai].concat(wordThaiDistractors(w, pool, 3, taught));
+        if(!hasBalancedThaiGrid(w.thai, opts)){
           errors.push(L.id + ':' + w.thai + ' Thai-choice options do not keep two component axes live');
         }
       }
@@ -5261,7 +5252,7 @@ function buildHearPickThaiQuiz(){
   const taught = taughtGlyphSet();
   return sample(pool, Math.min(10, pool.length)).map(w=>{
     const wrong = wordThaiDistractors(w, pool, 3, taught);
-    return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
+    return {kind:'mcq', text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
 }
