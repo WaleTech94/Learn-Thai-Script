@@ -668,7 +668,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.2</span>
+      <span class="version-pill">v4.3</span>
     </header>
 
     <section class="today-focus">
@@ -748,7 +748,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.2 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.3 (PWA)</div>
     </div>
   </section>
 
@@ -2392,6 +2392,10 @@ function rankedOptionValues(items, answer, n, scoreFn, valueFn, fallbackValues){
 function sameConfSet(a, b){
   return CONF_SETS.some(set=>set.includes(a) && set.includes(b));
 }
+const VOWEL_CONF_SETS = [["ี","ิ"],["ู","ุ"],["เ","แ"],["ไ","ใ","โ"],["า","ะ","ั"],["เ◌า","เ◌ีย","เ◌ือ"],["ึ","ื"]];
+function sameVowelConfSet(a, b){
+  return VOWEL_CONF_SETS.some(set=>set.includes(a) && set.includes(b));
+}
 function bareSound(s){
   return String(s||'').replace(/\s*\((long|short)\)/g,'').replace(/\s+/g,' ').trim();
 }
@@ -2415,6 +2419,7 @@ function glyphMisconceptionScore(ch, other){
     if(g.cls === o.cls) score += 2;
     if((g.rare && o.rare) || (!g.rare && !o.rare)) score += 1;
   } else if(g.type === 'v'){
+    if(sameVowelConfSet(ch, other)) score += 9;
     if(vowelFamily(g.sound) === vowelFamily(o.sound)) score += 8;
     if((/short/.test(g.sound) && /long/.test(o.sound)) || (/long/.test(g.sound) && /short/.test(o.sound))) score += 3;
     if(String(g.disp||'').slice(0,1) === String(o.disp||'').slice(0,1)) score += 2;
@@ -2471,12 +2476,38 @@ function firstTrChunk(tr){
   const two = s.slice(0,2);
   return ['bp','dt','kh','ch','ng','ph','th'].includes(two) ? two : s.slice(0,1);
 }
+function firstTrChunkRaw(tr){
+  const raw = String(tr||'').split(/[ -]/)[0] || '';
+  const head = firstTrChunk(raw);
+  return head ? raw.slice(0, head.length) : '';
+}
 function trRime(tr){
   const s = trLetters(String(tr||'').split(/[ -]/)[0]||'');
   const head = firstTrChunk(tr);
   return head ? s.slice(head.length) : s;
 }
+function trRimeRaw(tr){
+  const raw = String(tr||'').split(/[ -]/)[0] || '';
+  const head = firstTrChunkRaw(raw);
+  return head ? raw.slice(head.length) : '';
+}
 function syllableCount(tr){ return String(tr||'').split(/[ -]/).filter(Boolean).length; }
+function readingParts(tr){
+  if(!monoSyllable({tr:tr})) return null;
+  const onset = firstTrChunkRaw(tr), rime = trRimeRaw(tr);
+  if(!onset || !rime || !/^[a-z]+$/i.test(onset)) return null;
+  const plainRime = stripToneMarks(rime).toLowerCase();
+  if(!/^[aeiou]/.test(plainRime)) return null;                    // avoid true-cluster starts such as khráp/bplaa.
+  return {onset:onset.toLowerCase(), rime:rime.toLowerCase(), plainRime};
+}
+function rimeFamily(rime){
+  const plain = stripToneMarks(rime).toLowerCase();
+  if(/ng$/.test(plain)) return 'ring-ng';
+  if(/[nm]$/.test(plain)) return 'ring';
+  if(/[ktp]$/.test(plain)) return 'stop';
+  if(/(ai|ao|aao|oy)$/.test(plain)) return 'glide';
+  return 'open';
+}
 function thaiGlyphOverlap(a, b){
   const A = new Set([...String(a||'')].filter(ch=>/[฀-๿]/.test(ch)));
   let n = 0;
@@ -2504,7 +2535,63 @@ function wordDistractors(w, pool, n, field){
   const scored = (pool||[]).filter(x=>itemThai(x)!==itemThai(w) && wordValue(x, field));
   return rankedOptionValues(scored, answer, n, x=>wordMisconceptionScore(w, x), x=>wordValue(x, field), scored.map(x=>wordValue(x, field)));
 }
-function wordReadingDistractors(w, pool, n){ return wordDistractors(w, pool, n, 'tr'); }
+function componentCandidates(w, pool, axis){
+  const p = readingParts(w.tr);
+  if(!p) return [];
+  const rows = [];
+  (pool||[]).forEach((x,i)=>{
+    if(itemThai(x) === itemThai(w)) return;
+    const xp = readingParts(x.tr);
+    if(!xp) return;
+    const value = axis === 'onset' ? xp.onset : xp.rime;
+    const correct = axis === 'onset' ? p.onset : p.rime;
+    if(!value || value === correct) return;
+    let score = 1;
+    if(axis === 'onset'){
+      if(xp.rime === p.rime) score += 8;
+      if(soundFamily(value) === soundFamily(p.onset)) score += 4;
+      if(firstTrChunk(x.tr) === firstTrChunk(w.tr)) score += 2;
+    } else {
+      if(rimeFamily(value) === rimeFamily(p.rime)) score += 8;
+      if(vowelFamily(xp.plainRime) === vowelFamily(p.plainRime)) score += 5;
+      if(xp.onset === p.onset) score += 4;
+      if(toneOf(x.tr) === toneOf(w.tr)) score += 2;
+    }
+    score += Math.max(0, 5 - i/20);                                // prefer nearer covered/course examples.
+    rows.push({value, score, i});
+  });
+  const best = new Map();
+  rows.forEach(r=>{
+    const prev = best.get(r.value);
+    if(!prev || r.score > prev.score) best.set(r.value, r);
+  });
+  return [...best.values()].sort((a,b)=>b.score-a.score || a.i-b.i).map(x=>x.value);
+}
+function componentGridReadingDistractors(w, pool, n){
+  const p = readingParts(w.tr);
+  if(!p || n < 3) return [];
+  const onset = componentCandidates(w, pool, 'onset')[0];
+  const rime = componentCandidates(w, pool, 'rime')[0];
+  if(!onset || !rime) return [];
+  const answer = String(w.tr||'').toLowerCase();
+  const grid = [onset + p.rime, p.onset + rime, onset + rime]
+    .filter(x=>x && x !== answer);
+  return [...new Set(grid)].slice(0, n);
+}
+function hasBalancedReadingGrid(answer, options){
+  const parts = (options||[]).map(readingParts).filter(Boolean);
+  if(parts.length < 4) return false;
+  const onsets = new Set(parts.map(p=>p.onset));
+  const rimes = new Set(parts.map(p=>p.rime));
+  const combos = new Set(parts.map(p=>p.onset + '|' + p.rime));
+  const ans = readingParts(answer);
+  return !!ans && onsets.size >= 2 && rimes.size >= 2 && combos.size >= 4;
+}
+function wordReadingDistractors(w, pool, n){
+  const grid = componentGridReadingDistractors(w, pool, n);
+  if(grid.length >= Math.min(3, n)) return grid;
+  return wordDistractors(w, pool, n, 'tr');
+}
 function wordThaiDistractors(w, pool, n){ return wordDistractors(w, pool, n, 'thai'); }
 function wordMeaningDistractors(w, pool, n){
   const scored = (pool||[]).filter(x=>itemThai(x)!==itemThai(w) && x.en);
@@ -4415,6 +4502,23 @@ function validateStructuralClarityContracts(){
   if(errors.length) throw new Error('Structural clarity contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateBalancedComponentChoiceContracts(){
+  const errors = [];
+  LESSONS.forEach(L=>{
+    const pool = coveredWordsForLesson(L);
+    L.words.forEach(w=>{
+      const grid = componentGridReadingDistractors(w, pool, 3);
+      if(grid.length < 3) return;
+      const q = miniDecodeQuestion(w, pool);
+      if(!q) errors.push(L.id + ':' + w.thai + ' missing eligible mini-decode question');
+      else if(!hasBalancedReadingGrid(w.tr, q.options||[])){
+        errors.push(L.id + ':' + w.thai + ' mini-decode options do not keep two component axes live');
+      }
+    });
+  });
+  if(errors.length) throw new Error('Balanced component-choice contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function wrongOptions(q){ return (q.options||[]).filter(o=>String(o)!==String(q.answer)); }
 function bestGlyphSoundScore(ch, pool, value){
   let best = 0;
@@ -5429,6 +5533,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateReviewChoiceContracts();
   validateFinalSoundContracts();
   validateStructuralClarityContracts();
+  validateBalancedComponentChoiceContracts();
   validateMisconceptionChoiceContracts();
   await loadState();
   let migrated = false;

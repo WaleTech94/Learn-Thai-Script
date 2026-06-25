@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.3 — 2026-06-25
+
+- Added balanced component-grid reading distractors for eligible Mini decode and Quick decode items, so options keep two axes live, such as start consonant × vowel/rime.
+- Added `validateBalancedComponentChoiceContracts()` so eligible decode questions cannot regress to one-correct-plus-random distractors.
+- Tightened vowel glyph misconception scoring so visual/sound traps such as `ไ/โ`, `เ/แ`, short/long vowel pairs and wrap vowels are preferred where covered.
+- Kept lesson order, covered-content gating, quiz size, mastery gates and the state schema unchanged.
+
 ## v4.2 — 2026-06-24
 
 - Added a structural clarity pass across Phase 1 for hidden vowels, written-vs-spoken vowel order, live/dead sound feel, short/long vowel length, and true/fake clusters.
