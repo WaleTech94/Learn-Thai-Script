@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.4 — 2026-06-25
+
+- Completed the balanced multiple-choice pass for Thai-script choices, not just Mini decode / Quick decode transliteration choices.
+- Added coverage-checked two-axis Thai grids for eligible reading→Thai and listening→Thai options in lesson quizzes, Foundation Ear, mixed review, Hear & Pick Thai and legacy review cards.
+- Filtered synthetic Thai grid options through taught glyph coverage before they can appear.
+- Expanded `validateBalancedComponentChoiceContracts()` so it now rejects missing Thai-choice and lesson-local listening grids, including cases like Lesson 2 `ดี / บี / ดู / บู`.
+- Kept lesson order, quiz size, mastery gates and the state schema unchanged.
+
 ## v4.3 — 2026-06-25
 
 - Added balanced component-grid reading distractors for eligible Mini decode and Quick decode items, so options keep two axes live, such as start consonant × vowel/rime.

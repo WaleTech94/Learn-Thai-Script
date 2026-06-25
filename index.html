@@ -668,7 +668,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.3</span>
+      <span class="version-pill">v4.4</span>
     </header>
 
     <section class="today-focus">
@@ -748,7 +748,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.3 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.4 (PWA)</div>
     </div>
   </section>
 
@@ -2396,6 +2396,9 @@ const VOWEL_CONF_SETS = [["ี","ิ"],["ู","ุ"],["เ","แ"],["ไ","ใ",
 function sameVowelConfSet(a, b){
   return VOWEL_CONF_SETS.some(set=>set.includes(a) && set.includes(b));
 }
+function glyphIntroIndex(ch){
+  return LESSONS.findIndex(L=>(L.glyphs||[]).includes(ch));
+}
 function bareSound(s){
   return String(s||'').replace(/\s*\((long|short)\)/g,'').replace(/\s+/g,' ').trim();
 }
@@ -2508,6 +2511,23 @@ function rimeFamily(rime){
   if(/(ai|ao|aao|oy)$/.test(plain)) return 'glide';
   return 'open';
 }
+const FRONT_VOWEL_CHARS = new Set(['เ','แ','ไ','ใ','โ']);
+function thaiSimplePartsText(thai){
+  const chars = [...String(thai||'')];
+  if(!chars.length || chars.some(ch=>ch===' ' || ch==='-' || ch==='์' || ch==='ๆ')) return null;
+  let i = 0, pre = '';
+  while(i < chars.length && FRONT_VOWEL_CHARS.has(chars[i])) pre += chars[i++];
+  const onset = chars[i++];
+  if(!GLYPHS[onset] || GLYPHS[onset].type !== 'c') return null;
+  const post = chars.slice(i).join('');
+  if(!pre && !post) return null;
+  return {onset, pre, post, rimeKey:pre + '|' + post};
+}
+function thaiSimpleParts(w){ return w ? thaiSimplePartsText(itemThai(w)) : null; }
+function composeThaiGridOption(onset, rime){
+  if(!onset || !rime) return null;
+  return rime.pre + onset + rime.post;
+}
 function thaiGlyphOverlap(a, b){
   const A = new Set([...String(a||'')].filter(ch=>/[฀-๿]/.test(ch)));
   let n = 0;
@@ -2567,6 +2587,40 @@ function componentCandidates(w, pool, axis){
   });
   return [...best.values()].sort((a,b)=>b.score-a.score || a.i-b.i).map(x=>x.value);
 }
+function componentThaiCandidates(w, pool, axis){
+  const p = readingParts(w.tr), tp = thaiSimpleParts(w);
+  if(!p || !tp) return [];
+  const targetIntro = glyphIntroIndex(tp.onset);
+  const rows = [];
+  (pool||[]).forEach((x,i)=>{
+    if(itemThai(x) === itemThai(w)) return;
+    const xp = readingParts(x.tr), xt = thaiSimpleParts(x);
+    if(!xp || !xt) return;
+    const value = axis === 'onset' ? xp.onset : xp.rime;
+    const correct = axis === 'onset' ? p.onset : p.rime;
+    if(!value || value === correct) return;
+    let score = 1;
+    if(axis === 'onset'){
+      if(xp.rime === p.rime) score += 8;
+      if(soundFamily(value) === soundFamily(p.onset)) score += 4;
+      if(GLYPHS[xt.onset] && GLYPHS[tp.onset] && GLYPHS[xt.onset].cls === GLYPHS[tp.onset].cls) score += 2;
+      const sourceIntro = glyphIntroIndex(xt.onset);
+      if(sourceIntro >= 0 && sourceIntro === targetIntro) score += 3;
+      rows.push({value, thai:xt.onset, score:score + Math.max(0, 5 - i/20), i});
+    } else {
+      if(rimeFamily(value) === rimeFamily(p.rime)) score += 8;
+      if(vowelFamily(xp.plainRime) === vowelFamily(p.plainRime)) score += 5;
+      if(xp.onset === p.onset) score += 4;
+      rows.push({value, thai:{pre:xt.pre, post:xt.post}, score:score + Math.max(0, 5 - i/20), i});
+    }
+  });
+  const best = new Map();
+  rows.forEach(r=>{
+    const prev = best.get(r.value);
+    if(!prev || r.score > prev.score) best.set(r.value, r);
+  });
+  return [...best.values()].sort((a,b)=>b.score-a.score || a.i-b.i).map(x=>x.thai);
+}
 function componentGridReadingDistractors(w, pool, n){
   const p = readingParts(w.tr);
   if(!p || n < 3) return [];
@@ -2578,6 +2632,20 @@ function componentGridReadingDistractors(w, pool, n){
     .filter(x=>x && x !== answer);
   return [...new Set(grid)].slice(0, n);
 }
+function componentGridThaiDistractors(w, pool, n, taught){
+  const tp = thaiSimpleParts(w);
+  if(!tp || n < 3) return [];
+  const onset = componentThaiCandidates(w, pool, 'onset')[0];
+  const rime = componentThaiCandidates(w, pool, 'rime')[0];
+  if(!onset || !rime) return [];
+  const answer = itemThai(w);
+  const grid = [
+    composeThaiGridOption(onset, {pre:tp.pre, post:tp.post}),
+    composeThaiGridOption(tp.onset, rime),
+    composeThaiGridOption(onset, rime)
+  ].filter(x=>x && x !== answer && (!taught || thaiTextReadable(x, taught)));
+  return [...new Set(grid)].slice(0, n);
+}
 function hasBalancedReadingGrid(answer, options){
   const parts = (options||[]).map(readingParts).filter(Boolean);
   if(parts.length < 4) return false;
@@ -2587,12 +2655,25 @@ function hasBalancedReadingGrid(answer, options){
   const ans = readingParts(answer);
   return !!ans && onsets.size >= 2 && rimes.size >= 2 && combos.size >= 4;
 }
+function hasBalancedThaiGrid(answer, options){
+  const parts = (options||[]).map(thaiSimplePartsText).filter(Boolean);
+  if(parts.length < 4) return false;
+  const onsets = new Set(parts.map(p=>p.onset));
+  const rimes = new Set(parts.map(p=>p.rimeKey));
+  const combos = new Set(parts.map(p=>p.onset + '|' + p.rimeKey));
+  const ans = thaiSimplePartsText(answer);
+  return !!ans && onsets.size >= 2 && rimes.size >= 2 && combos.size >= 4;
+}
 function wordReadingDistractors(w, pool, n){
   const grid = componentGridReadingDistractors(w, pool, n);
   if(grid.length >= Math.min(3, n)) return grid;
   return wordDistractors(w, pool, n, 'tr');
 }
-function wordThaiDistractors(w, pool, n){ return wordDistractors(w, pool, n, 'thai'); }
+function wordThaiDistractors(w, pool, n, taught){
+  const grid = componentGridThaiDistractors(w, pool, n, taught);
+  if(grid.length >= Math.min(3, n)) return grid;
+  return wordDistractors(w, pool, n, 'thai');
+}
 function wordMeaningDistractors(w, pool, n){
   const scored = (pool||[]).filter(x=>itemThai(x)!==itemThai(w) && x.en);
   return rankedOptionValues(scored, w.en, n, x=>(x.cat&&w.cat&&x.cat===w.cat ? 10 : 0) + Math.ceil(wordMisconceptionScore(w, x)/3), x=>x.en, scored.map(x=>x.en));
@@ -2609,9 +2690,13 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
   }
   if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
     const thai = id.slice(2), w = findWord(thai);
+    const taught = taughtGlyphSet();
     let pool = learnedWordPool();
-    let opts = w ? wordThaiDistractors(w, pool, 3) : pickN(pool.map(x=>x.thai), thai, 3);
-    if(opts.length < 3) opts = w ? wordThaiDistractors(w, rawWordPool(), 3) : pickN(rawWordPool().map(x=>x.thai), thai, 3);
+    let opts = w ? wordThaiDistractors(w, pool, 3, taught) : pickN(pool.map(x=>x.thai), thai, 3);
+    if(opts.length < 3){
+      const readable = rawWordPool().filter(x=>thaiTextReadable(x.thai, taught));
+      opts = w ? wordThaiDistractors(w, readable, 3, taught) : pickN(readable.map(x=>x.thai), thai, 3);
+    }
     return {prompt: w?w.en:'?', text:'Which one in Thai?', answer:thai,
       options:shuffle([thai, ...opts]), thaiOpts:true, _choice:'word-thai', explain: w ? w.tr : ''};
   }
@@ -4040,9 +4125,10 @@ function startCheckpoint(i){
 }
 function buildFoundationEarQuiz(){
   const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
+  const taught = taughtGlyphSet(LESSONS.slice(0,6).map(L=>L.id));
   return sample(pool, Math.min(10,pool.length)).map(w=>{
-    const wrong = wordThaiDistractors(w, pool, 3);
-    return {kind:'mcq', text:'Listen: which Thai word did you hear?', say:w.thai, autoplay:true,
+    const wrong = wordThaiDistractors(w, pool, 3, taught);
+    return {kind:'mcq', text:'Listen: which Thai did you hear?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
 }
@@ -4328,10 +4414,10 @@ function miniDecodeQuestion(w, pool){
   return {kind:'mcq', prompt:w.thai, promptBig:true, text:'Mini decode: how does this read?',
     answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
 }
-function readingToThaiQuestion(w, pool){
-  const wrong = wordThaiDistractors(w, pool, 3);
+function readingToThaiQuestion(w, pool, taught){
+  const wrong = wordThaiDistractors(w, pool, 3, taught);
   if(wrong.length < 2) return null;
-  return {kind:'mcq', prompt:w.tr, text:'Which Thai word has this reading?',
+  return {kind:'mcq', prompt:w.tr, text:'Which Thai matches this reading?',
     answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr};
 }
 
@@ -4341,6 +4427,7 @@ function buildLessonQuiz(L){
   const upToLessonNum = lessonNum(L.id);
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const coveredWords = coveredWordsForLesson(L);
+  const taught = taughtGlyphSet(lessonIdsThrough(L));
   L.glyphs.forEach(ch=>{
     if(!GLYPHS[ch]) return;
     glyphQs.push(glyphToSoundQuestion(ch, L));
@@ -4355,7 +4442,7 @@ function buildLessonQuiz(L){
   const readQs = L.words.map(w=>{
     return miniDecodeQuestion(w, coveredWords);
   }).filter(Boolean);
-  const reverseReadQs = L.words.map(w=>readingToThaiQuestion(w, coveredWords)).filter(Boolean);
+  const reverseReadQs = L.words.map(w=>readingToThaiQuestion(w, coveredWords, taught)).filter(Boolean);
   const finalQs = L.words.map(w=>finalSoundQuestion(w)).filter(Boolean);
   const hiddenQs = L.words.map(w=>hiddenVowelQuestion(w)).filter(Boolean);
   const orderQs = L.words.map(w=>vowelOrderQuestion(w)).filter(Boolean);
@@ -4367,8 +4454,8 @@ function buildLessonQuiz(L){
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
   const core = lessonCoreWords(L);
   const listenQs = core.slice(0,2).map(w=>{
-    const wrong = wordThaiDistractors(w, L.words, 3);
-    return {kind:'mcq', text:'Listen: which Thai word did you hear?', say:w.thai, autoplay:true,
+    const wrong = wordThaiDistractors(w, L.words, 3, taught);
+    return {kind:'mcq', text:'Listen: which Thai did you hear?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const structureQs = [hiddenQs[0], orderQs[0], liveDeadQs[0], lengthQs[0], clusterQs[0]].filter(Boolean);
@@ -4506,13 +4593,30 @@ function validateBalancedComponentChoiceContracts(){
   const errors = [];
   LESSONS.forEach(L=>{
     const pool = coveredWordsForLesson(L);
+    const taught = taughtGlyphSet(lessonIdsThrough(L));
     L.words.forEach(w=>{
       const grid = componentGridReadingDistractors(w, pool, 3);
-      if(grid.length < 3) return;
-      const q = miniDecodeQuestion(w, pool);
-      if(!q) errors.push(L.id + ':' + w.thai + ' missing eligible mini-decode question');
-      else if(!hasBalancedReadingGrid(w.tr, q.options||[])){
-        errors.push(L.id + ':' + w.thai + ' mini-decode options do not keep two component axes live');
+      if(grid.length >= 3){
+        const q = miniDecodeQuestion(w, pool);
+        if(!q) errors.push(L.id + ':' + w.thai + ' missing eligible mini-decode question');
+        else if(!hasBalancedReadingGrid(w.tr, q.options||[])){
+          errors.push(L.id + ':' + w.thai + ' mini-decode options do not keep two component axes live');
+        }
+      }
+      const thaiGrid = componentGridThaiDistractors(w, pool, 3, taught);
+      if(thaiGrid.length >= 3){
+        const q = readingToThaiQuestion(w, pool, taught);
+        if(!q) errors.push(L.id + ':' + w.thai + ' missing eligible Thai-choice question');
+        else if(!hasBalancedThaiGrid(w.thai, q.options||[])){
+          errors.push(L.id + ':' + w.thai + ' Thai-choice options do not keep two component axes live');
+        }
+      }
+      const lessonGrid = componentGridThaiDistractors(w, L.words, 3, taught);
+      if(lessonGrid.length >= 3){
+        const opts = [w.thai].concat(wordThaiDistractors(w, L.words, 3, taught));
+        if(!hasBalancedThaiGrid(w.thai, opts)){
+          errors.push(L.id + ':' + w.thai + ' lesson-local listening options do not keep two component axes live');
+        }
       }
     });
   });
@@ -4543,9 +4647,19 @@ function bestWordValueScore(w, pool, value, field){
   });
   return best;
 }
-function checkWordDistractors(errors, label, w, pool, field){
-  const opts = wordDistractors(w, pool, 3, field);
+function checkWordDistractors(errors, label, w, pool, field, taught){
   const answer = wordValue(w, field);
+  if(field === 'tr' && componentGridReadingDistractors(w, pool, 3).length >= 3){
+    const opts = wordReadingDistractors(w, pool, 3);
+    if(!hasBalancedReadingGrid(answer, [answer].concat(opts))) errors.push(label + ': missing balanced reading grid');
+    return;
+  }
+  if(field === 'thai' && componentGridThaiDistractors(w, pool, 3, taught).length >= 3){
+    const opts = wordThaiDistractors(w, pool, 3, taught);
+    if(!hasBalancedThaiGrid(answer, [answer].concat(opts))) errors.push(label + ': missing balanced Thai grid');
+    return;
+  }
+  const opts = wordDistractors(w, pool, 3, field);
   const values = new Set((pool||[]).map(x=>wordValue(x, field)).filter(v=>v && String(v)!==String(answer)));
   if(opts.length < Math.min(3, values.size)) errors.push(label + ': not enough word distractors');
   const best = Math.max(0, ...(pool||[]).map(x=>wordMisconceptionScore(w, x)));
@@ -4564,12 +4678,13 @@ function validateMisconceptionChoiceContracts(){
     });
     L.words.forEach(w=>{
       const pool = coveredWordsForLesson(L);
+      const taught = taughtGlyphSet(lessonIdsThrough(L));
       checkWordDistractors(errors, L.id + ':' + w.thai + ' reading', w, pool, 'tr');
-      checkWordDistractors(errors, L.id + ':' + w.thai + ' Thai pick', w, pool, 'thai');
+      checkWordDistractors(errors, L.id + ':' + w.thai + ' Thai pick', w, pool, 'thai', taught);
     });
     const quiz = buildLessonQuiz(L);
     quiz.forEach((q,i)=>{
-      if(q.kind==='mcq' && /(Mini decode|Which Thai word|Listen|Hear it|What .*sound|Pick the .*class consonant)/.test(q.text||'') && !q._choice){
+      if(q.kind==='mcq' && /(Mini decode|Which Thai|Listen|Hear it|What .*sound|Pick the .*class consonant)/.test(q.text||'') && !q._choice){
         errors.push(L.id + ' q' + (i+1) + ': generated MCQ missing misconception-choice tag');
       }
       if(q._choice && wrongOptions(q).length < Math.min(3, (q.options||[]).length-1) && !/^Pick the /.test(q.text||'')){
@@ -5048,6 +5163,7 @@ function renderFlash(){
 function buildMixedQuiz(){
   const glyphs = learnedGlyphIds().filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
   const words = learnedMeaningWords();
+  const taught = taughtGlyphSet();
   const upToLessonNum = state.done.length ? Math.max(...state.done.map(lessonNum)) : 0;
   const phraseIds = Object.keys(state.srs).filter(k=>k.startsWith('w:')).map(k=>k.slice(2));
   const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean);
@@ -5064,7 +5180,7 @@ function buildMixedQuiz(){
     const wrongRead = wordReadingDistractors(w, allWords, 3);
     if(wrongRead.length===3){
       qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), _choice:'word-reading'});
-      const wrongT = wordThaiDistractors(w, allWords, 3);
+      const wrongT = wordThaiDistractors(w, allWords, 3, taught);
       qs.push({kind:'mcq', text:'Listen: which one did you hear?', say:w.thai, autoplay:true,
         answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'});
     }
@@ -5077,9 +5193,10 @@ function buildMixedQuiz(){
 }
 function buildHearPickThaiQuiz(){
   const pool = coveredSoundThaiItems();
+  const taught = taughtGlyphSet();
   return sample(pool, Math.min(10, pool.length)).map(w=>{
-    const wrong = wordThaiDistractors(w, pool, 3);
-    return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai word is it?', say:w.thai, autoplay:true,
+    const wrong = wordThaiDistractors(w, pool, 3, taught);
+    return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
 }
