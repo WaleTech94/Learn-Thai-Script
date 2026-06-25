@@ -90,6 +90,10 @@ h2{font-size:20px;margin-bottom:4px}
 .classchip.mid{color:var(--mid);border-color:var(--mid)}
 .classchip.high{color:var(--high);border-color:var(--high)}
 .classchip.low{color:var(--low);border-color:var(--low)}
+.class-letter{font-family:'Mitr',sans-serif;font-weight:500}
+.class-letter.mid{color:var(--mid)}
+.class-letter.high{color:var(--high)}
+.class-letter.low{color:var(--low)}
 .speak{
   width:44px;height:44px;border-radius:50%;flex:none;
   background:var(--surface2);border:1px solid var(--line);
@@ -673,7 +677,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.5</span>
+      <span class="version-pill">v4.6</span>
     </header>
 
     <section class="today-focus">
@@ -753,7 +757,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.5 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.6 (PWA)</div>
     </div>
   </section>
 
@@ -1201,7 +1205,7 @@ const LESSONS = [
      {thai:"ปี", tr:"bpii", en:"year", vocab:"recognition"}
    ]},
   {id:"l4", we:{m:"ไม่ → ม LOW class + ไม้เอก ่ → FALLING tone = not", twinIdx:1, ask:"tone"}, unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
-   pre:[{h:"Tone marks - the class decides", body:"Two Thai tone marks sit above the consonant: <b>่</b> is <b>ไม้เอก</b>, and <b>้</b> is <b>ไม้โท</b>. The mark is only one part of the rule. Read the initial consonant's class, then the Thai mark, then name the tone.<div class='tone-rule-tiles'><div class='tone-rule-tile'><div class='tone-rule-thai'>บ้าน</div><div class='tone-rule-parts'><span class='classchip mid'>mid class</span> บ + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'>ห้า</div><div class='tone-rule-parts'><span class='classchip high'>high class</span> ห + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'>ไม่</div><div class='tone-rule-parts'><span class='classchip low'>low class</span> ม + ไม้เอก ่</div><div class='tone-rule-result'>falling tone</div></div></div>The full table comes in Unit C."}],
+   pre:[{h:"Tone marks - the class decides", body:"Two Thai tone marks sit above the consonant: <b>่</b> is <b>ไม้เอก</b>, and <b>้</b> is <b>ไม้โท</b>. The mark is only one part of the rule. Read the initial consonant's class, then the Thai mark, then name the tone.<div class='tone-rule-tiles'><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter mid'>บ้</span>า<span class='class-letter low'>น</span></div><div class='tone-rule-parts'><span class='classchip mid'>mid class</span> บ + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter high'>ห้</span>า</div><div class='tone-rule-parts'><span class='classchip high'>high class</span> ห + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'>ไ<span class='class-letter low'>ม่</span></div><div class='tone-rule-parts'><span class='classchip low'>low class</span> ม + ไม้เอก ่</div><div class='tone-rule-result'>falling tone</div></div></div>The full table comes in Unit C."}],
    note:"The same Thai tone mark can make different tones depending on consonant class. Use class + mark to name the tone.",
    words:[
      {thai:"ไม่", tr:"mâi", en:"no / not", vocab:"core"},
@@ -2703,13 +2707,13 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
       opts = w ? wordThaiDistractors(w, readable, 3, taught) : pickN(readable.map(x=>x.thai), thai, 3);
     }
     return {prompt: w?w.en:'?', text:'Which one in Thai?', answer:thai,
-      options:shuffle([thai, ...opts]), thaiOpts:true, _choice:'word-thai', explain: w ? w.tr : ''};
+      options:shuffle([thai, ...opts]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain: w ? w.tr : ''};
   }
   const thai = id.slice(2), w = findWord(thai), correct = w ? w.en : '?';
   let pool = learnedWordPool();
   let opts = w ? wordMeaningDistractors(w, pool, 3) : pickN(pool.map(x=>x.en), correct, 3);
   if(opts.length < 3) opts = w ? wordMeaningDistractors(w, rawWordPool(), 3) : pickN(rawWordPool().map(x=>x.en), correct, 3);
-  return {prompt:thai, promptBig:true, text:'What does it mean?', answer:correct,
+  return {prompt:thai, promptBig:true, colourPrompt:true, text:'What does it mean?', answer:correct,
     options:shuffle([correct, ...opts]), say:thai, _choice:'word-meaning', explain: w ? w.tr : ''};
 }
 
@@ -2909,7 +2913,46 @@ function toast(msg){
 }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function sample(a,n){ return shuffle(a).slice(0,n); }
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+const THAI_COMBINING_RE = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/;
+function classLetterHtml(ch, cluster){
+  const g = GLYPHS[ch];
+  return g && g.type === 'c'
+    ? '<span class="class-letter ' + g.cls + '">' + esc(cluster || ch) + '</span>'
+    : esc(cluster || ch);
+}
+function classColourThaiHtml(text){
+  const chars = [...String(text||'')];
+  let out = '';
+  for(let i=0;i<chars.length;i++){
+    const ch = chars[i], g = GLYPHS[ch];
+    if(g && g.type === 'c'){
+      let cluster = ch;
+      while(i + 1 < chars.length && THAI_COMBINING_RE.test(chars[i+1])) cluster += chars[++i];
+      out += classLetterHtml(ch, cluster);
+    } else {
+      out += esc(ch);
+    }
+  }
+  return out;
+}
+function glyphDisplayHtml(ch){
+  const g = GLYPHS[ch], disp = g ? (g.disp || ch) : ch;
+  return g && g.type === 'c' ? classLetterHtml(ch, disp) : esc(disp);
+}
+function lessonGlyphPreviewHtml(L){
+  return L.glyphs.length ? L.glyphs.slice(0,3).map(glyphDisplayHtml).join(' ') : '💡';
+}
+function classColourPromptHtml(q){
+  if(q.promptHtml) return q.promptHtml;
+  const text = String(q.text||'');
+  if(!q.prompt || /Which class\?/.test(text) || /^Pick the .* class consonant/.test(text)) return q.prompt ? esc(q.prompt) : '';
+  if(q.colourPrompt || (/[ก-ฮ]/.test(String(q.prompt)) && !q._choice)) return classColourThaiHtml(q.prompt);
+  return esc(q.prompt);
+}
+function quizOptionHtml(q, option){
+  return q.colourThaiOpts ? classColourThaiHtml(option) : esc(option);
+}
 function ensureSkillStats(){
   if(!state.skillStats) state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null};
   if(!Array.isArray(state.skillStats.listen)) state.skillStats.listen = [];
@@ -3082,7 +3125,7 @@ function toneQuestionExplain(w){
 }
 function toneQuestion(w, upToLessonNum){
   if(!toneTaughtBy(w, upToLessonNum)) return null;
-  return {kind:'mcq', prompt:w.thai, promptBig:true, text:toneQuestionText(w), answer:toneOf(w.tr),
+  return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:toneQuestionText(w), answer:toneOf(w.tr),
     options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w)};
 }
 
@@ -4033,7 +4076,7 @@ function renderLearn(){
     const card = document.createElement('button');
     card.className = 'card lesson-card' + (done?' done':'') + (locked?' locked':'');
     card.innerHTML = `
-      <div class="glyphs">${L.glyphs.length ? L.glyphs.slice(0,3).map(g=>(GLYPHS[g]&&GLYPHS[g].disp)||g).join(' ') : '💡'}</div>
+      <div class="glyphs">${lessonGlyphPreviewHtml(L)}</div>
       <div class="meta"><div class="t">${i+1}. ${L.title}</div><div class="d">${gated ? 'pass the mastery check above to unlock' : L.sub}</div></div>
       <div class="state">${done?'✓ done':(locked?'🔒':'start →')}</div>`;
     if(!locked) card.addEventListener('click', ()=>startLessonFromUser(L));
@@ -4099,7 +4142,7 @@ function buildBossQuiz(u){
   });
   words.forEach(w=>{
     const wrong = wordReadingDistractors(w, allWordsPool, 3);
-    qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading'});
+    qs.push({kind:'mcq', prompt:w.thai, colourPrompt:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading'});
     const tq = toneQuestion(w, upToLessonNum);
     if(tq) qs.push(tq);
   });
@@ -4148,7 +4191,7 @@ function buildFoundationEarQuiz(){
   return sample(pool, Math.min(10,pool.length)).map(w=>{
     const wrong = wordThaiDistractors(w, pool, 3, taught);
     return {kind:'mcq', text:'Listen: which Thai did you hear?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
 }
 function startFoundationEar(){
@@ -4197,7 +4240,7 @@ function renderLessonSpeak(p){
   const w = words[p.speakIdx];
   stage.innerHTML = `
     <div class="center"><div class="eyebrow">Read &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Read it aloud</h2></div>
-    <div class="speak-cue">${esc(w.thai)}</div>
+    <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
     <div class="sub" style="text-align:center">Use the script, not the English meaning. Then reveal the model and compare. No score needed.</div>
     <div id="speak-reveal" class="stage-actions">
       <button class="btn full" id="speak-show">I read it · reveal the model →</button>
@@ -4207,7 +4250,7 @@ function renderLessonSpeak(p){
     logSpeakAttempt();
     el('speak-reveal').innerHTML = `
       <div class="compare-box">
-        <div class="echo-word" style="margin:0">${w.thai}</div>
+        <div class="echo-word" style="margin:0">${classColourThaiHtml(w.thai)}</div>
         <div class="fc-tr" style="text-align:center">${w.tr}</div>
         <div class="compare-audio">
           <span class="sub">Model</span>${speakBtn(w.thai, 'Hear model: '+w.thai)}
@@ -4278,16 +4321,18 @@ function renderLessonStep(){
       : shuffle([tw.tr, ...wordReadingDistractors(tw, coveredWordsForLesson(L), 3)]);
     stage.innerHTML = `
       <div class="center"><div class="eyebrow">Class check</div><h2>Quick decode</h2></div>
-      <div class="notebox" style="font-size:15px;line-height:1.8">${esc(model)}</div>
+      <div class="notebox" style="font-size:15px;line-height:1.8">${classColourThaiHtml(model)}</div>
       <div class="q-prompt" style="margin-top:6px">
         <div class="eyebrow">You do</div>
-        <div class="q-big" style="font-size:56px">${tw.thai}</div>
+        <div class="q-big" style="font-size:56px">${classColourThaiHtml(tw.thai)}</div>
         <div class="q-text">${askTone ? (toneQ ? toneQ.text : 'Which tone? Use the rule above.') : 'How does it read?'}</div>
       </div>
       <div class="q-options">${opts.map(o=>`<button class="q-opt">${esc(String(o))}</button>`).join('')}</div>
       <div class="q-feedback" id="we-fb"></div>
       <div class="stage-actions"><button class="btn" id="st-next" disabled>Next</button></div>`;
     const ob = stage.querySelectorAll('.q-opt');
+    const nb2 = el('st-next');
+    if(nb2) nb2.addEventListener('click', ()=>{ p.i++; renderLessonStep(); });
     ob.forEach(b=>b.addEventListener('click', ()=>{
       const ok = b.textContent === String(answer);
       ob.forEach(x=>{ x.disabled = true; if(x.textContent===String(answer)) x.classList.add('correct'); });
@@ -4300,7 +4345,6 @@ function renderLessonStep(){
       speak(tw.thai);
       el('st-next').disabled = false;
     }));
-    const nb2 = el('st-next'); nb2.onclick = ()=>{ p.i++; renderLessonStep(); };
     return;
   }
   // words page
@@ -4309,7 +4353,7 @@ function renderLessonStep(){
       <div class="center"><h2>Now read these</h2><p class="sub">Sound each word out first. Then reveal the reading, audio and meaning.</p></div>
       ${L.words.map((w,wi)=>`
         <div class="word-line">
-          <div class="w-thai">${w.thai}${wordRole(w)==='decode'?'<div style="font-size:10px;color:var(--muted);letter-spacing:.08em">DECODE ONLY</div>':wordRole(w)==='recognition'?'<div style="font-size:10px;color:var(--blue);letter-spacing:.08em">RECOGNISE</div>':''}</div>
+          <div class="w-thai">${classColourThaiHtml(w.thai)}${wordRole(w)==='decode'?'<div style="font-size:10px;color:var(--muted);letter-spacing:.08em">DECODE ONLY</div>':wordRole(w)==='recognition'?'<div style="font-size:10px;color:var(--blue);letter-spacing:.08em">RECOGNISE</div>':''}</div>
           <div class="w-meta">
             <button class="w-reveal" data-wi="${wi}">reveal reading</button>
             <div class="w-answer" hidden>
@@ -4432,14 +4476,14 @@ function classPickQuestion(ch, L){
 function miniDecodeQuestion(w, pool){
   const wrong = wordReadingDistractors(w, pool, 3);
   if(wrong.length < 2) return null;
-  return {kind:'mcq', prompt:w.thai, promptBig:true, text:'Mini decode: how does this read?',
+  return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:'Mini decode: how does this read?',
     answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
 }
 function readingToThaiQuestion(w, pool, taught){
   const wrong = wordThaiDistractors(w, pool, 3, taught);
   if(wrong.length < 2) return null;
   return {kind:'mcq', prompt:w.tr, text:'Which Thai matches this reading?',
-    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr};
+    answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr};
 }
 
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
@@ -4477,7 +4521,7 @@ function buildLessonQuiz(L){
   const listenQs = core.slice(0,2).map(w=>{
     const wrong = wordThaiDistractors(w, L.words, 3, taught);
     return {kind:'mcq', text:'Listen: which Thai did you hear?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const structureQs = [hiddenQs[0], orderQs[0], liveDeadQs[0], lengthQs[0], clusterQs[0]].filter(Boolean);
   const guaranteed = classQs.concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(L.extraQuiz||[]);
@@ -4724,12 +4768,12 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     ${timedSecs ? '<div class="timerbar"><i id="qtimer"></i></div>' : ''}
     <div class="q-prompt">
       <div class="eyebrow">${counterLabel||''}</div>
-      ${q.prompt ? `<div class="q-big">${q.prompt}</div>` : ''}
+      ${q.prompt ? `<div class="q-big">${classColourPromptHtml(q)}</div>` : ''}
       <div class="q-text">${q.text}</div>
       ${q.say ? `<div class="audio-inline">${speakBtn(q.say, q.sayLabel || ('Hear: ' + q.say))}${q.sayLabel?`<span class="audio-caption">${esc(q.sayLabel)}</span>`:''}</div>` : ''}
     </div>
     <div class="q-options">
-      ${q.options.map(o=>`<button class="q-opt ${q.thaiOpts?'thai-opt':''}">${esc(String(o))}</button>`).join('')}
+      ${q.options.map(o=>`<button class="q-opt ${q.thaiOpts?'thai-opt':''}">${quizOptionHtml(q, String(o))}</button>`).join('')}
     </div>
     <div class="q-feedback" id="q-fb"></div>`;
   if(q.autoplay && q.say) setTimeout(()=>speak(q.say), 350);
@@ -4770,7 +4814,7 @@ function renderTypeQ(q, onDone, counterLabel){
   el('stage').innerHTML = `
     <div class="q-prompt">
       <div class="eyebrow">${counterLabel||''}</div>
-      <div class="q-big">${q.prompt}</div>
+      <div class="q-big">${classColourThaiHtml(q.prompt)}</div>
       <div class="q-text">${q.text||'Type the sound'}</div>
     </div>
     <input class="type-in" id="type-in" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="type it…">
@@ -4799,7 +4843,7 @@ function toneRow(t){
   return `<div class="card tone-row">
     <svg class="contour" viewBox="0 0 54 28"><path d="${t.path}"/></svg>
     <div class="t-name">${t.name}</div>
-    <div class="t-word">${t.thai}</div>
+    <div class="t-word">${classColourThaiHtml(t.thai)}</div>
     <div class="t-meta"><div class="t-tr">${t.tr}</div><div class="t-en">${t.en}</div></div>
     ${speakBtn(t.thai)}
   </div>`;
@@ -4848,7 +4892,7 @@ el('twins-btn').addEventListener('click', ()=>{
     const tgt = sample(set, 1)[0];
     return {
       kind:'mcq', text:'Listen: which Thai word did you hear?', say:tgt.t, autoplay:true,
-      options: shuffle(set.map(m=>m.t)), thaiOpts:true, answer:tgt.t,
+      options: shuffle(set.map(m=>m.t)), thaiOpts:true, colourThaiOpts:true, answer:tgt.t,
       explain: set.map(m=>`${m.t} ${m.tr}`).join('  ·  ')
     };
   });
@@ -4880,7 +4924,7 @@ function renderEcho(){
   const r = p.rounds[p.i];
   el('stage').innerHTML = `
     <div class="q-feedback">Listen, then say it aloud · ${p.i+1} of ${p.rounds.length}</div>
-    <div class="echo-word">${esc(r.t)}</div>
+    <div class="echo-word">${classColourThaiHtml(r.t)}</div>
     <div class="fc-tr" style="text-align:center;color:var(--muted)">${r.tr}</div>
     <div class="row" style="justify-content:center;gap:10px;margin:14px 0">
       ${speakBtn(r.t)}
@@ -4908,7 +4952,7 @@ el('tone-rule-btn').addEventListener('click', ()=>{
   let pool = learnedWords().filter(monoSyllable);
   if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
   const qs = sample(pool, 10).map(w=>({
-    kind:'mcq', prompt:w.thai, text:toneQuestionText(w),
+    kind:'mcq', prompt:w.thai, colourPrompt:true, text:toneQuestionText(w),
     answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
     explain:toneQuestionExplain(w)
   }));
@@ -5012,7 +5056,7 @@ function renderPhrases(){
     const added = inSrs('w:'+p.thai);
     return `<div class="card phrase">
       <div class="p-meta">
-        <div class="p-thai">${p.thai}</div>
+        <div class="p-thai">${classColourThaiHtml(p.thai)}</div>
         <div class="p-tr">${p.tr}</div>
         <div class="p-en">${p.en}</div>
         ${p.note?`<div class="p-note">${p.note}</div>`:''}
@@ -5154,7 +5198,7 @@ function renderFlash(){
             <div class="fc-hint">What did you hear?</div>
           </div>
           <div class="fc-face back">
-            <div class="fc-mid">${esc(b.big)}</div>
+            <div class="fc-mid">${/[ก-ฮ]/.test(String(b.big||'')) ? classColourThaiHtml(b.big) : esc(b.big)}</div>
             ${b.tr?`<div class="fc-tr">${b.tr}</div>`:''}
             ${b.en?`<div class="fc-en">${b.en}</div>`:''}
           </div>
@@ -5200,10 +5244,10 @@ function buildMixedQuiz(){
   allWords.forEach(w=>{
     const wrongRead = wordReadingDistractors(w, allWords, 3);
     if(wrongRead.length===3){
-      qs.push({kind:'mcq', prompt:w.thai, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), _choice:'word-reading'});
+      qs.push({kind:'mcq', prompt:w.thai, colourPrompt:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrongRead]), _choice:'word-reading'});
       const wrongT = wordThaiDistractors(w, allWords, 3, taught);
       qs.push({kind:'mcq', text:'Listen: which one did you hear?', say:w.thai, autoplay:true,
-        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'});
+        answer:w.thai, options:shuffle([w.thai,...wrongT]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'});
     }
   });
   allWords.forEach(w=>{
@@ -5218,7 +5262,7 @@ function buildHearPickThaiQuiz(){
   return sample(pool, Math.min(10, pool.length)).map(w=>{
     const wrong = wordThaiDistractors(w, pool, 3, taught);
     return {kind:'mcq', prompt:w.tr, text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
-      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
 }
 
@@ -5405,7 +5449,7 @@ function renderSpell(){
     </div>
     <div class="build-area" id="built">&nbsp;</div>
     <div class="tilebank" id="bank">
-      ${tiles.map((t,ix)=>`<button class="ltile" data-ix="${ix}" data-ch="${t}">${(GLYPHS[t]&&GLYPHS[t].disp)||t}</button>`).join('')}
+      ${tiles.map((t,ix)=>`<button class="ltile" data-ix="${ix}" data-ch="${t}">${glyphDisplayHtml(t)}</button>`).join('')}
     </div>
     <div class="stage-actions">
       <button class="btn ghost" id="sp-undo">⌫ Undo</button>
@@ -5414,7 +5458,7 @@ function renderSpell(){
     <div class="q-feedback" id="q-fb"></div>`;
   setTimeout(()=>speak(w.thai), 300);
   const builtEl = el('built'), bank = el('bank');
-  function refresh(){ builtEl.innerHTML = built.map(b=>b.ch).join('') || '&nbsp;'; }
+  function refresh(){ builtEl.innerHTML = built.length ? classColourThaiHtml(built.map(b=>b.ch).join('')) : '&nbsp;'; }
   function check(){
     if(built.length !== target.length) return;
     if(built.map(b=>b.ch).join('') === w.thai){
@@ -5451,7 +5495,7 @@ function renderSpell(){
   el('sp-skip').onclick = ()=>{
     if(settled) return;
     settled = true; firstTry = false;
-    builtEl.innerHTML = w.thai; builtEl.classList.add('good');
+    builtEl.innerHTML = classColourThaiHtml(w.thai); builtEl.classList.add('good');
     el('q-fb').textContent = w.tr;
     el('q-fb').className = 'q-feedback no';
     speak(w.thai);
@@ -5605,7 +5649,7 @@ function renderStory(s){
     <div class="center"><h2>${s.title}</h2></div>
     ${s.lines.map((line,li)=>`
       <div class="story-line" data-li="${li}">
-        ${line.map((w,wi)=>`<span class="sw" data-li="${li}" data-wi="${wi}">${w.t}</span>`).join(' ')}
+        ${line.map((w,wi)=>`<span class="sw" data-li="${li}" data-wi="${wi}">${classColourThaiHtml(w.t)}</span>`).join(' ')}
       </div>`).join('')}
     <div class="stage-actions">
       <button class="btn ghost" id="story-play">🔊 Read to me</button>

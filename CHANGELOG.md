@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.6 — 2026-06-25
+
+- Added shared class-colour rendering for connected Thai so consonant letters show mid/high/low colours on teaching and practice surfaces.
+- Extended class-coloured Thai to lesson previews, Quick Decode prompts, word reveal/read-aloud, tone examples, Thai-word MCQ options, review cards, Spell It, Reading Room stories and phrase cards.
+- Kept class-recall questions neutral before answer, including `Which class?` and `Pick the ... class consonant`, so colour does not give away the response.
+- Grouped Thai combining marks with their base consonant in the renderer so tone marks stay attached visually.
+- Kept lesson order, mastery gates and the state schema unchanged.
+
 ## v4.5 — 2026-06-25
 
 - Reworked tone teaching so Thai tone marks (`่ ้ ๊ ๋`) and consonant class are the visible route to tone, with transliteration tone signs treated as reading hints only.
