@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.10 — 2026-06-26
+
+- Added `validatePrerequisiteContracts()` so lesson words, generated quiz prompts, review pools, stories and role-sensitive surfaces are checked for visible glyphs, composite vowel patterns and script mechanisms before they can ship.
+- Repaired the known Phase 1 sequence leaks: taught `เ◌า` in Lesson 5 for `เรา`; moved `ไหม` to silent-leader Lesson 17 and used `สี` as the Lesson 6 core replacement; gated `เสือ / เสื้อ / เสื่อ` until `เ◌ือ`; taught `็ / เ◌็` by Lesson 16; taught `เ◌อ`, `ษ` and a direct `์` check in Lesson 20; taught `ฬ` in Lesson 21; moved `ๆ` to Lesson 23; and taught `เ◌ิ` before the capstone `เปิด`.
+- Renamed Lesson 23 from Thai digits to useful signs rather than adding untested Thai-digit scope.
+- Extended review-pool readability from raw character coverage to concept-aware pattern/mechanism prerequisites, including Echo, tone listening, Sound Twins, Hear & Pick Thai and mixed-review phrase source pools.
+- Expanded the generated Phase 1 audit with prerequisite validator status, machine-readable lesson/pool/role issue objects, named surface rows for Hear & Pick Thai, Spell It, Echo, Sound Twins, Tone listening, Mixed review and Reading/stories, and a workload section that separates available pool size from the Today governor’s served daily load.
+- Kept the Today governor, SRS cap, mastery gates, lesson order and state keys unchanged.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check, `node tools/phase1-audit.js`, generated audit validator suite all PASS, targeted regression checks for `ไหม` before Lesson 17 and `เสือ / เสื้อ / เสื่อ` before Lesson 22 all PASS.
+
 ## v4.9 — 2026-06-26
 
 - Promoted ending jobs into first-class teaching cards from Lesson 2 onward, so finals are taught like starts instead of only appearing inside word sublines.

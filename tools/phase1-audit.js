@@ -132,6 +132,242 @@ globalThis.__phase1Audit = (function(){
       focus:f && f.focus || null
     };
   }
+  function issueText(i){
+    return [i.surface, i.item, (i.missing||[]).join(', ')].filter(Boolean).join(' · ');
+  }
+  function itemKey(item){
+    return itemThai(item) || (item && item.thai) || '';
+  }
+  function uniqueByThai(items){
+    const seen = new Set(), out = [];
+    (items||[]).forEach(item=>{
+      const key = itemKey(item);
+      if(!key || seen.has(key)) return;
+      seen.add(key); out.push(item);
+    });
+    return out;
+  }
+  function roleCounts(items){
+    return countBy(items||[], item=>{
+      const thai = itemKey(item);
+      const w = findWord(thai);
+      return item.role || (w ? wordRole(w) : 'none');
+    });
+  }
+  function roleContract(status, items, note, excludedCount){
+    return {
+      status,
+      counts:roleCounts(items),
+      excludedCount:excludedCount || 0,
+      note:note || ''
+    };
+  }
+  function prereqStatus(items, doneIds, surface){
+    const issues = [];
+    (items||[]).forEach(item=>{
+      const thai = itemKey(item);
+      const w = findWord(thai);
+      prerequisiteIssuesForThai(thai, doneIds, surface, w ? wordFrame(w) : null).forEach(i=>issues.push(i));
+    });
+    return {status:issues.length ? 'FAIL' : 'PASS', issueCount:issues.length, issues:issues.slice(0, 12)};
+  }
+  function surfaceRow(id, name, availableItems, servedCount, cap, rawCount, prereq, role){
+    const availableCount = Array.isArray(availableItems) ? availableItems.length : availableItems;
+    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories'}[id]) || 'items';
+    return {
+      id,
+      name,
+      unit,
+      availableItemCount:availableCount,
+      servedCount,
+      cap,
+      blockedExcludedCount:Math.max(0, (rawCount == null ? availableCount : rawCount) - availableCount),
+      prerequisiteStatus:prereq || {status:'PASS', issueCount:0, issues:[]},
+      roleContract:role || {status:'N/A', counts:{}, excludedCount:0, note:'not role-gated'}
+    };
+  }
+  function rawToneItems(doneIds){
+    return TONES.concat(TONES2).filter(t=>lessonGateMet(t.gate, doneIds));
+  }
+  function rawTwinSets(doneIds){
+    return TONE_SETS.concat(LENGTH_PAIRS).filter(set=>set.every(w=>lessonGateMet(w.gate, doneIds)));
+  }
+  function rawEchoItems(doneIds){
+    const lessonItems = learnedWords(doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en, role:wordRole(w)}));
+    const toneItems = rawToneItems(doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+    const twinItems = rawTwinSets(doneIds).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
+    return uniqueByThai(lessonItems.concat(toneItems, twinItems));
+  }
+  function hearPickSurface(doneIds){
+    const raw = learnedWords(doneIds).map(w=>({thai:w.thai, tr:w.tr, en:w.en, role:wordRole(w)}));
+    const available = raw.filter(w=>thaiItemPrereqsMet(w.thai, doneIds, wordFrame(findWord(w.thai))));
+    const served = available.length >= 4 ? Math.min(10, available.length) : 0;
+    return surfaceRow(
+      'hear-pick-thai',
+      'Hear & Pick Thai',
+      available,
+      served,
+      10,
+      raw.length,
+      prereqStatus(available, doneIds, 'hear-pick-thai'),
+      roleContract('PASS', available, 'script-recognition from covered Thai; no English cue')
+    );
+  }
+  function spellSurface(doneIds){
+    const raw = learnedWords(doneIds);
+    const available = raw.filter(w=>wordRole(w)==='core' && !w.thai.includes(' ') && [...w.thai].length <= 7 && thaiItemPrereqsMet(w.thai, doneIds, wordFrame(w)));
+    const served = available.length >= 4 ? Math.min(8, available.length) : 0;
+    return surfaceRow(
+      'spell-it',
+      'Spell It',
+      available.map(w=>({thai:w.thai, role:wordRole(w)})),
+      served,
+      8,
+      raw.length,
+      prereqStatus(available.map(w=>({thai:w.thai})), doneIds, 'spell-it'),
+      roleContract('PASS', available.map(w=>({thai:w.thai, role:wordRole(w)})), 'core-only production/spelling surface', raw.length - available.length)
+    );
+  }
+  function echoSurface(doneIds){
+    const raw = rawEchoItems(doneIds);
+    const available = readableEchoItems(doneIds);
+    const served = available.length >= 4 ? Math.min(8, available.length) : 0;
+    return surfaceRow(
+      'echo',
+      'Echo',
+      available,
+      served,
+      8,
+      raw.length,
+      prereqStatus(available, doneIds, 'echo'),
+      roleContract('PASS', available, 'script-cued read-aloud practice, not certified speaking mastery')
+    );
+  }
+  function soundTwinsSurface(doneIds, taught){
+    const raw = rawTwinSets(doneIds);
+    const available = readableTwinSets(taught, doneIds);
+    const served = available.length >= 2 ? Math.min(10, available.length) : 0;
+    return surfaceRow(
+      'sound-twins',
+      'Sound Twins',
+      available,
+      served,
+      10,
+      raw.length,
+      prereqStatus(available.flat(), doneIds, 'sound-twins'),
+      roleContract('N/A', [], 'tone/length contrast sets are not lesson-word role gated')
+    );
+  }
+  function toneListeningSurface(doneIds, taught){
+    const raw = rawToneItems(doneIds);
+    const available = readableToneItems(taught, doneIds);
+    const served = available.length >= 4 ? Math.min(8, available.length) : 0;
+    return surfaceRow(
+      'tone-listening',
+      'Tone listening',
+      available,
+      served,
+      8,
+      raw.length,
+      prereqStatus(available, doneIds, 'tone-listening'),
+      roleContract('N/A', [], 'tone examples are checked by tone/prerequisite gates')
+    );
+  }
+  function mixedReviewSurface(doneIds, taught){
+    const glyphs = learnedGlyphIdsFor(doneIds).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+    const finals = learnedFinalGlyphIds(doneIds);
+    const words = learnedWords(doneIds);
+    const reviewWords = words.filter(w=>wordRole(w)!=='decode' && thaiItemPrereqsMet(w.thai, doneIds, wordFrame(w)));
+    let questionCount = glyphs.length * 2 + finals.filter(ch=>finalJobQuestion(ch)).length;
+    let noDistractorExcluded = 0;
+    reviewWords.forEach(w=>{
+      const wrongRead = wordReadingDistractors(w, reviewWords, 3);
+      if(wrongRead.length===3) questionCount += 2;
+      else noDistractorExcluded++;
+      if(toneQuestion(w, doneIds.length ? Math.max(...doneIds.map(lessonNum)) : 0)) questionCount++;
+    });
+    const decodeExcluded = words.filter(w=>wordRole(w)==='decode').length;
+    const served = questionCount ? Math.min(10, questionCount) : 0;
+    const row = surfaceRow(
+      'mixed-review',
+      'Mixed review',
+      questionCount,
+      served,
+      10,
+      questionCount + decodeExcluded + noDistractorExcluded,
+      prereqStatus(reviewWords.map(w=>({thai:w.thai})), doneIds, 'mixed-review'),
+      roleContract('PASS', reviewWords.map(w=>({thai:w.thai, role:wordRole(w)})), 'decode words excluded; phrase cards must pass the same readability gate', decodeExcluded)
+    );
+    row.excludedDetail = {decodeRoleExcluded:decodeExcluded, insufficientDistractorWords:noDistractorExcluded};
+    return row;
+  }
+  function storySurface(doneIds){
+    const raw = STORIES.filter(s=>doneIds.includes(s.gate));
+    const available = raw.filter(s=>!(s.lines||[]).flat().some(w=>prerequisiteIssuesForThai(itemThai(w), doneIds, 'story/' + s.id).length));
+    const served = available.length ? 1 : 0;
+    return surfaceRow(
+      'reading-stories',
+      'Reading/stories',
+      available,
+      served,
+      1,
+      raw.length,
+      {status:available.length === raw.length ? 'PASS' : 'FAIL', issueCount:raw.length - available.length, issues:[]},
+      roleContract('N/A', [], 'stories use their own decodability/prerequisite gate')
+    );
+  }
+  function surfaceAudit(doneIds, taught){
+    return [
+      hearPickSurface(doneIds),
+      spellSurface(doneIds),
+      echoSurface(doneIds),
+      soundTwinsSurface(doneIds, taught),
+      toneListeningSurface(doneIds, taught),
+      mixedReviewSurface(doneIds, taught),
+      storySurface(doneIds)
+    ];
+  }
+  function workloadAudit(L, index){
+    const prevDoneIds = LESSONS.slice(0, index).map(x=>x.id);
+    const doneIds = LESSONS.slice(0, index+1).map(x=>x.id);
+    const prevGlyphs = new Set(learnedGlyphIdsFor(prevDoneIds));
+    const prevFinals = new Set(learnedFinalGlyphIds(prevDoneIds));
+    const learnedGlyphs = learnedGlyphIdsFor(doneIds);
+    const learnedFinals = learnedFinalGlyphIds(doneIds);
+    const taught = taughtGlyphSet(doneIds);
+    const toneItems = readableToneItems(taught, doneIds);
+    const twinSets = readableTwinSets(taught, doneIds);
+    const echoItems = readableEchoItems(doneIds);
+    const storyCount = STORIES.filter(s=>doneIds.includes(s.gate)).length;
+    const dueBeforeCap = learnedGlyphs.length + learnedFinals.length;
+    const dueServedAfterCap = Math.min(40, dueBeforeCap);
+    const dayType = (dueBeforeCap > 45 || index === LESSONS.length - 1) ? 'Consolidation day' : 'Lesson day';
+    const earlyFoundation = index < 3;
+    const depthBlock = storyCount ? 'Reading room or drill' : 'Progression drill';
+    return {
+      newGlyphCards:(L.glyphs||[]).filter(g=>!prevGlyphs.has(g)).length,
+      newFinalCards:finalGlyphsForLesson(L).filter(g=>!prevFinals.has(g)).length,
+      lessonQuizCount:buildLessonQuiz(L).length,
+      availablePool:{
+        glyphCards:learnedGlyphs.length,
+        finalCards:learnedFinals.length,
+        toneItems:toneItems.length,
+        twinSets:twinSets.length,
+        echoItems:echoItems.length,
+        stories:storyCount
+      },
+      servedDailyLoad:{
+        dueSrsBeforeCap:dueBeforeCap,
+        dueSrsServedAfterCap:dueServedAfterCap,
+        srsCap:40,
+        consolidationTrigger:45,
+        todayType:dayType,
+        depthBlockLikely:depthBlock,
+        earlyFoundationRule:earlyFoundation ? '20-30 minute foundation day; optional Lesson 2/3 stretch only before Lesson 4' : '45 minute target route',
+        estimatedLoadBand:earlyFoundation ? '20-30 min core' : '45 min target'
+      }
+    };
+  }
   function lessonAudit(L, index){
     const doneIds = LESSONS.slice(0, index+1).map(x=>x.id);
     const taught = taughtGlyphSet(doneIds);
@@ -152,6 +388,10 @@ globalThis.__phase1Audit = (function(){
     const toneItems = readableToneItems(taught, doneIds).map(itemThai);
     const twinSets = readableTwinSets(taught, doneIds).map(set=>set.map(itemThai));
     const learnedGlyphs = learnedGlyphIdsFor(doneIds);
+    const surfaces = surfaceAudit(doneIds, taught);
+    const prereqLessonIssues = prerequisite.lessonIssues.concat(prerequisite.roleIssues).filter(i=>i.lesson === L.id);
+    const prereqPoolIssues = prerequisite.poolIssues.filter(i=>i.lesson === L.id || i.afterLesson === index+1);
+    const prereqIssues = prereqLessonIssues.concat(prereqPoolIssues);
     return {
       id:L.id,
       day:index+1,
@@ -174,13 +414,18 @@ globalThis.__phase1Audit = (function(){
         unlockedDrills:DRILLS.filter(d=>lessonGateMet(d.gate, doneIds)).map(d=>d.id),
         unlockedStories:STORIES.filter(s=>doneIds.includes(s.gate)).map(s=>s.id)
       },
-      issues
+      surfaceAudit:surfaces,
+      workload:workloadAudit(L, index),
+      prerequisiteIssues:prereqIssues,
+      issues:issues.concat(prereqIssues.map(issueText))
     };
   }
+  const prerequisite = collectPrerequisiteIssues();
   const validators = [
     validatorResult('audio', validateAudioContracts),
     validatorResult('vocabulary', validateVocabularyContracts),
     validatorResult('coverage', validateCoverageContracts),
+    validatorResult('prerequisites', validatePrerequisiteContracts),
     validatorResult('reviewChoices', validateReviewChoiceContracts),
     validatorResult('finalSounds', validateFinalSoundContracts),
     validatorResult('structuralClarity', validateStructuralClarityContracts),
@@ -192,6 +437,17 @@ globalThis.__phase1Audit = (function(){
     appVersion:${JSON.stringify(appVersion)},
     lessonCount:LESSONS.length,
     validators,
+    prerequisites:{
+      lessonIssues:prerequisite.lessonIssues,
+      poolIssues:prerequisite.poolIssues,
+      roleIssues:prerequisite.roleIssues,
+      all:prerequisite.lessonIssues.concat(prerequisite.poolIssues, prerequisite.roleIssues)
+    },
+    workload:{
+      srsCap:40,
+      consolidationTrigger:45,
+      note:'Available pool totals are not daily workload. Served review is capped by Today/SRS, and due > 45 creates a consolidation day.'
+    },
     lessons:LESSONS.map(lessonAudit)
   };
 })();
@@ -210,15 +466,56 @@ function renderMarkdown(audit){
   lines.push(`App version: ${audit.appVersion || 'unknown'}`);
   lines.push(`Lessons: ${audit.lessonCount}`);
   lines.push('');
-  lines.push('This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words and generated pools for sub-agent or scripted review.');
+  lines.push('This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.');
   lines.push('');
   lines.push('## Validator Status');
   audit.validators.forEach(v=>{
     lines.push(`- ${v.ok ? 'PASS' : 'FAIL'} ${v.name}${v.issues.length ? ': ' + v.issues.join('; ') : ''}`);
   });
   lines.push('');
+  lines.push('## Prerequisite Audit');
+  lines.push(`- Lesson prerequisite issues: ${audit.prerequisites.lessonIssues.length}`);
+  lines.push(`- Pool prerequisite issues: ${audit.prerequisites.poolIssues.length}`);
+  lines.push(`- Role-contract issues: ${audit.prerequisites.roleIssues.length}`);
+  if(audit.prerequisites.all.length){
+    audit.prerequisites.all.forEach(i=>lines.push(`- ${safeCell([i.lesson || (i.afterLesson != null ? 'after lesson ' + i.afterLesson : ''), i.surface, i.item, (i.missing||[]).join(', ')].filter(Boolean).join(' · '))}`));
+  } else {
+    lines.push('- No unresolved prerequisite issues.');
+  }
+  lines.push('');
+  lines.push('## Workload Audit');
+  lines.push('');
+  lines.push('Available pool size is reported separately from served daily workload. The Today governor serves review through the SRS cap, routes due loads over the consolidation trigger into consolidation days, and keeps Lessons 1-3 as shorter foundation days.');
+  lines.push('');
+  lines.push(`- SRS cap: ${audit.workload.srsCap} cards per review session`);
+  lines.push(`- Consolidation trigger: due > ${audit.workload.consolidationTrigger}`);
+  lines.push('- Lessons 1-3: 20-30 minute foundation days, with only the existing optional Lesson 2/3 stretch before Lesson 4.');
+  lines.push('');
+  lines.push('| Day | New glyph cards | New final cards | Quiz | Available pool | Served daily load | Today type | Depth block |');
+  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- |');
+  audit.lessons.forEach(L=>{
+    const w = L.workload;
+    const avail = `glyph ${w.availablePool.glyphCards}, final ${w.availablePool.finalCards}, tone ${w.availablePool.toneItems}, twins ${w.availablePool.twinSets}, echo ${w.availablePool.echoItems}, stories ${w.availablePool.stories}`;
+    const served = `due ${w.servedDailyLoad.dueSrsBeforeCap} -> served ${w.servedDailyLoad.dueSrsServedAfterCap} / cap ${w.servedDailyLoad.srsCap}`;
+    lines.push(`| ${L.day} | ${w.newGlyphCards} | ${w.newFinalCards} | ${w.lessonQuizCount} | ${safeCell(avail)} | ${safeCell(served)} | ${safeCell(w.servedDailyLoad.todayType)} | ${safeCell(w.servedDailyLoad.depthBlockLikely)} |`);
+  });
+  lines.push('');
+  lines.push('## Named Surface Audit');
+  lines.push('');
+  lines.push('These rows reuse the app source gates. `Available` is the post-gate pool after each lesson; `Served` is the per-session cap where that surface has one; `Blocked/excluded` is the raw candidate count held back by prerequisite, role, form or option-building gates.');
+  lines.push('');
+  lines.push('| Day | Surface | Available | Served / cap | Blocked/excluded | Prerequisites | Role contract |');
+  lines.push('| --- | --- | --- | --- | --- | --- | --- |');
+  audit.lessons.forEach(L=>{
+    (L.surfaceAudit||[]).forEach(s=>{
+      const role = s.roleContract || {};
+      const roleText = [role.status || 'N/A', role.note || '', role.excludedCount ? 'role-excluded ' + role.excludedCount : ''].filter(Boolean).join(' · ');
+      lines.push(`| ${L.day} | ${safeCell(s.name)} | ${s.availableItemCount} ${safeCell(s.unit||'items')} | ${s.servedCount} / ${s.cap} | ${s.blockedExcludedCount} | ${safeCell((s.prerequisiteStatus||{}).status || 'PASS')} | ${safeCell(roleText)} |`);
+    });
+  });
+  lines.push('');
   lines.push('## Lesson Map');
-  lines.push('| Day | Lesson | New starts | Finals taught | Quiz axes | Generated pools after lesson | Issues |');
+  lines.push('| Day | Lesson | New starts | Finals taught | Quiz axes | Available pools after lesson | Issues |');
   lines.push('| --- | --- | --- | --- | --- | --- | --- |');
   audit.lessons.forEach(L=>{
     const axes = Object.entries(L.quiz.axes).map(([k,v])=>`${k}:${v}`).join(', ');
@@ -241,6 +538,8 @@ function renderMarkdown(audit){
     lines.push(`- Quiz count: ${L.quiz.count}`);
     lines.push(`- Quiz axes: ${Object.entries(L.quiz.axes).map(([k,v])=>`${k} ${v}`).join(', ') || '-'}`);
     lines.push(`- Review after lesson: glyph cards ${L.afterLesson.learnedGlyphs.length}, start-consonant glyphs ${L.afterLesson.learnedStarts.length}, final cards ${L.afterLesson.learnedFinals.length}, echo pool ${L.afterLesson.echoItems.length}`);
+    lines.push(`- Workload: new glyph cards ${L.workload.newGlyphCards}, new final cards ${L.workload.newFinalCards}, due SRS before cap ${L.workload.servedDailyLoad.dueSrsBeforeCap}, served after cap ${L.workload.servedDailyLoad.dueSrsServedAfterCap}, ${L.workload.servedDailyLoad.todayType}`);
+    lines.push(`- Surface audit: ${(L.surfaceAudit||[]).map(s=>`${s.name} ${s.availableItemCount} ${s.unit||'items'} -> ${s.servedCount}/${s.cap} ${s.prerequisiteStatus.status}`).join('; ') || '-'}`);
     lines.push(`- Unlocked drills: ${L.afterLesson.unlockedDrills.join(', ') || '-'}`);
     lines.push('- Quiz prompts:');
     L.quiz.prompts.forEach(q=>{

@@ -677,7 +677,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.9</span>
+      <span class="version-pill">v4.10</span>
     </header>
 
     <section class="today-focus">
@@ -1065,8 +1065,11 @@ const GLYPHS = {
   "ั":{disp:"อั", type:"v", sound:"a (short)",  name:"ไม้หันอากาศ", nameTr:"mái hǎn-aa-gàat", gloss:"short a when a final consonant follows", demo:"วัน"},
   "ึ":{disp:"อึ", type:"v", sound:"ue (short)", name:"สระอึ", nameTr:"sara ue", gloss:"on top - say 'u' with a flat smile", demo:"ลึก"},
   "ื":{disp:"อือ", type:"v", sound:"uue (long)", name:"สระอือ", nameTr:"sara uue", gloss:"on top, usually followed by อ", demo:"มือ"},
+  "็":{disp:"เอ็", type:"m", sound:"shortener mark", name:"ไม้ไต่คู้", nameTr:"mái tài-khúu", gloss:"shortens the vowel before a final", demo:"เล็ก"},
   "ำ":{disp:"อำ", type:"v", sound:"am",         name:"สระอำ", nameTr:"sara am", gloss:"after the consonant", demo:"น้ำ"},
   "เ◌า":{disp:"เอา", type:"v", sound:"ao",       name:"สระเอา", nameTr:"sara ao", gloss:"wraps around the consonant", demo:"เขา"},
+  "เ◌อ":{disp:"เออ", type:"v", sound:"er",       name:"สระเออ", nameTr:"sara er", gloss:"front-plus-carrier vowel, written around the consonant", demo:"เธอ"},
+  "เ◌ิ":{disp:"เอิ", type:"v", sound:"er + final", name:"สระเอิ", nameTr:"sara er", gloss:"front vowel form before a final consonant", demo:"เปิด"},
   "เ◌ีย":{disp:"เอีย", type:"v", sound:"ia",      name:"สระเอีย", nameTr:"sara ia", gloss:"three pieces, one vowel", demo:"เรียน"},
   "เ◌ือ":{disp:"เอือ", type:"v", sound:"uea",     name:"สระเอือ", nameTr:"sara uea", gloss:"three pieces, one vowel", demo:"เพื่อน"},
   "◌ัว":{disp:"อัว", type:"v", sound:"ua",       name:"สระอัว", nameTr:"sara ua", gloss:"two pieces after/above", demo:"ตัว"},
@@ -1074,7 +1077,8 @@ const GLYPHS = {
   "้":{disp:"ก้", type:"m", sound:"mái thoo",   name:"ไม้โท", nameTr:"mái thoo", gloss:"Thai tone mark 2 - read with consonant class", demo:"บ้าน"},
   "๊":{disp:"ก๊", type:"m", sound:"mái dtrii",  name:"ไม้ตรี", nameTr:"mái dtrii", gloss:"tone mark 3 - high tone, mid class only", demo:"โต๊ะ"},
   "๋":{disp:"ก๋", type:"m", sound:"mái jàt-dtà-waa", name:"ไม้จัตวา", nameTr:"mái jàt-dtà-waa", gloss:"tone mark 4 - rising, mid class only", demo:"ก๋วยเตี๋ยว"},
-  "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it - common in loanwords", demo:"ศูนย์"}
+  "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it - common in loanwords", demo:"ศูนย์"},
+  "ๆ":{disp:"ๆ", type:"m", sound:"repeat sign", name:"ไม้ยมก", nameTr:"mái yá-mók", gloss:"repeats the previous word", demo:"ช้าๆ"}
 };
 
 const FINAL_JOBS = {
@@ -1213,12 +1217,13 @@ const LESSONS = [
      {thai:"นี่", tr:"nîi", en:"this", vocab:"core"},
      {thai:"ห้า", tr:"hâa", en:"five", vocab:"recognition"}
    ]},
-  {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ as a vowel", glyphs:["ร","ล","ว","ย"],
-   pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class - and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) - that flip is the Unit-C payoff."}],
-   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. ว as an ending glides into -ao/-aao: ยาว yaao. (เรา borrows the wrap-around vowel เ-า - properly yours in lesson 12.)",
+  {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ and เ◌า", glyphs:["ร","ล","ว","ย","เ◌า"],
+   pre:[{h:"Low class, plain = mid", body:"ร ล ว ย are <span style='color:var(--low);font-weight:600'>low</span> class - and most consonants are. A <span style='color:var(--low);font-weight:600'>low</span>-class initial that's plain and live also lands on the <b>mid</b> tone: รอ ror, ยาว yaao. Low class behaves differently <i>under a tone mark</i> (you saw ไม่ flip to falling) - that flip is the Unit-C payoff."},
+     {h:"เ◌า wraps the consonant", body:"เ◌า is one vowel sound, <b>ao</b>. It writes เ before the consonant and า after it, but you still read the consonant first: เรา = ร + เ◌า → rao. Lesson 12 will revisit this pattern with more words."}],
+   note:"อ doubles as the vowel or when it follows a consonant: รอ ror = wait. เ◌า wraps the consonant: เรา rao. ว as an ending glides into -ao/-aao: ยาว yaao.",
    words:[
      {thai:"รอ", tr:"ror", en:"to wait", vocab:"core"},
-     {thai:"เรา", tr:"rao", en:"we / us", vocab:"core"},
+     {thai:"เรา", tr:"rao", en:"we / us", vocab:"core", frame:{text:"เ◌า wraps ร: ร start r + เ◌า ao → rao", vowelOrder:"wraps the consonant", orderExplain:"เ◌า has pieces before and after the consonant; read ร first, then ao."}},
      {thai:"ยาว", tr:"yaao", en:"long", vocab:"recognition", frame:{text:"ย start y + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}},
      {thai:"ลาว", tr:"laao", en:"Lao / Laos", vocab:"decode", frame:{text:"ล start l + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}}
    ]},
@@ -1227,9 +1232,9 @@ const LESSONS = [
    note:"High-class consonants with a plain live syllable give a RISING tone: ขอ khǒr (may I have…) starts almost every polite request in Thailand.",
    words:[
      {thai:"ขอ", tr:"khǒr", en:"may I have… (request)", vocab:"core"},
+     {thai:"สี", tr:"sǐi", en:"colour", vocab:"core"},
      {thai:"สาม", tr:"sǎam", en:"three", vocab:"recognition", frame:{text:"ส start s + า aa + ม ending -m (rings/live)", final:"ม"}},
-     {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}},
-     {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)", vocab:"core"}
+     {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}}
    ]},
   /* ---------------- UNIT B - The workhorses ---------------- */
   {id:"l7", we:{m:"งาน → ง start job ng + า aa + น ending job -n → rings/live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take ไม้โท ้ and jump to a <b>high</b> tone - ช้าง. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
@@ -1320,16 +1325,16 @@ const LESSONS = [
    words:[
      {thai:"ข้าว", tr:"khâao", en:"rice / a meal", vocab:"core", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live) + ้ tone mark", final:"ว", sound:"-aao"}},
      {thai:"ห้อง", tr:"hôrng", en:"room", vocab:"core", frame:{text:"ห start h + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
-     {thai:"ถาม", tr:"thǎam", en:"to ask", vocab:"core", frame:{text:"ถ start th + า aa + ม ending -m (rings/live)", final:"ม"}},
-     {thai:"สี", tr:"sǐi", en:"colour", vocab:"recognition"}
+     {thai:"ถาม", tr:"thǎam", en:"to ask", vocab:"core", frame:{text:"ถ start th + า aa + ม ending -m (rings/live)", final:"ม"}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"ข้าว", text:"<span class='classchip high'>high class</span> + ไม้โท ้ gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"ข is high class; ไม้โท gives falling"},
      {kind:"mcq", prompt:"สี", text:"<span class='classchip high'>high class</span>, live, no mark gives which tone?", answer:"Rising", options:["Mid","Low","Falling","High","Rising"], explain:"ส is high class; plain live syllables rise"},
      {kind:"mcq", prompt:"ถูก", text:"<span class='classchip high'>high class</span> + dead syllable gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ถ is high class; a dead syllable gives low"}
    ]},
-  {id:"l16", we:{m:"น้ำ → น LOW class + ไม้โท ้ → HIGH tone, not falling = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:[],
-   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br><span class='classchip low'>low class</span> + ไม้เอก ่ → <b>falling</b>: ไม่<br><span class='classchip low'>low class</span> + ไม้โท ้ → <b>high</b>: น้ำ<br><span class='classchip low'>low class</span> plain + dead-short → <b>high</b>: เล็ก<br><span class='classchip low'>low class</span> plain + dead-long → <b>falling</b>: มาก<br><br>This is the flip that breaks most learners. The class colour is there to remind you which row you are using."}],
+  {id:"l16", we:{m:"น้ำ → น LOW class + ไม้โท ้ → HIGH tone, not falling = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:["็"],
+   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br><span class='classchip low'>low class</span> + ไม้เอก ่ → <b>falling</b>: ไม่<br><span class='classchip low'>low class</span> + ไม้โท ้ → <b>high</b>: น้ำ<br><span class='classchip low'>low class</span> plain + dead-short → <b>high</b>: เล็ก<br><span class='classchip low'>low class</span> plain + dead-long → <b>falling</b>: มาก<br><br>This is the flip that breaks most learners. The class colour is there to remind you which row you are using."},
+     {h:"็ marks a short vowel", body:"ไม้ไต่คู้ ็ is not a tone mark. It makes the vowel short before a final consonant: เล็ก = ล + เ◌็ + ก, a dead-short syllable."}],
    note:"พี่ phîi (older) and น้อง nórng (younger) - Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu - it shortens the vowel, no tone change.",
    words:[
      {thai:"น้อง", tr:"nórng", en:"younger sibling / junior", vocab:"core", frame:{text:"น start n + อ or + ง ending -ng (rings/live) + ้ tone mark", final:"ง"}},
@@ -1349,7 +1354,8 @@ const LESSONS = [
      {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition", frame:{text:"ห is silent here. It leads ม into high-class tone rules: ม sound + า aa, live/no mark → rising mǎa."}},
      {thai:"ไหน", tr:"nǎi", en:"where / which", vocab:"core"},
      {thai:"อยู่", tr:"yùu", en:"to be at / -ing", vocab:"core"},
-     {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core", frame:{text:"อ silent leader + ย start y + า aa + ก ending -k (stop/dead)", final:"ก"}}
+     {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core", frame:{text:"อ silent leader + ย start y + า aa + ก ending -k (stop/dead)", final:"ก"}},
+     {thai:"ไหม", tr:"mǎi", en:"…? (yes/no question particle)", vocab:"core", frame:{text:"ห is silent here. It leads ม into high-class tone rules; ไ gives the ai vowel sound."}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"หมา", text:"What does silent ห do here?", answer:"Makes ม follow high-class tone rules", options:["Makes ม follow high-class tone rules","Adds an h sound","Makes the vowel short","Makes the word formal"], explain:"หมา is pronounced mǎa, not h-mǎa"},
@@ -1385,38 +1391,41 @@ const LESSONS = [
      {kind:"mcq", prompt:"ทราบ", text:"ทร usually begins with which sound?", answer:"s", options:["s","th","tr","r"], explain:"ทราบ reads sâap"},
      {kind:"mcq", prompt:"อร่อย", text:"What job is อ doing?", answer:"Carrying the opening vowel", options:["Carrying the opening vowel","Making an r sound","Silencing ร","Marking high class"], explain:"อ carries the a- before ร่อย"}
    ]},
-  {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING tone = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b> tone."}], sub:"ธ ภ ศ ญ ฮ + the silent killer ◌์", glyphs:["ธ","ภ","ศ","ญ","ฮ","์"],
+  {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING tone = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ศ and ษ are both high-class s-family letters. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b> tone."},
+     {h:"เ◌อ says er", body:"เ◌อ is the app's <b>er</b> vowel pattern: เธอ = ธ + เ◌อ → ter. It is useful for real speech, but recognition-level here."}], sub:"ธ ภ ศ ษ ญ ฮ + เ◌อ + ◌์", glyphs:["ธ","ภ","ศ","ษ","ญ","ฮ","เ◌อ","์"],
    note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
    words:[
-     {thai:"เธอ", tr:"ter", en:"you / she (informal)", vocab:"recognition"},
-     {thai:"ภาษา", tr:"phaa-sǎa", en:"language", vocab:"core"},
+     {thai:"เธอ", tr:"ter", en:"you / she (informal)", vocab:"recognition", frame:{text:"ธ start th/soft t + เ◌อ er → ter", vowelOrder:"wraps the consonant", orderExplain:"เ◌อ writes around ธ, but you read the consonant first: t + er."}},
+     {thai:"ภาษา", tr:"phaa-sǎa", en:"language", vocab:"core", frame:{text:"ภาษา = ภา + ษา; ษ is a high-class s-family letter."}},
      {thai:"ผู้หญิง", tr:"phûu-yǐng", en:"woman", vocab:"recognition", frame:{text:"หญิง = ห leads ญ + ิ i + ง ending -ng (rings/live)", final:"ง", focus:"หญิง"}},
      {thai:"ศูนย์", tr:"sǔun", en:"zero / centre", vocab:"recognition", frame:{text:"ศ start s + ู uu + น ending -n; ย์ is silent", final:"น"}}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ศูนย์", text:"In ศูนย์, what does ์ do?", answer:"Silences the marked letter", options:["Silences the marked letter","Makes the tone high","Repeats the word","Makes the vowel short"], explain:"ย์ is written but not pronounced; น is the ending sound."}
    ]},
-  {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING tone = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ + recognition-only rarities", glyphs:["ฉ"],
+  {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING tone = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ ฬ + recognition-only rarities", glyphs:["ฉ","ฬ"],
    pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them - and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED - ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 - the Letters boss will check you know them."}],
    note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
    words:[
      {thai:"ฉัน", tr:"chǎn", en:"I (informal)", vocab:"recognition", frame:{text:"ฉ start ch + ั a + น ending -n (rings/live)", final:"น"}},
-     {thai:"กีฬา", tr:"gii-laa", en:"sport", vocab:"decode"},
+     {thai:"กีฬา", tr:"gii-laa", en:"sport", vocab:"decode", frame:{text:"กีฬา = กี + ฬา; ฬ is a rare low-class l letter used in formal/Pali words."}},
      {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior", vocab:"recognition"},
      {thai:"สนุก", tr:"sà-nùk", en:"fun", vocab:"core", frame:{text:"สนุก = ส + hidden a, then นุก = น start n + ุ u + ก ending -k (stop/dead)", final:"ก", focus:"นุก", hiddenFocus:"สนุก", hiddenVowel:"hidden a", hiddenExplain:"สนุก starts with a short hidden a after ส: sà-nùk."}}
    ]},
-  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ไม้เอก ่ on LOW class → FALLING tone = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels - class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes ไม้เอก ่ → <b>falling</b> tone."}], sub:"เ◌ีย เ◌ือ ◌ัว + ๆ", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
-   note:"ๆ (mái yá-mók) repeats the previous word: ช้าๆ = cháa cháa = slowly. เร็วๆ = quickly. You'll see it everywhere.",
+  {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ไม้เอก ่ on LOW class → FALLING tone = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels - class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes ไม้เอก ่ → <b>falling</b> tone."}], sub:"เ◌ีย เ◌ือ ◌ัว", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
+   note:"Find the consonant inside the three-piece vowel first, then read class, live/dead and any Thai tone mark.",
    words:[
      {thai:"เรียน", tr:"rian", en:"to study", vocab:"core", frame:{text:"ร start r + เ◌ีย ia + น ending -n (rings/live)", final:"น", vowelOrder:"three pieces around the consonant", orderExplain:"เ◌ีย is a three-piece vowel; the pieces surround ร but the sound reads r + ia."}},
      {thai:"เพื่อน", tr:"phûean", en:"friend", vocab:"core", frame:{text:"พ start ph + เ◌ือ uea + น ending -n (rings/live) + ่ tone mark", final:"น", vowelOrder:"three pieces around the consonant", orderExplain:"เ◌ือ is a three-piece vowel; find the consonant inside it before reading the tone."}},
-     {thai:"ตัว", tr:"dtua", en:"body / classifier", vocab:"recognition"},
-     {thai:"เสื้อ", tr:"sûea", en:"shirt", vocab:"core"}
+     {thai:"ตัว", tr:"dtua", en:"body / classifier", vocab:"recognition", frame:{text:"ต start dt + ◌ัว ua → dtua", vowelOrder:"three pieces around the consonant", orderExplain:"◌ัว sits around/after the consonant but reads as one ua vowel."}},
+     {thai:"เสื้อ", tr:"sûea", en:"shirt", vocab:"core", frame:{text:"ส start s + เ◌ือ uea + ้ tone mark", vowelOrder:"three pieces around the consonant", orderExplain:"เ◌ือ surrounds ส; read s + uea, then apply the tone mark."}}
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"เพื่อน", text:"What still drives the tone in a three-piece vowel?", answer:"The consonant class", options:["The consonant class","The vowel shape","The word length","The lesson number"], explain:"พ is low class; ไม้เอก gives falling"},
-     {kind:"mcq", prompt:"เพื่อน", text:"<span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class + ไม้เอก gives falling"},
-     {kind:"mcq", prompt:"ๆ", text:"What does ๆ do?", answer:"Repeats the previous word", options:["Repeats the previous word","Makes the tone high","Silences a letter","Marks a question"], explain:"ช้าๆ = slowly"}
+     {kind:"mcq", prompt:"เพื่อน", text:"<span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class + ไม้เอก gives falling"}
    ]},
-  {id:"l23", we:{m:"ระวัง → ระ dead short on LOW class → HIGH tone, then วัง live → MID tone = caution", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Thai digits & signs", sub:"๑ ๒ ๓ and reading the street", glyphs:[],
-   pre:[{h:"Thai has its own digits", body:"๐ 0 · ๑ 1 · ๒ 2 · ๓ 3 · ๔ 4 · ๕ 5 · ๖ 6 · ๗ 7 · ๘ 8 · ๙ 9<br><br>Arabic numerals dominate, but government documents, temples and - usefully - <b>dual-pricing signs</b> use Thai digits. If the Thai-digit price differs from the Arabic one, you've found the local price."}],
+  {id:"l23", we:{m:"ระวัง → ระ dead short on LOW class → HIGH tone, then วัง live → MID tone = caution", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Useful signs", sub:"repetition sign + reading the street", glyphs:["ๆ"],
+   pre:[{h:"Useful signs", body:"ๆ (ไม้ยมก) repeats the previous word: ช้าๆ = cháa cháa = slowly. You also now have enough script to tackle short public signs such as ระวัง, ทางออก, ทางเข้า and ห้องน้ำ."}],
    note:"ระวัง rá-wang appears on every wet floor, low doorway, and BTS platform in Bangkok.",
    words:[
      {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful", vocab:"core", frame:{text:"วัง = ว start w + ั a + ง ending -ng (rings/live)", final:"ง", focus:"วัง"}},
@@ -1426,11 +1435,13 @@ const LESSONS = [
    ],
    extraQuiz:[
      {kind:"mcq", prompt:"ระวัง", text:"The first syllable ระ is live or dead?", answer:"Dead", options:["Live","Dead"], explain:"short vowel, cut off"},
+     {kind:"mcq", prompt:"ๆ", text:"What does ๆ do?", answer:"Repeats the previous word", options:["Repeats the previous word","Makes the tone high","Silences a letter","Marks a question"], explain:"ช้าๆ = slowly"},
      {kind:"mcq", prompt:"ทางออก", text:"How does this sign read?", answer:"thaang-òrk", options:["thaang-òrk","thaang-khâo","hôrng-náam","rá-wang"]},
      {kind:"mcq", prompt:"ทางเข้า", text:"How does this sign read?", answer:"thaang-khâo", options:["thaang-khâo","thaang-òrk","hôrng-náam","rá-wang"]}
    ]},
-  {id:"l24", we:{m:"เปิด → ป start bp + เ◌ิ er + ด ending -t → MID class dead → LOW tone = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:[],
-   pre:[{h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list. Keep using the frame: start sound, vowel, ending sound, then live/dead and tone."}],
+  {id:"l24", we:{m:"เปิด → ป start bp + เ◌ิ er + ด ending -t → MID class dead → LOW tone = open", twinIdx:2, ask:"tone"}, unit:"D · Clusters & the long tail", title:"Capstone: read Bangkok", sub:"Signs you will actually meet", glyphs:["เ◌ิ"],
+   pre:[{h:"เ◌ิ before a final", body:"One final useful sign pattern: เ◌ิ before a final consonant uses the app's <b>er</b> sound. เปิด = ป start bp + เ◌ิ er + ด ending -t."},
+     {h:"Final boss", body:"Everything below uses only what you've learned. Sound each one out BEFORE flipping to the answer in the word list. Keep using the frame: start sound, vowel, ending sound, then live/dead and tone."}],
    note:"That's Phase 1. You now have the letter → class → tone tools to tackle unfamiliar Thai slowly; real-world spelling can still contain ambiguous or irregular words.",
    words:[
      {thai:"เปิด", tr:"bpèrt", en:"open", vocab:"core", frame:{text:"ป start bp + เ◌ิ er + ด ending -t (stop/dead)", final:"ด", vowelOrder:"written before, spoken after", orderExplain:"เ◌ิ starts before ป on the page, but the sound is bp + er + -t."}},
@@ -1458,7 +1469,7 @@ const TONES2 = [
   {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ไม่", tr:"mâi",  en:"no, not"},
   {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ห้า", tr:"hâa",  en:"five"},
   {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ไม้", tr:"máai", en:"wood"},
-  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle", gate:"l6"}
+  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle", gate:"l17"}
 ];
 /* minimal pairs/sets - segmentally identical, differ ONLY by tone or vowel length.
    Every tone verified against the grid via idea-engine/tone-validator.js (Rung 1: hear the difference). */
@@ -1467,7 +1478,7 @@ const TONE_SETS = [
   [{t:"เสือ",tr:"sǔea",en:"tiger"},{t:"เสื้อ",tr:"sûea",en:"shirt"},{t:"เสื่อ",tr:"sùea",en:"a mat"}],
   [{t:"มา",tr:"maa",en:"to come"},{t:"ม้า",tr:"máa",en:"horse"},{t:"หมา",tr:"mǎa",en:"dog", gate:"l17"}],
   [{t:"ปา",tr:"bpaa",en:"to throw"},{t:"ป่า",tr:"bpàa",en:"forest"},{t:"ป้า",tr:"bpâa",en:"aunt"}],
-  [{t:"ไม้",tr:"máai",en:"wood"},{t:"ไม่",tr:"mâi",en:"not"},{t:"ไหม",tr:"mǎi",en:"silk", gate:"l6"},{t:"ใหม่",tr:"mài",en:"new", gate:"l17"}],
+  [{t:"ไม้",tr:"máai",en:"wood"},{t:"ไม่",tr:"mâi",en:"not"},{t:"ไหม",tr:"mǎi",en:"silk", gate:"l17"},{t:"ใหม่",tr:"mài",en:"new", gate:"l17"}],
   [{t:"นา",tr:"naa",en:"rice field"},{t:"น่า",tr:"nâa",en:"worth doing"}],
 ];
 const LENGTH_PAIRS = [
@@ -3364,25 +3375,159 @@ function clusterQuestion(w){
 /* decodability gate (v2.22) - a phrase becomes a READING card only once its letters are taught;
    until then it lives ear-first (listening card + the rote phrasebook). */
 function taughtGlyphSet(doneIds){
-  const doneSet = new Set(doneIds || state.done || []);
+  const ids = doneIds || state.done || [];
+  const doneSet = new Set(ids);
   const s = new Set();
-  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)) s.add(ch); }); }
+  Object.defineProperty(s, '_doneIds', {value:ids.slice ? ids.slice() : Array.from(doneSet), enumerable:false});
+  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)){ if(ch !== '◌') s.add(ch); } }); }
+  return s;
+}
+function taughtGlyphIdSet(doneIds){
+  const doneSet = new Set(doneIds || state.done || []), s = new Set();
+  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>s.add(g)); }
   return s;
 }
 function isLessonWord(thai){ return LESSONS.some(L=>L.words.some(w=>w.thai===thai)); }
+function thaiChars(s){ return [...String(s||'')]; }
+function isThaiChar(ch){ return /[\u0E00-\u0E7F]/.test(ch) || ch === '◌'; }
+function hasThaiText(s){ return thaiChars(s).some(isThaiChar); }
+function thaiOnlyText(s){
+  const chars = thaiChars(s).filter(ch=>ch !== ' ' && ch !== '-' && ch !== '.' && ch !== ',' && ch !== '/' && ch !== '(' && ch !== ')' && ch !== '◌');
+  return chars.length && chars.every(isThaiChar);
+}
+function consonantAt(ch){ return !!(GLYPHS[ch] && GLYPHS[ch].type === 'c'); }
+function nextThaiConsonant(chars, from){
+  for(let i=from;i<chars.length;i++) if(consonantAt(chars[i])) return {ch:chars[i], i};
+  return null;
+}
+function hasSilentH(thai){
+  const chars = thaiChars(thai);
+  for(let i=0;i<chars.length-1;i++){
+    if(chars[i] === 'ห' && GLYPHS[chars[i+1]] && GLYPHS[chars[i+1]].type === 'c' && GLYPHS[chars[i+1]].cls === 'low') return true;
+  }
+  return false;
+}
+function hasSilentOLead(thai){ return /^อย[ู่า่างก]?/.test(String(thai||'')); }
+function thaiVowelPatternTokens(thai){
+  const chars = thaiChars(thai), out = [];
+  for(let i=0;i<chars.length;i++){
+    if(chars[i] === 'เ'){
+      const tail = chars.slice(i+1, i+7);
+      if(tail.includes('็')) out.push('เ◌็');
+      if(tail.includes('ิ')) out.push('เ◌ิ');
+      if(tail.includes('ื') && tail.includes('อ')) out.push('เ◌ือ');
+      else if(tail.includes('ี') && tail.includes('ย')) out.push('เ◌ีย');
+      else if(tail.includes('า')) out.push('เ◌า');
+      else if(tail.includes('อ')) out.push('เ◌อ');
+      else out.push('เ');
+    }
+    if(chars[i] === 'แ') out.push('แ');
+    if(chars[i] === 'ไ') out.push('ไ');
+    if(chars[i] === 'ใ') out.push('ใ');
+    if(chars[i] === 'โ') out.push('โ');
+    if(chars[i] === 'ั' && chars[i+1] === 'ว') out.push('◌ัว');
+    if(chars[i] === 'ำ') out.push('ำ');
+  }
+  return [...new Set(out)];
+}
+function thaiVisibleGlyphTokens(thai){
+  const tokens = [];
+  thaiChars(thai).forEach(ch=>{
+    if(ch === '◌' || ch === ' ' || ch === '-' || ch === '.' || ch === ',' || ch === '/') return;
+    if(!isThaiChar(ch)) return;
+    if(/[๐-๙]/.test(ch)) tokens.push(ch);
+    else if(GLYPHS[ch]) tokens.push(ch);
+  });
+  return [...new Set(tokens.concat(thaiVowelPatternTokens(thai)))];
+}
+function mechanismIntroLesson(m){
+  return {
+    'final-job':2,
+    'hidden-o':9,
+    'hidden-a':21,
+    'live-dead':2,
+    'vowel-length':2,
+    'front-vowel-order':3,
+    'wrap-vowel-order':5,
+    'three-piece-vowel-order':22,
+    'tone-marks':4,
+    'no-mark-tone':1,
+    'shortener':16,
+    'silent-h':17,
+    'silent-o':17,
+    'true-cluster':18,
+    'fake-cluster':19,
+    'karan':20,
+    'repeat-sign':23,
+    'thai-digits':99
+  }[m] || 1;
+}
+function wordMechanisms(thai, frame){
+  const mechs = [];
+  if(/[่้๊๋]/.test(thai)) mechs.push('tone-marks');
+  if(/็/.test(thai)) mechs.push('shortener');
+  if(/์/.test(thai)) mechs.push('karan');
+  if(/ๆ/.test(thai)) mechs.push('repeat-sign');
+  if(/[๐-๙]/.test(thai)) mechs.push('thai-digits');
+  if(hasSilentH(thai)) mechs.push('silent-h');
+  if(hasSilentOLead(thai)) mechs.push('silent-o');
+  if(frame){
+    if(frame.final) mechs.push('final-job');
+    if(frame.hiddenVowel === 'hidden o') mechs.push('hidden-o');
+    if(frame.hiddenVowel === 'hidden a') mechs.push('hidden-a');
+    if(frame.vowelLength) mechs.push('vowel-length');
+    if(frame.vowelOrder === 'written before, spoken after') mechs.push('front-vowel-order');
+    if(frame.vowelOrder === 'wraps the consonant') mechs.push('wrap-vowel-order');
+    if(frame.vowelOrder === 'three pieces around the consonant') mechs.push('three-piece-vowel-order');
+    if(frame.clusterKind === 'true cluster') mechs.push('true-cluster');
+    if(frame.clusterKind === 'fake cluster') mechs.push('fake-cluster');
+    if(liveDeadFromFrame(frame)) mechs.push('live-dead');
+  }
+  return [...new Set(mechs)];
+}
+function prerequisiteIssuesForThai(thai, doneIds, surface, frame){
+  const done = doneIds || state.done || [];
+  const taughtChars = taughtGlyphSet(done), taughtIds = taughtGlyphIdSet(done);
+  const lessonN = done.length ? Math.max(...done.map(lessonNum)) : 0;
+  const issues = [];
+  thaiVisibleGlyphTokens(thai).forEach(token=>{
+    if(token === 'เ◌็'){
+      if(!taughtIds.has('็')) issues.push({surface, item:thai, missing:['vowelPattern:เ◌็'], severity:'error', suggestedFix:'teach ็ / เ◌็ before using this item structurally'});
+      return;
+    }
+    if(/[๐-๙]/.test(token)){
+      issues.push({surface, item:thai, missing:['thaiDigit:' + token], severity:'error', suggestedFix:'teach Thai digits before using them in Phase 1 scored content'});
+      return;
+    }
+    if(token.length === 1){
+      if(!taughtChars.has(token)) issues.push({surface, item:thai, missing:['glyph:' + token], severity:'error', suggestedFix:'teach ' + token + ' before this scored/reviewable item'});
+    } else if(!taughtIds.has(token)){
+      issues.push({surface, item:thai, missing:['vowelPattern:' + token], severity:'error', suggestedFix:'teach ' + token + ' before this scored/reviewable item'});
+    }
+  });
+  wordMechanisms(thai, frame).forEach(m=>{
+    const intro = mechanismIntroLesson(m);
+    if(lessonN < intro) issues.push({surface, item:thai, missing:['mechanism:' + m], severity:'error', suggestedFix:'teach ' + m + ' by Lesson ' + intro + ' before using this item'});
+  });
+  return issues;
+}
+function thaiItemPrereqsMet(thai, doneIds, frame){
+  return prerequisiteIssuesForThai(thai, doneIds || state.done || [], 'readability', frame).length === 0;
+}
 function thaiTextReadable(thai, taught){
   taught = taught || taughtGlyphSet();
   for(const ch of String(thai)){
-    if(ch===' ' || ch==='ๆ' || ch==='ฯ' || ch==='็' || ch==='์' || ch==='.' || ch===',') continue;   // spacing / iteration / vowel-shortener / silencer - decode-helpers, not gating glyphs
+    if(ch===' ' || ch==='ฯ' || ch==='.' || ch===',' || ch==='◌') continue;
     if(!/[฀-๿]/.test(ch)) continue;     // non-Thai - ignore
     if(!taught.has(ch)) return false;
   }
-  return true;
+  const doneIds = taught._doneIds || state.done || [];
+  return prerequisiteIssuesForThai(thai, doneIds, 'readability').length === 0;
 }
 function phraseReadable(thai){ return thaiTextReadable(thai); }
 function itemThai(x){ return x.thai || x.t || ''; }
 function practiceItemReadable(x, taught, doneIds){
-  return lessonGateMet(x && x.gate, doneIds) && thaiTextReadable(itemThai(x), taught);
+  return lessonGateMet(x && x.gate, doneIds) && thaiTextReadable(itemThai(x), taught || taughtGlyphSet(doneIds));
 }
 function readableToneItems(taught, doneIds){
   taught = taught || taughtGlyphSet(doneIds);
@@ -3403,14 +3548,18 @@ function uniquePracticeItems(items){
 }
 function readableEchoItems(doneIds){
   const taught = taughtGlyphSet(doneIds);
-  const lessonItems = learnedWords(doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+  const lessonItems = learnedWords(doneIds)
+    .filter(w=>thaiItemPrereqsMet(w.thai, doneIds, wordFrame(w)))
+    .map(w=>({t:w.thai, tr:w.tr, en:w.en}));
   const toneItems = readableToneItems(taught, doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
   const twinItems = readableTwinSets(taught, doneIds).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
   return uniquePracticeItems(lessonItems.concat(toneItems, twinItems));
 }
 function coveredSoundThaiItems(){
   const taught = taughtGlyphSet();
-  const out = learnedWords().map(w=>({thai:w.thai, tr:w.tr, en:w.en}));
+  const out = learnedWords()
+    .filter(w=>thaiItemPrereqsMet(w.thai, state.done, wordFrame(w)))
+    .map(w=>({thai:w.thai, tr:w.tr, en:w.en}));
   Object.keys(state.srs||{}).filter(k=>k.startsWith('w:')).forEach(k=>{
     const w = findWord(k.slice(2));
     if(w && thaiTextReadable(w.thai, taught)) out.push({thai:w.thai, tr:w.tr, en:w.en});
@@ -4690,6 +4839,126 @@ function validateCoverageContracts(){
   if(errors.length) throw new Error('Coverage contract failed:\n' + errors.join('\n'));
   return true;
 }
+function quizPrerequisiteIssues(q, L, index){
+  const doneIds = LESSONS.slice(0, index+1).map(x=>x.id);
+  const surface = L.id + '/quiz/' + (q.axis || q._choice || q.kind || 'other');
+  const issues = [];
+  if(q._choice === 'glyph-sound' || q._choice === 'glyph-choice') return issues;
+  const scan = v=>{
+    if(v == null) return;
+    const s = String(v);
+    if(!hasThaiText(s)) return;
+    if(thaiOnlyText(s) || s.length <= 12) issues.push(...prerequisiteIssuesForThai(s, doneIds, surface));
+  };
+  scan(q.prompt);
+  scan(q.say);
+  scan(q.answer);
+  (q.options||[]).forEach(scan);
+  const lessonN = lessonNum(L.id);
+  const addMechanism = m=>{
+    const intro = mechanismIntroLesson(m);
+    if(lessonN < intro) issues.push({surface, item:q.prompt || q.text || '', missing:['mechanism:' + m], severity:'error', suggestedFix:'teach ' + m + ' by Lesson ' + intro + ' before asking this quiz axis'});
+  };
+  if(q.axis === 'final' || q.axis === 'final-job') addMechanism('final-job');
+  if(q.axis === 'hidden-vowel') addMechanism(String(q.answer) === 'hidden a' ? 'hidden-a' : 'hidden-o');
+  if(q.axis === 'live-dead') addMechanism('live-dead');
+  if(q.axis === 'vowel-length') addMechanism('vowel-length');
+  if(q.axis === 'vowel-order'){
+    if(q.answer === 'three pieces around the consonant') addMechanism('three-piece-vowel-order');
+    else if(q.answer === 'wraps the consonant') addMechanism('wrap-vowel-order');
+    else addMechanism('front-vowel-order');
+  }
+  if(q.axis === 'cluster'){
+    if(q.answer === 'fake cluster') addMechanism('fake-cluster');
+    else addMechanism('true-cluster');
+  }
+  if(/ๆ/.test(String(q.prompt||'') + String(q.text||''))) addMechanism('repeat-sign');
+  if(/์|silences? the marked letter/i.test(String(q.prompt||'') + String(q.text||''))) addMechanism('karan');
+  if(TONE_NAMES.includes(q.answer) && hasThaiText(q.prompt)){
+    const w = findWord(String(q.prompt));
+    if(w && !toneTaughtBy(w, lessonN)){
+      issues.push({surface, item:w.thai, missing:['toneRule:' + w.thai], severity:'error', suggestedFix:'teach the matching tone rule before asking for this tone'});
+    }
+  }
+  return issues;
+}
+function collectPrerequisiteIssues(){
+  const lessonIssues = [], poolIssues = [], roleIssues = [];
+  LESSONS.forEach((L,index)=>{
+    const doneIds = LESSONS.slice(0, index+1).map(x=>x.id);
+    (L.glyphs||[]).forEach(g=>{
+      if(!GLYPHS[g]) lessonIssues.push({lesson:L.id, surface:'lesson-glyph', item:g, missing:['glyphData:' + g], severity:'error', suggestedFix:'add GLYPHS metadata before teaching this glyph'});
+    });
+    (L.words||[]).forEach(w=>{
+      const surface = 'lesson-word/' + wordRole(w);
+      const issues = prerequisiteIssuesForThai(w.thai, doneIds, surface, wordFrame(w)).map(i=>Object.assign({lesson:L.id, role:wordRole(w)}, i));
+      if(issues.length){
+        if(wordRole(w) === 'core' || wordRole(w) === 'decode') roleIssues.push(...issues);
+        else lessonIssues.push(...issues);
+      }
+    });
+    buildLessonQuiz(L).forEach(q=>{
+      lessonIssues.push(...quizPrerequisiteIssues(q, L, index).map(i=>Object.assign({lesson:L.id}, i)));
+      if(q.axis === 'listen'){
+        const w = L.words.find(x=>x.thai === q.say || x.thai === q.answer);
+        if(w && wordRole(w) !== 'core') roleIssues.push({lesson:L.id, surface:'lesson-quiz/listen', item:w.thai, missing:['role:core'], severity:'error', suggestedFix:'only core lesson words may receive objective lesson listening checks'});
+      }
+    });
+  });
+  for(let n=0;n<=LESSONS.length;n++){
+    const doneIds = LESSONS.slice(0,n).map(L=>L.id);
+    const taught = taughtGlyphSet(doneIds);
+    readableToneItems(taught, doneIds).forEach(t=>{
+      prerequisiteIssuesForThai(itemThai(t), doneIds, 'tone-pool').forEach(i=>poolIssues.push(Object.assign({afterLesson:n}, i)));
+    });
+    readableTwinSets(taught, doneIds).forEach(set=>{
+      set.forEach(w=>prerequisiteIssuesForThai(itemThai(w), doneIds, 'sound-twins-pool').forEach(i=>poolIssues.push(Object.assign({afterLesson:n}, i))));
+    });
+    readableEchoItems(doneIds).forEach(w=>{
+      prerequisiteIssuesForThai(itemThai(w), doneIds, 'echo-pool').forEach(i=>poolIssues.push(Object.assign({afterLesson:n}, i)));
+    });
+  }
+  STORIES.forEach(s=>{
+    const gi = LESSONS.findIndex(L=>L.id === s.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    (s.lines||[]).flat().forEach(w=>{
+      prerequisiteIssuesForThai(itemThai(w), doneIds, 'story/' + s.id).forEach(i=>poolIssues.push(Object.assign({lesson:s.gate}, i)));
+    });
+  });
+  POSTCARDS.forEach(p=>{
+    const gi = LESSONS.findIndex(L=>L.id === p.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    (p.cap||[]).forEach(w=>{
+      prerequisiteIssuesForThai(itemThai(w), doneIds, 'postcard/' + p.days).forEach(i=>poolIssues.push(Object.assign({lesson:p.gate}, i)));
+    });
+  });
+  const uniq = issues=>{
+    const seen = new Set();
+    return issues.filter(i=>{
+      const key = [i.lesson,i.afterLesson,i.surface,i.item,(i.missing||[]).join(',')].join('|');
+      if(seen.has(key)) return false;
+      seen.add(key); return true;
+    });
+  };
+  return {lessonIssues:uniq(lessonIssues), poolIssues:uniq(poolIssues), roleIssues:uniq(roleIssues)};
+}
+function validatePrerequisiteContracts(){
+  const collected = collectPrerequisiteIssues();
+  const all = collected.lessonIssues.concat(collected.poolIssues, collected.roleIssues);
+  if(readableTwinSets(taughtGlyphSet(LESSONS.slice(0,10).map(L=>L.id)), LESSONS.slice(0,10).map(L=>L.id)).flat().some(w=>['เสือ','เสื้อ','เสื่อ'].includes(itemThai(w)))){
+    all.push({surface:'sound-twins-pool', item:'เสือ/เสื้อ/เสื่อ', missing:['vowelPattern:เ◌ือ'], severity:'error', suggestedFix:'gate เ◌ือ tone set until Lesson 22'});
+  }
+  if(readableToneItems(taughtGlyphSet(LESSONS.slice(0,6).map(L=>L.id)), LESSONS.slice(0,6).map(L=>L.id)).some(w=>itemThai(w)==='ไหม')){
+    all.push({surface:'tone-pool', item:'ไหม', missing:['mechanism:silent-h'], severity:'error', suggestedFix:'gate ไหม until Lesson 17'});
+  }
+  if(all.length){
+    throw new Error('Prerequisite contract failed:\n' + all.map(i=>{
+      const where = i.lesson ? i.lesson : i.afterLesson != null ? 'after l' + i.afterLesson : 'pool';
+      return where + ' ' + i.surface + ' ' + i.item + ' missing ' + (i.missing||[]).join(', ');
+    }).join('\n'));
+  }
+  return true;
+}
 function validateReviewChoiceContracts(){
   const errors = [];
   Object.keys(GLYPHS).forEach(ch=>{
@@ -5333,7 +5602,7 @@ function buildMixedQuiz(){
   const taught = taughtGlyphSet();
   const upToLessonNum = state.done.length ? Math.max(...state.done.map(lessonNum)) : 0;
   const phraseIds = Object.keys(state.srs).filter(k=>k.startsWith('w:')).map(k=>k.slice(2));
-  const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean);
+  const phrases = phraseIds.map(t=>findWord(t)).filter(Boolean).filter(p=>thaiTextReadable(p.thai, taught));
   const allWords = words.concat(phrases.filter(p=>!words.some(w=>w.thai===p.thai)));
   const qs = [];
   glyphs.forEach(ch=>{
@@ -5818,6 +6087,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateAudioContracts();
   validateVocabularyContracts();
   validateCoverageContracts();
+  validatePrerequisiteContracts();
   validateReviewChoiceContracts();
   validateFinalSoundContracts();
   validateStructuralClarityContracts();
