@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.8 — 2026-06-26
+
+- Fixed a Lesson 5 review leak where Echo could surface `หมา` because the letters were known even though the silent-ห mechanism is not taught until Lesson 17.
+- Added per-item lesson gates to global tone, Sound Twins and Echo practice pools, so covered practice now checks taught mechanisms as well as visible letters.
+- Added `ห้า` to the early tone-listening examples so the Lesson 4 tone drill still has enough valid covered items after silent-leader examples are held back.
+- Added a direct Lesson 17 frame explaining why `หมา` reads `mǎa`: silent `ห` makes `ม` follow high-class tone rules.
+- Kept lesson order, mastery gates and the state schema unchanged.
+
 ## v4.7 — 2026-06-25
 
 - Removed transliteration-cued `reading → Thai` questions from generated lesson quizzes, including Lesson 4 cases such as `bâan` → `บ้าน`.

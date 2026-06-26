@@ -677,7 +677,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.7</span>
+      <span class="version-pill">v4.8</span>
     </header>
 
     <section class="today-focus">
@@ -757,7 +757,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.7 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.8 (PWA)</div>
     </div>
   </section>
 
@@ -1346,7 +1346,7 @@ const LESSONS = [
    pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine - these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow <span class='classchip high'>high class</span> tone rules: หมา and ไหน are rising.<br><br>Silent อ does the same trick with <span class='classchip mid'>mid class</span> rules - but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
    note:"อยู่ marks location AND continuous action: อยู่ไหน = where are you? กินอยู่ = (I'm) eating.",
    words:[
-     {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition"},
+     {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition", frame:{text:"ห is silent here. It leads ม into high-class tone rules: ม sound + า aa, live/no mark → rising mǎa."}},
      {thai:"ไหน", tr:"nǎi", en:"where / which", vocab:"core"},
      {thai:"อยู่", tr:"yùu", en:"to be at / -ing", vocab:"core"},
      {thai:"อยาก", tr:"yàak", en:"to want to", vocab:"core", frame:{text:"อ silent leader + ย start y + า aa + ก ending -k (stop/dead)", final:"ก"}}
@@ -1454,19 +1454,20 @@ const TONES = [
 ];
 const TONES2 = [
   {name:"Mid",     path:"M4,15 L50,15",                 thai:"มา",  tr:"maa",  en:"to come"},
-  {name:"Low",     path:"M4,12 C20,18 36,21 50,21",     thai:"ใหม่", tr:"mài",  en:"new"},
+  {name:"Low",     path:"M4,12 C20,18 36,21 50,21",     thai:"ใหม่", tr:"mài",  en:"new", gate:"l17"},
   {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ไม่", tr:"mâi",  en:"no, not"},
+  {name:"Falling", path:"M4,8 C22,7 36,18 50,24",       thai:"ห้า", tr:"hâa",  en:"five"},
   {name:"High",    path:"M4,16 C24,15 38,8 50,4",       thai:"ไม้", tr:"máai", en:"wood"},
-  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle"}
+  {name:"Rising",  path:"M4,12 C14,21 28,21 50,5",      thai:"ไหม", tr:"mǎi",  en:"question particle", gate:"l6"}
 ];
 /* minimal pairs/sets - segmentally identical, differ ONLY by tone or vowel length.
    Every tone verified against the grid via idea-engine/tone-validator.js (Rung 1: hear the difference). */
 const TONE_SETS = [
   [{t:"ขาว",tr:"khǎao",en:"white"},{t:"ข้าว",tr:"khâao",en:"rice"},{t:"ข่าว",tr:"khàao",en:"news"}],
   [{t:"เสือ",tr:"sǔea",en:"tiger"},{t:"เสื้อ",tr:"sûea",en:"shirt"},{t:"เสื่อ",tr:"sùea",en:"a mat"}],
-  [{t:"มา",tr:"maa",en:"to come"},{t:"ม้า",tr:"máa",en:"horse"},{t:"หมา",tr:"mǎa",en:"dog"}],
+  [{t:"มา",tr:"maa",en:"to come"},{t:"ม้า",tr:"máa",en:"horse"},{t:"หมา",tr:"mǎa",en:"dog", gate:"l17"}],
   [{t:"ปา",tr:"bpaa",en:"to throw"},{t:"ป่า",tr:"bpàa",en:"forest"},{t:"ป้า",tr:"bpâa",en:"aunt"}],
-  [{t:"ไม้",tr:"máai",en:"wood"},{t:"ไม่",tr:"mâi",en:"not"},{t:"ไหม",tr:"mǎi",en:"silk"},{t:"ใหม่",tr:"mài",en:"new"}],
+  [{t:"ไม้",tr:"máai",en:"wood"},{t:"ไม่",tr:"mâi",en:"not"},{t:"ไหม",tr:"mǎi",en:"silk", gate:"l6"},{t:"ใหม่",tr:"mài",en:"new", gate:"l17"}],
   [{t:"นา",tr:"naa",en:"rice field"},{t:"น่า",tr:"nâa",en:"worth doing"}],
 ];
 const LENGTH_PAIRS = [
@@ -3082,6 +3083,11 @@ function classBadgeHtml(cls){
 }
 function wordClassBadgeHtml(w){ return classBadgeHtml(firstConsonantClass(w.thai)); }
 function lessonNum(id){ return +(String(id||'').match(/\d+/)||[0])[0]; }
+function lessonGateMet(gate, doneIds){
+  if(!gate) return true;
+  const doneSet = new Set(doneIds || state.done || []);
+  return doneSet.has(gate);
+}
 const EARLY_TONE_GATES = {
   "มา":1, "มี":1, "นาน":1, "กา":1,
   "กิน":2, "ดี":2, "ดู":2, "บิน":2,
@@ -3165,9 +3171,10 @@ function learnedGlyphIds(){
   for(const L of LESSONS){ if(state.done.includes(L.id)) L.glyphs.forEach(g=>out.push(g)); }
   return out;
 }
-function learnedWords(){
+function learnedWords(doneIds){
+  const doneSet = new Set(doneIds || state.done || []);
   const out = [];
-  for(const L of LESSONS){ if(state.done.includes(L.id)) L.words.forEach(w=>out.push(w)); }
+  for(const L of LESSONS){ if(doneSet.has(L.id)) L.words.forEach(w=>out.push(w)); }
   return out;
 }
 function wordRole(w){
@@ -3330,14 +3337,16 @@ function thaiTextReadable(thai, taught){
 }
 function phraseReadable(thai){ return thaiTextReadable(thai); }
 function itemThai(x){ return x.thai || x.t || ''; }
-function practiceItemReadable(x, taught){ return thaiTextReadable(itemThai(x), taught); }
-function readableToneItems(taught){
-  taught = taught || taughtGlyphSet();
-  return TONES.concat(TONES2).filter(t=>practiceItemReadable(t, taught));
+function practiceItemReadable(x, taught, doneIds){
+  return lessonGateMet(x && x.gate, doneIds) && thaiTextReadable(itemThai(x), taught);
 }
-function readableTwinSets(taught){
-  taught = taught || taughtGlyphSet();
-  return TONE_SETS.concat(LENGTH_PAIRS).filter(set=>set.every(w=>practiceItemReadable(w, taught)));
+function readableToneItems(taught, doneIds){
+  taught = taught || taughtGlyphSet(doneIds);
+  return TONES.concat(TONES2).filter(t=>practiceItemReadable(t, taught, doneIds));
+}
+function readableTwinSets(taught, doneIds){
+  taught = taught || taughtGlyphSet(doneIds);
+  return TONE_SETS.concat(LENGTH_PAIRS).filter(set=>set.every(w=>practiceItemReadable(w, taught, doneIds)));
 }
 function uniquePracticeItems(items){
   const seen = new Set(), out = [];
@@ -3348,11 +3357,11 @@ function uniquePracticeItems(items){
   });
   return out;
 }
-function readableEchoItems(){
-  const taught = taughtGlyphSet();
-  const lessonItems = learnedWords().map(w=>({t:w.thai, tr:w.tr, en:w.en}));
-  const toneItems = readableToneItems(taught).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
-  const twinItems = readableTwinSets(taught).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
+function readableEchoItems(doneIds){
+  const taught = taughtGlyphSet(doneIds);
+  const lessonItems = learnedWords(doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+  const toneItems = readableToneItems(taught, doneIds).map(w=>({t:w.thai, tr:w.tr, en:w.en}));
+  const twinItems = readableTwinSets(taught, doneIds).flat().map(w=>({t:w.t, tr:w.tr, en:w.en}));
   return uniquePracticeItems(lessonItems.concat(toneItems, twinItems));
 }
 function coveredSoundThaiItems(){
@@ -4558,12 +4567,12 @@ function validateCoverageContracts(){
   for(let n=0;n<=LESSONS.length;n++){
     const doneIds = LESSONS.slice(0,n).map(L=>L.id);
     const taught = taughtGlyphSet(doneIds);
-    readableToneItems(taught).forEach(t=>{
-      if(!practiceItemReadable(t, taught)) errors.push('tone item not readable at lesson count ' + n + ': ' + itemThai(t));
+    readableToneItems(taught, doneIds).forEach(t=>{
+      if(!practiceItemReadable(t, taught, doneIds)) errors.push('tone item not readable at lesson count ' + n + ': ' + itemThai(t));
     });
-    readableTwinSets(taught).forEach(set=>{
+    readableTwinSets(taught, doneIds).forEach(set=>{
       set.forEach(w=>{
-        if(!practiceItemReadable(w, taught)) errors.push('twin item not readable at lesson count ' + n + ': ' + itemThai(w));
+        if(!practiceItemReadable(w, taught, doneIds)) errors.push('twin item not readable at lesson count ' + n + ': ' + itemThai(w));
       });
     });
   }
@@ -4582,9 +4591,12 @@ function validateCoverageContracts(){
     });
   });
   const afterL1 = taughtGlyphSet(['l1']);
-  if(readableTwinSets(afterL1).length) errors.push('Sound Twins has readable sets too early; expected none after Lesson 1');
+  if(readableTwinSets(afterL1, ['l1']).length) errors.push('Sound Twins has readable sets too early; expected none after Lesson 1');
   const afterL4 = taughtGlyphSet(['l1','l2','l3','l4']);
-  if(readableTwinSets(afterL4).length < 2) errors.push('Sound Twins should have at least two covered sets after Lesson 4');
+  if(readableToneItems(afterL4, ['l1','l2','l3','l4']).length < 4) errors.push('Tone listening should have at least four covered examples after Lesson 4');
+  if(readableTwinSets(afterL4, ['l1','l2','l3','l4']).length < 2) errors.push('Sound Twins should have at least two covered sets after Lesson 4');
+  const afterL5Ids = ['l1','l2','l3','l4','l5'];
+  if(readableEchoItems(afterL5Ids).some(w=>itemThai(w)==='หมา')) errors.push('Echo leaked silent-leader หมา before Lesson 17');
   const earlyPathTwins = buildPath().some(n=>/^p:w[0-2]$/.test(n.id||'') && n.label === 'Sound twins');
   if(earlyPathTwins) errors.push('Learn path routes to Sound Twins before Lesson 4');
   const toneListen = DRILLS.find(d=>d.id==='tone-listen');
