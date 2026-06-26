@@ -694,7 +694,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.0</span>
+      <span class="version-pill">v5.0.1</span>
     </header>
 
     <section class="today-focus">
@@ -702,6 +702,11 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <h1 id="today-heading">Today's route</h1>
       <p class="sub" id="today-brief">Use the buttons in order. If something is missing, End today will send you back to it.</p>
       <div class="today-task-list">
+        <button class="task-button primary" id="foundation-refresh-btn" style="display:none">
+          <span class="task-kicker">Required update</span>
+          <span class="task-title">Relearn updated foundations</span>
+          <span class="task-detail">Ending jobs unlock before normal review resumes</span>
+        </button>
         <button class="task-button" id="today-review-btn">
           <span class="task-kicker" id="today-review-state">Step 1</span>
           <span class="task-title" id="today-review-title">Review</span>
@@ -774,7 +779,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.0 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.0.1 (PWA)</div>
     </div>
   </section>
 
@@ -1846,6 +1851,7 @@ let state = {
   packs:[],
   notices:{},
   migrations:{},
+  foundationRefresh:{required:false, complete:false, quarantinedFinals:[]},
   signSafari:{seen:{}}
 };
 const SKEY = 'thai_state_v1';
@@ -1933,6 +1939,7 @@ function markCurrentPathPracticeDone(){
    New lessons are redirected when current material still needs embedding. */
 function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
+  if(foundationRefreshRequired()) return 'foundations';
   if(due > 0) return 'review';                                // warm-up first; don't skip the current deck
   if(earlyBonusLessonCandidate()) return 'bonus';              // L1→L2 or L2→L3 only, for honest early pacing
   if(d.paid) return 'rest';                                   // plan complete → stop new load
@@ -1941,6 +1948,7 @@ function governorPhase(){
   return 'learn';
 }
 function newLessonBlockReason(L){
+  if(foundationRefreshRequired()) return 'Updated foundations must be relearned before new lessons.';
   if(!L || state.done.includes(L.id)) return '';
   const next = nextLesson();
   if(!next || L.id !== next.id) return '';
@@ -1954,6 +1962,7 @@ function newLessonBlockReason(L){
   return '';
 }
 function startDepthBlock(){
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const due = srsDue();
   if(due.length){
     gotoView('practice');
@@ -1965,6 +1974,11 @@ function startDepthBlock(){
   gotoView('practice');
 }
 function startLessonFromUser(L){
+  if(foundationRefreshRequired()){
+    toast('Relearn updated foundations first.');
+    startFoundationRefresh();
+    return;
+  }
   const earlyBonus = isEarlyBonusLesson(L);
   const reason = newLessonBlockReason(L);
   if(reason){
@@ -2045,7 +2059,12 @@ function todayDepthTask(){
     go:()=>launchDrill(drill.id)
   };
 }
-	function launchDrill(id){
+function launchDrill(id){
+  if(foundationRefreshRequired()){
+    toast('Relearn updated foundations first.');
+    startFoundationRefresh();
+    return;
+  }
 	  const d = DRILLS.find(x=>x.id===id); if(!d) return;
   if(!state.drillLog) state.drillLog = {};
   state.drillLog[id] = {n:((state.drillLog[id]||{}).n||0)+1, last:todayStr()};
@@ -2090,11 +2109,13 @@ function mainTaskNode(){
   return cur;
 }
 function goReviewTask(){
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   gotoView('practice');
   setTimeout(()=>el('cta-flash').click(), 60);
 }
 function routeToMainTask(){
   const d = ensureDay();
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
   if(d.type === 'C'){ startDepthBlock(); return; }
   const n = mainTaskNode();
@@ -2104,6 +2125,7 @@ function routeToMainTask(){
 }
 function routeToDepthTask(){
   const d = ensureDay();
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
   if(!mainDone){ toast('Main task first'); routeToMainTask(); return; }
@@ -2111,6 +2133,7 @@ function routeToDepthTask(){
 }
 function dailyMissingStep(){
   const d = ensureDay();
+  if(foundationRefreshRequired()) return 'foundations';
   if(srsDue().length) return 'review';
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
   if(!mainDone) return 'main';
@@ -2131,6 +2154,7 @@ function syncTabRecommendations(){
   if(practiceTab) practiceTab.classList.toggle('recommended', practice);
 }
 function routeToDailyStep(step){
+  if(step === 'foundations'){ startFoundationRefresh(); return; }
   if(step === 'review'){ goReviewTask(); return; }
   if(step === 'main'){ routeToMainTask(); return; }
   if(step === 'depth'){ routeToDepthTask(); }
@@ -2155,7 +2179,7 @@ function showEndDayModal(){
 function handleEndDay(){
   const missing = dailyMissingStep();
   if(missing){
-    const msg = missing === 'review' ? 'Review is still due' : missing === 'main' ? 'Main task is still due' : 'Practice block is still due';
+    const msg = missing === 'foundations' ? 'Updated foundations are still due' : missing === 'review' ? 'Review is still due' : missing === 'main' ? 'Main task is still due' : 'Practice block is still due';
     toast(msg + '. Opening it now.');
     routeToDailyStep(missing);
     return;
@@ -2196,12 +2220,46 @@ function setTaskButton(id, cfg){
 function renderTodayActions(){
   if(!el('today-review-btn')) return;
   const d = ensureDay(), due = srsDue().length;
+  const refreshRequired = foundationRefreshRequired();
   const reviewDone = due === 0;
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
   const depthDone = d.lite || (d.type === 'C' ? d.d > 1 : d.d > 0);
   const missing = dailyMissingStep();
   const early = earlyFoundationWindow();
   const main = mainTaskNode();
+  const refreshBtn = el('foundation-refresh-btn');
+  if(refreshBtn) refreshBtn.style.display = refreshRequired ? '' : 'none';
+  if(refreshRequired){
+    if(el('course-day-label')) el('course-day-label').textContent = 'UPDATED FOUNDATIONS';
+    el('today-heading').textContent = 'Relearn updated foundations';
+    el('today-brief').textContent = 'Ending-job cards have been added to older lessons. Complete this refresh before normal review resumes.';
+    setTaskButton('today-review-btn', {
+      state:'Locked',
+      title:'Review paused',
+      detail:'Seeded ending-job cards unlock after the refresh.',
+      kind:'locked'
+    });
+    setTaskButton('today-main-btn', {
+      state:'Required',
+      title:'Endings refresh',
+      detail:'Lesson 2, Lesson 3 and Lesson 5 ending jobs.',
+      kind:'primary'
+    });
+    setTaskButton('today-depth-btn', {
+      state:'Locked',
+      title:'Practice resumes after refresh',
+      detail:'Complete updated foundations first.',
+      kind:'locked'
+    });
+    const end = el('end-day-btn');
+    if(end){
+      end.className = 'task-button end locked';
+      el('end-day-state').textContent = 'Locked';
+      el('end-day-detail').textContent = 'Finish the updated foundations refresh first.';
+    }
+    syncTabRecommendations();
+    return;
+  }
   if(el('course-day-label')) el('course-day-label').textContent = d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = d.type === 'C' ? "Today's consolidation" : early ? "Today's foundation" : "Today's route";
   el('today-brief').textContent = early ? 'Shorter foundation day. Clear review, take the main step, then practise before ending.' : 'Use the buttons in order. End today sends you back to anything missing.';
@@ -2404,9 +2462,13 @@ function questCheck(){
 function srsAdd(id){
   if(!state.srs[id]) state.srs[id] = {iv:0, due:todayStr(), lapses:0};
 }
-function srsDue(){
+function srsDueFor(target){
+  const s = target || state;
   const t = todayStr();
-  return Object.keys(state.srs).filter(id => state.srs[id].due <= t);
+  return Object.keys(s.srs || {}).filter(id => s.srs[id].due <= t && !reviewCardBlockedByFoundationRefresh(id, s));
+}
+function srsDue(){
+  return srsDueFor(state);
 }
 function srsGrade(id, grade){ // 0 again, 1 hard, 2 good, 3 easy
   const c = state.srs[id]; if(!c) return;
@@ -2420,6 +2482,7 @@ function srsGrade(id, grade){ // 0 again, 1 hard, 2 good, 3 easy
 }
 function weakestCards(n){ // n trickiest cards: most lapses, then lowest interval
   return Object.keys(state.srs)
+    .filter(id=>!reviewCardBlockedByFoundationRefresh(id, state))
     .sort((a,b)=> (state.srs[b].lapses - state.srs[a].lapses) || (state.srs[a].iv - state.srs[b].iv))
     .slice(0, n);
 }
@@ -3373,6 +3436,11 @@ function finalJobLabel(job){
   if(!job) return '';
   return job.group === 'stop' ? 'stop ending · dead' : job.group === 'ring' ? 'ringing ending · live' : 'glide ending · live';
 }
+const FOUNDATION_REFRESH_SECTIONS = [
+  {gate:'l2', title:'Lesson 2 endings', sub:'First ending jobs', glyphs:['ก','น','ม','ด','บ']},
+  {gate:'l3', title:'Lesson 3 stop endings', sub:'Stops cut the syllable short', glyphs:['ป','ท','ก']},
+  {gate:'l5', title:'Lesson 5 glide/ring endings', sub:'Live endings that carry on', glyphs:['ร','ล','ว','ย']}
+];
 function addUniqueFinalGlyph(out, ch){
   if(GLYPHS[ch] && GLYPHS[ch].type === 'c' && finalJob(ch) && !out.includes(ch)) out.push(ch);
 }
@@ -3391,6 +3459,31 @@ function learnedFinalGlyphIds(doneIds){
   const doneSet = new Set(doneIds || state.done || []), out = [];
   LESSONS.forEach(L=>{ if(doneSet.has(L.id)) finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(out, ch)); });
   return out;
+}
+function foundationRefreshSections(doneIds){
+  const done = new Set(doneIds || state.done || []);
+  return FOUNDATION_REFRESH_SECTIONS
+    .filter(sec=>done.has(sec.gate))
+    .map(sec=>Object.assign({}, sec, {glyphs:sec.glyphs.filter(ch=>finalJob(ch))}))
+    .filter(sec=>sec.glyphs.length);
+}
+function foundationRefreshEligible(doneIds){
+  return foundationRefreshSections(doneIds).length > 0;
+}
+function foundationRefreshRequiredFor(target){
+  const fr = (target || state).foundationRefresh;
+  return !!(fr && fr.required && !fr.complete);
+}
+function foundationRefreshRequired(){
+  return foundationRefreshRequiredFor(state);
+}
+function foundationRefreshFinalIds(doneIds){
+  return learnedFinalGlyphIds(doneIds).map(ch=>'f:' + ch);
+}
+function reviewCardBlockedByFoundationRefresh(id, target){
+  const s = target || state, fr = s.foundationRefresh;
+  if(!foundationRefreshRequiredFor(s) || !id.startsWith('f:')) return false;
+  return (fr.quarantinedFinals || []).includes(id);
 }
 function cardAllowedForDone(id, doneIds){
   const done = doneIds || [];
@@ -3416,13 +3509,15 @@ function ensureStateCollections(target){
   const defaults = {
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
-    notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, signSafari:{seen:{}}
+    notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, signSafari:{seen:{}}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
   });
   if(!target.skillStats.listen || !Array.isArray(target.skillStats.listen)) target.skillStats.listen = [];
   if(!target.skillStats.speak) target.skillStats.speak = {attempts:0,last:null};
+  if(!target.foundationRefresh) target.foundationRefresh = {required:false, complete:false, quarantinedFinals:[]};
+  if(!Array.isArray(target.foundationRefresh.quarantinedFinals)) target.foundationRefresh.quarantinedFinals = [];
   if(!target.signSafari.seen) target.signSafari.seen = {};
 }
 function repairStateForV5(target){
@@ -3460,10 +3555,47 @@ function repairStateForV5(target){
   }
   return report;
 }
+function repairStateForV501(target){
+  const s = target || state;
+  ensureStateCollections(s);
+  const report = {changed:false, required:false, quarantinedFinals:0};
+  const done = (s.done || []).filter(id=>LESSONS.some(L=>L.id===id));
+  const firstV501Run = !s.migrations.v501;
+  const legacySeededFinals = !!(s.migrations.v5 && s.migrations.v5.seededFinals > 0);
+  const eligible = firstV501Run && legacySeededFinals && foundationRefreshEligible(done) && !s.foundationRefresh.complete;
+  if(eligible){
+    const finals = foundationRefreshFinalIds(done).filter(id=>s.srs && s.srs[id]);
+    s.foundationRefresh = Object.assign({}, s.foundationRefresh, {
+      required:true,
+      complete:false,
+      requested:todayStr(),
+      route:'endings-refresh',
+      quarantinedFinals:finals
+    });
+    report.required = true;
+    report.quarantinedFinals = finals.length;
+    report.changed = true;
+  }
+  if(foundationRefreshRequiredFor(s)){
+    const finals = foundationRefreshFinalIds(done).filter(id=>s.srs && s.srs[id]);
+    finals.forEach(id=>{
+      if(!s.foundationRefresh.quarantinedFinals.includes(id)){
+        s.foundationRefresh.quarantinedFinals.push(id);
+        report.changed = true;
+      }
+    });
+    report.quarantinedFinals = s.foundationRefresh.quarantinedFinals.length;
+  }
+  if(!s.migrations.v501){
+    s.migrations.v501 = {date:todayStr(), required:report.required, quarantinedFinals:report.quarantinedFinals};
+    report.changed = true;
+  }
+  return report;
+}
 function validateStateDeckForDone(s, label){
   const bad = Object.keys(s.srs || {}).filter(id=>!cardAllowedForDone(id, s.done || []));
   if(bad.length) throw new Error(label + ': invalid review card survived: ' + bad.join(', '));
-  const dueServed = Math.min(40, Object.keys(s.srs || {}).length);
+  const dueServed = Math.min(40, srsDueFor(s).length);
   if(dueServed > 40) throw new Error(label + ': SRS cap exceeded');
 }
 function validateV5MigrationContracts(){
@@ -3494,6 +3626,54 @@ function validateV5MigrationContracts(){
       if(!c.state.checks.letters42) throw new Error(c.label + ': letters boss state lost');
     }
   });
+  return true;
+}
+function releaseFoundationFinalCards(target){
+  const s = target || state;
+  ensureStateCollections(s);
+  const fr = s.foundationRefresh;
+  const released = (fr.quarantinedFinals || []).filter(id=>s.srs && s.srs[id]);
+  fr.required = false;
+  fr.complete = true;
+  fr.completed = todayStr();
+  fr.releasedFinals = released;
+  fr.quarantinedFinals = [];
+  return released;
+}
+function validateV501FoundationRefreshContracts(){
+  const oldDue = {iv:0, due:'2024-01-01', lapses:0};
+  const earlyDone = LESSONS.slice(0,5).map(L=>L.id);
+  const s = {
+    done:earlyDone.slice(),
+    baht:77,
+    streak:{count:12,last:'2024-01-01'},
+    notes:[{at:'2024-01-01', text:'keep'}],
+    titles:['reader'],
+    srs:{'g:ก':oldDue}
+  };
+  const before = JSON.stringify({done:s.done, baht:s.baht, streak:s.streak, notes:s.notes, titles:s.titles});
+  repairStateForV5(s);
+  repairStateForV501(s);
+  if(!foundationRefreshRequiredFor(s)) throw new Error('v5.0.1 refresh should be required for legacy early-complete states');
+  const hiddenFinals = srsDueFor(s).filter(id=>id.startsWith('f:'));
+  if(hiddenFinals.length) throw new Error('seeded final cards served before refresh: ' + hiddenFinals.join(', '));
+  if(!s.foundationRefresh.quarantinedFinals.includes('f:ก') || !s.foundationRefresh.quarantinedFinals.includes('f:ย')){
+    throw new Error('foundation refresh did not quarantine expected early final cards');
+  }
+  const after = JSON.stringify({done:s.done, baht:s.baht, streak:s.streak, notes:s.notes, titles:s.titles});
+  if(after !== before) throw new Error('v5.0.1 refresh migration changed progress/rewards/notes/titles');
+  releaseFoundationFinalCards(s);
+  const releasedFinals = srsDueFor(s).filter(id=>id.startsWith('f:'));
+  if(!releasedFinals.length) throw new Error('final cards were not released after refresh');
+  const fresh = {done:[], srs:{}};
+  repairStateForV5(fresh);
+  repairStateForV501(fresh);
+  if(foundationRefreshRequiredFor(fresh)) throw new Error('fresh users must not be forced into updated-foundations refresh');
+  const current = {done:earlyDone.slice(), srs:{}};
+  foundationRefreshFinalIds(earlyDone).forEach(id=>{ current.srs[id] = Object.assign({}, oldDue); });
+  repairStateForV5(current);
+  repairStateForV501(current);
+  if(foundationRefreshRequiredFor(current)) throw new Error('states with already-present final cards must not be forced into legacy refresh');
   return true;
 }
 function validateV5TransferContracts(){
@@ -4011,6 +4191,7 @@ function findWordInLessons(thai){
 }
 if(el('cta-lesson')) el('cta-lesson').addEventListener('click', routeToMainTask);
 if(el('cta-review')) el('cta-review').addEventListener('click', ()=>{ gotoView('practice'); });
+el('foundation-refresh-btn').addEventListener('click', startFoundationRefresh);
 el('today-review-btn').addEventListener('click', goReviewTask);
 el('today-main-btn').addEventListener('click', routeToMainTask);
 el('today-depth-btn').addEventListener('click', routeToDepthTask);
@@ -5790,6 +5971,7 @@ function renderReviewTab(){
   renderSkillEvidence();
 }
 el('cta-flash').addEventListener('click', ()=>{
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const due = srsDue();
   if(!due.length){ toast('No cards due right now'); return; }
   const session = shuffle(due).slice(0, 40);
@@ -5797,6 +5979,7 @@ el('cta-flash').addEventListener('click', ()=>{
   startFlashcards(session);
 });
 el('cta-quiz').addEventListener('click', ()=>{
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const qs = buildMixedQuiz();
   if(!qs.length){ toast('Finish a lesson first'); return; }
   startGenericQuiz(qs, 'Mixed quiz');
@@ -6130,6 +6313,84 @@ function showReadinessReport(){
     </div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+}
+function foundationRefreshSteps(){
+  const sections = foundationRefreshSections();
+  const steps = [{kind:'intro'}];
+  sections.forEach(sec=>{
+    steps.push({kind:'teach', section:sec});
+    sec.glyphs.forEach(ch=>{
+      const q = finalJobQuestion(ch);
+      if(q) steps.push({kind:'question', section:sec, q});
+    });
+  });
+  return steps;
+}
+function startFoundationRefresh(){
+  const steps = foundationRefreshSteps();
+  if(steps.length <= 1){
+    releaseFoundationFinalCards(state);
+    saveState();
+    renderHome();
+    toast('Updated foundations complete');
+    return;
+  }
+  player = {type:'foundation-refresh', steps, i:0, correct:0};
+  openOverlay();
+  renderFoundationRefreshStep();
+}
+function renderFoundationRefreshStep(){
+  const p = player;
+  setProg(Math.round(100*p.i/p.steps.length));
+  if(p.i >= p.steps.length){
+    const released = releaseFoundationFinalCards(state);
+    const d = ensureDay();
+    d.m = (d.m||0) + 1;
+    saveState();
+    bumpStreak();
+    setProg(100);
+    el('stage').innerHTML = `
+      <div class="result-big">Updated foundations</div>
+      <div class="result-sub">${p.correct} ending-job checks complete. ${released.length} final cards released into normal review.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Continue to review →</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); goReviewTask(); };
+    return;
+  }
+  const step = p.steps[p.i];
+  if(step.kind === 'intro'){
+    el('stage').innerHTML = `
+      <div class="center"><div class="eyebrow">Required update</div><h2>Relearn updated foundations</h2></div>
+      <div class="notebox" style="font-size:15px;line-height:1.7;text-align:left">
+        Ending jobs were added to older lessons. Normal review is paused until you refresh them here.<br><br>
+        You will see the endings first, then answer short checks. No seeded final card is served before this route.
+      </div>
+      <div class="stage-actions"><button class="btn full" id="st-next">Start Endings Refresh →</button></div>`;
+    el('st-next').onclick = ()=>{ p.i++; renderFoundationRefreshStep(); };
+    return;
+  }
+  if(step.kind === 'teach'){
+    const sec = step.section;
+    el('stage').innerHTML = `
+      <div class="center"><div class="eyebrow">${esc(sec.title)}</div><h2>${esc(sec.sub)}</h2></div>
+      <div class="sign-list">
+        ${sec.glyphs.map(ch=>{
+          const g = GLYPHS[ch], job = finalJob(ch);
+          return `<div class="sign-row">
+            <div class="sign-word">${classColourThaiHtml(ch)}<div class="sub" style="font-size:13px">Start: ${esc(g.sound)} · Ending: ${esc(job.sound)} · ${esc(finalJobLabel(job))}</div></div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="stage-actions"><button class="btn full" id="st-next">Check these endings →</button></div>`;
+    el('st-next').onclick = ()=>{ p.i++; renderFoundationRefreshStep(); };
+    return;
+  }
+  if(step.kind === 'question'){
+    renderQuizQ(step.q, ok=>{
+      if(ok) p.correct++;
+      p.i++;
+      renderFoundationRefreshStep();
+    }, `${step.section.title} · ${p.i+1} of ${p.steps.length}`);
+  }
 }
 
 function startGenericQuiz(qs, label, opts){
@@ -6585,10 +6846,12 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateBalancedComponentChoiceContracts();
   validateMisconceptionChoiceContracts();
   validateV5MigrationContracts();
+  validateV501FoundationRefreshContracts();
   validateV5TransferContracts();
   await loadState();
   const migrated = repairStateForV5(state);
-  if(migrated.changed) saveState();
+  const migrated501 = repairStateForV501(state);
+  if(migrated.changed || migrated501.changed) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
   showV5NoticeIfNeeded();

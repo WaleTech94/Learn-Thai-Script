@@ -516,6 +516,7 @@ globalThis.__phase1Audit = (function(){
     validatorResult('balancedChoices', validateBalancedComponentChoiceContracts),
     validatorResult('misconceptionChoices', validateMisconceptionChoiceContracts),
     validatorResult('v5Migration', validateV5MigrationContracts),
+    validatorResult('v501FoundationRefresh', validateV501FoundationRefreshContracts),
     validatorResult('v5Transfer', validateV5TransferContracts)
   ];
   return {

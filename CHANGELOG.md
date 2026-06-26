@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.0.1 — 2026-06-26
+
+- Added the required “Relearn updated foundations” route for legacy learners whose early-lesson `f:` final cards were seeded by migration rather than learned through the updated lesson flow.
+- Quarantined migration-seeded final cards from normal due review until the refresh is complete, so learners are not asked to guess ending-job SRS cards before seeing the endings again.
+- Built the compact Endings Refresh around Lesson 2 endings (`ก น ม ด บ`), Lesson 3 stop endings (`ป ท ก`) and Lesson 5 glide/ring endings (`ร ล ว ย`), with normal review, new lessons, practice and End Today forced through the route while it is required.
+- Preserved lesson progress, streak, tokens, notes, titles and other existing state; only a full reset still clears progress.
+- Added `repairStateForV501()` and `validateV501FoundationRefreshContracts()` and extended the generated Phase 1 audit validator list with `v501FoundationRefresh`.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS.
+
 ## v5.0 — 2026-06-26
 
 - Added `repairStateForV5()` as the existing-user stability pass: it preserves lessons/tokens/titles/checks, prunes stale `r:` cards and invalid review entries, rebuilds glyph/final eligibility from lesson gates and seeds missing current `g:`/`f:` cards for completed lessons.
