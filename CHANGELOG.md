@@ -2,6 +2,28 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.2 — 2026-06-26
+
+- Added a required lesson payoff step to all 24 lessons: Thai script first, learner decodes before reveal, then audio, meaning/context and script-cued read-aloud.
+- Added axis-based recall with new `a:` SRS card ids for separate glyph recognition, class recall, initial sound, final job, live/dead status, tone derivation, listening contrast, reading aloud and real-world transfer.
+- Added delayed lesson mastery checks: each completed lesson now schedules +1 day retained and +7 day stabilised checks, and Today treats a due delayed check as the main task before new lessons.
+- Added Contrast Block as a guided daily/practice surface: listen-first discrimination, Thai-script imitation, local record/playback and a tiny no-score self-rubric.
+- Covered high-risk Thai contrasts across their lesson gates: tone marks, initial `ง`, vowel length, `ต/ท/ถ`, `ก/ค/ข`, `ป/พ`, final `-k/-t/-p`, `ร/ล` and true/fake clusters.
+- Added Bangkok Missions as local real-world check-offs from already-covered Thai, with no camera, upload, location or web access.
+- Updated Today/Daily win so the practice block remains due until the required bridge pieces are complete: transfer mission from Lesson 3, then contrast + read-aloud + transfer from Lesson 4 onward.
+- Added `retention`, `a:` review ids, `days[].ret`, `days[].bridge`, `missions.done`, `contrastLog`, `lastCapability` and `migrations.v52Full` while preserving existing lesson progress, mastery gates and legacy card ids.
+- Added `validateV52BridgeContracts()` and `validateV52FullBriefContracts()`; extended the generated Phase 1 audit with Lesson payoff, Axis review and Delayed retention rows.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS including `v52Bridge` and `v52FullBrief`.
+
+## v5.1 — 2026-06-26
+
+- Added optional Mouth Coach contrast cards for high-risk Thai sounds: `ป/พ`, `ต/ท`, `ก/ค/ข`, `ง`, `ร/ล` and final `ก/ด/บ`, all script-cued with no pronunciation score.
+- Added richer item-specific wrong-answer feedback for key worked-example mechanisms, including final consonant closing sounds and silent-`ห` tone-row effects.
+- Added a Daily win card once review, main task and practice are complete, with bonus practice kept on current material.
+- Added Boss rematches for already-passed mastery gates and the Letters boss; rematches are optional practice, do not pay again and do not replace progression gates.
+- Added `validateV51PolishContracts()` and included it in the generated Phase 1 audit validator list.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS.
+
 ## v5.0.1 — 2026-06-26
 
 - Added the required “Relearn updated foundations” route for legacy learners whose early-lesson `f:` final cards were seeded by migration rather than learned through the updated lesson flow.
@@ -19,7 +41,7 @@ Every versioned app release must update this file and `AGENTS.md` in the same co
 - Added late Phase 1 Thai spacing/chunking teaching plus the capped, definition-free Chunk this word drill.
 - Added Seen in the wild / Sign Safari as a local checklist with no camera, upload, location or web access, plus +3💎 first-seen rewards and street-reading titles.
 - Added Font Shock, Mouth Coach, four extra decodable micro-stories and the Phase 1 Readiness report.
-- Added post-answer targeted mechanism hints without pre-answer leakage.
+- Added post-answer axis-level mechanism hints without pre-answer leakage; v5.1 later adds item-specific worked-example polish.
 - Extended the generated Phase 1 audit with `v5Migration`/`v5Transfer` validators, named rows for Chunk this word, Seen in the wild, Font Shock and Mouth Coach, and clearer workload wording that separates lesson payload from the Today governor route.
 - Kept the Today governor, SRS cap, mastery gates, one-file PWA architecture and Phase 1 scope unchanged. Daily win cards and boss rematches remain deferred rather than shipped in this stability release.
 - Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS.

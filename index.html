@@ -198,10 +198,17 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	  background:var(--surface2);color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
 	}
 	.task-button.primary .task-kicker{background:var(--gold);color:var(--bg)}
-	.task-button.done .task-kicker{background:var(--good);color:var(--bg)}
-	.task-title{font-family:'Mitr',sans-serif;font-size:18px;font-weight:500;line-height:1.25}
-	.task-detail{font-size:13px;color:var(--muted);line-height:1.35}
-	.daily-section{margin-bottom:16px}
+		.task-button.done .task-kicker{background:var(--good);color:var(--bg)}
+		.task-title{font-family:'Mitr',sans-serif;font-size:18px;font-weight:500;line-height:1.25}
+		.task-detail{font-size:13px;color:var(--muted);line-height:1.35}
+		.daily-win-card{
+		  margin-top:12px;border:1px solid rgba(91,209,121,.4);border-radius:12px;background:linear-gradient(160deg,var(--surface),rgba(91,209,121,.07));
+		  padding:14px 16px;display:grid;gap:10px;
+		}
+		.daily-win-card[hidden]{display:none}
+		.daily-win-card h2{font-size:20px;margin:0 0 2px}
+		.daily-win-actions{display:flex;gap:8px;flex-wrap:wrap}
+		.daily-section{margin-bottom:16px}
 	.practice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
 	.practice-chip{
 	  min-height:74px;border-radius:14px;background:var(--surface);border:1px solid var(--line);
@@ -595,10 +602,31 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .font-sample{display:block;font-size:28px;line-height:1.1}
 .font-sample.a{font-family:'Mitr',sans-serif;font-weight:300;letter-spacing:0}
 .font-sample.b{font-family:Tahoma,Arial,sans-serif;font-weight:700;letter-spacing:0}
-.font-sample.c{font-family:Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:0}
-.font-sample.d{font-family:'Mitr',sans-serif;font-weight:500;letter-spacing:.04em}
-.mouth-card{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:14px;margin:10px 0}
-.mouth-card .thai{font-family:'Mitr',sans-serif;font-size:42px;line-height:1.2}
+	.font-sample.c{font-family:Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:0}
+	.font-sample.d{font-family:'Mitr',sans-serif;font-weight:500;letter-spacing:.04em}
+	.mouth-card{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:14px;margin:10px 0}
+	.mouth-card.contrast{border-color:rgba(47,212,181,.38)}
+	.mouth-card .thai{font-family:'Mitr',sans-serif;font-size:42px;line-height:1.2}
+	.coach-tips{margin:8px 0 10px 18px;color:var(--muted);font-size:12px;line-height:1.55}
+	.coach-tips li{padding-left:2px}
+	.contrast-card{border:1px solid rgba(47,212,181,.38);border-radius:8px;background:var(--surface2);padding:14px;margin:12px 0}
+	.contrast-word{font-family:'Mitr',sans-serif;font-size:50px;line-height:1.2;text-align:center;margin:12px 0}
+	.contrast-focus{font-size:13px;color:var(--muted);line-height:1.55;text-align:left}
+	.contrast-rubric{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+	.mission-card{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:14px;margin:10px 0}
+	.mission-card.today{border-color:rgba(255,210,74,.55)}
+	.mission-card .thai{font-family:'Mitr',sans-serif;font-size:38px;line-height:1.2;margin:8px 0}
+	.capability-line{margin-top:8px;color:var(--good);font-size:13px;line-height:1.45}
+	.payoff-card{border:1px solid rgba(240,192,86,.36);border-radius:8px;background:var(--surface2);padding:16px;margin:12px 0}
+	.payoff-word{font-family:'Mitr',sans-serif;font-size:54px;line-height:1.2;text-align:center;margin:12px 0}
+	.payoff-context{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.5}
+	.retention-card{border:1px solid var(--blue);border-radius:8px;background:var(--surface2);padding:14px;margin:12px 0}
+	.axis-tag{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px;color:var(--muted);margin-top:8px}
+	.rematch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
+	.rematch-card{min-height:74px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:12px;text-align:left}
+	.rematch-card .t{font-family:'Mitr',sans-serif;font-size:15px}
+	.rematch-card .d{font-size:11px;color:var(--muted);margin-top:4px}
+	.rematch-card.locked{opacity:.55}
 /* skill constellation + personal-best lap (v2.14) - uses ACCENT palette, never the class colours */
 .constel-wrap{display:flex;gap:16px;align-items:center;margin-top:6px}
 .constel-svg{flex:0 0 132px;width:132px;height:120px}
@@ -694,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.0.1</span>
+      <span class="version-pill">v5.2</span>
     </header>
 
     <section class="today-focus">
@@ -728,6 +756,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           <span class="task-detail" id="end-day-detail">Opens only after the day is complete</span>
         </button>
       </div>
+      <div class="daily-win-card" id="daily-win-card" hidden></div>
     </section>
 
     <button class="card cta-card" id="wai-banner" style="display:none;border:1px solid var(--gold)">
@@ -772,6 +801,13 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           </div>
           <div id="progress-wall"></div>
         </section>
+        <section class="course-block" id="boss-rematch-block" hidden>
+          <div class="spread">
+            <div class="eyebrow" style="margin:0">Boss rematches</div>
+            <span class="sub" style="font-size:12px">optional · no extra reward</span>
+          </div>
+          <div class="rematch-grid" id="boss-rematches"></div>
+        </section>
         <section class="course-block">
           <div class="eyebrow">Replay lessons</div>
           <div class="lesson-list" id="lesson-list"></div>
@@ -779,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.0.1 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2 (PWA)</div>
     </div>
   </section>
 
@@ -961,8 +997,16 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <div><div class="t">Font shock</div><div class="d">Read familiar words in different styles</div></div>
             <span class="arrow">→</span>
           </button>
+          <button class="review-action" id="cta-contrast">
+            <div><div class="t">Contrast block</div><div class="d">Listen, say, record and self-check</div></div>
+            <span class="arrow">→</span>
+          </button>
           <button class="review-action" id="cta-mouth">
             <div><div class="t">Mouth coach</div><div class="d">Slow read-aloud cards with no score</div></div>
+            <span class="arrow">→</span>
+          </button>
+          <button class="review-action" id="cta-mission">
+            <div><div class="t">Bangkok mission</div><div class="d">Use covered Thai outside the app</div></div>
             <span class="arrow">→</span>
           </button>
         </div>
@@ -1824,10 +1868,109 @@ const SIGN_SAFARI_ITEMS = [
 const FONT_SHOCK_ITEMS = SIGN_SAFARI_ITEMS.slice();
 const MOUTH_COACH_CARDS = [
   {gate:'l4', title:'Tone mark shadow', thai:'ไม่ บ้าน นี่ ห้า', tr:'mâi · bâan · nîi · hâa', note:'Say the Thai first, then compare with the model. No score.'},
-  {gate:'l13', title:'Dead-stop endings', thai:'ถูก พูด รถ ทุก', tr:'thùuk · phûut · rót · thúk', note:'Make the ending stop cleanly. Then replay your voice.'},
-  {gate:'l18', title:'True clusters', thai:'ครับ ปลา ครู ใกล้', tr:'khráp · bplaa · khruu · glâi', note:'Blend the cluster as one start sound.'},
-  {gate:'l23', title:'Street signs', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang', note:'Read chunk by chunk before pressing play.'}
+  {gate:'l13', title:'Dead-stop endings', thai:'ถูก พูด รถ ทุก', tr:'thùuk · phûut · rót · thúk', note:'Make the ending stop cleanly. Then replay your voice. No score.'},
+  {gate:'l18', title:'True clusters', thai:'ครับ ปลา ครู ใกล้', tr:'khráp · bplaa · khruu · glâi', note:'Blend the cluster as one start sound. No score.'},
+  {gate:'l23', title:'Street signs', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang', note:'Read chunk by chunk before pressing play. No score.'},
+  {gate:'l18', title:'Contrast ป/พ', contrast:'ป/พ', thai:'ไป ปลา พ่อ พูด', tr:'bpai · bplaa · phôr · phûut', note:'ป is tight and unaspirated; พ has a puff of air. Palm test: พ should move air, ป should not. No score.', tips:['Start with ไป / ปลา for tight bp.', 'Then switch to พ่อ / พูด and let the puff out.']},
+  {gate:'l12', title:'Contrast ต/ท', contrast:'ต/ท', thai:'ตา ทุก ทำ', tr:'dtaa · thúk · tham', note:'ต is the tight dt sound; ท is aspirated th. Keep ต dry, then let ท push air. No score.', tips:['Say ตา with no puff.', 'Say ทุก / ทำ with a clear puff at the start.']},
+  {gate:'l15', title:'Contrast ก/ค/ข', contrast:'ก/ค/ข', thai:'กา คน ขอ ข้าว', tr:'gaa · khon · khǒr · khâao', note:'ก is unaspirated g/k; ค and ข are aspirated kh. The class changes tone rules too. No score.', tips:['Hold ก tight with no puff.', 'Let ค / ข breathe, then check the tone shape.']},
+  {gate:'l23', title:'Sound ง', contrast:'ง', thai:'งาน ช้าง กุ้ง ห้องน้ำ', tr:'ngaan · cháang · gûng · hôrng-náam', note:'ง starts and ends in the back of the nose. Keep the tongue low and let the sound hum. No score.', tips:['Hold งาน slowly before the vowel.', 'For ช้าง / กุ้ง / ห้อง, keep the final -ng ringing.']},
+  {gate:'l18', title:'Contrast ร/ล', contrast:'ร/ล', thai:'รอ เรา ลาว ปลา', tr:'ror · rao · laao · bplaa', note:'ร and ล are separate starts. If ร is hard, still keep it distinct from ล. No score.', tips:['Alternate รอ / ลาว slowly.', 'Keep ปลา as pl, not pr.']},
+  {gate:'l18', title:'Final ก/ด/บ', contrast:'final ก/ด/บ', thai:'มาก ถูก พูด ครับ', tr:'mâak · thùuk · phûut · khráp', note:'At the end, ก closes as -k, ด closes as -t and บ closes as -p. Do not say their start sounds. No score.', tips:['มาก / ถูก end with a closed -k.', 'พูด ends -t; ครับ ends -p.']}
 ];
+const CONTRAST_BLOCKS = [
+  {id:'tone-marks', gate:'l4', title:'Tone marks', contrast:'tone pairs', listen:true, speak:true,
+   focus:'Same visible shape family, different tone shape. Hear first, then read from Thai script.',
+   capability:'You practised hearing tone movement instead of relying on romanisation.',
+   items:[{thai:'ไม่',tr:'mâi'},{thai:'ไม้',tr:'máai'},{thai:'ห้า',tr:'hâa'},{thai:'บ้าน',tr:'bâan'}]},
+  {id:'initial-ng', gate:'l7', title:'Initial ง', contrast:'ง onset', listen:true, speak:true,
+   focus:'English usually puts ng at the end. Thai can start a word with ง.',
+   capability:'You gave initial ง its own mouth position before the vowel.',
+   items:[{thai:'งาน',tr:'ngaan'},{thai:'จาน',tr:'jaan'},{thai:'นาน',tr:'naan'}]},
+  {id:'vowel-length', gate:'l13', title:'Vowel length', contrast:'short/long vowel', listen:true, speak:true,
+   focus:'Short and long vowels can change the live/dead decision and the tone rule.',
+   capability:'You practised vowel length as a tone mechanism, not decoration.',
+   items:[{thai:'รัก',tr:'rák'},{thai:'มาก',tr:'mâak'},{thai:'วัน',tr:'wan'},{thai:'วาน',tr:'waan'}]},
+  {id:'dt-th', gate:'l12', title:'ต / ท / ถ', contrast:'aspiration', listen:true, speak:true,
+   focus:'ต is tight and unaspirated. ท and ถ push air.',
+   capability:'You separated tight dt from aspirated th.',
+   items:[{thai:'ตา',tr:'dtaa'},{thai:'ทำ',tr:'tham'},{thai:'ถูก',tr:'thùuk'}]},
+  {id:'g-kh', gate:'l15', title:'ก / ค / ข', contrast:'aspiration + class', listen:true, speak:true,
+   focus:'ก is tight; ค and ข breathe. The class row changes too.',
+   capability:'You linked aspiration contrast with consonant class.',
+   items:[{thai:'กา',tr:'gaa'},{thai:'คน',tr:'khon'},{thai:'ขอ',tr:'khǒr'},{thai:'ข้าว',tr:'khâao'}]},
+  {id:'bp-ph', gate:'l18', title:'ป / พ', contrast:'aspiration', listen:true, speak:true,
+   focus:'ป is the tight bp sound. พ has a puff of air.',
+   capability:'You practised the bp/ph contrast inside real covered words.',
+   items:[{thai:'ไป',tr:'bpai'},{thai:'ปลา',tr:'bplaa'},{thai:'พ่อ',tr:'phôr'},{thai:'พูด',tr:'phûut'}]},
+  {id:'final-stops', gate:'l18', title:'Final stops', contrast:'final -k/-t/-p', listen:true, speak:true,
+   focus:'Final ก closes as -k, ด/ท/ถ close as -t, and บ/ป close as -p.',
+   capability:'You practised closing final stops cleanly instead of saying their start sounds.',
+   items:[{thai:'มาก',tr:'mâak'},{thai:'ถูก',tr:'thùuk'},{thai:'พูด',tr:'phûut'},{thai:'ครับ',tr:'khráp'}]},
+  {id:'r-l', gate:'l18', title:'ร / ล', contrast:'ร/ล', listen:true, speak:true,
+   focus:'ร and ล are separate starts. Perfect native ร is not required, but the contrast matters.',
+   capability:'You kept ร and ล distinct while reading from Thai script.',
+   items:[{thai:'รอ',tr:'ror'},{thai:'เรา',tr:'rao'},{thai:'ลาว',tr:'laao'},{thai:'ปลา',tr:'bplaa'}]},
+  {id:'clusters', gate:'l19', title:'True and fake clusters', contrast:'cluster parsing', listen:true, speak:true,
+   focus:'Some pairs blend into one start; some hide or change a letter.',
+   capability:'You practised deciding whether a cluster blends, drops or changes sound.',
+   items:[{thai:'ครับ',tr:'khráp'},{thai:'ปลา',tr:'bplaa'},{thai:'จริง',tr:'jing'},{thai:'ทราบ',tr:'sâap'}]}
+];
+const BANGKOK_MISSIONS = [
+  {id:'price-baht', gate:'l3', title:'Price check', thai:'บาท', tr:'bàat',
+   action:'Read บาท on one price, receipt or menu line before you look away.',
+   capability:'You can recognise บาท in real prices.'},
+  {id:'tone-mark-spot', gate:'l4', title:'Tone-mark spotter', thai:'ไม่ บ้าน นี่', tr:'mâi · bâan · nîi',
+   action:'Spot one ่ or ้ above Thai text and name it before moving on.',
+   capability:'You connected Thai tone marks to real printed Thai.'},
+  {id:'request-starter', gate:'l6', title:'Request starter', thai:'ขอ', tr:'khǒr',
+   action:'Mentally start one polite request with ขอ before you switch to English.',
+   capability:'You linked ขอ to useful everyday requests.'},
+  {id:'ng-listen', gate:'l7', title:'Listen for ง', thai:'งาน ง', tr:'ngaan · ng',
+   action:'Listen for one ng sound at the start or end of a word around you.',
+   capability:'You took ง outside the lesson card.'},
+  {id:'male-i', gate:'l9', title:'Male I', thai:'ผม', tr:'phǒm',
+   action:'Notice or rehearse ผม once as the male speaker word for I.',
+   capability:'You connected the script to your own speaker role.'},
+  {id:'yes-water', gate:'l12', title:'Tiny service words', thai:'ใช่ น้ำ', tr:'châi · náam',
+   action:'Listen for ใช่ or น้ำ in one shop, cafe or office exchange.',
+   capability:'You tied useful covered words to live listening.'},
+  {id:'polite-khrap', gate:'l18', title:'ครับ in the wild', thai:'ครับ', tr:'khráp',
+   action:'Listen for ครับ in one real interaction and replay its final -p closure in your head.',
+   capability:'You heard ครับ as a readable cluster plus final stop.'},
+  {id:'public-signs', gate:'l23', title:'Public sign chunk', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang',
+   action:'Read one public sign by chunks: start sound, vowel, ending sound, then tone.',
+   capability:'You used the course frame on a real sign.'},
+  {id:'open-closed', gate:'l24', title:'Open or closed', thai:'เปิด ปิด ห้าม อาหาร', tr:'bpèrt · bpìt · hâam · aa-hǎan',
+   action:'Decode one open, closed, food or warning sign without transliteration.',
+   capability:'You read late Phase-1 signs as Bangkok information, not app content.'}
+];
+const LESSON_PAYOFFS = {
+  l1:{thai:'มา', tr:'maa', meaning:'to come', context:'A tiny real verb: you can now read มา before you know much Thai grammar.', capability:'You can read a live, unmarked Thai word from script first.'},
+  l2:{thai:'กิน', tr:'gin', meaning:'to eat', context:'This is the first useful start + vowel + ending frame: ก + ิ + น.', capability:'You can read a ringing final -n word, not just a letter list.'},
+  l3:{thai:'บาท', tr:'bàat', meaning:'baht', context:'You will see บาท beside prices. Decode the final -t before thinking about money.', capability:'You can recognise บาท in real prices.'},
+  l4:{thai:'ไม่', tr:'mâi', meaning:'no / not', context:'This is one of the first high-frequency words where the Thai tone mark matters.', capability:'You can spot a real tone mark and read ไม่ from the script.'},
+  l5:{thai:'เรา', tr:'rao', meaning:'we / us', context:'เ◌า wraps the consonant. Read ร first, then the ao vowel.', capability:'You can read a useful wrap-vowel word.'},
+  l6:{thai:'ขอ', tr:'khǒr', meaning:'may I have...', context:'Many polite requests start with ขอ. The rising tone comes from high class + live.', capability:'You can start recognising polite request Thai.'},
+  l7:{thai:'งาน', tr:'ngaan', meaning:'work', context:'Thai can start a word with ง. Hear it before the vowel, not only at the end.', capability:'You can read and hear initial ง.'},
+  l8:{thai:'ถูก', tr:'thùuk', meaning:'cheap / correct', context:'This is useful on prices and answers. The final ก closes as -k.', capability:'You can read a high-class dead syllable with a stop ending.'},
+  l9:{thai:'ผม', tr:'phǒm', meaning:'I (male) / hair', context:'For you as a male speaker, ผม is the useful first-person word.', capability:'You can connect hidden-o decoding to your speaker role.'},
+  l10:{thai:'แพง', tr:'phaaeng', meaning:'expensive', context:'Useful in Bangkok prices. แ is written first but spoken after the start sound.', capability:'You can read a front-vowel price word.'},
+  l11:{thai:'รถ', tr:'rót', meaning:'car / vehicle', context:'A compact Bangkok word: hidden o plus final ถ as -t.', capability:'You can read a dead-short hidden-vowel word.'},
+  l12:{thai:'น้ำ', tr:'náam', meaning:'water', context:'You will hear and see น้ำ constantly on bottles, menus and signs.', capability:'You can connect a covered Thai word to real listening.'},
+  l13:{thai:'มาก', tr:'mâak', meaning:'very / a lot', context:'The long vowel plus final -k changes the tone route.', capability:'You can explain live/dead using vowel length and ending sound.'},
+  l14:{thai:'ได้', tr:'dâi', meaning:'can / able to', context:'A practical grammar word that still follows the tone engine.', capability:'You can read ได้ as useful Thai, not a memorised shape.'},
+  l15:{thai:'ข้าว', tr:'khâao', meaning:'rice', context:'Rice is everywhere. Read high class + mark + long vowel before the meaning.', capability:'You can read a high-class marked food word.'},
+  l16:{thai:'น้ำ', tr:'náam', meaning:'water', context:'Now revisit น้ำ through the low-class tone-mark flip.', capability:'You can hear a useful word and explain why its tone is high.'},
+  l17:{thai:'ไหม', tr:'mǎi', meaning:'yes/no question particle', context:'A common question ending. Silent ห leads ม into high-class rules.', capability:'You can read a silent-leader question particle.'},
+  l18:{thai:'ครับ', tr:'khráp', meaning:'polite particle (male)', context:'You already say it; now read the cluster and final -p closure.', capability:'You can decode ครับ instead of treating it as a sound blob.'},
+  l19:{thai:'จริง', tr:'jing', meaning:'true / really', context:'A high-utility response word. The written ร drops out here.', capability:'You can read a fake cluster in a real response word.'},
+  l20:{thai:'ภาษา', tr:'phaa-sǎa', meaning:'language', context:'Useful for ภาษาไทย. Read the formal letters with the same tone rules.', capability:'You can keep the tone engine working through formal letters.'},
+  l21:{thai:'สนุก', tr:'sà-nùk', meaning:'fun', context:'Useful small talk. Notice the hidden a at the start.', capability:'You can read hidden-a structure in a real adjective.'},
+  l22:{thai:'เพื่อน', tr:'phûean', meaning:'friend', context:'A practical people word with a three-piece vowel.', capability:'You can find the consonant inside a three-piece vowel.'},
+  l23:{thai:'ห้องน้ำ', tr:'hôrng-náam', meaning:'toilet', context:'A real sign word. Decode ห้อง and น้ำ as chunks before using the meaning.', capability:'You can read a useful public-sign chunk.'},
+  l24:{thai:'เปิด', tr:'bpèrt', meaning:'open', context:'A capstone sign word: front vowel, final -t and the mid-class dead tone route.', capability:'You can read everyday open/closed sign Thai.'}
+};
 function classTilesHtml(xs, cls){
   return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${cls}">${ch}</span>`).join('')}</div>`;
 }
@@ -1852,7 +1995,10 @@ let state = {
   notices:{},
   migrations:{},
   foundationRefresh:{required:false, complete:false, quarantinedFinals:[]},
-  signSafari:{seen:{}}
+  retention:{},
+  signSafari:{seen:{}},
+  missions:{done:{}},
+  contrastLog:{}
 };
 const SKEY = 'thai_state_v1';
 async function loadState(){
@@ -1881,6 +2027,11 @@ function saveState(){
 }
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
+function isoPlusDays(iso, days){
+  const d = new Date((iso || todayStr()) + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0,10);
+}
 function bumpStreak(){
   const t = todayStr();
   if(state.streak.last === t) return;
@@ -1909,9 +2060,11 @@ function ensureDay(){
   if(!state.days[t]){
     const due = srsDue().length;
     const type = (due > 45 || !nextLesson()) ? 'C' : 'L';   // consolidation vs lesson day
-	    state.days[t] = {r:0, l:0, d:0, m:0, due, paid:false, type};
+	    state.days[t] = {r:0, l:0, d:0, m:0, ret:0, due, paid:false, type, bridge:{}};
     saveState();
   }
+  if(!state.days[t].bridge) state.days[t].bridge = {};
+  if(state.days[t].ret == null) state.days[t].ret = 0;
   return state.days[t];
 }
 function earlyFoundationWindow(){
@@ -1941,10 +2094,11 @@ function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
   if(foundationRefreshRequired()) return 'foundations';
   if(due > 0) return 'review';                                // warm-up first; don't skip the current deck
+  if(nextRetentionCheck()) return 'retention';                 // completed is not the same as retained
   if(earlyBonusLessonCandidate()) return 'bonus';              // L1→L2 or L2→L3 only, for honest early pacing
   if(d.paid) return 'rest';                                   // plan complete → stop new load
   if(d.type === 'C') return 'deepen';                          // consolidation days go deeper, not further
-	  if(d.l > 0 || (d.m||0) > 0) return 'deepen';                  // one main block/day; early finishers deepen
+	  if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) return 'deepen';                  // one main block/day; early finishers deepen
   return 'learn';
 }
 function newLessonBlockReason(L){
@@ -1956,8 +2110,9 @@ function newLessonBlockReason(L){
   if(isEarlyBonusLesson(L)) return '';
 	  if(d.paid) return 'Today is complete. Use practice if you want more.';
 	  if(due > 0) return 'Warm-up first: clear the current review before new letters.';
+  if(nextRetentionCheck()) return 'A delayed mastery check is due before new letters.';
 	  if(d.type === 'C') return 'Today is a consolidation day. Practise the current material first.';
-	  if((d.m||0) > 0) return 'Main task is complete for today. Do the practice block now.';
+	  if((d.m||0) > 0 || (d.ret||0) > 0) return 'Main task is complete for today. Do the practice block now.';
 	  if(d.l > 0) return lessonNum(L.id) >= 4 ? 'Lesson 4 and later stay one per day. Use a story or drill now.' : 'One new lesson is enough for today. Practise it now.';
   return '';
 }
@@ -1969,6 +2124,8 @@ function startDepthBlock(){
     setTimeout(()=>el('cta-flash').click(), 60);
     return;
   }
+  const retention = nextRetentionCheck();
+  if(retention){ startRetentionCheck(retention); return; }
   const task = todayDepthTask();
   if(task){ task.go(); return; }
   gotoView('practice');
@@ -2026,6 +2183,86 @@ function nextDrill(){
 function nextUnreadStory(){
   return STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id]) || null;
 }
+function contrastBlocks(doneIds){
+  const ids = doneIds || state.done || [];
+  return CONTRAST_BLOCKS.filter(block=>lessonGateMet(block.gate, ids) && block.items.every(item=>thaiItemPrereqsMet(item.thai, ids, wordFrame(findWord(item.thai)))));
+}
+function contrastDoneToday(){
+  const log = state.contrastLog || {};
+  return Object.values(log).some(x=>x && x.last === todayStr());
+}
+function nextContrastBlock(){
+  if(contrastDoneToday()) return null;
+  const blocks = contrastBlocks();
+  if(!blocks.length) return null;
+  const log = state.contrastLog || {};
+  return blocks.slice().sort((a,b)=>{
+    const al = (log[a.id] && log[a.id].last) || '';
+    const bl = (log[b.id] && log[b.id].last) || '';
+    return al.localeCompare(bl) || CONTRAST_BLOCKS.findIndex(x=>x.id===a.id) - CONTRAST_BLOCKS.findIndex(x=>x.id===b.id);
+  })[0];
+}
+function ensureMissions(){
+  if(!state.missions) state.missions = {done:{}};
+  if(!state.missions.done) state.missions.done = {};
+  return state.missions;
+}
+function missionAvailable(mission, doneIds){
+  const ids = doneIds || state.done || [];
+  return lessonGateMet(mission.gate, ids) && thaiItemPrereqsMet(mission.thai, ids, wordFrame(findWord(mission.thai)));
+}
+function bangkokMissions(doneIds){
+  const ids = doneIds || state.done || [];
+  return BANGKOK_MISSIONS.filter(m=>missionAvailable(m, ids));
+}
+function missionDoneToday(){
+  const done = (ensureMissions().done || {});
+  return Object.values(done).some(x=>x && x.last === todayStr());
+}
+function nextBangkokMission(){
+  if(missionDoneToday()) return null;
+  const available = bangkokMissions();
+  if(!available.length) return null;
+  const done = ensureMissions().done || {};
+  return available.slice().sort((a,b)=>{
+    const ad = done[a.id], bd = done[b.id];
+    const al = ad ? ad.last || '' : '';
+    const bl = bd ? bd.last || '' : '';
+    return al.localeCompare(bl) || lessonNum(a.gate) - lessonNum(b.gate);
+  })[0];
+}
+function dailyBridgeRequirements(doneIds){
+  const ids = doneIds || state.done || [];
+  const req = [];
+  if(ids.includes('l4')) req.push('contrast','speak','transfer');
+  else if(ids.includes('l3')) req.push('transfer');
+  return req;
+}
+function ensureDayBridge(d){
+  if(!d.bridge) d.bridge = {};
+  if(contrastDoneToday()){ d.bridge.contrast = true; d.bridge.speak = true; }
+  if(missionDoneToday()) d.bridge.transfer = true;
+  return d.bridge;
+}
+function markDailyDepth(parts){
+  const d = ensureDay();
+  d.d++;
+  const bridge = ensureDayBridge(d);
+  (Array.isArray(parts) ? parts : [parts]).filter(Boolean).forEach(part=>{ bridge[part] = true; });
+  saveState();
+}
+function dailyBridgeMissing(d){
+  const day = d || ensureDay();
+  const bridge = ensureDayBridge(day);
+  return dailyBridgeRequirements().filter(part=>!bridge[part]);
+}
+function dailyDepthComplete(d){
+  const day = d || ensureDay();
+  if(day.lite) return true;
+  const needed = dailyBridgeMissing(day);
+  if(needed.length) return false;
+  return day.type === 'C' ? day.d > 1 : day.d > 0;
+}
 function startStoryDepth(story){
   const s = story || nextUnreadStory();
   if(!s) return false;
@@ -2035,6 +2272,45 @@ function startStoryDepth(story){
   return true;
 }
 function todayDepthTask(){
+  const missingBridge = dailyBridgeMissing();
+  const needsContrast = missingBridge.includes('contrast') || missingBridge.includes('speak');
+  if(needsContrast){
+    const contrast = nextContrastBlock() || contrastBlocks()[0];
+    if(contrast){
+      return {
+        id:'contrast',
+        kind:'practice',
+        tab:'practice',
+        title:'Contrast block',
+        detail:contrast.title + ': listen, say, record and self-check.',
+        go:()=>startContrastBlock(contrast)
+      };
+    }
+  }
+  if(missingBridge.includes('transfer')){
+    const mission = nextBangkokMission() || bangkokMissions()[0];
+    if(mission){
+      return {
+        id:'mission',
+        kind:'practice',
+        tab:'practice',
+        title:'Bangkok mission',
+        detail:mission.title + ': one real-world check-off.',
+        go:()=>showBangkokMissions(mission.id)
+      };
+    }
+  }
+  const contrast = nextContrastBlock();
+  if(contrast){
+    return {
+      id:'contrast',
+      kind:'practice',
+      tab:'practice',
+      title:'Contrast block',
+      detail:contrast.title + ': listen, say, record and self-check.',
+      go:()=>startContrastBlock(contrast)
+    };
+  }
   const story = nextUnreadStory();
   if(story){
     return {
@@ -2044,6 +2320,17 @@ function todayDepthTask(){
       title:'Reading room',
       detail:'Read: ' + story.title,
       go:()=>startStoryDepth(story)
+    };
+  }
+  const mission = nextBangkokMission();
+  if(mission){
+    return {
+      id:'mission',
+      kind:'practice',
+      tab:'practice',
+      title:'Bangkok mission',
+      detail:mission.title + ': one real-world check-off.',
+      go:()=>showBangkokMissions(mission.id)
     };
   }
   const drill = nextDrill();
@@ -2101,6 +2388,11 @@ function currentPathNode(){
 function mainTaskNode(){
   const cur = currentPathNode();
   if(cur && cur.type === 'class') return cur;
+  const retention = nextRetentionCheck();
+  if(retention){
+    const L = lessonById(retention.lessonId);
+    return {type:'retention', label:retentionStageLabel(retention.stage) + ' · Lesson ' + lessonNum(retention.lessonId), sub:L ? L.title + ' · completed is not mastered yet' : 'Delayed mastery check', retention};
+  }
   const ck = firstReadyCheckpoint();
   if(ck >= 0) return {type:'checkpoint', label:'Mastery check', sub:'prove 80% before new lessons unlock', id:checkpointId(ck), checkpoint:ck};
   if(cur && cur.letters42) return cur;
@@ -2117,6 +2409,8 @@ function routeToMainTask(){
   const d = ensureDay();
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
+  const retention = nextRetentionCheck();
+  if(retention){ startRetentionCheck(retention); return; }
   if(d.type === 'C'){ startDepthBlock(); return; }
   const n = mainTaskNode();
   if(n){ launchNode(n); return; }
@@ -2127,7 +2421,7 @@ function routeToDepthTask(){
   const d = ensureDay();
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
-  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
+  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
   if(!mainDone){ toast('Main task first'); routeToMainTask(); return; }
   startDepthBlock();
 }
@@ -2135,11 +2429,59 @@ function dailyMissingStep(){
   const d = ensureDay();
   if(foundationRefreshRequired()) return 'foundations';
   if(srsDue().length) return 'review';
-  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
+  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
   if(!mainDone) return 'main';
-  const depthDone = d.lite || (d.type === 'C' ? d.d > 1 : d.d > 0);
+  const depthDone = dailyDepthComplete(d);
   if(!depthDone) return 'depth';
   return '';
+}
+function dailyWinSummary(d){
+  if(!d) return '';
+  if(d.lite) return 'Review clear · lighter day accepted · streak safe';
+  if(d.type === 'C') return 'Review clear · two current-material blocks complete';
+  if((d.ret||0) > 0) return 'Review clear · delayed mastery check complete · bridge practice done';
+  if((d.m||0) > 0) return 'Review clear · mastery gate complete · practice done';
+  return 'Review clear · lesson complete · practice done';
+}
+function dailyCapabilityStatement(d){
+  if(state.lastCapability && state.lastCapability.date === todayStr()) return state.lastCapability.text;
+  const doneN = (state.done || []).length;
+  if(d && d.type === 'C') return 'Today kept older Thai available instead of rushing new content.';
+  if(doneN >= 23) return 'You are using the course frame on real Bangkok sign shapes.';
+  if(doneN >= 18) return 'You are turning clusters and ครับ into readable everyday Thai.';
+  if(doneN >= 13) return 'You are making live/dead and tone decisions faster.';
+  if(doneN >= 6) return 'You are connecting class, tone marks and useful words.';
+  if(doneN >= 2) return 'You are reading starts, vowels and ending jobs as one frame.';
+  return 'You are building the letter, class and tone habit.';
+}
+function renderDailyWinCard(){
+  const card = el('daily-win-card');
+  if(!card) return;
+  const missing = dailyMissingStep();
+  if(missing || foundationRefreshRequired()){
+    card.hidden = true;
+    card.innerHTML = '';
+    return;
+  }
+  const d = ensureDay();
+  card.hidden = false;
+  card.innerHTML = `
+    <div>
+      <div class="eyebrow" style="margin:0;color:var(--good)">Daily win</div>
+      <h2>${d.type === 'C' ? 'Consolidation banked' : 'Today is complete'}</h2>
+      <p class="sub">${esc(dailyWinSummary(d))}${d.paid ? ' · +10💎 claimed' : ''}</p>
+      <div class="capability-line">${esc(dailyCapabilityStatement(d))}</div>
+    </div>
+    <div class="daily-win-actions">
+      <button class="btn small" id="daily-win-end">End today</button>
+      <button class="btn small ghost" id="daily-win-practice">Bonus practice</button>
+      <button class="btn small ghost" id="daily-win-mission">Mission</button>
+    </div>`;
+  const end = el('daily-win-end'), practice = el('daily-win-practice');
+  const mission = el('daily-win-mission');
+  if(end) end.onclick = showEndDayModal;
+  if(practice) practice.onclick = startDepthBlock;
+  if(mission) mission.onclick = ()=>showBangkokMissions();
 }
 function activeDepthTask(){
   return dailyMissingStep() === 'depth' ? todayDepthTask() : null;
@@ -2222,8 +2564,8 @@ function renderTodayActions(){
   const d = ensureDay(), due = srsDue().length;
   const refreshRequired = foundationRefreshRequired();
   const reviewDone = due === 0;
-  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0);
-  const depthDone = d.lite || (d.type === 'C' ? d.d > 1 : d.d > 0);
+  const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
+  const depthDone = dailyDepthComplete(d);
   const missing = dailyMissingStep();
   const early = earlyFoundationWindow();
   const main = mainTaskNode();
@@ -2252,14 +2594,15 @@ function renderTodayActions(){
       kind:'locked'
     });
     const end = el('end-day-btn');
-    if(end){
-      end.className = 'task-button end locked';
-      el('end-day-state').textContent = 'Locked';
-      el('end-day-detail').textContent = 'Finish the updated foundations refresh first.';
-    }
-    syncTabRecommendations();
-    return;
-  }
+	    if(end){
+	      end.className = 'task-button end locked';
+	      el('end-day-state').textContent = 'Locked';
+	      el('end-day-detail').textContent = 'Finish the updated foundations refresh first.';
+	    }
+	    renderDailyWinCard();
+	    syncTabRecommendations();
+	    return;
+	  }
   if(el('course-day-label')) el('course-day-label').textContent = d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = d.type === 'C' ? "Today's consolidation" : early ? "Today's foundation" : "Today's route";
   el('today-brief').textContent = early ? 'Shorter foundation day. Clear review, take the main step, then practise before ending.' : 'Use the buttons in order. End today sends you back to anything missing.';
@@ -2277,7 +2620,7 @@ function renderTodayActions(){
   }
   setTaskButton('today-main-btn', {
     state: mainDone ? 'Done' : 'Next',
-    title: mainDone ? (d.type === 'C' ? 'Consolidation started' : 'Main task complete') : mainTitle,
+    title: mainDone ? (d.ret ? 'Delayed check complete' : d.type === 'C' ? 'Consolidation started' : 'Main task complete') : mainTitle,
     detail: mainDone ? 'Now practise it before ending the day.' : mainDetail,
     kind: !mainDone && missing === 'main' ? 'primary' : mainDone ? 'done' : due ? 'locked' : ''
   });
@@ -2289,13 +2632,14 @@ function renderTodayActions(){
     kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || due) ? 'locked' : ''
   });
   const end = el('end-day-btn');
-  if(end){
-    end.className = 'task-button end' + (!missing ? ' primary' : ' locked');
-    el('end-day-state').textContent = missing ? 'Locked' : 'Ready';
-	    el('end-day-detail').textContent = missing ? 'Finish the highlighted task first.' : 'Mastery beats breadth. Stop here for today.';
-	  }
-  syncTabRecommendations();
-	}
+	  if(end){
+	    end.className = 'task-button end' + (!missing ? ' primary' : ' locked');
+	    el('end-day-state').textContent = missing ? 'Locked' : 'Ready';
+		    el('end-day-detail').textContent = missing ? 'Finish the highlighted task first.' : 'Mastery beats breadth. Stop here for today.';
+		  }
+	  renderDailyWinCard();
+	  syncTabRecommendations();
+		}
 const DAILY_PRACTICE = [
   {id:'review', title:'Review', gate:null, go:goReviewTask},
   {id:'tone-listen', title:'Tone drill', gate:'l4', go:()=>launchDrill('tone-listen')},
@@ -2303,8 +2647,10 @@ const DAILY_PRACTICE = [
   {id:'hear-thai', title:'Hear & pick Thai', gate:'l1', go:()=>launchDrill('hear-thai')},
   {id:'spell', title:'Spell it', gate:'l3', go:()=>launchDrill('spell')},
   {id:'reading', title:'Reading', gate:'l4', go:()=>{ if(!startStoryDepth()) launchDrill('reading'); }},
+  {id:'contrast', title:'Contrast', gate:'l4', go:()=>startContrastBlock()},
   {id:'chunk', title:'Chunk', gate:'l20', go:()=>launchDrill('chunk')},
   {id:'echo', title:'Echo', gate:'l1', go:()=>launchDrill('echo')},
+  {id:'mission', title:'Mission', gate:'l3', go:()=>showBangkokMissions()},
 ];
 function practiceState(p){
   if(p.gate && !state.done.includes(p.gate)) return {cls:'locked', text:'Locked until Lesson ' + p.gate.slice(1)};
@@ -2320,6 +2666,16 @@ function practiceState(p){
 	    const readToday = Object.values(state.stories||{}).includes(todayStr());
 	    if(readToday) return {cls:'done', text:'Done today'};
 	  }
+  if(p.id === 'contrast'){
+    if(contrastDoneToday()) return {cls:'done', text:'Done today'};
+    if(activeDepthTask() && activeDepthTask().id === 'contrast') return {cls:'recommended', text:"Today's practice"};
+    return contrastBlocks().length ? {cls:'', text:'Available'} : {cls:'locked', text:'Locked'};
+  }
+  if(p.id === 'mission'){
+    if(missionDoneToday()) return {cls:'done', text:'Done today'};
+    if(activeDepthTask() && activeDepthTask().id === 'mission') return {cls:'recommended', text:"Today's practice"};
+    return bangkokMissions().length ? {cls:'', text:'Available'} : {cls:'locked', text:'Locked'};
+  }
 	  const log = state.drillLog && state.drillLog[p.id];
 	  if(log && log.last === todayStr()) return {cls:'done', text:'Done today'};
   const active = activeDepthTask();
@@ -2371,23 +2727,26 @@ function renderPlan(){
   const bonus = earlyBonusLessonCandidate();
   const nd = nextDrill();                                   // progression-aware, not date-random
   const sugg = nd ? nd.title : 'a quick drill';
+  const retention = nextRetentionCheck();
   if(el('course-day-label')) el('course-day-label').textContent = early ? 'FOUNDATION DAY ↓' : '45-MINUTE COURSE DAY ↓';
   if(el('plan-sub')) el('plan-sub').textContent = early ? '20-30 min core · optional stretch' : 'depth before speed · +10💎';
   el('plan-title').textContent = isL ? (early ? "Today's foundation · honest pace" : "Today's 45 · Lesson day") : "Today's 45 · Consolidation day";
   el('plan-1').textContent = due ? 'Warm-up: clear due cards (' + due + ' left)' : 'Warm-up: review cleared';
   if(isL){
     const nl = nextLesson();
-	    if(d.l > 0 || (d.m||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Practise it now.';
+    if(retention && !(d.ret||0)) el('plan-2').textContent = 'Main: delayed check due - ' + retentionStageLabel(retention.stage) + ' Lesson ' + lessonNum(retention.lessonId);
+    else if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Practise it now.';
     else if(phase === 'review') el('plan-2').textContent = 'Main: lesson opens after the warm-up';
     else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
-    el('plan-3').textContent = bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
+    const missingBridge = dailyBridgeMissing(d);
+    el('plan-3').textContent = missingBridge.length ? 'Bridge: ' + missingBridge.join(' + ') + ' before ending' : bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
   } else {
     el('plan-2').textContent = 'Main: consolidate current letters, tones and words';
     el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
   }
   if(d.lite){ el('plan-3').textContent = '✓ Optional drill moved to tomorrow'; }
   const dThis = d;
-  el('plan-l3').classList.toggle('done', d.lite || (isL ? dThis.d > 0 : dThis.d > 1));
+  el('plan-l3').classList.toggle('done', dailyDepthComplete(dThis));
   // weekly status line
   const bits = [];
   if(state.week && state.week.key === weekKey()){
@@ -2417,14 +2776,15 @@ function renderRunway(){
   const srsMin = Math.min(15, Math.round(due * paceSecs() / 60));
   const bonus = earlyBonusLessonCandidate();
   const earlyPace = earlyFoundationWindow();
-  const lessonMin = (isL && nextLesson() && (d.l === 0 || bonus)) ? (bonus ? 15 : 20) : 0;          // includes hear-first + read-aloud compare
-  const mainDone = isL ? d.l > 0 : d.d > 0;
+  const retention = nextRetentionCheck();
+  const lessonMin = retention ? 8 : (isL && nextLesson() && (d.l === 0 || bonus)) ? (bonus ? 15 : 20) : 0;          // includes hear-first + read-aloud compare
+  const mainDone = isL ? (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) : d.d > 0;
   const targetMin = earlyPace ? 30 : 45;
   const minDrill = isL ? (earlyPace ? 10 : 15) : 25;
   const drillMin = d.lite || bonus ? 0 : (mainDone ? minDrill : Math.max(minDrill, targetMin - srsMin - lessonMin));
   const segDefs = [
     {cls:'srs', m:srsMin, label:'cards'},
-    {cls:'lesson', m:lessonMin, label:'lesson'},
+    {cls:'lesson', m:lessonMin, label:retention ? 'delayed check' : 'lesson'},
     {cls:'drill', m:drillMin, label:'drill'},
   ].filter(s=>s.m > 0);
   const total = segDefs.reduce((a,s)=>a+s.m,0);
@@ -2459,8 +2819,15 @@ function questCheck(){
 /* =====================================================
    SRS  (simple SM-2-lite, day granularity)
 ===================================================== */
-function srsAdd(id){
-  if(!state.srs[id]) state.srs[id] = {iv:0, due:todayStr(), lapses:0};
+function srsAddTo(target, id, delayDays){
+  const s = target || state;
+  if(!s.srs) s.srs = {};
+  if(s.srs[id]) return false;
+  s.srs[id] = {iv:0, due:isoPlusDays(todayStr(), delayDays || 0), lapses:0};
+  return true;
+}
+function srsAdd(id, delayDays){
+  return srsAddTo(state, id, delayDays);
 }
 function srsDueFor(target){
   const s = target || state;
@@ -2490,6 +2857,10 @@ function weakestCards(n){ // n trickiest cards: most lapses, then lowest interva
 /* card content lookup: ids are "g:ก" (glyph), "f:ก" (ending job), or "w:มา" (word/phrase) */
 const COMBINING = ['ิ','ี','ู','ุ','ึ','ื','ั','ำ','่','้','๊','๋','์'];
 function cardFront(id){
+  if(id.startsWith('a:')){
+    const p = parseAxisId(id), w = p && axisWord(p.key), L = p && lessonById(p.key);
+    return {big:w ? w.thai : L ? lessonPayoff(L).thai : (p ? p.key : id), hint:axisCardLabel(id), small:p && p.axis === 'transfer'};
+  }
   if(id.startsWith('g:')){
     const ch = id.slice(2), g = GLYPHS[ch];
     return {big: (g && g.disp) || ch, hint:'What sound?'};
@@ -2504,6 +2875,11 @@ function cardFront(id){
   return {big:id.slice(2), hint:'What does it mean?'};
 }
 function cardSay(id){
+  if(id.startsWith('a:')){
+    const p = parseAxisId(id), w = p && axisWord(p.key), L = p && lessonById(p.key);
+    if(w) return w.thai;
+    if(L && lessonPayoff(L)) return lessonPayoff(L).thai;
+  }
   if(id.startsWith('g:')){
     return glyphAudio(id.slice(2), 'sound').say;
   }
@@ -2511,6 +2887,12 @@ function cardSay(id){
   return id.slice(2); // w: and r: both speak the Thai
 }
 function cardBack(id){
+  if(id.startsWith('a:')){
+    const p = parseAxisId(id), w = p && axisWord(p.key), L = p && lessonById(p.key), payoff = L && lessonPayoff(L);
+    if(w) return {big:w.thai, tr:w.tr, en:axisCardLabel(id)};
+    if(payoff) return {big:payoff.thai, tr:payoff.tr, en:payoff.capability};
+    return {big:'?', tr:'', en:axisCardLabel(id)};
+  }
   if(id.startsWith('g:')){
     const g = GLYPHS[id.slice(2)];
     return {big:g ? g.sound : '?', tr:g ? g.name + ' · ' + g.nameTr : '', en:g ? (g.type==='c' ? CLS_LABEL[g.cls] : g.gloss) : ''};
@@ -2898,6 +3280,9 @@ function wordMeaningDistractors(w, pool, n){
   return rankedOptionValues(scored, w.en, n, x=>(x.cat&&w.cat&&x.cat===w.cat ? 10 : 0) + Math.ceil(wordMisconceptionScore(w, x)/3), x=>x.en, scored.map(x=>x.en));
 }
 function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?,explain?}
+  if(id.startsWith('a:')){
+    return axisQuestion(id) || {kind:'mcq', prompt:id, text:axisCardLabel(id), answer:'OK', options:['OK']};
+  }
   if(id.startsWith('g:')){
     const ch = id.slice(2), g = GLYPHS[ch], correct = g ? g.sound : '?';
     if(!g) return {prompt:ch, promptBig:true, text:glyphSoundPrompt(g), answer:correct, options:[correct]};
@@ -3333,8 +3718,11 @@ function toneQuestionText(w){
 function toneQuestionExplain(w){
   const gate = toneGate(w), tone = toneOf(w.tr);
   const marked = /[่้๊๋]/.test(w.thai);
+  const silentH = silentHLeadConsonant(w.thai);
   const cls = firstConsonantClass(w.thai);
   const classText = cls ? CLS_LABEL[cls] + ' class' : 'class';
+  if(silentH) return 'ห is silent here; it makes ' + silentH + ' follow the high-class row. That gives ' + tone.toLowerCase() + ' tone.';
+  if(hasSilentOLead(w.thai)) return 'อ is silent here; it makes ย follow the mid-class row. That gives ' + tone.toLowerCase() + ' tone.';
   if(gate <= 2 && tone === 'Mid') return 'No mark still gives a tone. This live syllable is mid.';
   if(gate === 3 && tone === 'Low') return classText + ' + dead syllable gives low tone.';
   if(gate === 6 && tone === 'Rising') return classText + ' + plain live syllable gives rising tone.';
@@ -3460,6 +3848,178 @@ function learnedFinalGlyphIds(doneIds){
   LESSONS.forEach(L=>{ if(doneSet.has(L.id)) finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(out, ch)); });
   return out;
 }
+function lessonPayoff(L){
+  if(!L) return null;
+  const explicit = LESSON_PAYOFFS[L.id];
+  if(explicit) return Object.assign({lesson:L.id}, explicit);
+  const w = (L.words||[]).find(x=>wordRole(x)!=='decode') || (L.words||[])[0];
+  return w ? {lesson:L.id, thai:w.thai, tr:w.tr, meaning:w.en, context:L.note || '', capability:'You can connect this lesson mechanism to useful Thai.'} : null;
+}
+function retentionRecord(target, lessonId){
+  const s = target || state;
+  if(!s.retention) s.retention = {};
+  return s.retention[lessonId] || null;
+}
+function scheduleRetentionForLesson(lessonId, completedDate, target, legacyCatchup){
+  const s = target || state;
+  if(!s.retention) s.retention = {};
+  if(s.retention[lessonId]) return false;
+  const doneAt = completedDate || todayStr();
+  s.retention[lessonId] = {
+    completed:doneAt,
+    due1:legacyCatchup ? todayStr() : isoPlusDays(doneAt, 1),
+    due7:legacyCatchup ? isoPlusDays(todayStr(), 6) : isoPlusDays(doneAt, 7),
+    retained:false,
+    stabilised:false,
+    attempts:{retained:0, stabilised:0}
+  };
+  return true;
+}
+function ensureRetentionForDoneLessons(target, legacyCatchup){
+  const s = target || state;
+  if(!s.retention) s.retention = {};
+  let changed = false;
+  (s.done||[]).forEach(id=>{
+    if(scheduleRetentionForLesson(id, todayStr(), s, legacyCatchup)) changed = true;
+  });
+  return changed;
+}
+function nextRetentionCheck(target){
+  const s = target || state;
+  const d = s.days && s.days[todayStr()];
+  if(d && (d.ret||0) > 0) return null;             // one delayed lesson check is enough for a day
+  const t = todayStr();
+  for(const id of (s.done||[])){
+    const rec = retentionRecord(s, id);
+    if(!rec) continue;
+    if(!rec.retained && rec.due1 <= t) return {lessonId:id, stage:'retained', due:rec.due1};
+    if(rec.retained && !rec.stabilised && rec.due7 <= t) return {lessonId:id, stage:'stabilised', due:rec.due7};
+  }
+  return null;
+}
+function retentionStageLabel(stage){ return stage === 'stabilised' ? '+7 day stabilise' : '+1 day retain'; }
+function retentionStageKey(stage){ return stage === 'stabilised' ? 'stabilised' : 'retained'; }
+function axisId(axis, key){ return 'a:' + axis + ':' + key; }
+function parseAxisId(id){
+  const parts = String(id||'').split(':');
+  return parts[0] === 'a' ? {axis:parts[1] || '', key:parts.slice(2).join(':')} : null;
+}
+function axisWord(key){ return findWord(key); }
+function axisCardIdsForLesson(L){
+  if(!L) return [];
+  const ids = [], n = lessonNum(L.id);
+  (L.glyphs||[]).forEach(ch=>{
+    const g = GLYPHS[ch];
+    if(!g) return;
+    ids.push(axisId('glyph', ch));
+    if(g.type === 'c'){
+      ids.push(axisId('class', ch));
+      ids.push(axisId('initial', ch));
+      if(n >= 2 && finalJob(ch)) ids.push(axisId('final', ch));
+    }
+  });
+  finalGlyphsForLesson(L).forEach(ch=>ids.push(axisId('final', ch)));
+  (L.words||[]).forEach(w=>{
+    if(wordRole(w) !== 'decode') ids.push(axisId('listen', w.thai));
+    ids.push(axisId('say', w.thai));
+    if(liveDeadFromFrame(wordFrame(w))) ids.push(axisId('live', w.thai));
+    if(toneTaughtBy(w, n)) ids.push(axisId('tone', w.thai));
+  });
+  if(lessonPayoff(L)) ids.push(axisId('transfer', L.id));
+  return [...new Set(ids)];
+}
+function axisCardAllowedForDone(id, doneIds){
+  const p = parseAxisId(id); if(!p) return false;
+  const done = doneIds || state.done || [];
+  if(p.axis === 'transfer') return done.includes(p.key) && !!lessonPayoff(lessonById(p.key));
+  if(['glyph','class','initial'].includes(p.axis)) return learnedGlyphIdsFor(done).includes(p.key);
+  if(p.axis === 'final') return learnedFinalGlyphIds(done).includes(p.key);
+  const w = axisWord(p.key);
+  if(!w || !learnedWords(done).some(x=>x.thai === w.thai)) return false;
+  if(p.axis === 'listen') return wordRole(w) !== 'decode';
+  if(p.axis === 'say') return true;
+  if(p.axis === 'live') return !!liveDeadFromFrame(wordFrame(w));
+  if(p.axis === 'tone'){
+    const maxLesson = done.length ? Math.max(...done.map(lessonNum)) : 0;
+    return toneTaughtBy(w, maxLesson);
+  }
+  return false;
+}
+function seedAxisCardsForLesson(L, target, delayDays){
+  const s = target || state;
+  let count = 0;
+  axisCardIdsForLesson(L).forEach(id=>{
+    if(axisCardAllowedForDone(id, (s.done||[])) && srsAddTo(s, id, delayDays == null ? 1 : delayDays)) count++;
+  });
+  return count;
+}
+function seedAxisCardsForDoneLessons(target, delayDays){
+  const s = target || state;
+  let count = 0;
+  (s.done||[]).forEach(id=>{ count += seedAxisCardsForLesson(lessonById(id), s, delayDays); });
+  return count;
+}
+function axisQuestion(id){
+  const p = parseAxisId(id); if(!p) return null;
+  if(p.axis === 'glyph'){
+    const ch = p.key, g = GLYPHS[ch]; if(!g) return null;
+    const pool = learnedGlyphIds().filter(x=>GLYPHS[x] && GLYPHS[x].type === g.type);
+    const wrong = glyphChoiceDistractors(ch, pool.length >= 4 ? pool : sameTypeGlyphs(g.type), 3);
+    return {kind:'mcq', text:'Pick the Thai glyph for this sound/name.', say:glyphAudio(ch, g.type==='c' ? 'name' : 'sound').say, sayLabel:g.name || g.sound,
+      answer:glyphLabel(ch), options:shuffle([glyphLabel(ch), ...wrong]), thaiOpts:true, _choice:'axis-glyph', axis:'glyph-recognition', explain:g.sound};
+  }
+  if(p.axis === 'class') return classFromMemoryQuestion(p.key);
+  if(p.axis === 'initial'){
+    const g = GLYPHS[p.key]; if(!g) return null;
+    return {kind:'type', prompt:p.key, text:'Type the start sound from memory', answer:g.sound, axis:'initial-sound'};
+  }
+  if(p.axis === 'final') return finalJobQuestion(p.key);
+  const w = axisWord(p.key);
+  if(!w) return null;
+  if(p.axis === 'listen'){
+    const taught = taughtGlyphSet();
+    let wrong = wordThaiDistractors(w, learnedWords(), 3, taught);
+    if(wrong.length < 3) wrong = wordThaiDistractors(w, rawWordPool().filter(x=>thaiTextReadable(x.thai, taught)), 3, taught);
+    return {kind:'mcq', text:'Listen: which Thai did you hear?', say:w.thai, autoplay:true,
+      answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'axis-listen', axis:'listening-contrast', explain:w.tr};
+  }
+  if(p.axis === 'live') return liveDeadQuestion(w);
+  if(p.axis === 'tone') return toneQuestion(w, state.done.length ? Math.max(...state.done.map(lessonNum)) : lessonNum((lessonById(p.key)||{}).id));
+  return null;
+}
+function axisCardLabel(id){
+  const p = parseAxisId(id); if(!p) return '';
+  const labels = {glyph:'glyph recognition', class:'class recall', initial:'initial sound', final:'final job', live:'live/dead status', tone:'tone derivation', listen:'listening contrast', say:'reading aloud', transfer:'real-world transfer'};
+  return labels[p.axis] || p.axis;
+}
+function buildRetentionQuiz(item){
+  const L = lessonById(item.lessonId);
+  if(!L) return [];
+  const axisIds = axisCardIdsForLesson(L).filter(id=>axisCardAllowedForDone(id));
+  const priority = item.stage === 'stabilised'
+    ? ['initial','class','final','live','tone','listen']
+    : ['final','live','tone','class','listen','initial'];
+  const qs = [];
+  priority.forEach(axis=>{
+    const id = axisIds.find(x=>parseAxisId(x).axis === axis && !qs.some(q=>q._axisId === x));
+    const q = id && axisQuestion(id);
+    if(q) qs.push(Object.assign({_axisId:id}, q));
+  });
+  if(qs.length < 6){
+    axisIds.forEach(id=>{
+      if(qs.length >= 8 || qs.some(q=>q._axisId === id)) return;
+      const q = axisQuestion(id);
+      if(q) qs.push(Object.assign({_axisId:id}, q));
+    });
+  }
+  return sample(qs, Math.min(item.stage === 'stabilised' ? 8 : 6, qs.length));
+}
+function startRetentionCheck(item){
+  const L = lessonById(item.lessonId);
+  const qs = buildRetentionQuiz(item);
+  if(!L || !qs.length){ toast('No delayed check ready'); return; }
+  startGenericQuiz(qs, retentionStageLabel(item.stage) + ' · Lesson ' + lessonNum(L.id), {retention:item});
+}
 function foundationRefreshSections(doneIds){
   const done = new Set(doneIds || state.done || []);
   return FOUNDATION_REFRESH_SECTIONS
@@ -3503,13 +4063,15 @@ function cardAllowedForDone(id, doneIds){
     const w = findWord(thai);
     return !!w;
   }
+  if(id.startsWith('a:')) return axisCardAllowedForDone(id, done);
   return false;
 }
 function ensureStateCollections(target){
   const defaults = {
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
-    notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, signSafari:{seen:{}}
+    notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, retention:{}, signSafari:{seen:{}},
+    missions:{done:{}}, contrastLog:{}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
@@ -3518,6 +4080,10 @@ function ensureStateCollections(target){
   if(!target.skillStats.speak) target.skillStats.speak = {attempts:0,last:null};
   if(!target.foundationRefresh) target.foundationRefresh = {required:false, complete:false, quarantinedFinals:[]};
   if(!Array.isArray(target.foundationRefresh.quarantinedFinals)) target.foundationRefresh.quarantinedFinals = [];
+  if(!target.retention) target.retention = {};
+  if(!target.missions) target.missions = {done:{}};
+  if(!target.missions.done) target.missions.done = {};
+  if(!target.contrastLog) target.contrastLog = {};
   if(!target.signSafari.seen) target.signSafari.seen = {};
 }
 function repairStateForV5(target){
@@ -3549,8 +4115,21 @@ function repairStateForV5(target){
       report.changed = true;
     }
   });
+  const seededAxes = seedAxisCardsForDoneLessons(s, 1);
+  if(seededAxes){
+    report.seededAxes = seededAxes;
+    report.changed = true;
+  }
+  if(ensureRetentionForDoneLessons(s, true)){
+    report.retentionBackfill = true;
+    report.changed = true;
+  }
   if(!s.migrations.v5){
     s.migrations.v5 = {date:todayStr(), pruned:report.pruned.length, seededGlyphs:report.seededGlyphs, seededFinals:report.seededFinals};
+    report.changed = true;
+  }
+  if(!s.migrations.v52Full){
+    s.migrations.v52Full = {date:todayStr(), seededAxes:seededAxes || 0, retentionBackfill:!!report.retentionBackfill};
     report.changed = true;
   }
   return report;
@@ -3713,6 +4292,98 @@ function validateV5TransferContracts(){
   if(errors.length) throw new Error('V5 transfer contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateV51PolishContracts(){
+  const errors = [];
+  const requiredContrasts = ['ป/พ','ต/ท','ก/ค/ข','ง','ร/ล','final ก/ด/บ'];
+  requiredContrasts.forEach(c=>{
+    const card = MOUTH_COACH_CARDS.find(x=>x.contrast === c);
+    if(!card) errors.push('Mouth Coach missing contrast card: ' + c);
+    else if(!/No score/.test(card.note || '')) errors.push('Mouth Coach contrast should stay no-score: ' + c);
+  });
+  const finalB = finalJobQuestion('บ');
+  if(!finalB || !/closes as -p/.test(finalB.wrongExplain || finalB.explain || '')) errors.push('final บ feedback must explain the -p closing sound');
+  const silentH = toneQuestion(findWord('หมา'), 17);
+  if(!silentH || !/ห is silent here/.test(silentH.explain || '')) errors.push('silent ห feedback must be item-specific');
+  const fakeState = {checks:{[checkpointId(2)]:true, letters42:true}};
+  const rematches = bossRematchItems(fakeState).map(x=>x.id);
+  if(!rematches.includes(checkpointId(2)) || !rematches.includes('letters42')) errors.push('boss rematch list must include passed checkpoints and Letters boss');
+  if(typeof renderDailyWinCard !== 'function' || !dailyWinSummary({type:'C', d:2, paid:true})) errors.push('daily win card helper missing');
+  if(errors.length) throw new Error('V5.1 polish contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV52BridgeContracts(){
+  const errors = [];
+  const requiredBlocks = ['tone-marks','initial-ng','vowel-length','dt-th','g-kh','bp-ph','final-stops','r-l','clusters'];
+  requiredBlocks.forEach(id=>{
+    const block = CONTRAST_BLOCKS.find(x=>x.id === id);
+    if(!block) errors.push('Contrast Block missing: ' + id);
+    else {
+      if(!block.listen || !block.speak) errors.push('Contrast Block must pair listening and speaking: ' + id);
+      if(!block.items || block.items.length < 2) errors.push('Contrast Block needs at least two options: ' + id);
+      const done = LESSONS.slice(0, LESSONS.findIndex(L=>L.id===block.gate)+1).map(L=>L.id);
+      (block.items||[]).forEach(item=>{
+        prerequisiteIssuesForThai(item.thai, done, 'contrast-block/' + id, wordFrame(findWord(item.thai))).forEach(i=>{
+          errors.push('contrast-block/' + id + ':' + item.thai + ' missing ' + (i.missing||[]).join(','));
+        });
+      });
+    }
+  });
+  BANGKOK_MISSIONS.forEach(mission=>{
+    const done = LESSONS.slice(0, LESSONS.findIndex(L=>L.id===mission.gate)+1).map(L=>L.id);
+    prerequisiteIssuesForThai(mission.thai, done, 'bangkok-mission/' + mission.id, wordFrame(findWord(mission.thai))).forEach(i=>{
+      errors.push('bangkok-mission/' + mission.id + ':' + mission.thai + ' missing ' + (i.missing||[]).join(','));
+    });
+    if(/camera|upload|location|gps|photo|web access/i.test(mission.action || '')) errors.push('Bangkok mission asks for blocked device/web dependency: ' + mission.id);
+    if(/ค่ะ/.test(JSON.stringify(mission))) errors.push('female polite particle leaked into mission: ' + mission.id);
+  });
+  if(typeof dailyCapabilityStatement !== 'function') errors.push('Daily capability statement helper missing');
+  const afterL4 = LESSONS.slice(0,4).map(L=>L.id);
+  if(!contrastBlocks(afterL4).some(block=>block.id === 'tone-marks')) errors.push('Tone contrast block should be available after Lesson 4');
+  const afterL3 = LESSONS.slice(0,3).map(L=>L.id);
+  if(!bangkokMissions(afterL3).some(m=>m.id === 'price-baht')) errors.push('First Bangkok mission should be available after Lesson 3');
+  if(errors.length) throw new Error('V5.2 bridge contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV52FullBriefContracts(){
+  const errors = [];
+  LESSONS.forEach(L=>{
+    const payoff = lessonPayoff(L);
+    if(!payoff) errors.push(L.id + ': missing useful payoff item');
+    else {
+      if(!payoff.thai || !payoff.tr || !payoff.meaning || !payoff.capability) errors.push(L.id + ': payoff missing thai/tr/meaning/capability');
+      const doneIds = LESSONS.slice(0, lessonIndexById(L.id)+1).map(x=>x.id);
+      prerequisiteIssuesForThai(payoff.thai, doneIds, 'lesson-payoff/' + L.id, wordFrame(findWord(payoff.thai))).forEach(i=>{
+        errors.push('lesson-payoff/' + L.id + ':' + payoff.thai + ' missing ' + (i.missing||[]).join(','));
+      });
+      if(/ค่ะ/.test(JSON.stringify(payoff))) errors.push(L.id + ': female polite particle leaked into payoff');
+    }
+    const ids = axisCardIdsForLesson(L), axes = new Set(ids.map(id=>(parseAxisId(id)||{}).axis));
+    if(!axes.has('transfer')) errors.push(L.id + ': missing transfer axis card');
+    if((L.words||[]).length && !axes.has('say')) errors.push(L.id + ': missing read-aloud axis card');
+    if((L.words||[]).some(w=>wordRole(w)!=='decode') && !axes.has('listen')) errors.push(L.id + ': missing listening axis card');
+    if((L.glyphs||[]).some(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c')){
+      ['glyph','class','initial'].forEach(axis=>{ if(!axes.has(axis)) errors.push(L.id + ': missing ' + axis + ' axis card'); });
+    }
+    if(finalGlyphsForLesson(L).length && !axes.has('final')) errors.push(L.id + ': missing final-job axis card');
+    if((L.words||[]).some(w=>liveDeadFromFrame(wordFrame(w))) && !axes.has('live')) errors.push(L.id + ': missing live/dead axis card');
+    if((L.words||[]).some(w=>toneTaughtBy(w, lessonNum(L.id))) && !axes.has('tone')) errors.push(L.id + ': missing tone axis card');
+  });
+  const fake = {done:['l1'], srs:{}, days:{}, retention:{}, streak:{count:0,last:null}};
+  ensureStateCollections(fake);
+  scheduleRetentionForLesson('l1', isoPlusDays(todayStr(), -1), fake, false);
+  if(!nextRetentionCheck(fake)) errors.push('retention scheduler should surface a +1 day check');
+  const fakeAxis = {done:['l1'], srs:{}, days:{}, retention:{}, streak:{count:0,last:null}};
+  ensureStateCollections(fakeAxis);
+  if(!seedAxisCardsForLesson(lessonById('l1'), fakeAxis, 1)) errors.push('axis seeding should add cards for Lesson 1');
+  const l3Req = dailyBridgeRequirements(['l1','l2','l3']);
+  if(l3Req.join(',') !== 'transfer') errors.push('Lesson 3 bridge should require transfer mission only');
+  const l4Req = dailyBridgeRequirements(['l1','l2','l3','l4']);
+  ['contrast','speak','transfer'].forEach(part=>{ if(!l4Req.includes(part)) errors.push('Lesson 4 bridge missing ' + part); });
+  if(typeof renderLessonPayoff !== 'function') errors.push('lesson payoff renderer missing');
+  if(typeof startRetentionCheck !== 'function') errors.push('retention check launcher missing');
+  if(errors.length) throw new Error('V5.2 full brief contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function finalJobHtml(ch, lessonId){
   const g = GLYPHS[ch], job = finalJob(ch);
   if(!g || g.type !== 'c' || lessonNum(lessonId) < 2) return '';
@@ -3733,6 +4404,13 @@ function finalSoundDistractors(ch, answer){
   ['-n','-m','-ng','-k','-t','-p','-ao/-aao','-aao','-ai','-oy','-y glide'].forEach(s=>{ if(s !== answer && !out.includes(s)) out.push(s); });
   return out.slice(0,3);
 }
+function finalJobExplain(ch, answer){
+  const g = GLYPHS[ch], job = finalJob(ch);
+  const start = g ? g.sound : '';
+  const close = job && job.group === 'stop';
+  const lead = g ? ch + ' starts like ' + start + ', but at the end it ' + (close ? 'closes as ' : 'reads ') + answer + '.' : 'At the end it reads ' + answer + '.';
+  return lead + (job ? ' ' + job.effect + '.' : '');
+}
 function finalSoundQuestion(w){
   const f = wordFrame(w);
   if(!f || !f.final) return null;
@@ -3740,13 +4418,12 @@ function finalSoundQuestion(w){
   if(!job) return null;
   const answer = f.sound || job.sound;
   const focus = f.focus || w.thai;
-  const g = GLYPHS[f.final];
-  const start = g ? g.sound : '';
   return {kind:'mcq', prompt:focus, promptBig:true,
     text:'Ending job: what sound does ' + f.final + ' make here?',
     answer, options:shuffle([answer,...finalSoundDistractors(f.final, answer)]),
     _choice:'final-sound', axis:'final',
-    explain:(g ? f.final + ' starts as ' + start + ', but ' : '') + 'at the end it reads ' + answer + '. ' + job.effect + '.'};
+    explain:finalJobExplain(f.final, answer),
+    wrongExplain:finalJobExplain(f.final, answer)};
 }
 function finalJobQuestion(ch){
   const job = finalJob(ch), g = GLYPHS[ch];
@@ -3756,7 +4433,8 @@ function finalJobQuestion(ch){
     text:'Ending job: what sound does this letter make at the end?',
     answer, options:shuffle([answer,...finalSoundDistractors(ch, answer)]),
     _choice:'final-job', axis:'final-job',
-    explain:ch + ' starts as ' + g.sound + ', but at the end it reads ' + answer + '. ' + job.effect + '.'};
+    explain:finalJobExplain(ch, answer),
+    wrongExplain:finalJobExplain(ch, answer)};
 }
 function uniqueOptions(answer, opts){
   const out = [answer];
@@ -3859,6 +4537,13 @@ function hasSilentH(thai){
     if(chars[i] === 'ห' && GLYPHS[chars[i+1]] && GLYPHS[chars[i+1]].type === 'c' && GLYPHS[chars[i+1]].cls === 'low') return true;
   }
   return false;
+}
+function silentHLeadConsonant(thai){
+  const chars = thaiChars(thai);
+  for(let i=0;i<chars.length-1;i++){
+    if(chars[i] === 'ห' && GLYPHS[chars[i+1]] && GLYPHS[chars[i+1]].type === 'c' && GLYPHS[chars[i+1]].cls === 'low') return chars[i+1];
+  }
+  return '';
 }
 function hasSilentOLead(thai){ return /^อย[ู่า่างก]?/.test(String(thai||'')); }
 function thaiVowelPatternTokens(thai){
@@ -4027,6 +4712,7 @@ function isCheckpointIndex(i){ return i % CHK_EVERY === 2; }       // after less
 function checkpointId(i){ return 'chk'+i; }
 function checkpointPassed(i){ return !!(state.checks||{})[checkpointId(i)]; }
 function checkpointReady(i){ return LESSONS.slice(0, i+1).every(L=>state.done.includes(L.id)); }   // its lessons all done
+function checkpointRangeLabel(i){ return 'Lessons 1-' + (i+1); }
 // a lesson at index `idx` is locked while any earlier ready checkpoint is unpassed - no skipping the gate
 function lessonLockedByCheck(idx){
   for(let i=0;i<idx;i++){ if(isCheckpointIndex(i) && checkpointReady(i) && !checkpointPassed(i)) return true; }
@@ -4096,11 +4782,42 @@ function nodeDone(n){
 }
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
 function launchNode(n){
+  if(n.retention){ startRetentionCheck(n.retention); return; }
   if(n.lesson){ startLessonFromUser(n.lesson); return; }
   if(n.letters42){ startLettersBoss(); return; }                          // capstone - only a ≥90% pass marks it
   if(n.type === 'checkpoint'){ startCheckpoint(n.checkpoint); return; }   // not marked done here - only a ≥80% pass marks it
   if(!state.pathDone) state.pathDone = {}; state.pathDone[n.id] = true; saveState();
   if(n.go) n.go();
+}
+function bossRematchItems(target){
+  const s = target || state;
+  const checks = s.checks || {};
+  const items = [];
+  LESSONS.forEach((L,i)=>{
+    if(isCheckpointIndex(i) && checks[checkpointId(i)]){
+      items.push({id:checkpointId(i), label:checkpointRangeLabel(i), sub:'80% mastery gate', go:()=>startCheckpointRematch(i)});
+    }
+  });
+  if(checks.letters42) items.push({id:'letters42', label:'Letters boss', sub:'class of all 42', go:()=>startLettersBoss(true)});
+  return items;
+}
+function renderBossRematches(){
+  const block = el('boss-rematch-block'), host = el('boss-rematches');
+  if(!block || !host) return;
+  const items = bossRematchItems();
+  block.hidden = !items.length;
+  if(!items.length){ host.innerHTML = ''; return; }
+  host.innerHTML = items.map((item,idx)=>`
+    <button class="rematch-card" data-rematch="${idx}">
+      <div class="t">${esc(item.label)}</div>
+      <div class="d">${esc(item.sub)} · no extra reward</div>
+    </button>`).join('');
+  host.querySelectorAll('[data-rematch]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const item = items[+b.dataset.rematch];
+      if(item && item.go) item.go();
+    });
+  });
 }
 function renderRail(){
   const host = el('path-now'); if(!host) return;
@@ -4136,6 +4853,14 @@ function renderRail(){
       <div class="pn-sub">${due} card${due>1?'s':''} waiting. New material opens after the warm-up.</div>
       <button class="btn full path-start" id="path-review">Review ${due} →</button></div>`;
     el('path-review').onclick = goReview;
+  } else if(phase === 'retention'){
+    const item = nextRetentionCheck(), L = item && lessonById(item.lessonId);
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">⏱ delayed check</div>
+      <div class="pn-label">${esc(item ? retentionStageLabel(item.stage) + ' · Lesson ' + lessonNum(item.lessonId) : 'Delayed check')}</div>
+      <div class="pn-sub">${esc(L ? L.title : 'Completed is not mastered yet.')} · 80% to pass</div>
+      <button class="btn full path-start" id="path-retention">Take the check →</button></div>`;
+    el('path-retention').onclick = ()=>{ if(item) startRetentionCheck(item); };
   } else if(phase === 'bonus'){
     const bonus = earlyBonusLessonCandidate();
     host.innerHTML = `<div class="path-now">
@@ -4183,7 +4908,7 @@ function renderHome(){
     } else _wb.style.display = 'none';
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderClassTiles(); renderHeatmap(); renderProgressWall(); renderConstellation();
+  ensureDay(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderHeatmap(); renderProgressWall(); renderConstellation();
 }
 function findWordInLessons(thai){
   for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
@@ -4752,7 +5477,7 @@ function renderLearn(){
         <div class="glyphs">👑</div>
         <div class="meta"><div class="t">Mastery check · lessons 1-${i+1}</div><div class="d">~12 Qs · type the sounds from memory + decode · 80% to pass · free retries · ${passed?'passed ✓':'+15💎 first pass'}</div></div>
         <div class="state">${stateTxt}</div>`;
-      if(ready) ck.addEventListener('click', ()=>startCheckpoint(i));
+      if(ready) ck.addEventListener('click', ()=>passed ? startCheckpointRematch(i) : startCheckpoint(i));
       list.appendChild(ck);
       // First genuine baseline comes after Unit A: script gate + objective ear check.
       // Speaking remains practice evidence because a free static app cannot grade pronunciation honestly.
@@ -4780,7 +5505,7 @@ function renderLearn(){
     <div class="glyphs">🏆</div>
     <div class="meta"><div class="t">Letters boss · class of all 42</div><div class="d">${_allDone ? (_lbPassed ? 'passed ✓ · the whole alphabet is yours' : '≥90% on every consonant · +30💎 + a title') : 'finish all 24 lessons to unlock'}</div></div>
     <div class="state">${_allDone ? (_lbPassed ? '👑 retake' : 'prove it →') : '🔒'}</div>`;
-  if(_allDone) lb.addEventListener('click', startLettersBoss);
+  if(_allDone) lb.addEventListener('click', ()=>startLettersBoss(_lbPassed));
   list.appendChild(lb);
   renderWall();
 }
@@ -4852,9 +5577,11 @@ function buildCheckpointQuiz(upTo){
   const nOther = Math.min(others.length, 12 - nType);
   return shuffle(sample(types, nType).concat(sample(others, nOther)));
 }
-function startCheckpoint(i){
-  startGenericQuiz(buildCheckpointQuiz(i), 'Mastery check', {timed:15, checkpoint:i});
+function startCheckpoint(i, opts){
+  const extra = opts || {};
+  startGenericQuiz(buildCheckpointQuiz(i), extra.rematch ? 'Boss rematch · ' + checkpointRangeLabel(i) : 'Mastery check', Object.assign({timed:15, checkpoint:i}, extra));
 }
+function startCheckpointRematch(i){ startCheckpoint(i, {rematch:true}); }
 function buildFoundationEarQuiz(){
   const pool = LESSONS.slice(0,6).flatMap(lessonCoreWords);
   const taught = taughtGlyphSet(LESSONS.slice(0,6).map(L=>L.id));
@@ -4878,7 +5605,7 @@ function buildLettersBossQuiz(){
     explain: GLYPHS[ch].cls==='mid' ? 'mid (the chicken-pecks 9)' : GLYPHS[ch].cls==='high' ? 'high (breathy / hissy)' : 'not mid or high → low'
   })));
 }
-function startLettersBoss(){ startGenericQuiz(buildLettersBossQuiz(), 'Letters boss', {letters42:true}); }
+function startLettersBoss(rematch){ startGenericQuiz(buildLettersBossQuiz(), rematch ? 'Boss rematch · Letters boss' : 'Letters boss', {letters42:true, rematch:!!rematch}); }
 
 /* =====================================================
    LESSON PLAYER
@@ -4899,7 +5626,7 @@ function startLesson(L, opts){
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
   const finalGlyphs = finalGlyphsForLesson(L);
-  player = {type:'lesson', L, pre, weN, finalGlyphs, steps: pre.length + L.glyphs.length + finalGlyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0, earlyBonus:!!(opts&&opts.earlyBonus)};
+  player = {type:'lesson', L, pre, weN, finalGlyphs, payoff:lessonPayoff(L), steps: pre.length + L.glyphs.length + finalGlyphs.length + weN + 1 + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0, earlyBonus:!!(opts&&opts.earlyBonus)};
   openOverlay(); renderLessonStep();
 }
 function renderLessonSpeak(p){
@@ -4938,6 +5665,48 @@ function renderLessonSpeak(p){
   };
   el('speak-skip').onclick = ()=>{ p.speakIdx++; renderLessonSpeak(p); };
 }
+function renderLessonPayoff(p){
+  const payoff = p.payoff || lessonPayoff(p.L);
+  if(!payoff){ p.i++; renderLessonStep(); return; }
+  clearLocalRecording();
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Useful payoff</div><h2>Decode first</h2></div>
+    <div class="payoff-card">
+      <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
+      <div class="sub" style="text-align:center">Read the Thai before revealing meaning.</div>
+      <div class="stage-actions" id="payoff-reveal-wrap">
+        <button class="btn full" id="payoff-reveal">I decoded it · reveal audio and use →</button>
+      </div>
+    </div>
+    <div class="stage-actions">
+      <button class="btn ghost" id="st-back">Back</button>
+    </div>`;
+  const back = el('st-back');
+  if(back) back.onclick = ()=>{ p.i = Math.max(0, p.i-1); renderLessonStep(); };
+  el('payoff-reveal').onclick = ()=>{
+    el('stage').innerHTML = `
+      <div class="center"><div class="eyebrow">Useful payoff</div><h2>${esc(payoff.capability)}</h2></div>
+      <div class="payoff-card">
+        <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
+        <div class="fc-tr" style="text-align:center">${esc(payoff.tr)}</div>
+        <div class="payoff-context"><b>Meaning after decoding:</b> ${esc(payoff.meaning)}<br>${esc(payoff.context)}</div>
+        <div class="row" style="justify-content:center;gap:10px;margin:14px 0">${speakBtn(payoff.thai, 'Hear: '+payoff.thai)}</div>
+        <div class="compare-box">
+          <div class="q-feedback" style="margin-bottom:8px">Say it once from Thai script. Record only if you want to compare.</div>
+          <button class="btn full ghost record-btn" id="payoff-record">Record yourself</button>
+          <audio class="own-audio" id="payoff-own" controls style="display:none"></audio>
+        </div>
+      </div>
+      <div class="stage-actions"><button class="btn full" id="payoff-next">Start the quiz →</button></div>`;
+    const rb = el('payoff-record'), au = el('payoff-own');
+    rb.onclick = ()=>toggleLocalRecording(rb, au);
+    speak(payoff.thai);
+    logSpeakAttempt();
+    state.lastCapability = {date:todayStr(), text:payoff.capability};
+    saveState();
+    el('payoff-next').onclick = ()=>{ clearLocalRecording(); p.i++; renderLessonStep(); };
+  };
+}
 function renderLessonFinalJob(p, ch, idx){
   const stage = el('stage'), g = GLYPHS[ch], job = finalJob(ch);
   stage.innerHTML = `
@@ -4962,7 +5731,7 @@ function renderLessonStep(){
   const p = player, L = p.L, stage = el('stage');
   const nPre = p.pre.length, nGly = L.glyphs.length, nFinal = p.finalGlyphs.length, nWe = p.weN;
   const preStart = 0, glyphStart = preStart+nPre, finalStart = glyphStart+nGly, weIndex = finalStart+nFinal;
-  const wordsIndex = weIndex+nWe, speakIndex = wordsIndex+1, quizStart = speakIndex+1;
+  const wordsIndex = weIndex+nWe, speakIndex = wordsIndex+1, payoffIndex = speakIndex+1, quizStart = payoffIndex+1;
   setProg(Math.round(100 * p.i / p.steps));
   // concept pages
   if(p.i < preStart + nPre){
@@ -5082,6 +5851,9 @@ function renderLessonStep(){
   else if(p.i === speakIndex){
     renderLessonSpeak(p); return;
   }
+  else if(p.i === payoffIndex){
+    renderLessonPayoff(p); return;
+  }
   // quiz steps
   else if(p.i < quizStart + p.quiz.length){
     const q = p.quiz[p.qIdx];
@@ -5109,6 +5881,8 @@ function finishLesson(){
     state.done.push(L.id);
     L.glyphs.forEach(g=>srsAdd('g:'+g));
     finalGlyphsForLesson(L).forEach(g=>srsAdd('f:'+g));
+    seedAxisCardsForLesson(L, state, 1);
+    scheduleRetentionForLesson(L.id);
     // pure letters (v2.27): the review deck is letters-only. Words live IN the lesson as decode
     // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards -
     // that was "heavy on definitions of words that don't mean much alone." Letter → class → tone is the spine.
@@ -5353,6 +6127,10 @@ function collectPrerequisiteIssues(){
         else lessonIssues.push(...issues);
       }
     });
+    const payoff = lessonPayoff(L);
+    if(payoff){
+      prerequisiteIssuesForThai(payoff.thai, doneIds, 'lesson-payoff/' + L.id, wordFrame(findWord(payoff.thai))).forEach(i=>lessonIssues.push(Object.assign({lesson:L.id}, i)));
+    }
     buildLessonQuiz(L).forEach(q=>{
       lessonIssues.push(...quizPrerequisiteIssues(q, L, index).map(i=>Object.assign({lesson:L.id}, i)));
       if(q.axis === 'listen'){
@@ -5400,6 +6178,18 @@ function collectPrerequisiteIssues(){
     const gi = LESSONS.findIndex(L=>L.id === card.gate);
     const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
     prerequisiteIssuesForThai(card.thai, doneIds, 'mouth-coach').forEach(i=>poolIssues.push(Object.assign({lesson:card.gate}, i)));
+  });
+  CONTRAST_BLOCKS.forEach(block=>{
+    const gi = LESSONS.findIndex(L=>L.id === block.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    (block.items||[]).forEach(item=>{
+      prerequisiteIssuesForThai(item.thai, doneIds, 'contrast-block/' + block.id, wordFrame(findWord(item.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:block.gate}, i)));
+    });
+  });
+  BANGKOK_MISSIONS.forEach(mission=>{
+    const gi = LESSONS.findIndex(L=>L.id === mission.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    prerequisiteIssuesForThai(mission.thai, doneIds, 'bangkok-mission/' + mission.id, wordFrame(findWord(mission.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:mission.gate}, i)));
   });
   POSTCARDS.forEach(p=>{
     const gi = LESSONS.findIndex(L=>L.id === p.gate);
@@ -5648,7 +6438,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
     const fb = el('q-fb');
-    const hint = q.explain || targetedWrongFeedback(q);
+    const hint = q.wrongExplain || q.explain || targetedWrongFeedback(q);
     fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
     fb.className = 'q-feedback ' + (ok?'ok':'no');
     setTimeout(()=>onDone(ok), ok ? 700 : 1700);
@@ -5989,13 +6779,69 @@ el('cta-hear-thai').addEventListener('click', ()=>{
   if(qs.length < 4){ toast('Finish Lesson 1 first. This uses covered words only.'); return; }
   startGenericQuiz(qs, 'Hear & pick Thai');
 });
+el('cta-contrast').addEventListener('click', ()=>startContrastBlock());
 el('cta-chunk').addEventListener('click', startChunkDrill);
 el('cta-font-shock').addEventListener('click', startFontShock);
 el('cta-mouth').addEventListener('click', showMouthCoach);
+el('cta-mission').addEventListener('click', ()=>showBangkokMissions());
 
 function startFlashcards(queue){
   player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now()};
   openOverlay(); renderFlash();
+}
+function renderAxisSpeakFlash(id, advance, counterLabel){
+  const p = parseAxisId(id), w = p && axisWord(p.key);
+  if(!w){ advance(false); return; }
+  clearLocalRecording();
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Read aloud from Thai</h2></div>
+    <div class="axis-tag">reading aloud axis</div>
+    <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
+    <div class="sub" style="text-align:center">No English cue. Read it once, then reveal the model and compare.</div>
+    <div class="stage-actions"><button class="btn full" id="axis-say-show">I read it · reveal model →</button></div>`;
+  el('axis-say-show').onclick = ()=>{
+    logSpeakAttempt();
+    el('stage').innerHTML = `
+      <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Compare</h2></div>
+      <div class="compare-box">
+        <div class="echo-word" style="margin:0">${classColourThaiHtml(w.thai)}</div>
+        <div class="fc-tr" style="text-align:center">${esc(w.tr)}</div>
+        <div class="compare-audio">
+          <span class="sub">Model</span>${speakBtn(w.thai, 'Hear model: '+w.thai)}
+          <button class="btn small ghost record-btn" id="axis-rec">● Record yourself</button>
+        </div>
+        <audio class="own-audio" id="axis-own" controls style="display:none"></audio>
+        <div class="sub" style="font-size:11px;margin-top:8px">Check the contrast named by the lesson. This is practice evidence, not certified mastery.</div>
+      </div>
+      <div class="rw-grid">
+        <button class="btn ghost" id="axis-again">Needs another pass</button>
+        <button class="btn" id="axis-good">Clear enough</button>
+      </div>`;
+    const rb = el('axis-rec'), au = el('axis-own');
+    rb.onclick = ()=>toggleLocalRecording(rb, au);
+    speak(w.thai);
+    el('axis-again').onclick = ()=>{ clearLocalRecording(); advance(false); };
+    el('axis-good').onclick = ()=>{ clearLocalRecording(); advance(true); };
+  };
+}
+function renderAxisTransferFlash(id, advance, counterLabel){
+  const p = parseAxisId(id), L = p && lessonById(p.key), payoff = L && lessonPayoff(L);
+  if(!payoff){ advance(false); return; }
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Transfer check</h2></div>
+    <div class="payoff-card">
+      <div class="axis-tag">real-world transfer axis</div>
+      <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
+      <div class="fc-tr" style="text-align:center">${esc(payoff.tr)}</div>
+      <div class="payoff-context">${esc(payoff.context)}</div>
+      <div class="capability-line">${esc(payoff.capability)}</div>
+    </div>
+    <div class="rw-grid">
+      <button class="btn ghost" id="axis-transfer-again">Not yet</button>
+      <button class="btn" id="axis-transfer-good">I can spot/use this</button>
+    </div>`;
+  el('axis-transfer-again').onclick = ()=>advance(false);
+  el('axis-transfer-good').onclick = ()=>advance(true);
 }
 function renderFlash(){
   const p = player;
@@ -6037,6 +6883,15 @@ function renderFlash(){
   }
   setProg(Math.round(100*p.i/p.queue.length));
   const id = p.queue[p.i];
+  const axis = parseAxisId(id);
+  if(axis && axis.axis === 'say'){
+    renderAxisSpeakFlash(id, advance, `${p.i+1} of ${p.queue.length}`);
+    return;
+  }
+  if(axis && axis.axis === 'transfer'){
+    renderAxisTransferFlash(id, advance, `${p.i+1} of ${p.queue.length}`);
+    return;
+  }
   const sayText = cardSay(id);
   // graduation gate (v2.22): a phrase stays ear-first (listening) until its letters are decodable;
   // lesson words are decodable by definition. Decodable phrases + words: reading MC, with 30% listening for variety.
@@ -6086,7 +6941,9 @@ function renderFlash(){
   }
 
   // READING / ALPHABET → objective multiple choice (you never rate yourself)
-  renderQuizQ(mcCard(id), advance, `${p.i+1} of ${p.queue.length}`, 0);
+  const q = mcCard(id);
+  if(q.kind === 'type') renderTypeQ(q, advance, `${p.i+1} of ${p.queue.length}`);
+  else renderQuizQ(q, advance, `${p.i+1} of ${p.queue.length}`, 0);
 }
 
 function buildMixedQuiz(){
@@ -6133,6 +6990,153 @@ function buildHearPickThaiQuiz(){
     return {kind:'mcq', text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
+}
+function contrastRoundOptions(block, target){
+  const opts = block.items.map(item=>item.thai);
+  if(!opts.includes(target.thai)) opts.push(target.thai);
+  return shuffle(opts);
+}
+function startContrastBlock(block){
+  const chosen = block || nextContrastBlock() || contrastBlocks()[0];
+  if(!chosen){ toast('Contrast blocks open once Lesson 4 sound contrasts are covered.'); return; }
+  const rounds = sample(chosen.items, Math.min(4, chosen.items.length)).map(target=>({
+    target,
+    options:contrastRoundOptions(chosen, target)
+  }));
+  player = {type:'contrast', block:chosen, rounds, i:0, phase:'listen', correct:0, clear:0};
+  openOverlay();
+  renderContrastBlock();
+}
+function finishContrastBlock(){
+  const p = player, block = p.block;
+  if(!state.contrastLog) state.contrastLog = {};
+  const prev = state.contrastLog[block.id] || {};
+  state.contrastLog[block.id] = {last:todayStr(), n:(prev.n||0)+1, correct:p.correct, clear:p.clear};
+  state.lastCapability = {date:todayStr(), text:block.capability};
+  markDailyDepth(['contrast','speak']);
+  bumpStreak(); award(2); questCheck();
+  setProg(100);
+  el('stage').innerHTML = `
+    <div class="result-big">${p.correct} / ${p.rounds.length}</div>
+    <div class="result-sub">${esc(block.title)} contrast banked · ${p.clear} self-check${p.clear===1?'':'s'} clear · +2💎</div>
+    <div class="result-sub" style="font-size:12px">${esc(block.capability)}</div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+}
+function renderContrastBlock(){
+  const p = player;
+  clearLocalRecording();
+  if(p.i >= p.rounds.length){ finishContrastBlock(); return; }
+  const round = p.rounds[p.i], target = round.target, block = p.block;
+  setProg(Math.round(100*(p.i + (p.phase === 'imitate' ? .5 : 0))/p.rounds.length));
+  if(p.phase === 'imitate'){
+    el('stage').innerHTML = `
+      <div class="center"><div class="eyebrow">Contrast block · ${p.i+1} of ${p.rounds.length}</div><h2>${esc(block.title)}</h2></div>
+      <div class="contrast-card">
+        <div class="contrast-word">${classColourThaiHtml(target.thai)}</div>
+        <div class="fc-tr" style="text-align:center;color:var(--muted)">${esc(target.tr)}</div>
+        <div class="contrast-focus">${esc(block.focus)}</div>
+        <div class="row" style="justify-content:center;gap:10px;margin:14px 0">
+          ${speakBtn(target.thai)}
+          <button class="btn small ghost" id="contrast-slow">slow</button>
+        </div>
+        <div class="compare-box">
+          <div class="q-feedback" style="margin-bottom:8px">Read from Thai, record, wait a moment, then play yourself back beside the model.</div>
+          <button class="btn full ghost record-btn" id="contrast-record">Record yourself</button>
+          <audio class="own-audio" id="contrast-own" controls style="display:none"></audio>
+          <div class="sub" style="font-size:11px;margin-top:8px">No pronunciation score. Check the specific contrast: ${esc(block.contrast)}.</div>
+        </div>
+        <div class="contrast-rubric">
+          <button class="btn ghost" id="contrast-shaky">Needs another pass</button>
+          <button class="btn" id="contrast-clear">Contrast clear</button>
+        </div>
+      </div>`;
+    el('contrast-slow').onclick = ()=>speak(target.thai, el('contrast-slow'), 0.4);
+    const rb = el('contrast-record'), au = el('contrast-own');
+    rb.onclick = ()=>toggleLocalRecording(rb, au);
+    el('contrast-shaky').onclick = ()=>{ logSpeakAttempt(); p.phase='listen'; p.i++; renderContrastBlock(); };
+    el('contrast-clear').onclick = ()=>{ logSpeakAttempt(); p.clear++; p.phase='listen'; p.i++; renderContrastBlock(); };
+    return;
+  }
+  el('stage').innerHTML = `
+    <div class="q-prompt">
+      <div class="eyebrow">Contrast block · ${p.i+1} of ${p.rounds.length}</div>
+      <div class="q-text">Listen first. Which Thai did you hear?</div>
+      <div class="audio-inline">${speakBtn(target.thai, 'Hear model')}</div>
+    </div>
+    <div class="q-options">
+      ${round.options.map(opt=>`<button class="q-opt thai-opt" data-opt="${esc(opt)}">${classColourThaiHtml(opt)}</button>`).join('')}
+    </div>
+    <div class="q-feedback" id="q-fb"></div>`;
+  setTimeout(()=>speak(target.thai), 350);
+  el('stage').querySelectorAll('[data-opt]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const ok = b.dataset.opt === target.thai;
+      el('stage').querySelectorAll('[data-opt]').forEach(x=>{
+        x.disabled = true;
+        if(x.dataset.opt === target.thai) x.classList.add('correct');
+      });
+      if(!ok) b.classList.add('wrong');
+      if(ok) p.correct++;
+      const fb = el('q-fb');
+      fb.textContent = ok ? 'Correct' : 'Answer: ' + target.thai + '. ' + target.tr;
+      fb.className = 'q-feedback ' + (ok ? 'ok' : 'no');
+      setTimeout(()=>{ p.phase = 'imitate'; renderContrastBlock(); }, ok ? 700 : 1300);
+    });
+  });
+}
+function markBangkokMissionDone(mission){
+  const store = ensureMissions();
+  const prev = store.done[mission.id] || {};
+  const first = !prev.last;
+  const countedToday = missionDoneToday();
+  store.done[mission.id] = {last:todayStr(), n:(prev.n||0)+1};
+  state.lastCapability = {date:todayStr(), text:mission.capability};
+  if(!countedToday){
+    markDailyDepth('transfer');
+  }
+  saveState(); bumpStreak();
+  if(first) award(2);
+  questCheck();
+  toast(first ? 'Mission checked off · +2💎' : 'Mission checked off');
+}
+function showBangkokMissions(focusId){
+  const items = bangkokMissions();
+  player = {type:'missions'};
+  openOverlay();
+  setProg(0);
+  if(!items.length){
+    el('stage').innerHTML = `<div class="center"><h2>Bangkok mission</h2><p class="sub">Missions open once Lesson 3 gives you enough real-world Thai to spot.</p></div>`;
+    return;
+  }
+  const done = ensureMissions().done || {};
+  const focus = focusId || (nextBangkokMission() || items[0]).id;
+  el('stage').innerHTML = `
+    <div class="center"><h2>Bangkok mission</h2><p class="sub">No camera, upload, location or web access. Tick only what you actually notice or rehearse outside the app.</p></div>
+    <div class="sign-list">
+      ${items.map(item=>{
+        const seen = done[item.id];
+        const today = item.id === focus && !missionDoneToday();
+        return `<div class="mission-card ${today?'today':''}">
+          <div class="eyebrow">${today ? 'Today' : (seen ? 'Done before' : 'Available')}</div>
+          <h3 style="margin:4px 0">${esc(item.title)}</h3>
+          <div class="thai">${classColourThaiHtml(item.thai)}</div>
+          <div class="sub">${esc(item.tr)}</div>
+          <p class="sub" style="margin-top:8px">${esc(item.action)}</p>
+          <div class="capability-line">${esc(item.capability)}</div>
+          <div class="row" style="margin-top:10px;gap:8px">${speakBtn(item.thai)}<button class="btn small ${seen?'ghost':''}" data-mission="${item.id}">${seen && seen.last===todayStr() ? 'Done today' : 'I did this'}</button></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('stage').querySelectorAll('[data-mission]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const item = BANGKOK_MISSIONS.find(m=>m.id===b.dataset.mission);
+      if(item) markBangkokMissionDone(item);
+      showBangkokMissions(item && item.id);
+    });
+  });
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
 }
 function chunkLabel(item){ return item.chunks.join(' / '); }
 function transferItemAvailable(item, doneIds){
@@ -6260,11 +7264,12 @@ function showMouthCoach(){
   el('stage').innerHTML = `
     <div class="center"><h2>Mouth coach</h2><p class="sub">Slow read-aloud cards. The app does not grade pronunciation.</p></div>
     ${cards.map((card,idx)=>`
-      <div class="mouth-card">
+      <div class="mouth-card ${card.contrast ? 'contrast' : ''}">
         <div class="eyebrow">${esc(card.title)}</div>
         <div class="thai">${classColourThaiHtml(card.thai)}</div>
         <div class="sub">${esc(card.tr)}</div>
         <div class="sub" style="font-size:12px;margin:8px 0">${esc(card.note)}</div>
+        ${card.tips ? `<ul class="coach-tips">${card.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>` : ''}
         <div class="row" style="gap:8px">${speakBtn(card.thai)}<button class="btn small ghost" data-mouth="${idx}">open in Echo</button></div>
       </div>`).join('')}
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
@@ -6404,8 +7409,8 @@ function nextGenericQ(){
 	  if(p.i >= p.qs.length){
 	    setProg(100);
 	    const d = ensureDay();
-	    if(p.opts.checkpoint == null && !p.opts.letters42) d.d++;
-	    saveState();
+	    if(p.opts.checkpoint == null && !p.opts.letters42 && !p.opts.retention) markDailyDepth('practice');
+	    else saveState();
     bumpStreak();
     const pct = Math.round(100*p.correct/p.qs.length);
     let subline = pct>=80 ? 'Strong.' : 'Worth another pass. The deck remembers what you miss.';
@@ -6424,37 +7429,39 @@ function nextGenericQ(){
       }
       saveState();
     }
-    if(p.opts.letters42){
-      const passed = pct >= 90;                        // capstone bar is higher than a checkpoint
-      questCheck();
-	      if(passed){
-	        if(!state.checks) state.checks = {};
-	        const first = !state.checks.letters42;
-	        state.checks.letters42 = true;
-	        d.m = (d.m||0) + 1;
-	        if(first){ award(30); if(!state.titles) state.titles = []; if(!state.titles.includes('reader')) state.titles.push('reader'); }
-	        saveState();
-        el('stage').innerHTML = `
-          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">🏆 You know the class of all 42. ${first ? 'The alphabet is yours. Phase 1 complete · +30💎 + the title นักอ่าน (the reader)' : 'Still sharp.'}</div>
-          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
-        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
-      } else {
-        const missed = (p.missed||[]).slice();
-        el('stage').innerHTML = `
-          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">The boss needs 90%. You are at ${pct}%. Drill the misses and come back.</div>
-          <div class="stage-actions">
-            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
-            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
-            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
-          </div>`;
-        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
-        el('ck-retake').onclick = ()=>startLettersBoss();
-        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
-      }
-      return;
-    }
+	    if(p.opts.letters42){
+	      const passed = pct >= 90;                        // capstone bar is higher than a checkpoint
+	      const rematch = !!p.opts.rematch;
+	      if(rematch){ d.d++; saveState(); }
+	      questCheck();
+		      if(passed){
+		        if(!state.checks) state.checks = {};
+		        const first = !state.checks.letters42;
+		        state.checks.letters42 = true;
+		        if(!rematch) d.m = (d.m||0) + 1;
+		        if(first && !rematch){ award(30); if(!state.titles) state.titles = []; if(!state.titles.includes('reader')) state.titles.push('reader'); }
+		        saveState();
+	        el('stage').innerHTML = `
+	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+	          <div class="result-sub">🏆 You know the class of all 42. ${rematch ? 'Boss rematch complete. Still sharp.' : first ? 'The alphabet is yours. Phase 1 complete · +30💎 + the title นักอ่าน (the reader)' : 'Still sharp.'}</div>
+	          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
+	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+	      } else {
+	        const missed = (p.missed||[]).slice();
+	        el('stage').innerHTML = `
+	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+	          <div class="result-sub">${rematch ? 'Rematch score: ' : 'The boss needs 90%. '}You are at ${pct}%. Drill the misses and come back.</div>
+	          <div class="stage-actions">
+	            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+	            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
+	            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
+	          </div>`;
+	        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
+	        el('ck-retake').onclick = ()=>startLettersBoss(rematch);
+	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+	      }
+	      return;
+	    }
     if(p.opts.foundationEar){
       const stats = ensureSkillStats();
       stats.foundationEar = {pct, date:todayStr()};
@@ -6470,35 +7477,69 @@ function nextGenericQ(){
       el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       return;
     }
-    if(p.opts.checkpoint != null){
-      const i = p.opts.checkpoint, passed = pct >= 80;
-      questCheck();
-	      if(passed){
-	        if(!state.checks) state.checks = {};
-	        const first = !state.checks[checkpointId(i)];
-	        state.checks[checkpointId(i)] = true; d.m = (d.m||0) + 1; saveState();
+    if(p.opts.retention){
+      const item = p.opts.retention, L = lessonById(item.lessonId), passed = pct >= 80;
+      const rec = retentionRecord(state, item.lessonId);
+      if(rec){
+        rec.attempts = rec.attempts || {retained:0, stabilised:0};
+        rec.attempts[retentionStageKey(item.stage)] = (rec.attempts[retentionStageKey(item.stage)] || 0) + 1;
+      }
+      if(passed && rec){
+        rec[retentionStageKey(item.stage)] = todayStr();
+        if(item.stage === 'retained' && !rec.due7) rec.due7 = isoPlusDays(todayStr(), 6);
+        d.ret = (d.ret||0) + 1;
+        state.lastCapability = {date:todayStr(), text:(L ? 'Lesson ' + lessonNum(L.id) + ' moved from completed toward retained mastery.' : 'Delayed mastery check passed.')};
+        saveState(); questCheck();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">👑 ${first ? 'Mastery proven. Next lessons unlocked · +15💎' : 'Still sharp. Unlocked.'}</div>
+          <div class="result-sub">${esc(retentionStageLabel(item.stage))} passed. ${L ? esc(L.title) : 'Lesson'} is now ${item.stage === 'stabilised' ? 'stabilised' : 'retained'}.</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
-        if(first) award(15);
-        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       } else {
-        const missed = (p.missed||[]).slice();
+        saveState(); questCheck();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">Not quite. You need 80%. Review the misses, then retake.</div>
+          <div class="result-sub">Not retained yet. You need 80%. This check stays due, because completed is not mastered.</div>
           <div class="stage-actions">
-            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
-            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the check →</button>
+            <button class="btn full" id="retention-retry">Retry now →</button>
             <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
           </div>`;
-        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Review the misses', {});
-        el('ck-retake').onclick = ()=>startCheckpoint(i);
-        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+        el('retention-retry').onclick = ()=>startRetentionCheck(item);
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       }
       return;
     }
+	    if(p.opts.checkpoint != null){
+	      const i = p.opts.checkpoint, passed = pct >= 80;
+	      const rematch = !!p.opts.rematch;
+	      if(rematch){ d.d++; saveState(); }
+	      questCheck();
+		      if(passed){
+		        if(!state.checks) state.checks = {};
+		        const first = !state.checks[checkpointId(i)];
+		        state.checks[checkpointId(i)] = true; if(!rematch) d.m = (d.m||0) + 1; saveState();
+	        el('stage').innerHTML = `
+	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+	          <div class="result-sub">👑 ${rematch ? 'Boss rematch complete. Still sharp.' : first ? 'Mastery proven. Next lessons unlocked · +15💎' : 'Still sharp. Unlocked.'}</div>
+	          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
+	        if(first && !rematch) award(15);
+	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+	      } else {
+	        const missed = (p.missed||[]).slice();
+	        el('stage').innerHTML = `
+	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+	          <div class="result-sub">${rematch ? 'Rematch score under 80%.' : 'Not quite. You need 80%.'} Review the misses, then retake.</div>
+	          <div class="stage-actions">
+	            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+	            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the check →</button>
+	            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
+	          </div>`;
+	        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Review the misses', {});
+	        el('ck-retake').onclick = ()=>rematch ? startCheckpointRematch(i) : startCheckpoint(i);
+	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
+	      }
+	      return;
+	    }
     questCheck();
     el('stage').innerHTML = `
       <div class="result-big">${p.correct} / ${p.qs.length}</div>
@@ -6848,6 +7889,9 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV5MigrationContracts();
   validateV501FoundationRefreshContracts();
   validateV5TransferContracts();
+  validateV51PolishContracts();
+  validateV52BridgeContracts();
+  validateV52FullBriefContracts();
   await loadState();
   const migrated = repairStateForV5(state);
   const migrated501 = repairStateForV501(state);

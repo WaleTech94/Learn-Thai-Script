@@ -173,7 +173,7 @@ globalThis.__phase1Audit = (function(){
   }
   function surfaceRow(id, name, availableItems, servedCount, cap, rawCount, prereq, role){
     const availableCount = Array.isArray(availableItems) ? availableItems.length : availableItems;
-    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories','sign-safari':'signs','mouth-coach':'cards'}[id]) || 'items';
+    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories','sign-safari':'signs','mouth-coach':'cards','contrast-block':'blocks','bangkok-mission':'missions','axis-review':'cards','retention-check':'checks'}[id]) || 'items';
     return {
       id,
       name,
@@ -301,6 +301,45 @@ globalThis.__phase1Audit = (function(){
     row.excludedDetail = {decodeRoleExcluded:decodeExcluded, insufficientDistractorWords:noDistractorExcluded};
     return row;
   }
+  function payoffSurface(doneIds){
+    const raw = doneIds.map(id=>lessonPayoff(lessonById(id))).filter(Boolean);
+    return surfaceRow(
+      'lesson-payoff',
+      'Lesson payoff',
+      raw.map(p=>({thai:p.thai})),
+      raw.length ? 1 : 0,
+      1,
+      raw.length,
+      prereqStatus(raw.map(p=>({thai:p.thai})), doneIds, 'lesson-payoff'),
+      roleContract('N/A', [], 'decode first, then meaning/context/use reveal')
+    );
+  }
+  function axisReviewSurface(doneIds){
+    const raw = doneIds.flatMap(id=>axisCardIdsForLesson(lessonById(id)));
+    const available = raw.filter(id=>axisCardAllowedForDone(id, doneIds));
+    return surfaceRow(
+      'axis-review',
+      'Axis review',
+      available,
+      available.length ? Math.min(40, available.length) : 0,
+      40,
+      raw.length,
+      {status:available.length === raw.length ? 'PASS' : 'FAIL', issueCount:raw.length - available.length, issues:[]},
+      roleContract('N/A', [], 'separate SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer')
+    );
+  }
+  function retentionSurface(doneIds){
+    return surfaceRow(
+      'retention-check',
+      'Delayed retention',
+      doneIds.length,
+      doneIds.length ? 1 : 0,
+      1,
+      doneIds.length,
+      {status:'PASS', issueCount:0, issues:[]},
+      roleContract('N/A', [], '+1 day retained and +7 day stabilised checks; one due lesson served per day')
+    );
+  }
   function storySurface(doneIds){
     const raw = STORIES.filter(s=>doneIds.includes(s.gate));
     const available = raw.filter(s=>!(s.lines||[]).flat().some(w=>prerequisiteIssuesForThai(itemThai(w), doneIds, 'story/' + s.id).length));
@@ -374,6 +413,35 @@ globalThis.__phase1Audit = (function(){
       roleContract('N/A', [], 'script-cued read-aloud coaching; no pronunciation score')
     );
   }
+  function contrastSurface(doneIds){
+    const raw = CONTRAST_BLOCKS.filter(block=>lessonGateMet(block.gate, doneIds));
+    const available = contrastBlocks(doneIds);
+    const flatItems = available.flatMap(block=>(block.items||[]).map(item=>({thai:item.thai})));
+    return surfaceRow(
+      'contrast-block',
+      'Contrast Block',
+      available,
+      available.length ? 1 : 0,
+      1,
+      raw.length,
+      prereqStatus(flatItems, doneIds, 'contrast-block'),
+      roleContract('N/A', [], 'listen-first contrast plus script-cued record/compare; no pronunciation score')
+    );
+  }
+  function missionSurface(doneIds){
+    const raw = BANGKOK_MISSIONS.filter(mission=>lessonGateMet(mission.gate, doneIds));
+    const available = bangkokMissions(doneIds);
+    return surfaceRow(
+      'bangkok-mission',
+      'Bangkok Mission',
+      available.map(mission=>({thai:mission.thai})),
+      available.length ? 1 : 0,
+      1,
+      raw.length,
+      prereqStatus(available.map(mission=>({thai:mission.thai})), doneIds, 'bangkok-mission'),
+      roleContract('N/A', [], 'local self-check; no camera, upload, location or web access')
+    );
+  }
   function surfaceAudit(doneIds, taught){
     return [
       hearPickSurface(doneIds),
@@ -382,11 +450,16 @@ globalThis.__phase1Audit = (function(){
       soundTwinsSurface(doneIds, taught),
       toneListeningSurface(doneIds, taught),
       mixedReviewSurface(doneIds, taught),
+      payoffSurface(doneIds),
+      axisReviewSurface(doneIds),
+      retentionSurface(doneIds),
       storySurface(doneIds),
       chunkSurface(doneIds),
       signSafariSurface(doneIds),
       fontShockSurface(doneIds),
-      mouthCoachSurface(doneIds)
+      mouthCoachSurface(doneIds),
+      contrastSurface(doneIds),
+      missionSurface(doneIds)
     ];
   }
   function workloadAudit(L, index){
@@ -492,6 +565,9 @@ globalThis.__phase1Audit = (function(){
         learnedGlyphs,
         learnedStarts:learnedGlyphs.filter(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c'),
         learnedFinals:learnedFinalGlyphIds(doneIds),
+        payoff:lessonPayoff(L),
+        axisCards:doneIds.flatMap(id=>axisCardIdsForLesson(lessonById(id))).length,
+        retention:{completed:doneIds.length, servedPerDay:doneIds.length ? 1 : 0},
         toneItems,
         twinSets,
         echoItems,
@@ -517,7 +593,10 @@ globalThis.__phase1Audit = (function(){
     validatorResult('misconceptionChoices', validateMisconceptionChoiceContracts),
     validatorResult('v5Migration', validateV5MigrationContracts),
     validatorResult('v501FoundationRefresh', validateV501FoundationRefreshContracts),
-    validatorResult('v5Transfer', validateV5TransferContracts)
+    validatorResult('v5Transfer', validateV5TransferContracts),
+    validatorResult('v51Polish', validateV51PolishContracts),
+    validatorResult('v52Bridge', validateV52BridgeContracts),
+    validatorResult('v52FullBrief', validateV52FullBriefContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
