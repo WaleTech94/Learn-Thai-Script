@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v4.9 — 2026-06-26
+
+- Promoted ending jobs into first-class teaching cards from Lesson 2 onward, so finals are taught like starts instead of only appearing inside word sublines.
+- Added `f:` final/ending-job review cards, including a migration that seeds them for lessons already completed.
+- Added ending-job recall to lesson quizzes, checkpoints, unit boss quizzes and mixed review, with review-choice and final-sound contracts guarding the coverage.
+- Added a tracked Phase 1 audit extractor at `tools/phase1-audit.js`.
+- Added generated audit surfaces at `docs/phase1_audit.md` and `docs/phase1_audit.json` so each day’s lessons, quiz prompts, final jobs, practice pools and validator results can be reviewed together.
+- Kept lesson order, mastery gates and existing state keys unchanged.
+
 ## v4.8 — 2026-06-26
 
 - Fixed a Lesson 5 review leak where Echo could surface `หมา` because the letters were known even though the silent-ห mechanism is not taught until Lesson 17.

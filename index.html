@@ -677,7 +677,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.8</span>
+      <span class="version-pill">v4.9</span>
     </header>
 
     <section class="today-focus">
@@ -757,7 +757,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.8 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.9 (PWA)</div>
     </div>
   </section>
 
@@ -2286,12 +2286,15 @@ function weakestCards(n){ // n trickiest cards: most lapses, then lowest interva
     .slice(0, n);
 }
 
-/* card content lookup: ids are "g:ก" (glyph) or "w:มา" (word/phrase) */
+/* card content lookup: ids are "g:ก" (glyph), "f:ก" (ending job), or "w:มา" (word/phrase) */
 const COMBINING = ['ิ','ี','ู','ุ','ึ','ื','ั','ำ','่','้','๊','๋','์'];
 function cardFront(id){
   if(id.startsWith('g:')){
     const ch = id.slice(2), g = GLYPHS[ch];
     return {big: (g && g.disp) || ch, hint:'What sound?'};
+  }
+  if(id.startsWith('f:')){
+    return {big:id.slice(2), hint:'Ending job?'};
   }
   if(id.startsWith('r:')){
     const w = findWord(id.slice(2));
@@ -2303,12 +2306,17 @@ function cardSay(id){
   if(id.startsWith('g:')){
     return glyphAudio(id.slice(2), 'sound').say;
   }
+  if(id.startsWith('f:')) return id.slice(2);
   return id.slice(2); // w: and r: both speak the Thai
 }
 function cardBack(id){
   if(id.startsWith('g:')){
     const g = GLYPHS[id.slice(2)];
     return {big:g ? g.sound : '?', tr:g ? g.name + ' · ' + g.nameTr : '', en:g ? (g.type==='c' ? CLS_LABEL[g.cls] : g.gloss) : ''};
+  }
+  if(id.startsWith('f:')){
+    const ch = id.slice(2), job = finalJob(ch);
+    return job ? {big:job.sound, tr:job.group, en:job.effect} : {big:'?', tr:'', en:''};
   }
   const w = findWord(id.slice(2));
   if(id.startsWith('r:')) return w ? {big:id.slice(2), tr:w.tr, en:''} : {big:'?', tr:'', en:''};
@@ -2698,6 +2706,9 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
       options:shuffle([correct, ...opts]), _choice:'glyph-sound',
       explain: g && g.type==='c' ? g.name+' · '+g.nameTr : ''};
   }
+  if(id.startsWith('f:')){
+    return finalJobQuestion(id.slice(2)) || {prompt:id.slice(2), promptBig:true, text:'Ending job?', answer:'?', options:['?']};
+  }
   if(id.startsWith('r:')){     // English → pick the Thai (reading of script)
     const thai = id.slice(2), w = findWord(thai);
     const taught = taughtGlyphSet();
@@ -3079,7 +3090,7 @@ function firstConsonantClass(thai){
   return null;
 }
 function classBadgeHtml(cls){
-  return cls ? '<span class="classchip ' + cls + '">' + CLS_LABEL[cls] + ' class</span>' : '';
+  return cls ? '<span class="classchip ' + cls + '">' + CLS_LABEL[cls] + '</span>' : '';
 }
 function wordClassBadgeHtml(w){ return classBadgeHtml(firstConsonantClass(w.thai)); }
 function lessonNum(id){ return +(String(id||'').match(/\d+/)||[0])[0]; }
@@ -3215,6 +3226,29 @@ function classReason(cls){
 }
 function classQuestionText(cls){ return 'Which class?'; }
 function finalJob(ch){ return FINAL_JOBS[ch] || null; }
+function finalJobLabel(job){
+  if(!job) return '';
+  return job.group === 'stop' ? 'stop ending · dead' : job.group === 'ring' ? 'ringing ending · live' : 'glide ending · live';
+}
+function addUniqueFinalGlyph(out, ch){
+  if(GLYPHS[ch] && GLYPHS[ch].type === 'c' && finalJob(ch) && !out.includes(ch)) out.push(ch);
+}
+function finalGlyphsForLesson(L){
+  if(!L || lessonNum(L.id) < 2) return [];
+  const out = [];
+  if(lessonNum(L.id) === 2) coveredGlyphsForLesson(L, 'c').forEach(ch=>addUniqueFinalGlyph(out, ch));
+  (L.glyphs||[]).forEach(ch=>addUniqueFinalGlyph(out, ch));
+  (L.words||[]).forEach(w=>{
+    const f = wordFrame(w);
+    if(f && f.final) addUniqueFinalGlyph(out, f.final);
+  });
+  return out;
+}
+function learnedFinalGlyphIds(doneIds){
+  const doneSet = new Set(doneIds || state.done || []), out = [];
+  LESSONS.forEach(L=>{ if(doneSet.has(L.id)) finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(out, ch)); });
+  return out;
+}
 function finalJobHtml(ch, lessonId){
   const g = GLYPHS[ch], job = finalJob(ch);
   if(!g || g.type !== 'c' || lessonNum(lessonId) < 2) return '';
@@ -3249,6 +3283,16 @@ function finalSoundQuestion(w){
     answer, options:shuffle([answer,...finalSoundDistractors(f.final, answer)]),
     _choice:'final-sound', axis:'final',
     explain:(g ? f.final + ' starts as ' + start + ', but ' : '') + 'at the end it reads ' + answer + '. ' + job.effect + '.'};
+}
+function finalJobQuestion(ch){
+  const job = finalJob(ch), g = GLYPHS[ch];
+  if(!job || !g) return null;
+  const answer = job.sound;
+  return {kind:'mcq', prompt:ch, promptBig:true,
+    text:'Ending job: what sound does this letter make at the end?',
+    answer, options:shuffle([answer,...finalSoundDistractors(ch, answer)]),
+    _choice:'final-job', axis:'final-job',
+    explain:ch + ' starts as ' + g.sound + ', but at the end it reads ' + answer + '. ' + job.effect + '.'};
 }
 function uniqueOptions(answer, opts){
   const out = [answer];
@@ -4140,6 +4184,8 @@ function buildBossQuiz(u){
   const Ls = unitLessons(u);
   const upToLessonNum = Math.max(...Ls.map(L=>lessonNum(L.id)));
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const finals = [];
+  Ls.forEach(L=>finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(finals, ch)));
   const words = Ls.flatMap(L=>L.words);
   const allWordsPool = LESSONS.flatMap(L=>L.words);
   const qs = [];
@@ -4148,6 +4194,10 @@ function buildBossQuiz(u){
     const wrong = glyphSoundDistractors(ch, 3, glyphs);
     qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
+  });
+  finals.forEach(ch=>{
+    const q = finalJobQuestion(ch);
+    if(q) qs.push(q);
   });
   words.forEach(w=>{
     const wrong = wordReadingDistractors(w, allWordsPool, 3);
@@ -4168,6 +4218,8 @@ function buildCheckpointQuiz(upTo){
   const Ls = LESSONS.slice(0, upTo+1);
   const upToLessonNum = lessonNum((LESSONS[upTo]||{}).id);
   const glyphs = Ls.flatMap(L=>L.glyphs).filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const finals = [];
+  Ls.forEach(L=>finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(finals, ch)));
   const words = Ls.flatMap(L=>L.words);
   const qs = [];
   glyphs.forEach(ch=>{
@@ -4179,6 +4231,10 @@ function buildCheckpointQuiz(upTo){
       qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     }
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL))});
+  });
+  finals.forEach(ch=>{
+    const q = finalJobQuestion(ch);
+    if(q) qs.push(q);
   });
   words.forEach(w=>{
     // pure letters (v2.27): no word-meaning recall - keep the read-the-tone check (the letter→class→tone payoff)
@@ -4237,7 +4293,8 @@ function startLesson(L, opts){
   const quiz = buildLessonQuiz(L);
   const pre = L.pre || [];
   const weN = L.we ? 1 : 0;
-  player = {type:'lesson', L, pre, weN, steps: pre.length + L.glyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0, earlyBonus:!!(opts&&opts.earlyBonus)};
+  const finalGlyphs = finalGlyphsForLesson(L);
+  player = {type:'lesson', L, pre, weN, finalGlyphs, steps: pre.length + L.glyphs.length + finalGlyphs.length + weN + 1 + 1 + quiz.length + 1, i:0, quiz, qIdx:0, correct:0, speakIdx:0, earlyBonus:!!(opts&&opts.earlyBonus)};
   openOverlay(); renderLessonStep();
 }
 function renderLessonSpeak(p){
@@ -4276,10 +4333,30 @@ function renderLessonSpeak(p){
   };
   el('speak-skip').onclick = ()=>{ p.speakIdx++; renderLessonSpeak(p); };
 }
+function renderLessonFinalJob(p, ch, idx){
+  const stage = el('stage'), g = GLYPHS[ch], job = finalJob(ch);
+  stage.innerHTML = `
+    <div class="class-banner neutral">ENDING JOB</div>
+    <div class="glyph-big ${g.cls||''}">${ch}</div>
+    <div class="center">
+      <div class="eyebrow">Ending job · ${idx+1} of ${p.finalGlyphs.length}</div>
+      <h2>At the end: ${esc(job.sound)}</h2>
+      <div class="notebox" style="font-size:15px;line-height:1.75;text-align:left">
+        <b>Start job:</b> ${esc(g.sound)}<br>
+        <b>Ending job:</b> ${esc(job.sound)}<br>
+        <b>Reading effect:</b> ${esc(job.effect)}
+      </div>
+      <div style="margin-top:12px"><span class="classchip">${esc(finalJobLabel(job))}</span></div>
+    </div>
+    <div class="stage-actions">
+      <button class="btn ghost" id="st-back">Back</button>
+      <button class="btn" id="st-next">Next</button>
+    </div>`;
+}
 function renderLessonStep(){
   const p = player, L = p.L, stage = el('stage');
-  const nPre = p.pre.length, nGly = L.glyphs.length, nWe = p.weN;
-  const preStart = 0, glyphStart = preStart+nPre, weIndex = glyphStart+nGly;
+  const nPre = p.pre.length, nGly = L.glyphs.length, nFinal = p.finalGlyphs.length, nWe = p.weN;
+  const preStart = 0, glyphStart = preStart+nPre, finalStart = glyphStart+nGly, weIndex = finalStart+nFinal;
   const wordsIndex = weIndex+nWe, speakIndex = wordsIndex+1, quizStart = speakIndex+1;
   setProg(Math.round(100 * p.i / p.steps));
   // concept pages
@@ -4317,6 +4394,11 @@ function renderLessonStep(){
         ${p.i>0?'<button class="btn ghost" id="st-back">Back</button>':''}
         <button class="btn" id="st-next">Next</button>
       </div>`;
+  }
+  // ending-job teaching steps: finals are tested and reviewed like start sounds
+  else if(p.i < finalStart + nFinal){
+    const idx = p.i-finalStart;
+    renderLessonFinalJob(p, p.finalGlyphs[idx], idx);
   }
   // quick decode: model the code once, then ask for the twin
   else if(nWe && p.i === weIndex){
@@ -4421,6 +4503,7 @@ function finishLesson(){
   if(firstTime){
     state.done.push(L.id);
     L.glyphs.forEach(g=>srsAdd('g:'+g));
+    finalGlyphsForLesson(L).forEach(g=>srsAdd('f:'+g));
     // pure letters (v2.27): the review deck is letters-only. Words live IN the lesson as decode
     // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards -
     // that was "heavy on definitions of words that don't mean much alone." Letter → class → tone is the spine.
@@ -4434,7 +4517,7 @@ function finishLesson(){
   bumpStreak(); saveState(); questCheck();
   el('stage').innerHTML = `
     <div class="result-big">${p.correct} / ${p.quiz.length}</div>
-    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete. The letters are in your review deck.':'Nice refresher.'}</div>
+    <div class="result-sub">${p.correct===p.quiz.length?'Perfect. ':''}${firstTime?'Lesson complete. The letters and ending jobs are in your review deck.':'Nice refresher.'}</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 }
@@ -4478,7 +4561,7 @@ function classPickQuestion(ch, L){
   const g = GLYPHS[ch]; if(!g || g.type!=='c') return null;
   const wrong = classPickDistractors(ch, L, 3);
   if(wrong.length < 2) return null;
-  return {kind:'mcq', text:'Pick the ' + CLS_LABEL[g.cls] + ' class consonant', answer:ch,
+  return {kind:'mcq', text:'Pick the ' + CLS_LABEL[g.cls].toLowerCase() + ' consonant', answer:ch,
     options:shuffle([ch,...wrong]), thaiOpts:true, _choice:'class-pick',
     explain:ch + ' is ' + CLS_LABEL[g.cls] + ': ' + classReason(g.cls)};
 }
@@ -4493,6 +4576,7 @@ function buildLessonQuiz(L){
   const glyphQs = [], classQs = [], classPickQs = [], spotQs = [];
   const upToLessonNum = lessonNum(L.id);
   const cons = L.glyphs.filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const finalJobQs = finalGlyphsForLesson(L).map(finalJobQuestion).filter(Boolean);
   const coveredWords = coveredWordsForLesson(L);
   const taught = taughtGlyphSet(lessonIdsThrough(L));
   L.glyphs.forEach(ch=>{
@@ -4525,7 +4609,7 @@ function buildLessonQuiz(L){
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const structureQs = [hiddenQs[0], orderQs[0], liveDeadQs[0], lengthQs[0], clusterQs[0]].filter(Boolean);
-  const guaranteed = classQs.concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(L.extraQuiz||[]);
+  const guaranteed = classQs.concat(finalJobQs).concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(L.extraQuiz||[]);
   const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(classPickQs)
     .concat(finalQs.slice(1)).concat(hiddenQs.slice(1)).concat(orderQs.slice(1)).concat(liveDeadQs.slice(1))
     .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs);
@@ -4616,6 +4700,15 @@ function validateReviewChoiceContracts(){
     });
     if(q.text !== glyphSoundPrompt(g)) errors.push(ch + ': review prompt is not type-specific');
   });
+  Object.keys(FINAL_JOBS).forEach(ch=>{
+    const q = mcCard('f:'+ch), job = finalJob(ch);
+    if(q.axis !== 'final-job') errors.push(ch + ': final review card missing final-job axis');
+    if(q.answer !== job.sound) errors.push(ch + ': final review answer mismatch');
+    if(!String(q.text||'').includes('Ending job')) errors.push(ch + ': final review prompt does not name ending job');
+    if(GLYPHS[ch] && GLYPHS[ch].sound !== job.sound && !(q.options||[]).includes(GLYPHS[ch].sound)){
+      errors.push(ch + ': final review should include start sound as the key misconception distractor');
+    }
+  });
   if(errors.length) throw new Error('Review choice contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -4623,12 +4716,17 @@ function validateFinalSoundContracts(){
   const errors = [];
   LESSONS.forEach(L=>{
     const frames = L.words.map(w=>wordFrame(w)).filter(Boolean);
+    const finalGlyphs = finalGlyphsForLesson(L);
     if(lessonNum(L.id) === 1 && frames.length) errors.push('Lesson 1 must keep finals out of the first buildup');
     if(lessonNum(L.id) >= 2 && lessonNum(L.id) !== 12){
       const finalFrames = frames.filter(f=>f.final);
       if(!finalFrames.length) errors.push(L.id + ': missing final-sound decode frame');
       finalFrames.forEach(f=>{
         if(!finalJob(f.final)) errors.push(L.id + ': unknown final job for ' + f.final);
+      });
+      if(!finalGlyphs.length) errors.push(L.id + ': missing explicit final-job teaching cards');
+      finalGlyphs.forEach(ch=>{
+        if(!buildLessonQuiz(L).some(q=>q.axis === 'final-job' && q.prompt === ch)) errors.push(L.id + ': missing final-job recall for ' + ch);
       });
       if(!buildLessonQuiz(L).some(q=>q.axis === 'final')) errors.push(L.id + ': missing final-sound quiz check');
     }
@@ -5230,6 +5328,7 @@ function renderFlash(){
 
 function buildMixedQuiz(){
   const glyphs = learnedGlyphIds().filter(g=>GLYPHS[g] && GLYPHS[g].type==='c');
+  const finals = learnedFinalGlyphIds();
   const words = learnedMeaningWords();
   const taught = taughtGlyphSet();
   const upToLessonNum = state.done.length ? Math.max(...state.done.map(lessonNum)) : 0;
@@ -5243,6 +5342,10 @@ function buildMixedQuiz(){
     qs.push({kind:'mcq', prompt:ch, text:'What sound?', answer:g.sound, options:shuffle([g.sound,...wrong]), _choice:'glyph-sound'});
     qs.push({kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[g.cls],
       options:shuffle(Object.values(CLS_LABEL)), explain:'Class decides the tone'});
+  });
+  finals.forEach(ch=>{
+    const q = finalJobQuestion(ch);
+    if(q) qs.push(q);
   });
   allWords.forEach(w=>{
     const wrongRead = wordReadingDistractors(w, allWords, 3);
@@ -5731,6 +5834,10 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
   if(!state.notes){ state.notes = []; migrated = true; }     // v2.26 test-notes pad
   if(!state.skillStats){ state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null}; migrated = true; } // v2.35 separate evidence
+  learnedFinalGlyphIds().forEach(ch=>{
+    const id = 'f:' + ch;
+    if(!state.srs[id]){ state.srs[id] = {iv:0, due:todayStr(), lapses:0}; migrated = true; }
+  });
   if(migrated) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
