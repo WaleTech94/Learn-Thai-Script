@@ -582,6 +582,23 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .story-line .sw:active{background:var(--surface2)}
 .story-card{padding:16px 18px;text-align:left}
 .story-card.locked{opacity:.45}
+.chunk-word{font-family:'Mitr',sans-serif;font-size:48px;line-height:1.35;text-align:center;margin:12px 0}
+.chunk-chip{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 14px;border-radius:10px;background:var(--surface2);border:1px solid var(--line);font-family:'Mitr',sans-serif;font-size:24px}
+.sign-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.sign-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.sign-row:last-child{border-bottom:none}
+.sign-word{flex:1;min-width:0;font-family:'Mitr',sans-serif;font-size:28px;line-height:1.2}
+.sign-row.seen .sign-word{opacity:.68}
+.readiness-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.readiness-stat{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--surface2)}
+.readiness-stat .n{font-family:'Mitr',sans-serif;font-size:22px}
+.font-sample{display:block;font-size:28px;line-height:1.1}
+.font-sample.a{font-family:'Mitr',sans-serif;font-weight:300;letter-spacing:0}
+.font-sample.b{font-family:Tahoma,Arial,sans-serif;font-weight:700;letter-spacing:0}
+.font-sample.c{font-family:Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:0}
+.font-sample.d{font-family:'Mitr',sans-serif;font-weight:500;letter-spacing:.04em}
+.mouth-card{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:14px;margin:10px 0}
+.mouth-card .thai{font-family:'Mitr',sans-serif;font-size:42px;line-height:1.2}
 /* skill constellation + personal-best lap (v2.14) - uses ACCENT palette, never the class colours */
 .constel-wrap{display:flex;gap:16px;align-items:center;margin-top:6px}
 .constel-svg{flex:0 0 132px;width:132px;height:120px}
@@ -677,7 +694,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v4.10</span>
+      <span class="version-pill">v5.0</span>
     </header>
 
     <section class="today-focus">
@@ -757,7 +774,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v4.9 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.0 (PWA)</div>
     </div>
   </section>
 
@@ -847,6 +864,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div><div class="t">Reading room</div><div class="d">Micro-stories from letters you know</div></div>
         <span style="font-size:20px">→</span>
       </button>
+      <button class="card cta-card" id="library-signs">
+        <div><div class="t">Seen in the wild</div><div class="d">Tick off real signs you can read</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
+      <button class="card cta-card" id="library-readiness">
+        <div><div class="t">Readiness report</div><div class="d">Phase 1 can-do check after the boss</div></div>
+        <span style="font-size:20px">→</span>
+      </button>
     </div>
     <div class="card" style="margin-bottom:14px">
       <div class="eyebrow">Class reference</div>
@@ -921,6 +946,18 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           </button>
           <button class="review-action" id="cta-read">
             <div><div class="t">Reading room</div><div class="d" id="read-sub">Micro-stories from letters you know</div></div>
+            <span class="arrow">→</span>
+          </button>
+          <button class="review-action" id="cta-chunk">
+            <div><div class="t">Chunk this word</div><div class="d">Break longer Thai into readable pieces</div></div>
+            <span class="arrow">→</span>
+          </button>
+          <button class="review-action" id="cta-font-shock">
+            <div><div class="t">Font shock</div><div class="d">Read familiar words in different styles</div></div>
+            <span class="arrow">→</span>
+          </button>
+          <button class="review-action" id="cta-mouth">
+            <div><div class="t">Mouth coach</div><div class="d">Slow read-aloud cards with no score</div></div>
             <span class="arrow">→</span>
           </button>
         </div>
@@ -1393,7 +1430,7 @@ const LESSONS = [
    ]},
   {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING tone = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ศ and ษ are both high-class s-family letters. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b> tone."},
      {h:"เ◌อ says er", body:"เ◌อ is the app's <b>er</b> vowel pattern: เธอ = ธ + เ◌อ → ter. It is useful for real speech, but recognition-level here."}], sub:"ธ ภ ศ ษ ญ ฮ + เ◌อ + ◌์", glyphs:["ธ","ภ","ศ","ษ","ญ","ฮ","เ◌อ","์"],
-   note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number).",
+   note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number). This is a denser late-Phase lesson, so read the frames slowly and let the review deck do the repetition.",
    words:[
      {thai:"เธอ", tr:"ter", en:"you / she (informal)", vocab:"recognition", frame:{text:"ธ start th/soft t + เ◌อ er → ter", vowelOrder:"wraps the consonant", orderExplain:"เ◌อ writes around ธ, but you read the consonant first: t + er."}},
      {thai:"ภาษา", tr:"phaa-sǎa", en:"language", vocab:"core", frame:{text:"ภาษา = ภา + ษา; ษ is a high-class s-family letter."}},
@@ -1425,7 +1462,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"เพื่อน", text:"<span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone?", answer:"Falling", options:["Mid","Low","Falling","High","Rising"], explain:"low class + ไม้เอก gives falling"}
    ]},
   {id:"l23", we:{m:"ระวัง → ระ dead short on LOW class → HIGH tone, then วัง live → MID tone = caution", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Useful signs", sub:"repetition sign + reading the street", glyphs:["ๆ"],
-   pre:[{h:"Useful signs", body:"ๆ (ไม้ยมก) repeats the previous word: ช้าๆ = cháa cháa = slowly. You also now have enough script to tackle short public signs such as ระวัง, ทางออก, ทางเข้า and ห้องน้ำ."}],
+   pre:[{h:"Useful signs", body:"ๆ (ไม้ยมก) repeats the previous word: ช้าๆ = cháa cháa = slowly. You also now have enough script to tackle short public signs such as ระวัง, ทางออก, ทางเข้า and ห้องน้ำ."},
+     {h:"Thai often writes in chunks, not spaces", body:"Thai does not put spaces between every word. Read by finding useful chunks first, then sound each chunk out: ทางออก = ทาง / ออก, ทางเข้า = ทาง / เข้า, ห้องน้ำ = ห้อง / น้ำ, วันนี้ = วัน / นี้, ภาษา = ภา / ษา, ผู้หญิง = ผู้ / หญิง.<br><br>For street signs, do the same slow routine: start sound, vowel, ending sound, then tone."}],
    note:"ระวัง rá-wang appears on every wet floor, low doorway, and BTS platform in Bangkok.",
    words:[
      {thai:"ระวัง", tr:"rá-wang", en:"caution / be careful", vocab:"core", frame:{text:"วัง = ว start w + ั a + ง ending -ng (rings/live)", final:"ง", focus:"วัง"}},
@@ -1660,7 +1698,9 @@ const TITLES = [
  {id:"brave", thai:"ผู้กล้า", tr:"phûu-glâa", en:"the brave one"},
  {id:"toneboss", thai:"เจ้าพ่อโทน", tr:"jâo-phôr-thoon", en:"the tone boss"},
  {id:"head", thai:"ครูใหญ่", tr:"khruu-yài", en:"the headmaster"},
- {id:"reader", thai:"นักอ่าน", tr:"nák-àan", en:"the reader"}
+ {id:"reader", thai:"นักอ่าน", tr:"nák-àan", en:"the reader"},
+ {id:"streetreader", thai:"นักอ่านถนน", tr:"nák-àan thà-nǒn", en:"street reader"},
+ {id:"bangkokreader", thai:"นักอ่านกรุงเทพ", tr:"nák-àan grung-thêep", en:"Bangkok reader"}
 ];
 
 /* milestone postcards: decodable caption at the streak's gate lesson (all validated) */
@@ -1717,12 +1757,72 @@ const STORIES = [
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"ใจดี",tr:"jai-dii",en:"is kind"}],
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"อยาก",tr:"yàak",en:"want to"},{t:"พูด",tr:"phûut",en:"speak"},{t:"ได้",tr:"dâi",en:"well"}],
    [{t:"ไม่",tr:"mâi",en:"not"},{t:"นาน",tr:"naan",en:"long now -"},{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"will speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
+ ]},
+ {id:"s7", gate:"l18", title:"ครูกินข้าว - Teacher eats", lines:[
+   [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"มา",tr:"maa",en:"comes"}],
+   [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"กิน",tr:"gin",en:"eats"},{t:"ข้าว",tr:"khâao",en:"rice"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"กิน",tr:"gin",en:"eat"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"พูด",tr:"phûut",en:"talks"},{t:"นาน",tr:"naan",en:"for ages"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ฟัง",tr:"fang",en:"listen"}]
+ ]},
+ {id:"s8", gate:"l24", title:"ทางออก - Exit", lines:[
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ไป",tr:"bpai",en:"go to"},{t:"ทางออก",tr:"thaang-òrk",en:"the exit"}],
+   [{t:"ทางออก",tr:"thaang-òrk",en:"the exit"},{t:"เปิด",tr:"bpèrt",en:"is open"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ไป",tr:"bpai",en:"go to"},{t:"ห้องน้ำ",tr:"hôrng-náam",en:"the toilet"}],
+   [{t:"ห้องน้ำ",tr:"hôrng-náam",en:"the toilet"},{t:"อยู่",tr:"yùu",en:"is at"},{t:"ทางเข้า",tr:"thaang-khâo",en:"the entrance"}],
+   [{t:"ระวัง",tr:"rá-wang",en:"be careful"}]
+ ]},
+ {id:"s9", gate:"l24", title:"เปิดปิด - Open and closed", lines:[
+   [{t:"เปิด",tr:"bpèrt",en:"open"}],
+   [{t:"ปิด",tr:"bpìt",en:"closed"}],
+   [{t:"ห้าม",tr:"hâam",en:"forbidden"}],
+   [{t:"อาหาร",tr:"aa-hǎan",en:"food"},{t:"ดี",tr:"dii",en:"good"},{t:"มาก",tr:"mâak",en:"very"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ไป",tr:"bpai",en:"go"},{t:"อาหาร",tr:"aa-hǎan",en:"food"}]
+ ]},
+ {id:"s10", gate:"l24", title:"เพื่อนเรียนไทย - Friends study Thai", lines:[
+   [{t:"เพื่อน",tr:"phûean",en:"friend"},{t:"เรียน",tr:"rian",en:"studies"},{t:"ภาษา",tr:"phaa-sǎa",en:"language"},{t:"ไทย",tr:"thai",en:"Thai"}],
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"สอน",tr:"sǒrn",en:"teaches"},{t:"ทุก",tr:"thúk",en:"every"},{t:"วัน",tr:"wan",en:"day"}],
+   [{t:"เพื่อน",tr:"phûean",en:"friend"},{t:"อยู่",tr:"yùu",en:"is in"},{t:"ห้อง",tr:"hôrng",en:"the room"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"สนุก",tr:"sà-nùk",en:"have fun"},{t:"มาก",tr:"mâak",en:"a lot"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"พูด",tr:"phûut",en:"speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
  ]}
 ];
 
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
 const MID_CLASS_SET = ['ก','จ','ฎ','ฏ','ด','ต','บ','ป','อ'];
 const HIGH_CLASS_SET = ['ข','ฃ','ฉ','ฐ','ถ','ผ','ฝ','ศ','ษ','ส','ห'];
+const CHUNK_ITEMS = [
+  {gate:'l20', thai:'ภาษา', tr:'phaa-sǎa', chunks:['ภา','ษา'], note:'Two written chunks; the second starts with high-class ษ.'},
+  {gate:'l20', thai:'ผู้หญิง', tr:'phûu-yǐng', chunks:['ผู้','หญิง'], note:'Read ผู้, then หญิง. ห leads ญ for the second chunk.'},
+  {gate:'l20', thai:'ศูนย์', tr:'sǔun', chunks:['ศูนย์'], note:'One chunk; ์ silences ย so น is the ending sound.'},
+  {gate:'l22', thai:'เพื่อน', tr:'phûean', chunks:['เพื่อน'], note:'One chunk: find the consonant inside เ◌ือ before the tone.'},
+  {gate:'l23', thai:'ทางออก', tr:'thaang-òrk', chunks:['ทาง','ออก'], note:'Public sign shape: ทาง + ออก.'},
+  {gate:'l23', thai:'ทางเข้า', tr:'thaang-khâo', chunks:['ทาง','เข้า'], note:'Public sign shape: ทาง + เข้า.'},
+  {gate:'l23', thai:'ห้องน้ำ', tr:'hôrng-náam', chunks:['ห้อง','น้ำ'], note:'Two everyday chunks; both have tone marks.'},
+  {gate:'l23', thai:'วันนี้', tr:'wan-níi', chunks:['วัน','นี้'], note:'No spaces between chunks; read วัน, then นี้.'},
+  {gate:'l24', thai:'กรุงเทพ', tr:'grung-thêep', chunks:['กรุง','เทพ'], note:'A city-name chunking practice item, not a meaning test.'},
+  {gate:'l24', thai:'เปิด', tr:'bpèrt', chunks:['เปิด'], note:'One sign word: เ◌ิ sits before ป, but reads after it.'},
+  {gate:'l24', thai:'อาหาร', tr:'aa-hǎan', chunks:['อา','หาร'], note:'Read the opening อา, then หาร.'}
+];
+const SIGN_SAFARI_ITEMS = [
+  {gate:'l23', thai:'ทางเข้า', tr:'thaang-khâo', en:'entrance'},
+  {gate:'l23', thai:'ทางออก', tr:'thaang-òrk', en:'exit'},
+  {gate:'l23', thai:'ห้องน้ำ', tr:'hôrng-náam', en:'toilet'},
+  {gate:'l23', thai:'ระวัง', tr:'rá-wang', en:'caution'},
+  {gate:'l24', thai:'เปิด', tr:'bpèrt', en:'open'},
+  {gate:'l24', thai:'ปิด', tr:'bpìt', en:'closed'},
+  {gate:'l24', thai:'ห้าม', tr:'hâam', en:'do not / forbidden'},
+  {gate:'l24', thai:'อาหาร', tr:'aa-hǎan', en:'food'},
+  {gate:'l24', thai:'ภาษา', tr:'phaa-sǎa', en:'language'},
+  {gate:'l24', thai:'กรุงเทพ', tr:'grung-thêep', en:'Bangkok'}
+];
+const FONT_SHOCK_ITEMS = SIGN_SAFARI_ITEMS.slice();
+const MOUTH_COACH_CARDS = [
+  {gate:'l4', title:'Tone mark shadow', thai:'ไม่ บ้าน นี่ ห้า', tr:'mâi · bâan · nîi · hâa', note:'Say the Thai first, then compare with the model. No score.'},
+  {gate:'l13', title:'Dead-stop endings', thai:'ถูก พูด รถ ทุก', tr:'thùuk · phûut · rót · thúk', note:'Make the ending stop cleanly. Then replay your voice.'},
+  {gate:'l18', title:'True clusters', thai:'ครับ ปลา ครู ใกล้', tr:'khráp · bplaa · khruu · glâi', note:'Blend the cluster as one start sound.'},
+  {gate:'l23', title:'Street signs', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang', note:'Read chunk by chunk before pressing play.'}
+];
 function classTilesHtml(xs, cls){
   return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${cls}">${ch}</span>`).join('')}</div>`;
 }
@@ -1743,7 +1843,10 @@ let state = {
   checks:{},          // checkpoint id -> true once passed (≥80% cumulative mastery gate)
   skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
   notes:[],           // test-notes pad: [{at, text}]  (rides along in Export)
-  packs:[]
+  packs:[],
+  notices:{},
+  migrations:{},
+  signSafari:{seen:{}}
 };
 const SKEY = 'thai_state_v1';
 async function loadState(){
@@ -1891,6 +1994,8 @@ const DRILLS = [
   {id:'ghost',       title:'Glyph ghost',       rung:3, gate:'l7',  go:()=>el('cta-ghost').click()},
   {id:'tone-rule',   title:'Tone-rule trainer', rung:3, gate:'l13', go:()=>el('tone-rule-btn').click()},
   {id:'reading',     title:'Reading room',      rung:4, gate:'l4',  go:()=>el('cta-read').click()},
+  {id:'chunk',        title:'Chunk this word',   rung:4, gate:'l20', go:()=>el('cta-chunk').click()},
+  {id:'font-shock',   title:'Font shock',        rung:4, gate:'l23', go:()=>el('cta-font-shock').click()},
 ];
 const TONE_DEPTH_IDS = new Set(['tone-listen','twins','echo','sprint','ghost','tone-rule']);
 // edge-case drills (Silent-Letter, rare-letter recognition) register at rung 5 when built - never gating.
@@ -2058,6 +2163,27 @@ function handleEndDay(){
   questCheck();
   showEndDayModal();
 }
+function showV5NoticeIfNeeded(){
+  if(!state.notices) state.notices = {};
+  if(state.notices.v5Phase1Repair) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'confirm-modal';
+  wrap.innerHTML = `<div class="confirm-card">
+    <div class="eyebrow">Phase 1 update</div>
+    <h2>Progress kept</h2>
+    <p class="sub">Phase 1 has been reorganised so review, signs and transfer practice stay inside the lesson gates. Your lessons, tokens, titles and valid review cards have been kept.</p>
+    <div class="confirm-actions">
+      <button class="btn" id="v5-notice-ok">Continue</button>
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
+  const close = ()=>{
+    state.notices.v5Phase1Repair = todayStr();
+    saveState();
+    wrap.remove();
+  };
+  wrap.querySelector('#v5-notice-ok').onclick = close;
+}
 function setTaskButton(id, cfg){
   const b = el(id); if(!b) return;
   b.className = 'task-button' + (cfg.kind ? ' ' + cfg.kind : '');
@@ -2119,6 +2245,7 @@ const DAILY_PRACTICE = [
   {id:'hear-thai', title:'Hear & pick Thai', gate:'l1', go:()=>launchDrill('hear-thai')},
   {id:'spell', title:'Spell it', gate:'l3', go:()=>launchDrill('spell')},
   {id:'reading', title:'Reading', gate:'l4', go:()=>{ if(!startStoryDepth()) launchDrill('reading'); }},
+  {id:'chunk', title:'Chunk', gate:'l20', go:()=>launchDrill('chunk')},
   {id:'echo', title:'Echo', gate:'l1', go:()=>launchDrill('echo')},
 ];
 function practiceState(p){
@@ -2968,12 +3095,14 @@ function lessonGlyphPreviewHtml(L){
 }
 function classColourPromptHtml(q){
   if(q.promptHtml) return q.promptHtml;
+  if(q.fontShockPrompt) return `<span class="font-sample ${fontShockClass(q.prompt)}">${classColourThaiHtml(q.prompt)}</span>`;
   const text = String(q.text||'');
   if(!q.prompt || /Which class\?/.test(text) || /^Pick the .* class consonant/.test(text)) return q.prompt ? esc(q.prompt) : '';
   if(q.colourPrompt || (/[ก-ฮ]/.test(String(q.prompt)) && !q._choice)) return classColourThaiHtml(q.prompt);
   return esc(q.prompt);
 }
 function quizOptionHtml(q, option){
+  if(q.fontShock) return `<span class="font-sample ${fontShockClass(option)}">${classColourThaiHtml(option)}</span>`;
   return q.colourThaiOpts ? classColourThaiHtml(option) : esc(option);
 }
 function ensureSkillStats(){
@@ -3130,11 +3259,11 @@ function toneQuestionText(w){
   const gate = toneGate(w), tone = toneOf(w.tr);
   const marked = /[่้๊๋]/.test(w.thai);
   const badge = wordClassBadgeHtml(w);
-  if(gate <= 2 && tone === 'Mid') return (badge ? badge + ' ' : '') + 'No tone mark, live syllable: which tone?';
+  if(gate <= 2 && tone === 'Mid') return (badge ? badge + ' ' : '') + w.thai + ' has no tone mark. What tone do we read here?';
   if(gate === 3 && tone === 'Low') return (badge || 'Mid class') + ' + dead syllable: which tone?';
   if(gate === 6 && tone === 'Rising') return (badge || 'High class') + ' + plain live: which tone?';
   if(marked) return (badge ? badge + ' + ' : '') + 'Thai tone mark: which tone?';
-  if(tone === 'Mid') return (badge ? badge + ' ' : '') + 'No tone mark, live syllable: which tone?';
+  if(tone === 'Mid') return (badge ? badge + ' ' : '') + w.thai + ' has no tone mark. What tone do we read here?';
   if(gate === 11 && tone === 'High') return (badge ? badge + ' + ' : '') + 'dead-short syllable: which tone?';
   return (badge ? badge + ' ' : '') + 'No tone mark: use class + live/dead. Which tone?';
 }
@@ -3189,8 +3318,11 @@ document.addEventListener('click', e=>{
    TODAY
 ===================================================== */
 function learnedGlyphIds(){
-  const out = [];
-  for(const L of LESSONS){ if(state.done.includes(L.id)) L.glyphs.forEach(g=>out.push(g)); }
+  return learnedGlyphIdsFor(state.done);
+}
+function learnedGlyphIdsFor(doneIds){
+  const doneSet = new Set(doneIds || state.done || []), out = [];
+  for(const L of LESSONS){ if(doneSet.has(L.id)) L.glyphs.forEach(g=>out.push(g)); }
   return out;
 }
 function learnedWords(doneIds){
@@ -3259,6 +3391,147 @@ function learnedFinalGlyphIds(doneIds){
   const doneSet = new Set(doneIds || state.done || []), out = [];
   LESSONS.forEach(L=>{ if(doneSet.has(L.id)) finalGlyphsForLesson(L).forEach(ch=>addUniqueFinalGlyph(out, ch)); });
   return out;
+}
+function cardAllowedForDone(id, doneIds){
+  const done = doneIds || [];
+  if(!id || typeof id !== 'string') return false;
+  if(id.startsWith('r:')) return false;
+  if(id.startsWith('g:')){
+    const ch = id.slice(2);
+    return !!(GLYPHS[ch] && learnedGlyphIdsFor(done).includes(ch));
+  }
+  if(id.startsWith('f:')){
+    const ch = id.slice(2);
+    return !!(finalJob(ch) && learnedFinalGlyphIds(done).includes(ch));
+  }
+  if(id.startsWith('w:')){
+    const thai = id.slice(2);
+    if(isLessonWord(thai)) return false;
+    const w = findWord(thai);
+    return !!w;
+  }
+  return false;
+}
+function ensureStateCollections(target){
+  const defaults = {
+    streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
+    boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
+    notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, signSafari:{seen:{}}
+  };
+  Object.keys(defaults).forEach(k=>{
+    if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
+  });
+  if(!target.skillStats.listen || !Array.isArray(target.skillStats.listen)) target.skillStats.listen = [];
+  if(!target.skillStats.speak) target.skillStats.speak = {attempts:0,last:null};
+  if(!target.signSafari.seen) target.signSafari.seen = {};
+}
+function repairStateForV5(target){
+  const s = target || state;
+  ensureStateCollections(s);
+  const report = {changed:false, pruned:[], seededGlyphs:0, seededFinals:0};
+  const done = (s.done || []).filter(id=>LESSONS.some(L=>L.id===id));
+  if(done.length !== (s.done||[]).length){ s.done = done; report.changed = true; }
+  Object.keys(s.srs || {}).forEach(id=>{
+    if(!cardAllowedForDone(id, done)){
+      delete s.srs[id];
+      report.pruned.push(id);
+      report.changed = true;
+    }
+  });
+  learnedGlyphIdsFor(done).forEach(ch=>{
+    const id = 'g:' + ch;
+    if(!s.srs[id]){
+      s.srs[id] = {iv:0, due:todayStr(), lapses:0};
+      report.seededGlyphs++;
+      report.changed = true;
+    }
+  });
+  learnedFinalGlyphIds(done).forEach(ch=>{
+    const id = 'f:' + ch;
+    if(!s.srs[id]){
+      s.srs[id] = {iv:0, due:todayStr(), lapses:0};
+      report.seededFinals++;
+      report.changed = true;
+    }
+  });
+  if(!s.migrations.v5){
+    s.migrations.v5 = {date:todayStr(), pruned:report.pruned.length, seededGlyphs:report.seededGlyphs, seededFinals:report.seededFinals};
+    report.changed = true;
+  }
+  return report;
+}
+function validateStateDeckForDone(s, label){
+  const bad = Object.keys(s.srs || {}).filter(id=>!cardAllowedForDone(id, s.done || []));
+  if(bad.length) throw new Error(label + ': invalid review card survived: ' + bad.join(', '));
+  const dueServed = Math.min(40, Object.keys(s.srs || {}).length);
+  if(dueServed > 40) throw new Error(label + ': SRS cap exceeded');
+}
+function validateV5MigrationContracts(){
+  const oldDue = {iv:0, due:'2024-01-01', lapses:0};
+  const allDone = LESSONS.map(L=>L.id);
+  const cases = [
+    {label:'fresh', state:{done:[], srs:{}}},
+    {label:'l1-l6 leaked-mai', state:{done:LESSONS.slice(0,6).map(L=>L.id), baht:99, srs:{'w:ไหม':oldDue, 'r:มา':oldDue}}},
+    {label:'l1-l12 leaked-suea', state:{done:LESSONS.slice(0,12).map(L=>L.id), srs:{'w:เสือ':oldDue, 'w:เสื้อ':oldDue, 'w:เสื่อ':oldDue}}},
+    {label:'lek-before-shortener', state:{done:LESSONS.slice(0,15).map(L=>L.id), srs:{'w:เล็ก':oldDue, 'g:็':oldDue}}},
+    {label:'formal-friends-leaks', state:{done:LESSONS.slice(0,19).map(L=>L.id), srs:{'w:ภาษา':oldDue, 'g:ษ':oldDue, 'w:กีฬา':oldDue, 'g:ฬ':oldDue}}},
+    {label:'open-before-er', state:{done:LESSONS.slice(0,23).map(L=>L.id), srs:{'w:เปิด':oldDue, 'g:เ◌ิ':oldDue}}},
+    {label:'day23-residue', state:{done:LESSONS.slice(0,23).map(L=>L.id), srs:{'w:เปิด':oldDue, 'r:ทางออก':oldDue, 'f:ก':oldDue}}},
+    {label:'legacy-r-and-existing-finals', state:{done:LESSONS.slice(0,10).map(L=>L.id), srs:{'r:กิน':oldDue, 'f:น':oldDue}}},
+    {label:'completed-phase1', state:{done:allDone, baht:321, titles:['reader'], checks:{letters42:true}, srs:{'r:มา':oldDue, 'f:ก':oldDue, 'g:ก':oldDue}}}
+  ];
+  cases.forEach(c=>{
+    const beforeDone = (c.state.done || []).slice().join(',');
+    const beforeBaht = c.state.baht || 0;
+    repairStateForV5(c.state);
+    if((c.state.done || []).join(',') !== beforeDone) throw new Error(c.label + ': completed lessons changed');
+    if((c.state.baht || 0) !== beforeBaht) throw new Error(c.label + ': rewards changed');
+    validateStateDeckForDone(c.state, c.label);
+    if(c.label === 'completed-phase1'){
+      const missingFinal = learnedFinalGlyphIds(allDone).filter(ch=>!c.state.srs['f:'+ch]);
+      const missingGlyph = learnedGlyphIdsFor(allDone).filter(ch=>!c.state.srs['g:'+ch]);
+      if(missingFinal.length || missingGlyph.length) throw new Error(c.label + ': missing seeded cards');
+      if(!c.state.checks.letters42) throw new Error(c.label + ': letters boss state lost');
+    }
+  });
+  return true;
+}
+function validateV5TransferContracts(){
+  const errors = [];
+  const gateDone = gate=>{
+    const idx = LESSONS.findIndex(L=>L.id===gate);
+    return idx < 0 ? [] : LESSONS.slice(0, idx+1).map(L=>L.id);
+  };
+  const checkItems = (label, items)=>{
+    items.forEach(item=>{
+      const done = gateDone(item.gate);
+      if(!done.length) errors.push(label + ':' + item.thai + ' has unknown gate ' + item.gate);
+      prerequisiteIssuesForThai(item.thai, done, label, wordFrame(findWord(item.thai))).forEach(i=>{
+        errors.push(label + ':' + item.thai + ' missing ' + (i.missing||[]).join(','));
+      });
+    });
+  };
+  checkItems('chunk', CHUNK_ITEMS);
+  checkItems('sign-safari', SIGN_SAFARI_ITEMS);
+  checkItems('font-shock', FONT_SHOCK_ITEMS);
+  MOUTH_COACH_CARDS.forEach(card=>{
+    const done = gateDone(card.gate);
+    prerequisiteIssuesForThai(card.thai, done, 'mouth-coach').forEach(i=>errors.push('mouth-coach:' + card.title + ' missing ' + (i.missing||[]).join(',')));
+  });
+  const after20 = LESSONS.slice(0,20).map(L=>L.id);
+  const chunkQs = buildChunkQuiz(after20);
+  if(chunkQs.length < 3) errors.push('Chunk drill has too few questions after Lesson 20');
+  errors.push(...definitionQuizLeaks(chunkQs, 'chunk'));
+  const after24 = LESSONS.map(L=>L.id);
+  const fontQs = buildFontShockQuiz(after24);
+  if(fontQs.length < 4) errors.push('Font Shock has too few questions after Phase 1');
+  errors.push(...definitionQuizLeaks(fontQs, 'font-shock'));
+  if(!signSafariItems(after24).length) errors.push('Sign Safari has no available Phase 1 signs');
+  if(!mouthCoachCards(after24).length) errors.push('Mouth Coach has no available Phase 1 cards');
+  const textBlob = JSON.stringify({CHUNK_ITEMS,SIGN_SAFARI_ITEMS,FONT_SHOCK_ITEMS,MOUTH_COACH_CARDS,STORIES});
+  if(new RegExp('\\u0E04\\u0E48\\u0E30').test(textBlob)) errors.push('female polite particle leaked into Phase 1 content');
+  if(errors.length) throw new Error('V5 transfer contract failed:\n' + errors.join('\n'));
+  return true;
 }
 function finalJobHtml(ch, lessonId){
   const g = GLYPHS[ch], job = finalJob(ch);
@@ -3747,6 +4020,8 @@ el('library-read').addEventListener('click', ()=>{
   openOverlay();
   renderStoryList();
 });
+el('library-signs').addEventListener('click', showSignSafari);
+el('library-readiness').addEventListener('click', showReadinessReport);
 el('wai-banner').addEventListener('click', ()=>{
   const weak = weakestCards(3);
   if(!weak.length){ toast('No cards yet. Finish a lesson first.'); return; }
@@ -4925,6 +5200,26 @@ function collectPrerequisiteIssues(){
       prerequisiteIssuesForThai(itemThai(w), doneIds, 'story/' + s.id).forEach(i=>poolIssues.push(Object.assign({lesson:s.gate}, i)));
     });
   });
+  CHUNK_ITEMS.forEach(item=>{
+    const gi = LESSONS.findIndex(L=>L.id === item.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    prerequisiteIssuesForThai(item.thai, doneIds, 'chunk-drill', wordFrame(findWord(item.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:item.gate}, i)));
+  });
+  SIGN_SAFARI_ITEMS.forEach(item=>{
+    const gi = LESSONS.findIndex(L=>L.id === item.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    prerequisiteIssuesForThai(item.thai, doneIds, 'sign-safari', wordFrame(findWord(item.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:item.gate}, i)));
+  });
+  FONT_SHOCK_ITEMS.forEach(item=>{
+    const gi = LESSONS.findIndex(L=>L.id === item.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    prerequisiteIssuesForThai(item.thai, doneIds, 'font-shock', wordFrame(findWord(item.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:item.gate}, i)));
+  });
+  MOUTH_COACH_CARDS.forEach(card=>{
+    const gi = LESSONS.findIndex(L=>L.id === card.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    prerequisiteIssuesForThai(card.thai, doneIds, 'mouth-coach').forEach(i=>poolIssues.push(Object.assign({lesson:card.gate}, i)));
+  });
   POSTCARDS.forEach(p=>{
     const gi = LESSONS.findIndex(L=>L.id === p.gate);
     const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
@@ -5132,6 +5427,18 @@ function validateMisconceptionChoiceContracts(){
 }
 
 /* generic MCQ renderer used by lessons, mixed quiz, tone drill */
+function targetedWrongFeedback(q){
+  if(!q) return '';
+  if(q.axis === 'final' || q.axis === 'final-job') return 'Check the ending job, not the start sound.';
+  if(q.axis === 'vowel-order') return 'Find the consonant first, then read the vowel shape around it.';
+  if(q.axis === 'live-dead') return 'Listen for whether the sound rings on or stops short.';
+  if(q.axis === 'vowel-length') return 'Short and long vowels can change the tone rule.';
+  if(q.axis === 'cluster') return 'Decide whether the pair blends, hides a letter, or changes sound.';
+  if(q.axis === 'chunk') return 'Read the word in chunks, then decode each chunk.';
+  if(q.axis === 'font-shock') return 'Ignore the style change and match the Thai letters.';
+  if(TONE_NAMES.includes(q.answer)) return 'Use consonant class, live/dead and any Thai tone mark.';
+  return '';
+}
 function renderQuizQ(q, onDone, counterLabel, timedSecs){
   const stage = el('stage');
   stage.innerHTML = `
@@ -5160,7 +5467,8 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
     const fb = el('q-fb');
-    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (q.explain ? '. ' + q.explain : '');
+    const hint = q.explain || targetedWrongFeedback(q);
+    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
     fb.className = 'q-feedback ' + (ok?'ok':'no');
     setTimeout(()=>onDone(ok), ok ? 700 : 1700);
   }
@@ -5498,6 +5806,9 @@ el('cta-hear-thai').addEventListener('click', ()=>{
   if(qs.length < 4){ toast('Finish Lesson 1 first. This uses covered words only.'); return; }
   startGenericQuiz(qs, 'Hear & pick Thai');
 });
+el('cta-chunk').addEventListener('click', startChunkDrill);
+el('cta-font-shock').addEventListener('click', startFontShock);
+el('cta-mouth').addEventListener('click', showMouthCoach);
 
 function startFlashcards(queue){
   player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now()};
@@ -5639,6 +5950,186 @@ function buildHearPickThaiQuiz(){
     return {kind:'mcq', text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   }).filter(q=>q.options.length >= 4);
+}
+function chunkLabel(item){ return item.chunks.join(' / '); }
+function transferItemAvailable(item, doneIds){
+  return lessonGateMet(item.gate, doneIds) && thaiItemPrereqsMet(item.thai, doneIds, wordFrame(findWord(item.thai)));
+}
+function chunkItems(doneIds){
+  const ids = doneIds || state.done || [];
+  return CHUNK_ITEMS.filter(item=>transferItemAvailable(item, ids));
+}
+function buildChunkQuiz(doneIds){
+  const pool = chunkItems(doneIds);
+  return sample(pool, Math.min(8, pool.length)).map(item=>{
+    const answer = chunkLabel(item);
+    const wrong = pool.map(chunkLabel).filter(x=>x !== answer);
+    return {kind:'mcq', prompt:item.thai, promptBig:true, colourPrompt:true,
+      text:'Chunk this word before you read it.',
+      answer, options:shuffle([answer,...sample(wrong, Math.min(3, wrong.length))]),
+      _choice:'chunk', axis:'chunk', explain:item.tr + '. ' + item.note};
+  }).filter(q=>q.options.length >= 3);
+}
+function startChunkDrill(){
+  const qs = buildChunkQuiz();
+  if(qs.length < 3){ toast('Chunk practice opens late in Phase 1. Finish Lesson 20.'); return; }
+  startGenericQuiz(qs, 'Chunk this word');
+}
+function fontShockClass(option){
+  const n = [...String(option)].reduce((a,ch)=>a + ch.charCodeAt(0), 0) % 4;
+  return ['a','b','c','d'][n];
+}
+function fontShockItems(doneIds){
+  const ids = doneIds || state.done || [];
+  return FONT_SHOCK_ITEMS.filter(item=>transferItemAvailable(item, ids));
+}
+function buildFontShockQuiz(doneIds){
+  const pool = fontShockItems(doneIds);
+  return sample(pool, Math.min(8, pool.length)).map(item=>{
+    const wrong = sample(pool.filter(x=>x.thai !== item.thai).map(x=>x.thai), 3);
+    return {kind:'mcq', text:'Which sign word is this?', prompt:item.thai, promptBig:true, fontShockPrompt:true,
+      answer:item.thai, options:shuffle([item.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, fontShock:true,
+      _choice:'font-shock', axis:'font-shock', explain:item.tr};
+  }).filter(q=>q.options.length >= 4);
+}
+function startFontShock(){
+  const qs = buildFontShockQuiz();
+  if(qs.length < 4){ toast('Font Shock opens once enough sign words are covered.'); return; }
+  startGenericQuiz(qs, 'Font shock');
+}
+function signSafariItems(doneIds){
+  const ids = doneIds || state.done || [];
+  return SIGN_SAFARI_ITEMS.filter(item=>transferItemAvailable(item, ids));
+}
+function ensureSignSafari(){
+  if(!state.signSafari) state.signSafari = {seen:{}};
+  if(!state.signSafari.seen) state.signSafari.seen = {};
+  return state.signSafari;
+}
+function maybeAwardSignTitles(){
+  const seenCount = Object.keys(ensureSignSafari().seen).length;
+  const total = SIGN_SAFARI_ITEMS.length;
+  if(!state.titles) state.titles = [];
+  if(seenCount >= 5 && !state.titles.includes('streetreader')){
+    state.titles.push('streetreader');
+    toast('Title earned: นักอ่านถนน');
+  }
+  if(seenCount >= total && !state.titles.includes('bangkokreader')){
+    state.titles.push('bangkokreader');
+    toast('Title earned: นักอ่านกรุงเทพ');
+  }
+}
+function markSignSeen(thai){
+  const safari = ensureSignSafari();
+  if(safari.seen[thai]) return false;
+  safari.seen[thai] = todayStr();
+  award(3);
+  maybeAwardSignTitles();
+  saveState();
+  return true;
+}
+function showSignSafari(){
+  const items = signSafariItems();
+  player = {type:'signs'};
+  openOverlay();
+  setProg(0);
+  if(!items.length){
+    el('stage').innerHTML = `<div class="center"><h2>Seen in the wild</h2><p class="sub">This opens once Lesson 23 sign words are covered.</p></div>`;
+    return;
+  }
+  const safari = ensureSignSafari();
+  const seenCount = Object.keys(safari.seen).length;
+  el('stage').innerHTML = `
+    <div class="center"><h2>Seen in the wild</h2><p class="sub">No camera, upload or location. Tick a sign only after you read it yourself outside the app.</p></div>
+    <div class="notebox">${seenCount}/${SIGN_SAFARI_ITEMS.length} signs seen · +3💎 first time</div>
+    <div class="sign-list">
+      ${items.map(item=>{
+        const seen = safari.seen[item.thai];
+        return `<div class="sign-row ${seen?'seen':''}">
+          <div class="sign-word">${classColourThaiHtml(item.thai)}<div class="sub" style="font-size:12px">${esc(item.tr)}</div></div>
+          ${speakBtn(item.thai)}
+          <button class="btn small ${seen?'ghost':''}" data-sign="${item.thai}">${seen?'✓ seen':'seen it'}</button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('stage').querySelectorAll('[data-sign]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      if(markSignSeen(b.dataset.sign)) toast('Seen in the wild · +3💎');
+      showSignSafari();
+    });
+  });
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderPhrases(); renderTitle(); };
+}
+function mouthCoachCards(doneIds){
+  const ids = doneIds || state.done || [];
+  return MOUTH_COACH_CARDS.filter(card=>lessonGateMet(card.gate, ids) && thaiItemPrereqsMet(card.thai, ids));
+}
+function showMouthCoach(){
+  const cards = mouthCoachCards();
+  player = {type:'mouth'};
+  openOverlay();
+  setProg(0);
+  if(!cards.length){
+    el('stage').innerHTML = `<div class="center"><h2>Mouth coach</h2><p class="sub">Finish a few tone-mark lessons first.</p></div>`;
+    return;
+  }
+  el('stage').innerHTML = `
+    <div class="center"><h2>Mouth coach</h2><p class="sub">Slow read-aloud cards. The app does not grade pronunciation.</p></div>
+    ${cards.map((card,idx)=>`
+      <div class="mouth-card">
+        <div class="eyebrow">${esc(card.title)}</div>
+        <div class="thai">${classColourThaiHtml(card.thai)}</div>
+        <div class="sub">${esc(card.tr)}</div>
+        <div class="sub" style="font-size:12px;margin:8px 0">${esc(card.note)}</div>
+        <div class="row" style="gap:8px">${speakBtn(card.thai)}<button class="btn small ghost" data-mouth="${idx}">open in Echo</button></div>
+      </div>`).join('')}
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('stage').querySelectorAll('[data-mouth]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const card = cards[+b.dataset.mouth];
+      player = {type:'echo', rounds:card.thai.split(/\s+/).filter(Boolean).map(t=>({t, tr:'', en:''})), i:0};
+      renderEcho();
+    });
+  });
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+}
+function readinessMetric(label, value, sub){
+  return `<div class="readiness-stat"><div class="sub" style="font-size:12px">${esc(label)}</div><div class="n">${esc(value)}</div><div class="sub" style="font-size:12px">${esc(sub||'')}</div></div>`;
+}
+function showReadinessReport(){
+  player = {type:'readiness'};
+  openOverlay();
+  setProg(0);
+  const lessonCount = (state.done||[]).length;
+  const checkpointTotal = LESSONS.filter((L,i)=>isCheckpointIndex(i)).length;
+  const checkpointPassedN = LESSONS.filter((L,i)=>isCheckpointIndex(i) && checkpointPassed(i)).length;
+  const lettersBoss = !!(state.checks && state.checks.letters42);
+  const listen = skillListenAcc();
+  const toneListen = toneAcc('listen'), toneRule = toneAcc('rule');
+  const speak = ensureSkillStats().speak;
+  const signSeen = Object.keys((ensureSignSafari().seen)||{}).length;
+  const storiesRead = Object.keys(state.stories||{}).length;
+  const complete = lessonCount >= LESSONS.length && lettersBoss;
+  el('stage').innerHTML = `
+    <div class="center"><h2>Phase 1 readiness</h2><p class="sub">${complete ? 'Phase 1 evidence from your real progress.' : 'Finish Lesson 24 and the Letters boss for the full report.'}</p></div>
+    <div class="readiness-grid">
+      ${readinessMetric('Lessons', lessonCount + '/' + LESSONS.length, complete ? 'course complete' : 'still in progress')}
+      ${readinessMetric('Mastery gates', checkpointPassedN + '/' + checkpointTotal, lettersBoss ? 'Letters boss passed' : 'Letters boss not passed')}
+      ${readinessMetric('Listening checks', listen.pct == null ? 'no data' : listen.pct + '%', 'n=' + listen.n)}
+      ${readinessMetric('Tone licence data', (toneListen.pct==null?'-':toneListen.pct+'%') + ' / ' + (toneRule.pct==null?'-':toneRule.pct+'%'), 'listen / rules')}
+      ${readinessMetric('Read-aloud practice', String(speak.attempts||0), 'comparisons logged')}
+      ${readinessMetric('Transfer', storiesRead + ' stories · ' + signSeen + ' signs', 'optional evidence')}
+    </div>
+    <div class="notebox" style="margin-top:14px;text-align:left">
+      <b>Can do now</b><br>
+      • Name consonant class from memory.<br>
+      • Read taught signs chunk by chunk.<br>
+      • Use start sound, vowel, ending sound, live/dead and tone marks to decode slowly.<br>
+      • Compare your own read-aloud with model audio without treating it as certified pronunciation.
+    </div>
+    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
 
 function startGenericQuiz(qs, label, opts){
@@ -6093,24 +6584,14 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateStructuralClarityContracts();
   validateBalancedComponentChoiceContracts();
   validateMisconceptionChoiceContracts();
+  validateV5MigrationContracts();
+  validateV5TransferContracts();
   await loadState();
-  let migrated = false;
-  // v2.27 pure letters: the review deck is letters-only. Prune lesson word→meaning (w:) and reverse (r:)
-  // cards; KEEP phrase cards (w: whose thai isn't a lesson word). Words stay in lessons as decode practice.
-  for(const id of Object.keys(state.srs)){
-    if(id.startsWith('r:')){ delete state.srs[id]; migrated = true; }                          // every reverse card was a lesson word
-    else if(id.startsWith('w:') && isLessonWord(id.slice(2))){ delete state.srs[id]; migrated = true; }
-  }
-  if(!state.checks){ state.checks = {}; migrated = true; }   // v2.23 mastery checkpoints
-  if(!state.notes){ state.notes = []; migrated = true; }     // v2.26 test-notes pad
-  if(!state.skillStats){ state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null}; migrated = true; } // v2.35 separate evidence
-  learnedFinalGlyphIds().forEach(ch=>{
-    const id = 'f:' + ch;
-    if(!state.srs[id]){ state.srs[id] = {iv:0, due:todayStr(), lapses:0}; migrated = true; }
-  });
-  if(migrated) saveState();
+  const migrated = repairStateForV5(state);
+  if(migrated.changed) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
+  showV5NoticeIfNeeded();
 })();
 </script>
 </body>

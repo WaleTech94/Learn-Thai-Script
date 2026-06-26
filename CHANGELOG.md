@@ -2,6 +2,19 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.0 — 2026-06-26
+
+- Added `repairStateForV5()` as the existing-user stability pass: it preserves lessons/tokens/titles/checks, prunes stale `r:` cards and invalid review entries, rebuilds glyph/final eligibility from lesson gates and seeds missing current `g:`/`f:` cards for completed lessons.
+- Added `validateV5MigrationContracts()` with simulated fresh, partial, leaked, legacy and completed states, including old `ไหม`, `เสือ/เสื้อ/เสื่อ`, `เล็ก`, `ภาษา`, `กีฬา`, `เปิด`, Day 23 residue, old `r:` cards, existing `f:` cards and completed Phase 1.
+- Added the one-time learner notice: “Phase 1 has been reorganised…” with progress kept.
+- Added late Phase 1 Thai spacing/chunking teaching plus the capped, definition-free Chunk this word drill.
+- Added Seen in the wild / Sign Safari as a local checklist with no camera, upload, location or web access, plus +3💎 first-seen rewards and street-reading titles.
+- Added Font Shock, Mouth Coach, four extra decodable micro-stories and the Phase 1 Readiness report.
+- Added post-answer targeted mechanism hints without pre-answer leakage.
+- Extended the generated Phase 1 audit with `v5Migration`/`v5Transfer` validators, named rows for Chunk this word, Seen in the wild, Font Shock and Mouth Coach, and clearer workload wording that separates lesson payload from the Today governor route.
+- Kept the Today governor, SRS cap, mastery gates, one-file PWA architecture and Phase 1 scope unchanged. Daily win cards and boss rematches remain deferred rather than shipped in this stability release.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS.
+
 ## v4.10 — 2026-06-26
 
 - Added `validatePrerequisiteContracts()` so lesson words, generated quiz prompts, review pools, stories and role-sensitive surfaces are checked for visible glyphs, composite vowel patterns and script mechanisms before they can ship.

@@ -173,7 +173,7 @@ globalThis.__phase1Audit = (function(){
   }
   function surfaceRow(id, name, availableItems, servedCount, cap, rawCount, prereq, role){
     const availableCount = Array.isArray(availableItems) ? availableItems.length : availableItems;
-    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories'}[id]) || 'items';
+    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories','sign-safari':'signs','mouth-coach':'cards'}[id]) || 'items';
     return {
       id,
       name,
@@ -316,6 +316,64 @@ globalThis.__phase1Audit = (function(){
       roleContract('N/A', [], 'stories use their own decodability/prerequisite gate')
     );
   }
+  function chunkSurface(doneIds){
+    const raw = CHUNK_ITEMS.filter(item=>lessonGateMet(item.gate, doneIds));
+    const available = chunkItems(doneIds);
+    const served = available.length >= 3 ? Math.min(8, available.length) : 0;
+    return surfaceRow(
+      'chunk-drill',
+      'Chunk this word',
+      available,
+      served,
+      8,
+      raw.length,
+      prereqStatus(available, doneIds, 'chunk-drill'),
+      roleContract('N/A', [], 'definition-free script chunking; no meaning test')
+    );
+  }
+  function signSafariSurface(doneIds){
+    const raw = SIGN_SAFARI_ITEMS.filter(item=>lessonGateMet(item.gate, doneIds));
+    const available = signSafariItems(doneIds);
+    return surfaceRow(
+      'sign-safari',
+      'Seen in the wild',
+      available,
+      available.length,
+      available.length,
+      raw.length,
+      prereqStatus(available, doneIds, 'sign-safari'),
+      roleContract('N/A', [], 'self-paced local checklist; no camera, upload or location')
+    );
+  }
+  function fontShockSurface(doneIds){
+    const raw = FONT_SHOCK_ITEMS.filter(item=>lessonGateMet(item.gate, doneIds));
+    const available = fontShockItems(doneIds);
+    const served = available.length >= 4 ? Math.min(8, available.length) : 0;
+    return surfaceRow(
+      'font-shock',
+      'Font Shock',
+      available,
+      served,
+      8,
+      raw.length,
+      prereqStatus(available, doneIds, 'font-shock'),
+      roleContract('N/A', [], 'same covered signs in CSS font/weight variations')
+    );
+  }
+  function mouthCoachSurface(doneIds){
+    const raw = MOUTH_COACH_CARDS.filter(card=>lessonGateMet(card.gate, doneIds));
+    const available = mouthCoachCards(doneIds);
+    return surfaceRow(
+      'mouth-coach',
+      'Mouth Coach',
+      available.map(card=>({thai:card.thai})),
+      available.length,
+      available.length,
+      raw.length,
+      prereqStatus(available.map(card=>({thai:card.thai})), doneIds, 'mouth-coach'),
+      roleContract('N/A', [], 'script-cued read-aloud coaching; no pronunciation score')
+    );
+  }
   function surfaceAudit(doneIds, taught){
     return [
       hearPickSurface(doneIds),
@@ -324,7 +382,11 @@ globalThis.__phase1Audit = (function(){
       soundTwinsSurface(doneIds, taught),
       toneListeningSurface(doneIds, taught),
       mixedReviewSurface(doneIds, taught),
-      storySurface(doneIds)
+      storySurface(doneIds),
+      chunkSurface(doneIds),
+      signSafariSurface(doneIds),
+      fontShockSurface(doneIds),
+      mouthCoachSurface(doneIds)
     ];
   }
   function workloadAudit(L, index){
@@ -339,6 +401,10 @@ globalThis.__phase1Audit = (function(){
     const twinSets = readableTwinSets(taught, doneIds);
     const echoItems = readableEchoItems(doneIds);
     const storyCount = STORIES.filter(s=>doneIds.includes(s.gate)).length;
+    const chunkCount = chunkItems(doneIds).length;
+    const signCount = signSafariItems(doneIds).length;
+    const fontCount = fontShockItems(doneIds).length;
+    const mouthCount = mouthCoachCards(doneIds).length;
     const dueBeforeCap = learnedGlyphs.length + learnedFinals.length;
     const dueServedAfterCap = Math.min(40, dueBeforeCap);
     const dayType = (dueBeforeCap > 45 || index === LESSONS.length - 1) ? 'Consolidation day' : 'Lesson day';
@@ -348,13 +414,22 @@ globalThis.__phase1Audit = (function(){
       newGlyphCards:(L.glyphs||[]).filter(g=>!prevGlyphs.has(g)).length,
       newFinalCards:finalGlyphsForLesson(L).filter(g=>!prevFinals.has(g)).length,
       lessonQuizCount:buildLessonQuiz(L).length,
+      lessonPayloadIfTaken:{
+        newGlyphCards:(L.glyphs||[]).filter(g=>!prevGlyphs.has(g)).length,
+        newFinalCards:finalGlyphsForLesson(L).filter(g=>!prevFinals.has(g)).length,
+        lessonQuizCount:buildLessonQuiz(L).length
+      },
       availablePool:{
         glyphCards:learnedGlyphs.length,
         finalCards:learnedFinals.length,
         toneItems:toneItems.length,
         twinSets:twinSets.length,
         echoItems:echoItems.length,
-        stories:storyCount
+        stories:storyCount,
+        chunks:chunkCount,
+        signs:signCount,
+        fontShock:fontCount,
+        mouthCoach:mouthCount
       },
       servedDailyLoad:{
         dueSrsBeforeCap:dueBeforeCap,
@@ -364,6 +439,15 @@ globalThis.__phase1Audit = (function(){
         todayType:dayType,
         depthBlockLikely:depthBlock,
         earlyFoundationRule:earlyFoundation ? '20-30 minute foundation day; optional Lesson 2/3 stretch only before Lesson 4' : '45 minute target route',
+        estimatedLoadBand:earlyFoundation ? '20-30 min core' : '45 min target'
+      },
+      todayGovernorRouteAtThisDueLoad:{
+        dueSrsBeforeCap:dueBeforeCap,
+        dueSrsServedAfterCap:dueServedAfterCap,
+        srsCap:40,
+        consolidationTrigger:45,
+        todayType:dayType,
+        depthBlockLikely:depthBlock,
         estimatedLoadBand:earlyFoundation ? '20-30 min core' : '45 min target'
       }
     };
@@ -430,7 +514,9 @@ globalThis.__phase1Audit = (function(){
     validatorResult('finalSounds', validateFinalSoundContracts),
     validatorResult('structuralClarity', validateStructuralClarityContracts),
     validatorResult('balancedChoices', validateBalancedComponentChoiceContracts),
-    validatorResult('misconceptionChoices', validateMisconceptionChoiceContracts)
+    validatorResult('misconceptionChoices', validateMisconceptionChoiceContracts),
+    validatorResult('v5Migration', validateV5MigrationContracts),
+    validatorResult('v5Transfer', validateV5TransferContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -446,7 +532,7 @@ globalThis.__phase1Audit = (function(){
     workload:{
       srsCap:40,
       consolidationTrigger:45,
-      note:'Available pool totals are not daily workload. Served review is capped by Today/SRS, and due > 45 creates a consolidation day.'
+      note:'Lesson payload, available pools and Today governor served workload are separate. Served review is capped by Today/SRS, and due > 45 creates a consolidation day.'
     },
     lessons:LESSONS.map(lessonAudit)
   };
@@ -485,19 +571,20 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('## Workload Audit');
   lines.push('');
-  lines.push('Available pool size is reported separately from served daily workload. The Today governor serves review through the SRS cap, routes due loads over the consolidation trigger into consolidation days, and keeps Lessons 1-3 as shorter foundation days.');
+  lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, due loads over the consolidation trigger become consolidation days, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
   lines.push(`- SRS cap: ${audit.workload.srsCap} cards per review session`);
   lines.push(`- Consolidation trigger: due > ${audit.workload.consolidationTrigger}`);
   lines.push('- Lessons 1-3: 20-30 minute foundation days, with only the existing optional Lesson 2/3 stretch before Lesson 4.');
   lines.push('');
-  lines.push('| Day | New glyph cards | New final cards | Quiz | Available pool | Served daily load | Today type | Depth block |');
-  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- |');
+  lines.push('| Day | Lesson payload | Available pool after lesson | Today governor route | Depth block |');
+  lines.push('| --- | --- | --- | --- | --- |');
   audit.lessons.forEach(L=>{
     const w = L.workload;
-    const avail = `glyph ${w.availablePool.glyphCards}, final ${w.availablePool.finalCards}, tone ${w.availablePool.toneItems}, twins ${w.availablePool.twinSets}, echo ${w.availablePool.echoItems}, stories ${w.availablePool.stories}`;
-    const served = `due ${w.servedDailyLoad.dueSrsBeforeCap} -> served ${w.servedDailyLoad.dueSrsServedAfterCap} / cap ${w.servedDailyLoad.srsCap}`;
-    lines.push(`| ${L.day} | ${w.newGlyphCards} | ${w.newFinalCards} | ${w.lessonQuizCount} | ${safeCell(avail)} | ${safeCell(served)} | ${safeCell(w.servedDailyLoad.todayType)} | ${safeCell(w.servedDailyLoad.depthBlockLikely)} |`);
+    const payload = `glyph ${w.lessonPayloadIfTaken.newGlyphCards}, final ${w.lessonPayloadIfTaken.newFinalCards}, quiz ${w.lessonPayloadIfTaken.lessonQuizCount}`;
+    const avail = `glyph ${w.availablePool.glyphCards}, final ${w.availablePool.finalCards}, tone ${w.availablePool.toneItems}, twins ${w.availablePool.twinSets}, echo ${w.availablePool.echoItems}, stories ${w.availablePool.stories}, chunks ${w.availablePool.chunks}, signs ${w.availablePool.signs}, font ${w.availablePool.fontShock}, mouth ${w.availablePool.mouthCoach}`;
+    const route = `due ${w.todayGovernorRouteAtThisDueLoad.dueSrsBeforeCap} -> served ${w.todayGovernorRouteAtThisDueLoad.dueSrsServedAfterCap} / cap ${w.todayGovernorRouteAtThisDueLoad.srsCap}; ${w.todayGovernorRouteAtThisDueLoad.todayType}`;
+    lines.push(`| ${L.day} | ${safeCell(payload)} | ${safeCell(avail)} | ${safeCell(route)} | ${safeCell(w.todayGovernorRouteAtThisDueLoad.depthBlockLikely)} |`);
   });
   lines.push('');
   lines.push('## Named Surface Audit');
@@ -538,7 +625,7 @@ function renderMarkdown(audit){
     lines.push(`- Quiz count: ${L.quiz.count}`);
     lines.push(`- Quiz axes: ${Object.entries(L.quiz.axes).map(([k,v])=>`${k} ${v}`).join(', ') || '-'}`);
     lines.push(`- Review after lesson: glyph cards ${L.afterLesson.learnedGlyphs.length}, start-consonant glyphs ${L.afterLesson.learnedStarts.length}, final cards ${L.afterLesson.learnedFinals.length}, echo pool ${L.afterLesson.echoItems.length}`);
-    lines.push(`- Workload: new glyph cards ${L.workload.newGlyphCards}, new final cards ${L.workload.newFinalCards}, due SRS before cap ${L.workload.servedDailyLoad.dueSrsBeforeCap}, served after cap ${L.workload.servedDailyLoad.dueSrsServedAfterCap}, ${L.workload.servedDailyLoad.todayType}`);
+    lines.push(`- Workload: lesson payload glyph ${L.workload.lessonPayloadIfTaken.newGlyphCards}, final ${L.workload.lessonPayloadIfTaken.newFinalCards}, quiz ${L.workload.lessonPayloadIfTaken.lessonQuizCount}; Today route due ${L.workload.todayGovernorRouteAtThisDueLoad.dueSrsBeforeCap}, served ${L.workload.todayGovernorRouteAtThisDueLoad.dueSrsServedAfterCap}/${L.workload.todayGovernorRouteAtThisDueLoad.srsCap}, ${L.workload.todayGovernorRouteAtThisDueLoad.todayType}`);
     lines.push(`- Surface audit: ${(L.surfaceAudit||[]).map(s=>`${s.name} ${s.availableItemCount} ${s.unit||'items'} -> ${s.servedCount}/${s.cap} ${s.prerequisiteStatus.status}`).join('; ') || '-'}`);
     lines.push(`- Unlocked drills: ${L.afterLesson.unlockedDrills.join(', ') || '-'}`);
     lines.push('- Quiz prompts:');
