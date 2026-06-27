@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.2</span>
+      <span class="version-pill">v5.2.1</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2.1 (PWA)</div>
     </div>
   </section>
 
@@ -967,6 +967,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="review-action-grid">
           <button class="review-action primary" id="cta-flash">
             <div><div class="t">Flashcards</div><div class="d" id="flash-sub">0 cards due</div></div>
+            <span class="arrow">→</span>
+          </button>
+          <button class="review-action" id="cta-leech">
+            <div><div class="t">Leech clinic</div><div class="d" id="leech-sub">0 tough cards</div></div>
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-quiz">
@@ -1971,6 +1975,40 @@ const LESSON_PAYOFFS = {
   l23:{thai:'ห้องน้ำ', tr:'hôrng-náam', meaning:'toilet', context:'A real sign word. Decode ห้อง and น้ำ as chunks before using the meaning.', capability:'You can read a useful public-sign chunk.'},
   l24:{thai:'เปิด', tr:'bpèrt', meaning:'open', context:'A capstone sign word: front vowel, final -t and the mid-class dead tone route.', capability:'You can read everyday open/closed sign Thai.'}
 };
+const UTILITY_LEVELS = ['high','medium','scaffold'];
+const PAYOFF_UTILITY = {
+  l1:'scaffold', l2:'medium', l3:'high', l4:'high', l5:'medium', l6:'high',
+  l7:'medium', l8:'high', l9:'high', l10:'high', l11:'medium', l12:'high',
+  l13:'high', l14:'high', l15:'high', l16:'high', l17:'high', l18:'high',
+  l19:'high', l20:'high', l21:'medium', l22:'high', l23:'high', l24:'high'
+};
+const MISSION_UTILITY = {
+  'price-baht':'high',
+  'tone-mark-spot':'medium',
+  'request-starter':'high',
+  'ng-listen':'medium',
+  'male-i':'high',
+  'yes-water':'high',
+  'polite-khrap':'high',
+  'public-signs':'high',
+  'open-closed':'high'
+};
+const HUMAN_AUDIO_TARGETS = [
+  {id:'tones', gate:'l4', thai:['กา','ก่า','ก้า'], reason:'tone shapes'},
+  {id:'aspiration', gate:'l12', thai:['กา','คน','ขอ','ถูก'], reason:'unaspirated/aspirated contrast'},
+  {id:'final-stops', gate:'l18', thai:['มาก','พูด','ครับ'], reason:'unreleased final stops'},
+  {id:'polite-core', gate:'l18', thai:['ขอ','ได้','ครับ'], reason:'core survival phrase rhythm'}
+];
+const HUMAN_AUDIO = {}; // optional bundled assets: thai text -> local audio URL
+const REVIEW_AXIS_QUOTAS = [
+  {id:'script', label:'glyph/class/start', cap:10, buckets:['script']},
+  {id:'mechanism', label:'final/live/tone', cap:12, buckets:['mechanism']},
+  {id:'listening', label:'listening contrast', cap:8, buckets:['listening']},
+  {id:'speaking-transfer', label:'read aloud/transfer', cap:6, buckets:['speaking','transfer']},
+  {id:'word', label:'phrase cards', cap:4, buckets:['word']}
+];
+const LEECH_LAPSE_LIMIT = 3;
+const LEECH_CLEAR_TARGET = 2;
 function classTilesHtml(xs, cls){
   return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${cls}">${ch}</span>`).join('')}</div>`;
 }
@@ -2213,7 +2251,7 @@ function missionAvailable(mission, doneIds){
 }
 function bangkokMissions(doneIds){
   const ids = doneIds || state.done || [];
-  return BANGKOK_MISSIONS.filter(m=>missionAvailable(m, ids));
+  return BANGKOK_MISSIONS.filter(m=>missionAvailable(m, ids)).map(m=>Object.assign({utility:MISSION_UTILITY[m.id] || 'medium'}, m));
 }
 function missionDoneToday(){
   const done = (ensureMissions().done || {});
@@ -2228,7 +2266,9 @@ function nextBangkokMission(){
     const ad = done[a.id], bd = done[b.id];
     const al = ad ? ad.last || '' : '';
     const bl = bd ? bd.last || '' : '';
-    return al.localeCompare(bl) || lessonNum(a.gate) - lessonNum(b.gate);
+    const au = a.utility === 'high' ? 0 : a.utility === 'medium' ? 1 : 2;
+    const bu = b.utility === 'high' ? 0 : b.utility === 'medium' ? 1 : 2;
+    return al.localeCompare(bl) || au - bu || lessonNum(a.gate) - lessonNum(b.gate);
   })[0];
 }
 function dailyBridgeRequirements(doneIds){
@@ -2823,26 +2863,92 @@ function srsAddTo(target, id, delayDays){
   const s = target || state;
   if(!s.srs) s.srs = {};
   if(s.srs[id]) return false;
-  s.srs[id] = {iv:0, due:isoPlusDays(todayStr(), delayDays || 0), lapses:0};
+  s.srs[id] = {iv:0, due:isoPlusDays(todayStr(), delayDays || 0), lapses:0, sameDayMisses:0};
   return true;
 }
 function srsAdd(id, delayDays){
   return srsAddTo(state, id, delayDays);
 }
-function srsDueFor(target){
+function srsCard(id, target){
+  const s = target || state;
+  return s && s.srs ? s.srs[id] : null;
+}
+function srsIsLeech(id, target){
+  const c = srsCard(id, target);
+  return !!(c && c.leech);
+}
+function cardReviewBucket(id){
+  const axis = parseAxisId(id);
+  if(axis){
+    if(['glyph','class','initial'].includes(axis.axis)) return 'script';
+    if(['final','live','tone'].includes(axis.axis)) return 'mechanism';
+    if(axis.axis === 'listen') return 'listening';
+    if(axis.axis === 'say') return 'speaking';
+    if(axis.axis === 'transfer') return 'transfer';
+  }
+  if(id.startsWith('g:')) return 'script';
+  if(id.startsWith('f:')) return 'mechanism';
+  if(id.startsWith('w:')) return 'word';
+  return 'word';
+}
+function sortReviewIds(ids, target){
+  const s = target || state;
+  return ids.slice().sort((a,b)=>{
+    const ac = s.srs[a] || {}, bc = s.srs[b] || {};
+    return (bc.lapses||0) - (ac.lapses||0) || String(ac.due||'').localeCompare(String(bc.due||'')) || a.localeCompare(b);
+  });
+}
+function buildBalancedReviewSession(ids, limit){
+  const remaining = sortReviewIds(ids, state), selected = [], used = new Set();
+  REVIEW_AXIS_QUOTAS.forEach(q=>{
+    remaining.filter(id=>!used.has(id) && q.buckets.includes(cardReviewBucket(id))).slice(0, q.cap).forEach(id=>{
+      used.add(id); selected.push(id);
+    });
+  });
+  remaining.forEach(id=>{
+    if(selected.length >= (limit || 40)) return;
+    if(!used.has(id)){ used.add(id); selected.push(id); }
+  });
+  return selected.slice(0, limit || 40);
+}
+function srsDueFor(target, opts){
   const s = target || state;
   const t = todayStr();
-  return Object.keys(s.srs || {}).filter(id => s.srs[id].due <= t && !reviewCardBlockedByFoundationRefresh(id, s));
+  const options = opts || {};
+  return Object.keys(s.srs || {}).filter(id => s.srs[id].due <= t
+    && !reviewCardBlockedByFoundationRefresh(id, s)
+    && (options.includeLeeches || !s.srs[id].leech));
 }
-function srsDue(){
-  return srsDueFor(state);
+function srsDue(opts){
+  return srsDueFor(state, opts);
 }
-function srsGrade(id, grade){ // 0 again, 1 hard, 2 good, 3 easy
+function srsLeechesDue(target){
+  const s = target || state, t = todayStr();
+  return Object.keys(s.srs || {}).filter(id=>s.srs[id].due <= t && s.srs[id].leech && !reviewCardBlockedByFoundationRefresh(id, s));
+}
+function srsGrade(id, grade, meta){ // 0 again, 1 hard, 2 good, 3 easy
   const c = state.srs[id]; if(!c) return;
-  if(grade === 0){ c.iv = 0; c.lapses++; }
+  const m = meta || {};
+  if(grade === 0){
+    c.iv = 0; c.lapses++; c.sameDayMisses = (c.sameDayMisses||0) + 1; c.leechClears = 0;
+    if((c.lapses||0) >= LEECH_LAPSE_LIMIT){ c.leech = true; c.leechSince = c.leechSince || todayStr(); }
+  }
   else if(grade === 1){ c.iv = Math.max(1, Math.round(c.iv * 1.2) || 1); }
-  else if(grade === 2){ c.iv = c.iv === 0 ? 1 : Math.round(c.iv * 2); }
+  else if(grade === 2){ c.iv = c.iv === 0 ? 1 : Math.round(c.iv * (m.shaky ? 1.2 : 2)); }
   else { c.iv = c.iv === 0 ? 3 : Math.round(c.iv * 3); }
+  if(grade > 0){
+    c.sameDayMisses = 0;
+    c.shaky = !!m.shaky;
+    c.lastResult = m.shaky ? 'shaky' : grade === 1 ? 'hard' : grade === 3 ? 'easy' : 'good';
+    if(c.leech){
+      c.leechClears = m.shaky ? 0 : (c.leechClears || 0) + 1;
+      if(c.leechClears >= LEECH_CLEAR_TARGET){
+        c.leech = false;
+        c.leechClears = 0;
+        c.leechCleared = todayStr();
+      }
+    }
+  }
   const d = new Date(); d.setDate(d.getDate() + c.iv);
   c.due = d.toISOString().slice(0,10);
   saveState();
@@ -3409,7 +3515,24 @@ function closeAudioSetup(){
   if(modal) modal.remove();
   audioSetupOpen = false;
 }
+function humanAudioUrl(text){
+  return HUMAN_AUDIO[String(text||'')] || '';
+}
+function playHumanAudio(text, btn){
+  const url = humanAudioUrl(text);
+  if(!url) return false;
+  const a = new Audio(url);
+  if(btn) btn.classList.add('playing');
+  a.onended = ()=>{ if(btn) btn.classList.remove('playing'); };
+  a.onerror = ()=>{ if(btn) btn.classList.remove('playing'); speakWithSystemVoice(text, btn); };
+  a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); speakWithSystemVoice(text, btn); });
+  return true;
+}
 function speak(text, btn, rate){
+  if(playHumanAudio(text, btn)) return;
+  speakWithSystemVoice(text, btn, rate);
+}
+function speakWithSystemVoice(text, btn, rate){
   if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text); return; }
   try{ speechSynthesis.resume(); }catch(e){}
   if(!thaiVoice) pickVoice();
@@ -3851,9 +3974,9 @@ function learnedFinalGlyphIds(doneIds){
 function lessonPayoff(L){
   if(!L) return null;
   const explicit = LESSON_PAYOFFS[L.id];
-  if(explicit) return Object.assign({lesson:L.id}, explicit);
+  if(explicit) return Object.assign({lesson:L.id, utility:PAYOFF_UTILITY[L.id] || 'medium'}, explicit);
   const w = (L.words||[]).find(x=>wordRole(x)!=='decode') || (L.words||[])[0];
-  return w ? {lesson:L.id, thai:w.thai, tr:w.tr, meaning:w.en, context:L.note || '', capability:'You can connect this lesson mechanism to useful Thai.'} : null;
+  return w ? {lesson:L.id, thai:w.thai, tr:w.tr, meaning:w.en, context:L.note || '', capability:'You can connect this lesson mechanism to useful Thai.', utility:PAYOFF_UTILITY[L.id] || 'medium'} : null;
 }
 function retentionRecord(target, lessonId){
   const s = target || state;
@@ -4085,6 +4208,14 @@ function ensureStateCollections(target){
   if(!target.missions.done) target.missions.done = {};
   if(!target.contrastLog) target.contrastLog = {};
   if(!target.signSafari.seen) target.signSafari.seen = {};
+  Object.keys(target.srs || {}).forEach(id=>{
+    const c = target.srs[id] || {};
+    if(c.sameDayMisses == null) c.sameDayMisses = 0;
+    if(c.leechClears == null) c.leechClears = 0;
+    if(c.lapses == null) c.lapses = 0;
+    if(c.lapses >= LEECH_LAPSE_LIMIT && c.leech == null) c.leech = true;
+    target.srs[id] = c;
+  });
 }
 function repairStateForV5(target){
   const s = target || state;
@@ -4102,7 +4233,7 @@ function repairStateForV5(target){
   learnedGlyphIdsFor(done).forEach(ch=>{
     const id = 'g:' + ch;
     if(!s.srs[id]){
-      s.srs[id] = {iv:0, due:todayStr(), lapses:0};
+      s.srs[id] = {iv:0, due:todayStr(), lapses:0, sameDayMisses:0};
       report.seededGlyphs++;
       report.changed = true;
     }
@@ -4110,7 +4241,7 @@ function repairStateForV5(target){
   learnedFinalGlyphIds(done).forEach(ch=>{
     const id = 'f:' + ch;
     if(!s.srs[id]){
-      s.srs[id] = {iv:0, due:todayStr(), lapses:0};
+      s.srs[id] = {iv:0, due:todayStr(), lapses:0, sameDayMisses:0};
       report.seededFinals++;
       report.changed = true;
     }
@@ -4382,6 +4513,116 @@ function validateV52FullBriefContracts(){
   if(typeof renderLessonPayoff !== 'function') errors.push('lesson payoff renderer missing');
   if(typeof startRetentionCheck !== 'function') errors.push('retention check launcher missing');
   if(errors.length) throw new Error('V5.2 full brief contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function withTemporaryState(fake, fn){
+  const old = state;
+  state = fake;
+  ensureStateCollections(state);
+  try{ return fn(); }
+  finally{ state = old; }
+}
+function validateRecallAxisContracts(){
+  const errors = [];
+  LESSONS.forEach(L=>{
+    axisCardIdsForLesson(L).forEach(id=>{
+      if(!axisCardAllowedForDone(id, lessonIdsThrough(L))) errors.push(L.id + ': axis card not allowed at its lesson gate: ' + id);
+    });
+  });
+  withTemporaryState({done:['l1'], srs:{}, days:{}, retention:{}}, ()=>{
+    const ids = [
+      'g:ก','g:น','a:glyph:ก','a:class:ก','a:initial:ก',
+      'f:ก','a:final:ก','a:live:มา','a:tone:มา',
+      'a:listen:มา','a:say:มา','a:transfer:l1','w:สวัสดีครับ'
+    ];
+    ids.forEach(id=>{ state.srs[id] = {iv:0, due:todayStr(), lapses:id.startsWith('a:listen')?2:0}; });
+    const session = buildBalancedReviewSession(ids, 40);
+    ['script','mechanism','listening','speaking','transfer','word'].forEach(bucket=>{
+      if(!session.some(id=>cardReviewBucket(id) === bucket)) errors.push('balanced review session missing ' + bucket + ' bucket');
+    });
+  });
+  if(errors.length) throw new Error('Recall axis contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateDelayedMasteryContracts(){
+  const errors = [];
+  const fake = {done:['l1'], srs:{}, days:{}, retention:{}};
+  ensureStateCollections(fake);
+  scheduleRetentionForLesson('l1', isoPlusDays(todayStr(), -1), fake, false);
+  const item = nextRetentionCheck(fake);
+  if(!item || item.stage !== 'retained') errors.push('missing +1 retained check');
+  const qs = withTemporaryState(fake, ()=>buildRetentionQuiz({lessonId:'l1', stage:'retained'}));
+  if(!qs.length || qs.some(q=>definitionCueText((q.text||'') + ' ' + (q.prompt||'') + ' ' + (q.sayLabel||'') + ' ' + (q.options||[]).join(' ')))) errors.push('retention checks must be definition-free and non-empty');
+  if(errors.length) throw new Error('Delayed mastery contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateContrastCoverageContracts(){
+  const errors = [];
+  ['tone-marks','initial-ng','vowel-length','dt-th','g-kh','bp-ph','final-stops','r-l','clusters'].forEach(id=>{
+    const block = CONTRAST_BLOCKS.find(b=>b.id === id);
+    if(!block) errors.push('missing contrast block ' + id);
+    else if(!block.listen || !block.speak) errors.push('contrast block must pair listen and speak: ' + id);
+  });
+  if(errors.length) throw new Error('Contrast coverage contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateMigrationTrustContracts(){
+  validateV5MigrationContracts();
+  validateV501FoundationRefreshContracts();
+  const fake = {done:['l1','l2','l3'], srs:{'f:ก':{iv:0,due:todayStr(),lapses:0}}, foundationRefresh:{required:true, complete:false, quarantinedFinals:['f:ก']}};
+  ensureStateCollections(fake);
+  if(srsDueFor(fake).includes('f:ก')) throw new Error('Migration trust contract failed:\nquarantined final surfaced in due review');
+  return true;
+}
+function validateUtilityMissionContracts(){
+  const errors = [];
+  LESSONS.forEach(L=>{
+    const p = lessonPayoff(L);
+    if(!p || !UTILITY_LEVELS.includes(p.utility)) errors.push(L.id + ': payoff missing valid utility tag');
+  });
+  BANGKOK_MISSIONS.forEach(m=>{
+    if(!UTILITY_LEVELS.includes(MISSION_UTILITY[m.id])) errors.push(m.id + ': mission missing valid utility tag');
+    if(/definition|translate|meaning quiz/i.test(m.action || '')) errors.push(m.id + ': mission drifts into meaning-only memorisation');
+  });
+  if(!BANGKOK_MISSIONS.some(m=>MISSION_UTILITY[m.id] === 'high')) errors.push('no high-utility Bangkok missions');
+  if(errors.length) throw new Error('Utility mission contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateHumanAudioFallbackContracts(){
+  const errors = [];
+  HUMAN_AUDIO_TARGETS.forEach(target=>{
+    if(!target.id || !target.gate || !target.thai || !target.thai.length) errors.push('human audio target incomplete: ' + (target.id||'?'));
+    const done = LESSONS.slice(0, LESSONS.findIndex(L=>L.id===target.gate)+1).map(L=>L.id);
+    (target.thai||[]).forEach(th=>{
+      prerequisiteIssuesForThai(th, done, 'human-audio/' + target.id, wordFrame(findWord(th))).forEach(i=>{
+        errors.push('human-audio/' + target.id + ':' + th + ' missing ' + (i.missing||[]).join(','));
+      });
+    });
+  });
+  if(typeof playHumanAudio !== 'function' || typeof speakWithSystemVoice !== 'function') errors.push('human audio fallback hooks missing');
+  if(errors.length) throw new Error('Human audio fallback contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV521HardeningContracts(){
+  const errors = [];
+  try{ validateRecallAxisContracts(); }catch(e){ errors.push(e.message); }
+  try{ validateDelayedMasteryContracts(); }catch(e){ errors.push(e.message); }
+  try{ validateContrastCoverageContracts(); }catch(e){ errors.push(e.message); }
+  try{ validateMigrationTrustContracts(); }catch(e){ errors.push(e.message); }
+  try{ validateUtilityMissionContracts(); }catch(e){ errors.push(e.message); }
+  try{ validateHumanAudioFallbackContracts(); }catch(e){ errors.push(e.message); }
+  withTemporaryState({done:['l1'], srs:{'g:ก':{iv:0,due:todayStr(),lapses:2,sameDayMisses:0}, 'g:น':{iv:4,due:todayStr(),lapses:0,sameDayMisses:0}}, days:{}, retention:{}}, ()=>{
+    srsGrade('g:ก', 0);
+    if(!state.srs['g:ก'].leech) errors.push('three lapses should mark a leech card');
+    if(srsDue().includes('g:ก')) errors.push('leech card should leave the normal due deck');
+    if(!srsLeechesDue().includes('g:ก')) errors.push('leech card should appear in leech clinic');
+    srsGrade('g:ก', 2);
+    srsGrade('g:ก', 2);
+    if(state.srs['g:ก'].leech) errors.push('two clean passes should clear leech status');
+    srsGrade('g:น', 2, {shaky:true});
+    if(!state.srs['g:น'].shaky || state.srs['g:น'].iv > 5) errors.push('shaky correct answer should shorten the interval');
+  });
+  if(errors.length) throw new Error('V5.2.1 hardening contract failed:\n' + errors.join('\n'));
   return true;
 }
 function finalJobHtml(ch, lessonId){
@@ -6439,8 +6680,19 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
     const fb = el('q-fb');
     const hint = q.wrongExplain || q.explain || targetedWrongFeedback(q);
-    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
     fb.className = 'q-feedback ' + (ok?'ok':'no');
+    if(ok && q.allowShaky){
+      fb.innerHTML = `
+        <div>Correct</div>
+        <div class="rw-grid" style="margin-top:10px">
+          <button class="btn ghost" id="q-shaky">Felt shaky</button>
+          <button class="btn" id="q-solid">Solid</button>
+        </div>`;
+      el('q-shaky').onclick = ()=>onDone(true, {shaky:true});
+      el('q-solid').onclick = ()=>onDone(true, {shaky:false});
+      return;
+    }
+    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
     setTimeout(()=>onDone(ok), ok ? 700 : 1700);
   }
   if(timedSecs){
@@ -6477,8 +6729,19 @@ function renderTypeQ(q, onDone, counterLabel){
     const ok = norm(inp.value) === norm(q.answer);
     if(inp) inp.disabled = true;
     const fb = el('q-fb');
-    fb.textContent = ok ? 'Correct' : 'Answer: ' + q.answer;
     fb.className = 'q-feedback ' + (ok?'ok':'no');
+    if(ok && q.allowShaky){
+      fb.innerHTML = `
+        <div>Correct</div>
+        <div class="rw-grid" style="margin-top:10px">
+          <button class="btn ghost" id="type-shaky">Felt shaky</button>
+          <button class="btn" id="type-solid">Solid</button>
+        </div>`;
+      el('type-shaky').onclick = ()=>onDone(true, {shaky:true});
+      el('type-solid').onclick = ()=>onDone(true, {shaky:false});
+      return;
+    }
+    fb.textContent = ok ? 'Correct' : 'Answer: ' + q.answer;
     setTimeout(()=>onDone(ok), ok ? 700 : 1500);
   }
   el('type-go').onclick = submit;
@@ -6754,7 +7017,10 @@ function renderPhrases(){
 ===================================================== */
 function renderReviewTab(){
   const due = srsDue().length;
+  const leeches = srsLeechesDue().length;
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due. Add phrases or finish lessons.';
+  const leechSub = el('leech-sub');
+  if(leechSub) leechSub.textContent = leeches ? leeches + ' tough card' + (leeches>1?'s':'') + ' waiting' : 'No tough cards waiting';
   renderLap();
   renderPath();
   renderTones();        // tone licence panel now lives in the Review tab (folded in v2.27)
@@ -6763,10 +7029,21 @@ function renderReviewTab(){
 el('cta-flash').addEventListener('click', ()=>{
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const due = srsDue();
-  if(!due.length){ toast('No cards due right now'); return; }
-  const session = shuffle(due).slice(0, 40);
+  if(!due.length){
+    const leeches = srsLeechesDue().length;
+    toast(leeches ? 'Normal deck is clear. Leech clinic has ' + leeches + ' tough card' + (leeches>1?'s':'') + '.' : 'No cards due right now');
+    return;
+  }
+  const session = buildBalancedReviewSession(due, 40);
   if(due.length > 40) toast((due.length - 40) + ' more after this session');
   startFlashcards(session);
+});
+el('cta-leech').addEventListener('click', ()=>{
+  if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
+  const due = srsLeechesDue();
+  if(!due.length){ toast('No leech cards waiting'); return; }
+  const session = buildBalancedReviewSession(due, 12);
+  startFlashcards(session, {leechClinic:true});
 });
 el('cta-quiz').addEventListener('click', ()=>{
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
@@ -6785,8 +7062,8 @@ el('cta-font-shock').addEventListener('click', startFontShock);
 el('cta-mouth').addEventListener('click', showMouthCoach);
 el('cta-mission').addEventListener('click', ()=>showBangkokMissions());
 
-function startFlashcards(queue){
-  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now()};
+function startFlashcards(queue, opts){
+  player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now(), opts:opts||{}};
   openOverlay(); renderFlash();
 }
 function renderAxisSpeakFlash(id, advance, counterLabel){
@@ -6875,7 +7152,7 @@ function renderFlash(){
     bumpStreak(); questCheck();
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak · ${p.reviewed} cards reviewed</div>
+      <div class="result-sub">gèng mâak · ${p.reviewed} ${p.opts && p.opts.leechClinic ? 'tough cards practised' : 'cards reviewed'}</div>
       ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
@@ -6898,10 +7175,10 @@ function renderFlash(){
   const gated = id.startsWith('w:') && !isLessonWord(id.slice(2)) && !phraseReadable(id.slice(2));
   const listen = id.startsWith('w:') && (gated || Math.random() < 0.3);
 
-  function advance(right){
+  function advance(right, meta){
     const firstAttempt = !p.seen[id]; if(firstAttempt) p.seen[id] = 1;
     if(firstAttempt && right) p.cleanFirst++;        // clean run = right on the FIRST try (no gambling)
-    if(right){ srsGrade(id, 2); }                    // Good - interval advances
+    if(right){ srsGrade(id, 2, meta); }              // Good - interval advances
     else { srsGrade(id, 0); p.queue.push(id); }      // Again - requeue this session
     p.reviewed++; p.i++; renderFlash();
   }
@@ -6941,7 +7218,7 @@ function renderFlash(){
   }
 
   // READING / ALPHABET → objective multiple choice (you never rate yourself)
-  const q = mcCard(id);
+  const q = Object.assign({}, mcCard(id), {allowShaky:true});
   if(q.kind === 'type') renderTypeQ(q, advance, `${p.i+1} of ${p.queue.length}`);
   else renderQuizQ(q, advance, `${p.i+1} of ${p.queue.length}`, 0);
 }
@@ -7892,6 +8169,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV51PolishContracts();
   validateV52BridgeContracts();
   validateV52FullBriefContracts();
+  validateV521HardeningContracts();
   await loadState();
   const migrated = repairStateForV5(state);
   const migrated501 = repairStateForV501(state);

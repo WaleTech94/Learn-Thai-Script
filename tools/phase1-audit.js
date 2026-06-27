@@ -321,11 +321,11 @@ globalThis.__phase1Audit = (function(){
       'axis-review',
       'Axis review',
       available,
-      available.length ? Math.min(40, available.length) : 0,
+      available.length ? buildBalancedReviewSession(available, 40).length : 0,
       40,
       raw.length,
       {status:available.length === raw.length ? 'PASS' : 'FAIL', issueCount:raw.length - available.length, issues:[]},
-      roleContract('N/A', [], 'separate SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer')
+      roleContract('N/A', [], 'quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer')
     );
   }
   function retentionSurface(doneIds){
@@ -596,7 +596,14 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v5Transfer', validateV5TransferContracts),
     validatorResult('v51Polish', validateV51PolishContracts),
     validatorResult('v52Bridge', validateV52BridgeContracts),
-    validatorResult('v52FullBrief', validateV52FullBriefContracts)
+    validatorResult('v52FullBrief', validateV52FullBriefContracts),
+    validatorResult('recallAxis', validateRecallAxisContracts),
+    validatorResult('delayedMastery', validateDelayedMasteryContracts),
+    validatorResult('contrastCoverage', validateContrastCoverageContracts),
+    validatorResult('migrationTrust', validateMigrationTrustContracts),
+    validatorResult('utilityMission', validateUtilityMissionContracts),
+    validatorResult('humanAudioFallback', validateHumanAudioFallbackContracts),
+    validatorResult('v521Hardening', validateV521HardeningContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),

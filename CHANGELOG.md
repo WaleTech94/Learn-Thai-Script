@@ -2,6 +2,17 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.2.1 — 2026-06-27
+
+- Added review hardening on top of v5.2: repeated misses now mark a card as a leech after three lapses, remove it from the normal due deck and surface it in a dedicated Leech clinic until two clean passes clear it.
+- Added a “Felt shaky” path for correct flashcard answers; shaky correct answers keep the card on a shorter interval instead of treating recognition as full confidence.
+- Added axis-balanced review sessions: normal flashcard review now samples across script, mechanism, listening, read-aloud/transfer and phrase buckets before filling the 40-card cap.
+- Added utility tags for lesson payoffs and Bangkok Missions so high-utility Phase 1 language can be prioritised without adding English-definition vocab quizzes.
+- Added human-audio readiness: speaker taps can prefer future bundled local recordings for core tone/aspiration/final-stop targets, while today’s app still falls back to the device Thai voice.
+- Added named hardening validators: `validateRecallAxisContracts()`, `validateDelayedMasteryContracts()`, `validateContrastCoverageContracts()`, `validateMigrationTrustContracts()`, `validateUtilityMissionContracts()`, `validateHumanAudioFallbackContracts()` and `validateV521HardeningContracts()`.
+- Parked v6/Phase 2 note: audio-first micro-scenes, controlled dialogues and useful-pattern retrieval remain a bridge-plan item, not Phase 1 scope.
+- Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS including the new v5.2.1 hardening contracts.
+
 ## v5.2 — 2026-06-26
 
 - Added a required lesson payoff step to all 24 lessons: Thai script first, learner decodes before reveal, then audio, meaning/context and script-cued read-aloud.
