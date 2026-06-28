@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.2.6 - 2026-06-28
+
+- Removed recurring tone-sign name review for `่`, `้`, `๊` and `๋`; the app no longer seeds or keeps `g:` glyph-name cards or `a:glyph` axis cards for those marks.
+- Kept tone-sign names in lesson/reference copy only, while preserving function-based tone questions such as class + mark -> tone.
+- Existing legacy tone-sign name cards are pruned by the normal state repair pass.
+- Changed remaining mark-review prompt wording from formal name recall to mark function.
+- Added `validateV526ToneSignReviewContracts()` and audit coverage to prevent tone-sign name MCQs from returning to review.
+
 ## v5.2.5 - 2026-06-27
 
 - Kept the v5.2/v5.2.1 learning model intact while simplifying route gating through a single canonical lesson blocker.

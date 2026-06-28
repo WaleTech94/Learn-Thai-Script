@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.2.5</span>
+      <span class="version-pill">v5.2.6</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2.5 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2.6 (PWA)</div>
     </div>
   </section>
 
@@ -1170,6 +1170,13 @@ const GLYPHS = {
   "์":{disp:"ย์", type:"m", sound:"silent",     name:"การันต์", nameTr:"gaa-ran", gloss:"kills the letter under it - common in loanwords", demo:"ศูนย์"},
   "ๆ":{disp:"ๆ", type:"m", sound:"repeat sign", name:"ไม้ยมก", nameTr:"mái yá-mók", gloss:"repeats the previous word", demo:"ช้าๆ"}
 };
+const TONE_SIGN_NAME_REVIEW_GLYPHS = ['่','้','๊','๋'];
+function isToneSignNameReviewGlyph(ch){
+  return TONE_SIGN_NAME_REVIEW_GLYPHS.includes(ch);
+}
+function glyphReviewCardAllowed(ch){
+  return !!(GLYPHS[ch] && !isToneSignNameReviewGlyph(ch));
+}
 
 const FINAL_JOBS = {
   "ก":{sound:"-k", group:"stop", effect:"stops the syllable (dead)"},
@@ -3248,7 +3255,7 @@ function glyphMisconceptionScore(ch, other){
     if((/short/.test(g.sound) && /long/.test(o.sound)) || (/long/.test(g.sound) && /short/.test(o.sound))) score += 3;
     if(String(g.disp||'').slice(0,1) === String(o.disp||'').slice(0,1)) score += 2;
   } else {
-    score += 8; // tone-mark names and the silencer are a deliberately tight family.
+    score += 8; // mark functions are a deliberately tight family.
   }
   return score;
 }
@@ -3264,7 +3271,7 @@ function glyphSoundPrompt(g){
   if(g.type === 'c') return 'What consonant sound?';
   if(g.type === 'v') return 'What vowel sound?';
   if(g.sound === 'silent') return 'What does this mark do?';
-  return 'What mark name?';
+  return 'What does this mark do?';
 }
 function sameTypeGlyphs(type){
   return Object.keys(GLYPHS).filter(k=>GLYPHS[k] && GLYPHS[k].type===type);
@@ -4165,7 +4172,7 @@ function axisCardIdsForLesson(L){
   (L.glyphs||[]).forEach(ch=>{
     const g = GLYPHS[ch];
     if(!g) return;
-    ids.push(axisId('glyph', ch));
+    if(glyphReviewCardAllowed(ch)) ids.push(axisId('glyph', ch));
     if(g.type === 'c'){
       ids.push(axisId('class', ch));
       ids.push(axisId('initial', ch));
@@ -4186,7 +4193,8 @@ function axisCardAllowedForDone(id, doneIds){
   const p = parseAxisId(id); if(!p) return false;
   const done = doneIds || state.done || [];
   if(p.axis === 'transfer') return done.includes(p.key) && !!lessonPayoff(lessonById(p.key));
-  if(['glyph','class','initial'].includes(p.axis)) return learnedGlyphIdsFor(done).includes(p.key);
+  if(p.axis === 'glyph') return glyphReviewCardAllowed(p.key) && learnedGlyphIdsFor(done).includes(p.key);
+  if(['class','initial'].includes(p.axis)) return learnedGlyphIdsFor(done).includes(p.key);
   if(p.axis === 'final') return learnedFinalGlyphIds(done).includes(p.key);
   const w = axisWord(p.key);
   if(!w || !learnedWords(done).some(x=>x.thai === w.thai)) return false;
@@ -4338,7 +4346,7 @@ function cardAllowedForDone(id, doneIds){
   if(id.startsWith('r:')) return false;
   if(id.startsWith('g:')){
     const ch = id.slice(2);
-    return !!(GLYPHS[ch] && learnedGlyphIdsFor(done).includes(ch));
+    return !!(glyphReviewCardAllowed(ch) && learnedGlyphIdsFor(done).includes(ch));
   }
   if(id.startsWith('f:')){
     const ch = id.slice(2);
@@ -4394,7 +4402,7 @@ function repairStateForV5(target){
       report.changed = true;
     }
   });
-  learnedGlyphIdsFor(done).forEach(ch=>{
+  learnedGlyphIdsFor(done).filter(glyphReviewCardAllowed).forEach(ch=>{
     const id = 'g:' + ch;
     if(!s.srs[id]){
       s.srs[id] = {iv:0, due:todayStr(), lapses:0, sameDayMisses:0};
@@ -4503,7 +4511,7 @@ function validateV5MigrationContracts(){
     validateStateDeckForDone(c.state, c.label);
     if(c.label === 'completed-phase1'){
       const missingFinal = learnedFinalGlyphIds(allDone).filter(ch=>!c.state.srs['f:'+ch]);
-      const missingGlyph = learnedGlyphIdsFor(allDone).filter(ch=>!c.state.srs['g:'+ch]);
+      const missingGlyph = learnedGlyphIdsFor(allDone).filter(glyphReviewCardAllowed).filter(ch=>!c.state.srs['g:'+ch]);
       if(missingFinal.length || missingGlyph.length) throw new Error(c.label + ': missing seeded cards');
       if(!c.state.checks.letters42) throw new Error(c.label + ': letters boss state lost');
     }
@@ -6424,7 +6432,7 @@ function finishLesson(){
   const firstTime = !state.done.includes(L.id);
   if(firstTime){
     state.done.push(L.id);
-    L.glyphs.forEach(g=>srsAdd('g:'+g));
+    L.glyphs.filter(glyphReviewCardAllowed).forEach(g=>srsAdd('g:'+g));
     finalGlyphsForLesson(L).forEach(g=>srsAdd('f:'+g));
     seedAxisCardsForLesson(L, state, null, {stagger:true});
     scheduleRetentionForLesson(L.id);
@@ -6772,7 +6780,7 @@ function validatePrerequisiteContracts(){
 }
 function validateReviewChoiceContracts(){
   const errors = [];
-  Object.keys(GLYPHS).forEach(ch=>{
+  Object.keys(GLYPHS).filter(glyphReviewCardAllowed).forEach(ch=>{
     const g = GLYPHS[ch], q = mcCard('g:'+ch);
     const pool = new Set(glyphSoundPool(g, g.sound));
     (q.options||[]).forEach(o=>{
@@ -6790,6 +6798,33 @@ function validateReviewChoiceContracts(){
     }
   });
   if(errors.length) throw new Error('Review choice contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV526ToneSignReviewContracts(){
+  const errors = [];
+  const allDone = LESSONS.map(L=>L.id);
+  TONE_SIGN_NAME_REVIEW_GLYPHS.forEach(ch=>{
+    if(cardAllowedForDone('g:' + ch, allDone)) errors.push(ch + ': tone-sign name glyph card should not be reviewable');
+    if(axisCardAllowedForDone(axisId('glyph', ch), allDone)) errors.push(ch + ': tone-sign name axis card should not be reviewable');
+  });
+  const legacy = {done:allDone.slice(), checks:{}, days:{}, retention:{}, pathDone:{}, srs:{}};
+  TONE_SIGN_NAME_REVIEW_GLYPHS.forEach(ch=>{
+    legacy.srs['g:' + ch] = {iv:0, due:todayStr(), lapses:0};
+    legacy.srs[axisId('glyph', ch)] = {iv:0, due:todayStr(), lapses:0};
+  });
+  repairStateForV5(legacy);
+  TONE_SIGN_NAME_REVIEW_GLYPHS.forEach(ch=>{
+    if(legacy.srs['g:' + ch]) errors.push(ch + ': legacy tone-sign glyph card survived repair');
+    if(legacy.srs[axisId('glyph', ch)]) errors.push(ch + ': legacy tone-sign axis card survived repair');
+  });
+  const l4 = {done:LESSONS.slice(0,4).map(L=>L.id), checks:{}, days:{}, retention:{}, pathDone:{}, srs:{}};
+  seedAxisCardsForLesson(lessonById('l4'), l4, 0);
+  ['่','้'].forEach(ch=>{
+    if(l4.srs[axisId('glyph', ch)]) errors.push(ch + ': Lesson 4 should not seed tone-sign name axis review');
+  });
+  const toneQ = toneQuestion(findWord('บ้าน'), 4);
+  if(!toneQ || toneQ.answer !== 'Falling') errors.push('function-based tone questions should remain available');
+  if(errors.length) throw new Error('V5.2.6 tone-sign review contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateFinalSoundContracts(){
@@ -8476,6 +8511,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV52FullBriefContracts();
   validateV521HardeningContracts();
   validateV525RouteSimplificationContracts();
+  validateV526ToneSignReviewContracts();
   await loadState();
   const migrated = repairStateForV5(state);
   const migrated501 = repairStateForV501(state);

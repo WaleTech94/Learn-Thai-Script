@@ -604,7 +604,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('utilityMission', validateUtilityMissionContracts),
     validatorResult('humanAudioFallback', validateHumanAudioFallbackContracts),
     validatorResult('v521Hardening', validateV521HardeningContracts),
-    validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts)
+    validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts),
+    validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -663,7 +664,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.2.5 keeps the v5.2/v5.2.1 learning model: Useful Thai, delayed recall, axis review, Contrast Blocks, Bangkok Missions, leech/shaky review, Endings Refresh, Course Map and Today all remain. Route gating is simplified through one lesson blocker: missing prerequisite lessons, required mastery checks, Endings Refresh, review overload at 45+ due cards, or invalid state. Delayed checks are recommended rather than normally blocking, migrated backfilled checks are capped per day, axis review backlogs are staged so the full axis pool is not treated as today's chore, and Course Map practice nodes are non-blocking/auto-completed by equivalent Today practice.");
+  lines.push("v5.2.6 keeps the v5.2/v5.2.1 learning model: Useful Thai, delayed recall, axis review, Contrast Blocks, Bangkok Missions, leech/shaky review, Endings Refresh, Course Map and Today all remain. Route gating is simplified through one lesson blocker: missing prerequisite lessons, required mastery checks, Endings Refresh, review overload at 45+ due cards, or invalid state. Delayed checks are recommended rather than normally blocking, migrated backfilled checks are capped per day, axis review backlogs are staged so the full axis pool is not treated as today's chore, Course Map practice nodes are non-blocking/auto-completed by equivalent Today practice, and tone-sign names are reference/teaching only rather than recurring review MCQs.");
   lines.push('');
   lines.push(`- SRS cap: ${audit.workload.srsCap} cards per review session`);
   lines.push(`- Axis review staging: up to ${audit.workload.axisReviewDailyCap} ordinary axis cards become due per day after a ${audit.workload.axisReviewFirstDelay}-day first delay; existing floods are repaired into that staged queue.`);
