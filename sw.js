@@ -1,5 +1,5 @@
 /* อ่าน — Learn Thai service worker */
-const CACHE = 'aan-thai-v2-2-0';
+const CACHE = 'aan-thai-v5-2-6';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

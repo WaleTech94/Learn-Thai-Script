@@ -9,6 +9,10 @@ Every versioned app release must update this file and `AGENTS.md` in the same co
 - Existing legacy tone-sign name cards are pruned by the normal state repair pass.
 - Changed remaining mark-review prompt wording from formal name recall to mark function.
 - Added `validateV526ToneSignReviewContracts()` and audit coverage to prevent tone-sign name MCQs from returning to review.
+- Stabilisation pass: progress import now validates the incoming JSON shape before merge, runs the same v5/v5.0.1 repair path used at startup, validates the repaired deck, saves and re-renders immediately.
+- Added `validateImportContracts()` / generated `importRepair` audit coverage for malformed imports, old valid imports requiring Endings Refresh, and completed Phase 1 imports.
+- Updated the service-worker cache name to `aan-thai-v5-2-6` while keeping the existing network-first shell strategy.
+- Added a clean source-review bundle manifest and a lightweight smoke-test checklist for fresh, Lesson 5, migrated, completed-course, malformed import, offline reload and installed-PWA update scenarios.
 
 ## v5.2.5 - 2026-06-27
 

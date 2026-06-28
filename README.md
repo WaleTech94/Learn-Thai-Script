@@ -24,3 +24,5 @@ Hosted on GitHub Pages and prepared for Vercel as a parallel static PWA deploy.
 - `icon-180/192/512.png` — app icons
 - `AGENTS.md` — canonical project context and conventions
 - `CHANGELOG.md` — release-by-release shipped changes
+- `tools/phase1-audit.js`, `docs/phase1_audit.*` — generated Phase 1 audit and validator evidence
+- `FILE_MANIFEST.md`, `THAI_APP_AUDIT_PACK.md`, `docs/smoke_test_checklist.md` — current source-review manifest, audit pack notes and lightweight smoke checklist

@@ -2071,6 +2071,81 @@ function saveState(){
   }, 350);
 }
 
+function plainObject(x){
+  return !!x && typeof x === 'object' && !Array.isArray(x);
+}
+function assertPlainObject(x, label){
+  if(!plainObject(x)) throw new Error(label + ' must be an object');
+}
+function assertStringArray(xs, label){
+  if(xs == null) return;
+  if(!Array.isArray(xs) || xs.some(x=>typeof x !== 'string')) throw new Error(label + ' must be an array of strings');
+}
+function assertNumberField(obj, key, label){
+  if(obj[key] != null && !Number.isFinite(obj[key])) throw new Error(label + '.' + key + ' must be a number');
+}
+function assertBoolField(obj, key, label){
+  if(obj[key] != null && typeof obj[key] !== 'boolean') throw new Error(label + '.' + key + ' must be true or false');
+}
+function validateImportedStateShape(s){
+  assertPlainObject(s, 'progress');
+  assertPlainObject(s.srs, 'progress.srs');
+  assertPlainObject(s.streak, 'progress.streak');
+  assertStringArray(s.done, 'progress.done');
+  ['notes','packs','titles','themes','postcards'].forEach(k=>{
+    if(s[k] != null && !Array.isArray(s[k])) throw new Error('progress.' + k + ' must be an array');
+  });
+  ['baht','freeze','pace','paceN'].forEach(k=>assertNumberField(s, k, 'progress'));
+  assertNumberField(s.streak, 'count', 'progress.streak');
+  if(s.streak.last != null && typeof s.streak.last !== 'string') throw new Error('progress.streak.last must be a string or null');
+  [
+    'intro','days','calib','boss','checks','skillStats','notices','migrations','foundationRefresh',
+    'retention','signSafari','missions','contrastLog','pathDone','drillLog','stories','week',
+    'toneStats','toneLicence','gacha','constel','lap','confs','lastCapability'
+  ].forEach(k=>{
+    if(s[k] != null) assertPlainObject(s[k], 'progress.' + k);
+  });
+  if(s.skillStats && s.skillStats.listen != null && !Array.isArray(s.skillStats.listen)) throw new Error('progress.skillStats.listen must be an array');
+  if(s.skillStats && s.skillStats.speak != null) assertPlainObject(s.skillStats.speak, 'progress.skillStats.speak');
+  if(s.foundationRefresh && s.foundationRefresh.quarantinedFinals != null) assertStringArray(s.foundationRefresh.quarantinedFinals, 'progress.foundationRefresh.quarantinedFinals');
+  Object.keys(s.srs).forEach(id=>{
+    const c = s.srs[id];
+    assertPlainObject(c, 'progress.srs.' + id);
+    ['iv','lapses','sameDayMisses','leechClears'].forEach(k=>assertNumberField(c, k, 'progress.srs.' + id));
+    ['leech','leechCleared','shaky','axisReview','axisBackfilled','axisStaged'].forEach(k=>assertBoolField(c, k, 'progress.srs.' + id));
+    ['due','lastResult','leechSince'].forEach(k=>{
+      if(c[k] != null && typeof c[k] !== 'string') throw new Error('progress.srs.' + id + '.' + k + ' must be a string');
+    });
+  });
+  return true;
+}
+function importBaseState(){
+  const base = {};
+  ensureStateCollections(base);
+  base.baht = 0;
+  base.freeze = 0;
+  return base;
+}
+function importProgressState(s){
+  validateImportedStateShape(s);
+  const imported = JSON.parse(JSON.stringify(s));
+  const next = Object.assign(importBaseState(), imported);
+  const migrated = repairStateForV5(next);
+  const migrated501 = repairStateForV501(next);
+  validateStateDeckForDone(next, 'imported progress');
+  return {state:next, migrated, migrated501};
+}
+function renderAfterStateImport(){
+  applyTheme();
+  renderTitle();
+  renderHome();
+  renderLearn();
+  renderReviewTab();
+  renderCats();
+  renderPhrases();
+  renderPack();
+}
+
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function isoPlusDays(iso, days){
   const d = new Date((iso || todayStr()) + 'T00:00:00Z');
@@ -4566,6 +4641,60 @@ function validateV501FoundationRefreshContracts(){
   if(foundationRefreshRequiredFor(current)) throw new Error('states with already-present final cards must not be forced into legacy refresh');
   return true;
 }
+function validateImportContracts(){
+  const errors = [];
+  const oldDue = {iv:0, due:'2024-01-01', lapses:0};
+  const earlyDone = LESSONS.slice(0,5).map(L=>L.id);
+  const allDone = LESSONS.map(L=>L.id);
+  const oldValid = {
+    streak:{count:9,last:'2024-01-01'},
+    done:earlyDone.slice(),
+    baht:77,
+    notes:[{at:'2024-01-01', text:'keep'}],
+    checks:{[checkpointId(2)]:true},
+    srs:{'g:ก':oldDue}
+  };
+  const oldImported = importProgressState(oldValid).state;
+  if(oldImported.done.join(',') !== oldValid.done.join(',')) errors.push('old valid import changed completed lessons');
+  if(oldImported.baht !== oldValid.baht) errors.push('old valid import lost tokens');
+  if(!oldImported.notes.length || oldImported.notes[0].text !== 'keep') errors.push('old valid import lost notes');
+  if(!foundationRefreshRequiredFor(oldImported)) errors.push('old valid import should run v5/v5.0.1 repair and require Endings Refresh');
+  validateStateDeckForDone(oldImported, 'old valid import');
+
+  const completed = {
+    streak:{count:40,last:'2024-01-01'},
+    done:allDone.slice(),
+    baht:321,
+    titles:['reader'],
+    checks:{letters42:true},
+    srs:{'r:มา':oldDue, 'g:ก':oldDue, 'f:ก':oldDue}
+  };
+  const completedImported = importProgressState(completed).state;
+  if(completedImported.done.length !== allDone.length) errors.push('completed-course import lost lesson progress');
+  if(!completedImported.checks.letters42) errors.push('completed-course import lost Letters boss pass');
+  if(completedImported.baht !== completed.baht || !completedImported.titles.includes('reader')) errors.push('completed-course import lost rewards');
+  validateStateDeckForDone(completedImported, 'completed-course import');
+  const missingCompletedFinal = learnedFinalGlyphIds(allDone).filter(ch=>!completedImported.srs['f:'+ch]);
+  if(missingCompletedFinal.length) errors.push('completed-course import missing repaired final cards');
+
+  const bads = [
+    null,
+    {streak:{count:1}, srs:[]},
+    {streak:{count:'1'}, srs:{}},
+    {streak:{count:1}, done:'l1', srs:{}},
+    {streak:{count:1}, done:['l1'], srs:{'g:ก':'bad'}},
+    {streak:{count:1}, srs:{'g:ก':{iv:'0', due:'2024-01-01'}}}
+  ];
+  const before = JSON.stringify(state);
+  const rejected = bads.filter(b=>{
+    try{ importProgressState(b); return false; }
+    catch(e){ return true; }
+  }).length;
+  if(rejected !== bads.length) errors.push('malformed imports should be rejected before merge');
+  if(JSON.stringify(state) !== before) errors.push('malformed import validation mutated live state');
+  if(errors.length) throw new Error('Import contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV5TransferContracts(){
   const errors = [];
   const gateDone = gate=>{
@@ -5791,11 +5920,10 @@ el('import-btn').addEventListener('click', ()=>{
   const raw = prompt('Paste your exported progress JSON:');
   if(!raw) return;
   try{
-    const s = JSON.parse(raw);
-    if(!s.srs || !s.streak) throw new Error('not a progress blob');
-    state = Object.assign(state, s);
+    const imported = importProgressState(JSON.parse(raw));
+    state = imported.state;
     saveState();
-    renderHome(); renderLearn(); renderReviewTab(); renderCats(); renderPhrases(); renderPack();
+    renderAfterStateImport();
     toast('Progress imported');
   }catch(e){ toast('Import failed. That is not valid progress data.'); }
 });
@@ -8505,6 +8633,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateMisconceptionChoiceContracts();
   validateV5MigrationContracts();
   validateV501FoundationRefreshContracts();
+  validateImportContracts();
   validateV5TransferContracts();
   validateV51PolishContracts();
   validateV52BridgeContracts();
