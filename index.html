@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.2.1</span>
+      <span class="version-pill">v5.2.5</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2.1 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.2.5 (PWA)</div>
     </div>
   </section>
 
@@ -970,7 +970,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-leech">
-            <div><div class="t">Leech clinic</div><div class="d" id="leech-sub">0 tough cards</div></div>
+            <div><div class="t">Leech clinic</div><div class="d" id="leech-sub">0 hard cards</div></div>
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-quiz">
@@ -1002,7 +1002,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-contrast">
-            <div><div class="t">Contrast block</div><div class="d">Listen, say, record and self-check</div></div>
+            <div><div class="t">Contrast block</div><div class="d">Listen, say, record and compare</div></div>
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-mouth">
@@ -1010,7 +1010,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="arrow">→</span>
           </button>
           <button class="review-action" id="cta-mission">
-            <div><div class="t">Bangkok mission</div><div class="d">Use covered Thai outside the app</div></div>
+            <div><div class="t">Bangkok mission</div><div class="d">Spot covered Thai outside the app</div></div>
             <span class="arrow">→</span>
           </button>
         </div>
@@ -1885,15 +1885,15 @@ const MOUTH_COACH_CARDS = [
 const CONTRAST_BLOCKS = [
   {id:'tone-marks', gate:'l4', title:'Tone marks', contrast:'tone pairs', listen:true, speak:true,
    focus:'Same visible shape family, different tone shape. Hear first, then read from Thai script.',
-   capability:'You practised hearing tone movement instead of relying on romanisation.',
+   capability:'You heard tone movement without relying on romanisation.',
    items:[{thai:'ไม่',tr:'mâi'},{thai:'ไม้',tr:'máai'},{thai:'ห้า',tr:'hâa'},{thai:'บ้าน',tr:'bâan'}]},
   {id:'initial-ng', gate:'l7', title:'Initial ง', contrast:'ง onset', listen:true, speak:true,
    focus:'English usually puts ng at the end. Thai can start a word with ง.',
-   capability:'You gave initial ง its own mouth position before the vowel.',
+   capability:'You put initial ง before the vowel.',
    items:[{thai:'งาน',tr:'ngaan'},{thai:'จาน',tr:'jaan'},{thai:'นาน',tr:'naan'}]},
   {id:'vowel-length', gate:'l13', title:'Vowel length', contrast:'short/long vowel', listen:true, speak:true,
    focus:'Short and long vowels can change the live/dead decision and the tone rule.',
-   capability:'You practised vowel length as a tone mechanism, not decoration.',
+   capability:'You used vowel length to help choose the tone rule.',
    items:[{thai:'รัก',tr:'rák'},{thai:'มาก',tr:'mâak'},{thai:'วัน',tr:'wan'},{thai:'วาน',tr:'waan'}]},
   {id:'dt-th', gate:'l12', title:'ต / ท / ถ', contrast:'aspiration', listen:true, speak:true,
    focus:'ต is tight and unaspirated. ท and ถ push air.',
@@ -1901,15 +1901,15 @@ const CONTRAST_BLOCKS = [
    items:[{thai:'ตา',tr:'dtaa'},{thai:'ทำ',tr:'tham'},{thai:'ถูก',tr:'thùuk'}]},
   {id:'g-kh', gate:'l15', title:'ก / ค / ข', contrast:'aspiration + class', listen:true, speak:true,
    focus:'ก is tight; ค and ข breathe. The class row changes too.',
-   capability:'You linked aspiration contrast with consonant class.',
+   capability:'You heard the puff, then checked the consonant class.',
    items:[{thai:'กา',tr:'gaa'},{thai:'คน',tr:'khon'},{thai:'ขอ',tr:'khǒr'},{thai:'ข้าว',tr:'khâao'}]},
   {id:'bp-ph', gate:'l18', title:'ป / พ', contrast:'aspiration', listen:true, speak:true,
    focus:'ป is the tight bp sound. พ has a puff of air.',
-   capability:'You practised the bp/ph contrast inside real covered words.',
+   capability:'You kept bp and ph apart in words you can read.',
    items:[{thai:'ไป',tr:'bpai'},{thai:'ปลา',tr:'bplaa'},{thai:'พ่อ',tr:'phôr'},{thai:'พูด',tr:'phûut'}]},
   {id:'final-stops', gate:'l18', title:'Final stops', contrast:'final -k/-t/-p', listen:true, speak:true,
    focus:'Final ก closes as -k, ด/ท/ถ close as -t, and บ/ป close as -p.',
-   capability:'You practised closing final stops cleanly instead of saying their start sounds.',
+   capability:'You closed final stops without adding their start sounds.',
    items:[{thai:'มาก',tr:'mâak'},{thai:'ถูก',tr:'thùuk'},{thai:'พูด',tr:'phûut'},{thai:'ครับ',tr:'khráp'}]},
   {id:'r-l', gate:'l18', title:'ร / ล', contrast:'ร/ล', listen:true, speak:true,
    focus:'ร and ล are separate starts. Perfect native ร is not required, but the contrast matters.',
@@ -1917,63 +1917,63 @@ const CONTRAST_BLOCKS = [
    items:[{thai:'รอ',tr:'ror'},{thai:'เรา',tr:'rao'},{thai:'ลาว',tr:'laao'},{thai:'ปลา',tr:'bplaa'}]},
   {id:'clusters', gate:'l19', title:'True and fake clusters', contrast:'cluster parsing', listen:true, speak:true,
    focus:'Some pairs blend into one start; some hide or change a letter.',
-   capability:'You practised deciding whether a cluster blends, drops or changes sound.',
+   capability:'You decided whether the cluster blends, drops or changes sound.',
    items:[{thai:'ครับ',tr:'khráp'},{thai:'ปลา',tr:'bplaa'},{thai:'จริง',tr:'jing'},{thai:'ทราบ',tr:'sâap'}]}
 ];
 const BANGKOK_MISSIONS = [
   {id:'price-baht', gate:'l3', title:'Price check', thai:'บาท', tr:'bàat',
    action:'Read บาท on one price, receipt or menu line before you look away.',
-   capability:'You can recognise บาท in real prices.'},
+   capability:'You spotted บาท in a real price.'},
   {id:'tone-mark-spot', gate:'l4', title:'Tone-mark spotter', thai:'ไม่ บ้าน นี่', tr:'mâi · bâan · nîi',
    action:'Spot one ่ or ้ above Thai text and name it before moving on.',
-   capability:'You connected Thai tone marks to real printed Thai.'},
+   capability:'You used Thai tone marks in printed Thai.'},
   {id:'request-starter', gate:'l6', title:'Request starter', thai:'ขอ', tr:'khǒr',
    action:'Mentally start one polite request with ขอ before you switch to English.',
-   capability:'You linked ขอ to useful everyday requests.'},
+   capability:'You used ขอ as the start of a polite request.'},
   {id:'ng-listen', gate:'l7', title:'Listen for ง', thai:'งาน ง', tr:'ngaan · ng',
    action:'Listen for one ng sound at the start or end of a word around you.',
-   capability:'You took ง outside the lesson card.'},
+   capability:'You listened for ง outside the lesson.'},
   {id:'male-i', gate:'l9', title:'Male I', thai:'ผม', tr:'phǒm',
    action:'Notice or rehearse ผม once as the male speaker word for I.',
-   capability:'You connected the script to your own speaker role.'},
+   capability:'You tied ผม to your own speaker role.'},
   {id:'yes-water', gate:'l12', title:'Tiny service words', thai:'ใช่ น้ำ', tr:'châi · náam',
    action:'Listen for ใช่ or น้ำ in one shop, cafe or office exchange.',
-   capability:'You tied useful covered words to live listening.'},
+   capability:'You heard a covered word in live Thai.'},
   {id:'polite-khrap', gate:'l18', title:'ครับ in the wild', thai:'ครับ', tr:'khráp',
    action:'Listen for ครับ in one real interaction and replay its final -p closure in your head.',
-   capability:'You heard ครับ as a readable cluster plus final stop.'},
+   capability:'You heard ครับ as a cluster plus final stop.'},
   {id:'public-signs', gate:'l23', title:'Public sign chunk', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang',
    action:'Read one public sign by chunks: start sound, vowel, ending sound, then tone.',
-   capability:'You used the course frame on a real sign.'},
+   capability:'You read a real sign with the course tools.'},
   {id:'open-closed', gate:'l24', title:'Open or closed', thai:'เปิด ปิด ห้าม อาหาร', tr:'bpèrt · bpìt · hâam · aa-hǎan',
    action:'Decode one open, closed, food or warning sign without transliteration.',
-   capability:'You read late Phase-1 signs as Bangkok information, not app content.'}
+   capability:'You read a Bangkok sign as Thai, not app text.'}
 ];
 const LESSON_PAYOFFS = {
-  l1:{thai:'มา', tr:'maa', meaning:'to come', context:'A tiny real verb: you can now read มา before you know much Thai grammar.', capability:'You can read a live, unmarked Thai word from script first.'},
-  l2:{thai:'กิน', tr:'gin', meaning:'to eat', context:'This is the first useful start + vowel + ending frame: ก + ิ + น.', capability:'You can read a ringing final -n word, not just a letter list.'},
-  l3:{thai:'บาท', tr:'bàat', meaning:'baht', context:'You will see บาท beside prices. Decode the final -t before thinking about money.', capability:'You can recognise บาท in real prices.'},
-  l4:{thai:'ไม่', tr:'mâi', meaning:'no / not', context:'This is one of the first high-frequency words where the Thai tone mark matters.', capability:'You can spot a real tone mark and read ไม่ from the script.'},
-  l5:{thai:'เรา', tr:'rao', meaning:'we / us', context:'เ◌า wraps the consonant. Read ร first, then the ao vowel.', capability:'You can read a useful wrap-vowel word.'},
-  l6:{thai:'ขอ', tr:'khǒr', meaning:'may I have...', context:'Many polite requests start with ขอ. The rising tone comes from high class + live.', capability:'You can start recognising polite request Thai.'},
-  l7:{thai:'งาน', tr:'ngaan', meaning:'work', context:'Thai can start a word with ง. Hear it before the vowel, not only at the end.', capability:'You can read and hear initial ง.'},
-  l8:{thai:'ถูก', tr:'thùuk', meaning:'cheap / correct', context:'This is useful on prices and answers. The final ก closes as -k.', capability:'You can read a high-class dead syllable with a stop ending.'},
-  l9:{thai:'ผม', tr:'phǒm', meaning:'I (male) / hair', context:'For you as a male speaker, ผม is the useful first-person word.', capability:'You can connect hidden-o decoding to your speaker role.'},
-  l10:{thai:'แพง', tr:'phaaeng', meaning:'expensive', context:'Useful in Bangkok prices. แ is written first but spoken after the start sound.', capability:'You can read a front-vowel price word.'},
-  l11:{thai:'รถ', tr:'rót', meaning:'car / vehicle', context:'A compact Bangkok word: hidden o plus final ถ as -t.', capability:'You can read a dead-short hidden-vowel word.'},
-  l12:{thai:'น้ำ', tr:'náam', meaning:'water', context:'You will hear and see น้ำ constantly on bottles, menus and signs.', capability:'You can connect a covered Thai word to real listening.'},
-  l13:{thai:'มาก', tr:'mâak', meaning:'very / a lot', context:'The long vowel plus final -k changes the tone route.', capability:'You can explain live/dead using vowel length and ending sound.'},
-  l14:{thai:'ได้', tr:'dâi', meaning:'can / able to', context:'A practical grammar word that still follows the tone engine.', capability:'You can read ได้ as useful Thai, not a memorised shape.'},
-  l15:{thai:'ข้าว', tr:'khâao', meaning:'rice', context:'Rice is everywhere. Read high class + mark + long vowel before the meaning.', capability:'You can read a high-class marked food word.'},
-  l16:{thai:'น้ำ', tr:'náam', meaning:'water', context:'Now revisit น้ำ through the low-class tone-mark flip.', capability:'You can hear a useful word and explain why its tone is high.'},
-  l17:{thai:'ไหม', tr:'mǎi', meaning:'yes/no question particle', context:'A common question ending. Silent ห leads ม into high-class rules.', capability:'You can read a silent-leader question particle.'},
-  l18:{thai:'ครับ', tr:'khráp', meaning:'polite particle (male)', context:'You already say it; now read the cluster and final -p closure.', capability:'You can decode ครับ instead of treating it as a sound blob.'},
-  l19:{thai:'จริง', tr:'jing', meaning:'true / really', context:'A high-utility response word. The written ร drops out here.', capability:'You can read a fake cluster in a real response word.'},
-  l20:{thai:'ภาษา', tr:'phaa-sǎa', meaning:'language', context:'Useful for ภาษาไทย. Read the formal letters with the same tone rules.', capability:'You can keep the tone engine working through formal letters.'},
-  l21:{thai:'สนุก', tr:'sà-nùk', meaning:'fun', context:'Useful small talk. Notice the hidden a at the start.', capability:'You can read hidden-a structure in a real adjective.'},
-  l22:{thai:'เพื่อน', tr:'phûean', meaning:'friend', context:'A practical people word with a three-piece vowel.', capability:'You can find the consonant inside a three-piece vowel.'},
-  l23:{thai:'ห้องน้ำ', tr:'hôrng-náam', meaning:'toilet', context:'A real sign word. Decode ห้อง and น้ำ as chunks before using the meaning.', capability:'You can read a useful public-sign chunk.'},
-  l24:{thai:'เปิด', tr:'bpèrt', meaning:'open', context:'A capstone sign word: front vowel, final -t and the mid-class dead tone route.', capability:'You can read everyday open/closed sign Thai.'}
+  l1:{thai:'มา', tr:'maa', meaning:'to come', context:'A small real verb: you can read มา before you know much Thai grammar.', capability:'You read มา from Thai script.'},
+  l2:{thai:'กิน', tr:'gin', meaning:'to eat', context:'Your first useful start + vowel + ending word: ก + ิ + น.', capability:'You read a word with a ringing -n ending.'},
+  l3:{thai:'บาท', tr:'bàat', meaning:'baht', context:'You will see บาท beside prices. Read the final -t before thinking about money.', capability:'You recognised บาท in a price word.'},
+  l4:{thai:'ไม่', tr:'mâi', meaning:'no / not', context:'This is an early word where the Thai tone mark matters.', capability:'You read ไม่ from the tone mark.'},
+  l5:{thai:'เรา', tr:'rao', meaning:'we / us', context:'เ◌า wraps the consonant. Read ร first, then the ao vowel.', capability:'You read a useful wrap-vowel word.'},
+  l6:{thai:'ขอ', tr:'khǒr', meaning:'may I have...', context:'Many polite requests start with ขอ. The rising tone comes from high class + live.', capability:'You read the start of a polite request.'},
+  l7:{thai:'งาน', tr:'ngaan', meaning:'work', context:'Thai can start a word with ง. Hear it before the vowel, not only at the end.', capability:'You read and heard initial ง.'},
+  l8:{thai:'ถูก', tr:'thùuk', meaning:'cheap / correct', context:'Useful for prices and answers. The final ก closes as -k.', capability:'You read a high-class dead syllable with a stop ending.'},
+  l9:{thai:'ผม', tr:'phǒm', meaning:'I (male) / hair', context:'For you as a male speaker, ผม is the useful first-person word.', capability:'You linked hidden-o decoding to your speaker word.'},
+  l10:{thai:'แพง', tr:'phaaeng', meaning:'expensive', context:'Useful for Bangkok prices. แ is written first but spoken after the start sound.', capability:'You read a front-vowel price word.'},
+  l11:{thai:'รถ', tr:'rót', meaning:'car / vehicle', context:'A compact Bangkok word: hidden o plus final ถ as -t.', capability:'You read a dead-short hidden-vowel word.'},
+  l12:{thai:'น้ำ', tr:'náam', meaning:'water', context:'You will hear and see น้ำ on bottles, menus and signs.', capability:'You linked a covered Thai word to real listening.'},
+  l13:{thai:'มาก', tr:'mâak', meaning:'very / a lot', context:'The long vowel plus final -k changes the tone route.', capability:'You used vowel length and ending sound to explain live/dead.'},
+  l14:{thai:'ได้', tr:'dâi', meaning:'can / able to', context:'A practical grammar word that still follows the tone engine.', capability:'You read ได้ as useful Thai, not a memorised shape.'},
+  l15:{thai:'ข้าว', tr:'khâao', meaning:'rice', context:'Rice is everywhere. Read high class + mark + long vowel before the meaning.', capability:'You read a high-class marked food word.'},
+  l16:{thai:'น้ำ', tr:'náam', meaning:'water', context:'Now revisit น้ำ through the low-class tone-mark flip.', capability:'You heard a useful word and explained its high tone.'},
+  l17:{thai:'ไหม', tr:'mǎi', meaning:'yes/no question particle', context:'A common question ending. Silent ห leads ม into high-class rules.', capability:'You read a silent-leader question word.'},
+  l18:{thai:'ครับ', tr:'khráp', meaning:'polite particle (male)', context:'You already say it; now read the cluster and final -p closure.', capability:'You decoded ครับ instead of memorising one sound.'},
+  l19:{thai:'จริง', tr:'jing', meaning:'true / really', context:'A useful response word. The written ร drops out here.', capability:'You read a fake cluster in a real response word.'},
+  l20:{thai:'ภาษา', tr:'phaa-sǎa', meaning:'language', context:'Useful for ภาษาไทย. Read the formal letters with the same tone rules.', capability:'You kept the tone engine working through formal letters.'},
+  l21:{thai:'สนุก', tr:'sà-nùk', meaning:'fun', context:'Useful small talk. Notice the hidden a at the start.', capability:'You read hidden-a structure in a real adjective.'},
+  l22:{thai:'เพื่อน', tr:'phûean', meaning:'friend', context:'A practical people word with a three-piece vowel.', capability:'You found the consonant inside a three-piece vowel.'},
+  l23:{thai:'ห้องน้ำ', tr:'hôrng-náam', meaning:'toilet', context:'A real sign word. Read ห้อง and น้ำ as chunks before using the meaning.', capability:'You read a useful public-sign chunk.'},
+  l24:{thai:'เปิด', tr:'bpèrt', meaning:'open', context:'A final sign word: front vowel, final -t and the mid-class dead tone route.', capability:'You read an everyday open/closed sign word.'}
 };
 const UTILITY_LEVELS = ['high','medium','scaffold'];
 const PAYOFF_UTILITY = {
@@ -2092,12 +2092,117 @@ function award(n){
   saveState();
   const b = el('baht-num'); if(b) b.textContent = state.baht;
 }
+const REVIEW_RECOMMEND_DUE = 25;
+const REVIEW_HARD_CAP = 45;
+const BACKFILLED_RETENTION_DAILY_CAP = 4;
+const AXIS_REVIEW_DAILY_CAP = 6;
+const AXIS_REVIEW_FIRST_DELAY = 7;
+function reviewLoadBand(due){
+  if((due||0) >= REVIEW_HARD_CAP) return 'hard';
+  if((due||0) >= REVIEW_RECOMMEND_DUE) return 'recommend';
+  return 'normal';
+}
+function lessonCheckpointBlocker(L, target){
+  const s = target || state, idx = lessonIndexById(L && L.id);
+  if(idx < 0) return null;
+  const done = new Set(s.done || []);
+  for(let i=0;i<idx;i++){
+    if(!done.has(LESSONS[i].id)) continue;
+    if(isCheckpointIndex(i) && !(s.checks||{})[checkpointId(i)]){
+      return {
+        code:'mastery-check',
+        title:'Mastery check required',
+        explanation:'Lesson ' + lessonNum(L.id) + ' is locked because the Lessons 1-' + (i+1) + ' mastery check is not passed yet.',
+        actionLabel:'Take mastery check',
+        actionRoute:'checkpoint:' + i
+      };
+    }
+  }
+  return null;
+}
+function getLessonBlocker(lessonId, target){
+  const s = target || state;
+  const L = typeof lessonId === 'object' ? lessonId : lessonById(lessonId);
+  if(!L) return {
+    code:'invalid-state',
+    title:'Progress repair needed',
+    explanation:'This lesson could not be found in the course map. Reload the app so progress can be repaired.',
+    actionLabel:'Reload app',
+    actionRoute:'repair'
+  };
+  if(!Array.isArray(s.done) || !s.srs || typeof s.srs !== 'object') return {
+    code:'invalid-state',
+    title:'Progress repair needed',
+    explanation:'Your saved progress is missing required fields. Reload the app so the repair pass can run.',
+    actionLabel:'Reload app',
+    actionRoute:'repair'
+  };
+  if((s.done||[]).includes(L.id)) return null;
+  const idx = lessonIndexById(L.id), done = new Set(s.done || []);
+  if(idx < 0) return {
+    code:'invalid-state',
+    title:'Progress repair needed',
+    explanation:'The course map and saved progress disagree. Reload the app so progress can be repaired.',
+    actionLabel:'Reload app',
+    actionRoute:'repair'
+  };
+  const missing = LESSONS.slice(0, idx).find(prev=>!done.has(prev.id));
+  if(missing) return {
+    code:'missing-prerequisite',
+    title:'Previous lesson needed',
+    explanation:'Lesson ' + lessonNum(L.id) + ' is locked because Lesson ' + lessonNum(missing.id) + ' is not complete yet.',
+    actionLabel:'Start Lesson ' + lessonNum(missing.id),
+    actionRoute:'lesson:' + missing.id
+  };
+  if(foundationRefreshRequiredFor(s)) return {
+    code:'foundation-refresh',
+    title:'Endings Refresh required',
+    explanation:'Lesson ' + lessonNum(L.id) + ' is locked because your v5 foundation refresh is incomplete. Do the 12-minute Endings Refresh first.',
+    actionLabel:'Start Endings Refresh',
+    actionRoute:'foundation-refresh'
+  };
+  const mastery = lessonCheckpointBlocker(L, s);
+  if(mastery) return mastery;
+  const due = srsDueFor(s).length;
+  if(reviewLoadBand(due) === 'hard') return {
+    code:'review-overload',
+    title:'Review load too high',
+    explanation:'Lesson ' + lessonNum(L.id) + ' is locked because ' + due + ' review cards are due. Reduce the deck below ' + REVIEW_HARD_CAP + ' first.',
+    actionLabel:'Review ' + due,
+    actionRoute:'review'
+  };
+  return null;
+}
+function lessonAvailabilityMessage(L){
+  if(!L) return '';
+  const blocker = getLessonBlocker(L.id);
+  if(blocker) return blocker.explanation;
+  const due = srsDue().length;
+  if(reviewLoadBand(due) === 'recommend') return 'Lesson ' + lessonNum(L.id) + ' is available. You have ' + due + ' due review items, but this is below the hard cap. Review is recommended before starting.';
+  const retention = nextRetentionCheck();
+  if(retention) return 'Lesson ' + lessonNum(L.id) + ' is available. A delayed check is due, but it is recommended rather than locked.';
+  return 'Lesson ' + lessonNum(L.id) + ' is available.';
+}
+function routeBlockerAction(blocker){
+  if(!blocker) return;
+  if(blocker.actionRoute === 'foundation-refresh'){ startFoundationRefresh(); return; }
+  if(blocker.actionRoute === 'review'){ goReviewTask(); return; }
+  if(blocker.actionRoute === 'repair'){ toast('Reload the app to repair progress.'); return; }
+  if(blocker.actionRoute && blocker.actionRoute.startsWith('checkpoint:')){
+    startCheckpoint(+blocker.actionRoute.split(':')[1]); return;
+  }
+  if(blocker.actionRoute && blocker.actionRoute.startsWith('lesson:')){
+    const L = lessonById(blocker.actionRoute.split(':')[1]);
+    if(L) startLessonFromUser(L);
+    return;
+  }
+}
 function ensureDay(){
   const t = todayStr();
   if(!state.days) state.days = {};
   if(!state.days[t]){
     const due = srsDue().length;
-    const type = (due > 45 || !nextLesson()) ? 'C' : 'L';   // consolidation vs lesson day
+    const type = (due >= REVIEW_HARD_CAP || !nextLesson()) ? 'C' : 'L';   // consolidation vs lesson day
 	    state.days[t] = {r:0, l:0, d:0, m:0, ret:0, due, paid:false, type, bridge:{}};
     saveState();
   }
@@ -2112,7 +2217,7 @@ function earlyFoundationWindow(){
 }
 function earlyBonusLessonCandidate(){
   const d = ensureDay(), next = nextLesson();
-  if(!next || d.type === 'C' || d.l !== 1 || srsDue().length) return null;
+  if(!next || d.type === 'C' || d.l !== 1 || getLessonBlocker(next.id)) return null;
   const n = lessonNum(next.id);
   return n >= 2 && n <= 3 ? next : null;                  // never carries into Lesson 4, where stories/tones deepen
 }
@@ -2131,33 +2236,23 @@ function markCurrentPathPracticeDone(){
 function governorPhase(){
   const d = ensureDay(), due = srsDue().length;
   if(foundationRefreshRequired()) return 'foundations';
-  if(due > 0) return 'review';                                // warm-up first; don't skip the current deck
-  if(nextRetentionCheck()) return 'retention';                 // completed is not the same as retained
+  const next = nextLesson(), blocker = next && getLessonBlocker(next.id);
+  if(blocker && blocker.code === 'review-overload') return 'review';
   if(earlyBonusLessonCandidate()) return 'bonus';              // L1→L2 or L2→L3 only, for honest early pacing
   if(d.paid) return 'rest';                                   // plan complete → stop new load
   if(d.type === 'C') return 'deepen';                          // consolidation days go deeper, not further
-	  if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) return 'deepen';                  // one main block/day; early finishers deepen
+		  if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) return 'deepen';                  // one main block/day; early finishers deepen
   return 'learn';
 }
 function newLessonBlockReason(L){
-  if(foundationRefreshRequired()) return 'Updated foundations must be relearned before new lessons.';
   if(!L || state.done.includes(L.id)) return '';
-  const next = nextLesson();
-  if(!next || L.id !== next.id) return '';
-  const d = ensureDay(), due = srsDue().length;
-  if(isEarlyBonusLesson(L)) return '';
-	  if(d.paid) return 'Today is complete. Use practice if you want more.';
-	  if(due > 0) return 'Warm-up first: clear the current review before new letters.';
-  if(nextRetentionCheck()) return 'A delayed mastery check is due before new letters.';
-	  if(d.type === 'C') return 'Today is a consolidation day. Practise the current material first.';
-	  if((d.m||0) > 0 || (d.ret||0) > 0) return 'Main task is complete for today. Do the practice block now.';
-	  if(d.l > 0) return lessonNum(L.id) >= 4 ? 'Lesson 4 and later stay one per day. Use a story or drill now.' : 'One new lesson is enough for today. Practise it now.';
-  return '';
+  const blocker = getLessonBlocker(L.id);
+  return blocker ? blocker.explanation : '';
 }
 function startDepthBlock(){
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const due = srsDue();
-  if(due.length){
+  if(reviewLoadBand(due.length) === 'hard'){
     gotoView('practice');
     setTimeout(()=>el('cta-flash').click(), 60);
     return;
@@ -2169,16 +2264,11 @@ function startDepthBlock(){
   gotoView('practice');
 }
 function startLessonFromUser(L){
-  if(foundationRefreshRequired()){
-    toast('Relearn updated foundations first.');
-    startFoundationRefresh();
-    return;
-  }
   const earlyBonus = isEarlyBonusLesson(L);
-  const reason = newLessonBlockReason(L);
-  if(reason){
-    toast(reason);
-    startDepthBlock();
+  const blocker = L && !state.done.includes(L.id) ? getLessonBlocker(L.id) : null;
+  if(blocker){
+    toast(blocker.explanation);
+    routeBlockerAction(blocker);
     return;
   }
   if(earlyBonus) markCurrentPathPracticeDone();
@@ -2288,7 +2378,10 @@ function markDailyDepth(parts){
   const d = ensureDay();
   d.d++;
   const bridge = ensureDayBridge(d);
-  (Array.isArray(parts) ? parts : [parts]).filter(Boolean).forEach(part=>{ bridge[part] = true; });
+  (Array.isArray(parts) ? parts : [parts]).filter(Boolean).forEach(part=>{
+    bridge[part] = true;
+    markEquivalentPracticeNodeComplete(part, (state.done||[]).slice(-1)[0]);
+  });
   saveState();
 }
 function dailyBridgeMissing(d){
@@ -2306,6 +2399,7 @@ function dailyDepthComplete(d){
 function startStoryDepth(story){
   const s = story || nextUnreadStory();
   if(!s) return false;
+  markEquivalentPracticeNodeComplete('reading', s.gate);
   player = {type:'read'};
   openOverlay();
   renderStory(s);
@@ -2322,7 +2416,7 @@ function todayDepthTask(){
         kind:'practice',
         tab:'practice',
         title:'Contrast block',
-        detail:contrast.title + ': listen, say, record and self-check.',
+        detail:contrast.title + ': listen, say, record and compare.',
         go:()=>startContrastBlock(contrast)
       };
     }
@@ -2335,7 +2429,7 @@ function todayDepthTask(){
         kind:'practice',
         tab:'practice',
         title:'Bangkok mission',
-        detail:mission.title + ': one real-world check-off.',
+        detail:mission.title + ': one outside-the-app check.',
         go:()=>showBangkokMissions(mission.id)
       };
     }
@@ -2347,7 +2441,7 @@ function todayDepthTask(){
       kind:'practice',
       tab:'practice',
       title:'Contrast block',
-      detail:contrast.title + ': listen, say, record and self-check.',
+      detail:contrast.title + ': listen, say, record and compare.',
       go:()=>startContrastBlock(contrast)
     };
   }
@@ -2369,7 +2463,7 @@ function todayDepthTask(){
       kind:'practice',
       tab:'practice',
       title:'Bangkok mission',
-      detail:mission.title + ': one real-world check-off.',
+      detail:mission.title + ': one outside-the-app check.',
       go:()=>showBangkokMissions(mission.id)
     };
   }
@@ -2392,9 +2486,10 @@ function launchDrill(id){
     startFoundationRefresh();
     return;
   }
-	  const d = DRILLS.find(x=>x.id===id); if(!d) return;
+		  const d = DRILLS.find(x=>x.id===id); if(!d) return;
   if(!state.drillLog) state.drillLog = {};
   state.drillLog[id] = {n:((state.drillLog[id]||{}).n||0)+1, last:todayStr()};
+  markEquivalentPracticeNodeComplete(id, d.gate);
   saveState();
   d.go();
 }
@@ -2428,16 +2523,16 @@ function currentPathNode(){
 function mainTaskNode(){
   const cur = currentPathNode();
   if(cur && cur.type === 'class') return cur;
-  const retention = nextRetentionCheck();
-  if(retention){
-    const L = lessonById(retention.lessonId);
-    return {type:'retention', label:retentionStageLabel(retention.stage) + ' · Lesson ' + lessonNum(retention.lessonId), sub:L ? L.title + ' · completed is not mastered yet' : 'Delayed mastery check', retention};
-  }
   const ck = firstReadyCheckpoint();
   if(ck >= 0) return {type:'checkpoint', label:'Mastery check', sub:'prove 80% before new lessons unlock', id:checkpointId(ck), checkpoint:ck};
   if(cur && cur.letters42) return cur;
   const nl = nextLesson();
   if(nl) return {type:'lesson', label:'Lesson ' + nl.id.slice(1) + ': ' + nl.title, sub:nl.sub, lesson:nl};
+  const retention = nextRetentionCheck();
+  if(retention){
+    const L = lessonById(retention.lessonId);
+    return {type:'retention', label:retentionStageLabel(retention.stage) + ' · Lesson ' + lessonNum(retention.lessonId), sub:L ? L.title + ' · recommended memory check' : 'Later memory check', retention};
+  }
   return cur;
 }
 function goReviewTask(){
@@ -2448,10 +2543,8 @@ function goReviewTask(){
 function routeToMainTask(){
   const d = ensureDay();
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
-  if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
-  const retention = nextRetentionCheck();
-  if(retention){ startRetentionCheck(retention); return; }
-  if(d.type === 'C'){ startDepthBlock(); return; }
+  const next = nextLesson(), blocker = next && getLessonBlocker(next.id);
+  if(blocker){ toast(blocker.explanation); routeBlockerAction(blocker); return; }
   const n = mainTaskNode();
   if(n){ launchNode(n); return; }
   const drawer = el('course-map-drawer');
@@ -2460,7 +2553,7 @@ function routeToMainTask(){
 function routeToDepthTask(){
   const d = ensureDay();
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
-  if(srsDue().length){ toast('Warm-up first: clear review cards'); goReviewTask(); return; }
+  if(reviewLoadBand(srsDue().length) === 'hard'){ toast('Review load is too high for new work.'); goReviewTask(); return; }
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
   if(!mainDone){ toast('Main task first'); routeToMainTask(); return; }
   startDepthBlock();
@@ -2468,7 +2561,7 @@ function routeToDepthTask(){
 function dailyMissingStep(){
   const d = ensureDay();
   if(foundationRefreshRequired()) return 'foundations';
-  if(srsDue().length) return 'review';
+  if(reviewLoadBand(srsDue().length) === 'hard') return 'review';
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
   if(!mainDone) return 'main';
   const depthDone = dailyDepthComplete(d);
@@ -2477,21 +2570,23 @@ function dailyMissingStep(){
 }
 function dailyWinSummary(d){
   if(!d) return '';
-  if(d.lite) return 'Review clear · lighter day accepted · streak safe';
-  if(d.type === 'C') return 'Review clear · two current-material blocks complete';
-  if((d.ret||0) > 0) return 'Review clear · delayed mastery check complete · bridge practice done';
-  if((d.m||0) > 0) return 'Review clear · mastery gate complete · practice done';
-  return 'Review clear · lesson complete · practice done';
+  const due = srsDue().length;
+  const review = due ? 'Review recommended (' + due + ' due)' : 'Review clear';
+  if(d.lite) return review + ' · lighter day accepted · streak safe';
+  if(d.type === 'C') return review + ' · current-material block complete';
+  if((d.ret||0) > 0) return review + ' · memory check done';
+  if((d.m||0) > 0) return review + ' · mastery gate complete';
+  return review + ' · lesson/practice route complete';
 }
 function dailyCapabilityStatement(d){
   if(state.lastCapability && state.lastCapability.date === todayStr()) return state.lastCapability.text;
   const doneN = (state.done || []).length;
-  if(d && d.type === 'C') return 'Today kept older Thai available instead of rushing new content.';
-  if(doneN >= 23) return 'You are using the course frame on real Bangkok sign shapes.';
+  if(d && d.type === 'C') return 'Today kept older Thai fresh instead of rushing ahead.';
+  if(doneN >= 23) return 'You are reading real Bangkok signs with the tools from this course.';
   if(doneN >= 18) return 'You are turning clusters and ครับ into readable everyday Thai.';
-  if(doneN >= 13) return 'You are making live/dead and tone decisions faster.';
-  if(doneN >= 6) return 'You are connecting class, tone marks and useful words.';
-  if(doneN >= 2) return 'You are reading starts, vowels and ending jobs as one frame.';
+  if(doneN >= 13) return 'Live/dead and tone choices are getting quicker.';
+  if(doneN >= 6) return 'Class, tone marks and useful words are starting to connect.';
+  if(doneN >= 2) return 'You are reading starts, vowels and endings as one word.';
   return 'You are building the letter, class and tone habit.';
 }
 function renderDailyWinCard(){
@@ -2504,24 +2599,26 @@ function renderDailyWinCard(){
     return;
   }
   const d = ensureDay();
+  const due = srsDue().length, next = nextLesson(), blocker = next && getLessonBlocker(next.id);
   card.hidden = false;
   card.innerHTML = `
     <div>
       <div class="eyebrow" style="margin:0;color:var(--good)">Daily win</div>
-      <h2>${d.type === 'C' ? 'Consolidation banked' : 'Today is complete'}</h2>
+      <h2>${d.type === 'C' ? 'Consolidation banked' : due ? 'Main route complete' : 'Today is complete'}</h2>
       <p class="sub">${esc(dailyWinSummary(d))}${d.paid ? ' · +10💎 claimed' : ''}</p>
       <div class="capability-line">${esc(dailyCapabilityStatement(d))}</div>
     </div>
     <div class="daily-win-actions">
-      <button class="btn small" id="daily-win-end">End today</button>
-      <button class="btn small ghost" id="daily-win-practice">Bonus practice</button>
-      <button class="btn small ghost" id="daily-win-mission">Mission</button>
+      <button class="btn small" id="daily-win-end">Stop for today</button>
+      ${due ? '<button class="btn small ghost" id="daily-win-review">Review</button>' : ''}
+      ${next && !blocker ? `<button class="btn small ghost" id="daily-win-next">Lesson ${lessonNum(next.id)}</button>` : ''}
+      <button class="btn small ghost" id="daily-win-contrast">Contrast</button>
     </div>`;
-  const end = el('daily-win-end'), practice = el('daily-win-practice');
-  const mission = el('daily-win-mission');
+  const end = el('daily-win-end'), review = el('daily-win-review'), nextBtn = el('daily-win-next'), contrast = el('daily-win-contrast');
   if(end) end.onclick = showEndDayModal;
-  if(practice) practice.onclick = startDepthBlock;
-  if(mission) mission.onclick = ()=>showBangkokMissions();
+  if(review) review.onclick = goReviewTask;
+  if(nextBtn) nextBtn.onclick = ()=>startLessonFromUser(next);
+  if(contrast) contrast.onclick = ()=>{ const c = nextContrastBlock() || contrastBlocks()[0]; c ? startContrastBlock(c) : startDepthBlock(); };
 }
 function activeDepthTask(){
   return dailyMissingStep() === 'depth' ? todayDepthTask() : null;
@@ -2542,12 +2639,13 @@ function routeToDailyStep(step){
   if(step === 'depth'){ routeToDepthTask(); }
 }
 function showEndDayModal(){
+  const missing = dailyMissingStep();
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card">
-    <div class="eyebrow">Day complete</div>
+    <div class="eyebrow">${missing ? 'Stop for today' : 'Day complete'}</div>
     <h2>Mastery beats breadth.</h2>
-    <p class="sub">You have cleared today's required work. Extra study should stay on review, stories or drills, not new material.</p>
+    <p class="sub">${missing ? 'You can stop here. The route will keep the recommended work ready when you return.' : "You have cleared today's required work. Extra study can stay on review, stories or drills, or you can start the next lesson if no true blocker exists."}</p>
     <div class="confirm-actions">
       <button class="btn ghost" id="end-more">Bonus practice</button>
       <button class="btn" id="end-close">Done for today</button>
@@ -2602,6 +2700,7 @@ function setTaskButton(id, cfg){
 function renderTodayActions(){
   if(!el('today-review-btn')) return;
   const d = ensureDay(), due = srsDue().length;
+  const band = reviewLoadBand(due);
   const refreshRequired = foundationRefreshRequired();
   const reviewDone = due === 0;
   const mainDone = d.type === 'C' ? d.d > 0 : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
@@ -2609,6 +2708,8 @@ function renderTodayActions(){
   const missing = dailyMissingStep();
   const early = earlyFoundationWindow();
   const main = mainTaskNode();
+  const next = nextLesson();
+  const lessonBlocker = next && getLessonBlocker(next.id);
   const refreshBtn = el('foundation-refresh-btn');
   if(refreshBtn) refreshBtn.style.display = refreshRequired ? '' : 'none';
   if(refreshRequired){
@@ -2645,12 +2746,12 @@ function renderTodayActions(){
 	  }
   if(el('course-day-label')) el('course-day-label').textContent = d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = d.type === 'C' ? "Today's consolidation" : early ? "Today's foundation" : "Today's route";
-  el('today-brief').textContent = early ? 'Shorter foundation day. Clear review, take the main step, then practise before ending.' : 'Use the buttons in order. End today sends you back to anything missing.';
+  el('today-brief').textContent = lessonBlocker ? lessonBlocker.explanation : early ? 'Shorter foundation day. Review is useful, but only true blockers stop the next lesson.' : 'Review and delayed checks are recommended when due. Only the named blocker can stop the next lesson.';
   setTaskButton('today-review-btn', {
-    state: reviewDone ? 'Done' : 'Due',
+    state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : band === 'recommend' ? 'Recommended' : 'Due',
     title: reviewDone ? 'Review clear' : 'Review due cards',
-    detail: reviewDone ? 'Your current deck is clear for today.' : due + ' card' + (due===1?'':'s') + ' waiting before new material.',
-    kind: !reviewDone && missing === 'review' ? 'primary' : reviewDone ? 'done' : ''
+    detail: reviewDone ? 'Your current deck is clear for today.' : band === 'hard' ? due + ' cards due. Reduce this below ' + REVIEW_HARD_CAP + ' before a new lesson.' : band === 'recommend' ? due + ' cards due. Review is recommended first, but the next lesson can still start.' : due + ' card' + (due===1?'':'s') + ' due. You can review now or continue.',
+    kind: !reviewDone && band === 'hard' ? 'primary' : reviewDone ? 'done' : band === 'recommend' ? '' : ''
   });
   let mainTitle = d.type === 'C' ? 'Consolidate' : 'Main task';
   let mainDetail = d.type === 'C' ? 'Use a current-material block before any extra practice.' : 'Lesson, class primer or mastery check.';
@@ -2658,18 +2759,26 @@ function renderTodayActions(){
     mainTitle = main.label || mainTitle;
     mainDetail = main.sub || mainDetail;
   }
+  if(next){
+    if(lessonBlocker){
+      mainTitle = lessonBlocker.title;
+      mainDetail = lessonBlocker.explanation;
+    } else if(main && main.lesson){
+      mainDetail = lessonAvailabilityMessage(next);
+    }
+  }
   setTaskButton('today-main-btn', {
-    state: mainDone ? 'Done' : 'Next',
+    state: mainDone ? 'Done' : lessonBlocker ? 'Locked' : 'Next',
     title: mainDone ? (d.ret ? 'Delayed check complete' : d.type === 'C' ? 'Consolidation started' : 'Main task complete') : mainTitle,
-    detail: mainDone ? 'Now practise it before ending the day.' : mainDetail,
-    kind: !mainDone && missing === 'main' ? 'primary' : mainDone ? 'done' : due ? 'locked' : ''
+    detail: mainDone ? 'Choose: review, start the next lesson anyway, contrast practice, or stop for today.' : mainDetail,
+    kind: !mainDone && missing === 'main' && !lessonBlocker ? 'primary' : mainDone ? 'done' : lessonBlocker ? 'locked' : ''
   });
   const depthTask = todayDepthTask();
   setTaskButton('today-depth-btn', {
-    state: depthDone ? 'Done' : (!mainDone || due) ? 'Locked' : 'Next',
+    state: depthDone ? 'Done' : (!mainDone || band === 'hard') ? 'Locked' : 'Next',
     title: depthDone ? 'Practice complete' : (depthTask ? depthTask.title : 'Practice block'),
     detail: depthDone ? (d.lite ? 'Optional practice moved to tomorrow.' : 'Practice is done for today.') : (depthTask ? depthTask.detail : 'Story, spelling, tone, class or listening practice.'),
-    kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || due) ? 'locked' : ''
+    kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || band === 'hard') ? 'locked' : ''
   });
   const end = el('end-day-btn');
 	  if(end){
@@ -2724,13 +2833,15 @@ function practiceState(p){
 	}
 function renderDailyPractice(){
   const host = el('daily-practice'); if(!host) return;
-	  const missing = dailyMissingStep();
-	  const active = activeDepthTask();
-	  const task = active || todayDepthTask();
-	  el('practice-next').textContent = srsDue().length ? 'review first'
-	    : missing === 'main' ? 'main first'
-	    : active ? 'next: ' + active.title
-	    : task ? 'available: ' + task.title
+		  const missing = dailyMissingStep();
+		  const active = activeDepthTask();
+		  const task = active || todayDepthTask();
+		  const due = srsDue().length, band = reviewLoadBand(due);
+		  el('practice-next').textContent = band === 'hard' ? 'review first'
+		    : band === 'recommend' ? 'review recommended'
+		    : missing === 'main' ? 'main first'
+		    : active ? 'next: ' + active.title
+		    : task ? 'available: ' + task.title
 	    : 'all open';
   host.innerHTML = DAILY_PRACTICE.map(p=>{
     const s = practiceState(p);
@@ -2762,24 +2873,27 @@ function renderPlan(){
   if(!el('plan-title')) return;
   const isL = d.type !== 'C';
   const due = srsDue().length;
+  const band = reviewLoadBand(due);
   const phase = governorPhase();
   const early = earlyFoundationWindow();
   const bonus = earlyBonusLessonCandidate();
   const nd = nextDrill();                                   // progression-aware, not date-random
   const sugg = nd ? nd.title : 'a quick drill';
   const retention = nextRetentionCheck();
+  const nl = nextLesson();
+  const blocker = nl && getLessonBlocker(nl.id);
   if(el('course-day-label')) el('course-day-label').textContent = early ? 'FOUNDATION DAY ↓' : '45-MINUTE COURSE DAY ↓';
   if(el('plan-sub')) el('plan-sub').textContent = early ? '20-30 min core · optional stretch' : 'depth before speed · +10💎';
   el('plan-title').textContent = isL ? (early ? "Today's foundation · honest pace" : "Today's 45 · Lesson day") : "Today's 45 · Consolidation day";
-  el('plan-1').textContent = due ? 'Warm-up: clear due cards (' + due + ' left)' : 'Warm-up: review cleared';
+  el('plan-1').textContent = due ? (band === 'hard' ? 'Review: ' + due + ' due - reduce below ' + REVIEW_HARD_CAP + ' to unlock lessons' : band === 'recommend' ? 'Review: ' + due + ' due - recommended before lesson' : 'Review: ' + due + ' due - optional warm-up') : 'Review: clear';
   if(isL){
-    const nl = nextLesson();
-    if(retention && !(d.ret||0)) el('plan-2').textContent = 'Main: delayed check due - ' + retentionStageLabel(retention.stage) + ' Lesson ' + lessonNum(retention.lessonId);
-    else if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Practise it now.';
-    else if(phase === 'review') el('plan-2').textContent = 'Main: lesson opens after the warm-up';
+    if(blocker) el('plan-2').textContent = 'Main: ' + blocker.explanation;
+    else if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Next lesson can still be started if you choose.';
+    else if(retention) el('plan-2').textContent = 'Recommended: delayed check due - ' + retentionStageLabel(retention.stage) + ' Lesson ' + lessonNum(retention.lessonId);
+    else if(phase === 'review') el('plan-2').textContent = 'Main: review overload first';
     else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
     const missingBridge = dailyBridgeMissing(d);
-    el('plan-3').textContent = missingBridge.length ? 'Bridge: ' + missingBridge.join(' + ') + ' before ending' : bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
+    el('plan-3').textContent = missingBridge.length ? 'Bridge: ' + missingBridge.join(' + ') + ' recommended after the main task' : bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
   } else {
     el('plan-2').textContent = 'Main: consolidate current letters, tones and words';
     el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
@@ -2859,11 +2973,11 @@ function questCheck(){
 /* =====================================================
    SRS  (simple SM-2-lite, day granularity)
 ===================================================== */
-function srsAddTo(target, id, delayDays){
+function srsAddTo(target, id, delayDays, meta){
   const s = target || state;
   if(!s.srs) s.srs = {};
   if(s.srs[id]) return false;
-  s.srs[id] = {iv:0, due:isoPlusDays(todayStr(), delayDays || 0), lapses:0, sameDayMisses:0};
+  s.srs[id] = Object.assign({iv:0, due:isoPlusDays(todayStr(), delayDays || 0), lapses:0, sameDayMisses:0}, meta || {});
   return true;
 }
 function srsAdd(id, delayDays){
@@ -3911,8 +4025,12 @@ function wordRole(w){
 function learnedMeaningWords(){
   return learnedWords().filter(w=>wordRole(w)!=='decode');
 }
+function nextLessonFor(target){
+  const s = target || state;
+  return LESSONS.find(L=>!(s.done||[]).includes(L.id)) || null;
+}
 function nextLesson(){
-  return LESSONS.find(L=>!state.done.includes(L.id)) || null;
+  return nextLessonFor(state);
 }
 function lessonIndexById(id){ return LESSONS.findIndex(L=>L.id===id); }
 function lessonIdsThrough(L){
@@ -3991,11 +4109,12 @@ function scheduleRetentionForLesson(lessonId, completedDate, target, legacyCatch
   s.retention[lessonId] = {
     completed:doneAt,
     due1:legacyCatchup ? todayStr() : isoPlusDays(doneAt, 1),
-    due7:legacyCatchup ? isoPlusDays(todayStr(), 6) : isoPlusDays(doneAt, 7),
-    retained:false,
-    stabilised:false,
-    attempts:{retained:0, stabilised:0}
-  };
+	    due7:legacyCatchup ? isoPlusDays(todayStr(), 6) : isoPlusDays(doneAt, 7),
+	    retained:false,
+	    stabilised:false,
+	    attempts:{retained:0, stabilised:0},
+	    backfilled:!!legacyCatchup
+	  };
   return true;
 }
 function ensureRetentionForDoneLessons(target, legacyCatchup){
@@ -4007,20 +4126,32 @@ function ensureRetentionForDoneLessons(target, legacyCatchup){
   });
   return changed;
 }
-function nextRetentionCheck(target){
+function dueRetentionChecks(target, opts){
   const s = target || state;
   const d = s.days && s.days[todayStr()];
-  if(d && (d.ret||0) > 0) return null;             // one delayed lesson check is enough for a day
+  const taken = opts && opts.ignoreDay ? 0 : ((d && d.ret) || 0);
   const t = todayStr();
+  const items = [];
   for(const id of (s.done||[])){
     const rec = retentionRecord(s, id);
     if(!rec) continue;
-    if(!rec.retained && rec.due1 <= t) return {lessonId:id, stage:'retained', due:rec.due1};
-    if(rec.retained && !rec.stabilised && rec.due7 <= t) return {lessonId:id, stage:'stabilised', due:rec.due7};
+    if(!rec.retained && rec.due1 <= t) items.push({lessonId:id, stage:'retained', due:rec.due1, backfilled:!!rec.backfilled});
+    else if(rec.retained && !rec.stabilised && rec.due7 <= t) items.push({lessonId:id, stage:'stabilised', due:rec.due7, backfilled:!!rec.backfilled});
   }
-  return null;
+  const regular = items.filter(x=>!x.backfilled);
+  const backfilled = items.filter(x=>x.backfilled).slice(0, Math.max(0, BACKFILLED_RETENTION_DAILY_CAP - taken));
+  return regular.concat(backfilled);
 }
-function retentionStageLabel(stage){ return stage === 'stabilised' ? '+7 day stabilise' : '+1 day retain'; }
+function nextRetentionCheck(target){
+  const s = target || state;
+  const d = s.days && s.days[todayStr()];
+  const items = dueRetentionChecks(s);
+  if(!items.length) return null;
+  const first = items[0];
+  if(d && (d.ret||0) > 0 && !first.backfilled) return null;             // one normal delayed check is enough for a day
+  return first;
+}
+function retentionStageLabel(stage){ return stage === 'stabilised' ? '+7 day check' : '+1 day check'; }
 function retentionStageKey(stage){ return stage === 'stabilised' ? 'stabilised' : 'retained'; }
 function axisId(axis, key){ return 'a:' + axis + ':' + key; }
 function parseAxisId(id){
@@ -4068,19 +4199,52 @@ function axisCardAllowedForDone(id, doneIds){
   }
   return false;
 }
-function seedAxisCardsForLesson(L, target, delayDays){
+function seedAxisCardsForLesson(L, target, delayDays, opts){
   const s = target || state;
+  const options = opts || {};
   let count = 0;
-  axisCardIdsForLesson(L).forEach(id=>{
-    if(axisCardAllowedForDone(id, (s.done||[])) && srsAddTo(s, id, delayDays == null ? 1 : delayDays)) count++;
+  axisCardIdsForLesson(L).forEach((id, ix)=>{
+    if(!axisCardAllowedForDone(id, (s.done||[]))) return;
+    const delay = options.stagger ? AXIS_REVIEW_FIRST_DELAY + Math.floor(ix / AXIS_REVIEW_DAILY_CAP) : (delayDays == null ? 1 : delayDays);
+    if(srsAddTo(s, id, delay, {axisReview:true, axisBackfilled:!!options.backfilled})) count++;
   });
   return count;
 }
-function seedAxisCardsForDoneLessons(target, delayDays){
+function seedAxisCardsForDoneLessons(target, delayDays, opts){
   const s = target || state;
   let count = 0;
-  (s.done||[]).forEach(id=>{ count += seedAxisCardsForLesson(lessonById(id), s, delayDays); });
+  (s.done||[]).forEach(id=>{ count += seedAxisCardsForLesson(lessonById(id), s, delayDays, opts); });
   return count;
+}
+function repairAxisReviewFlood(target){
+  const s = target || state;
+  if(!s.srs) return false;
+  const dueAxis = srsDueFor(s).filter(id=>id.startsWith('a:')).sort();
+  if(dueAxis.length <= AXIS_REVIEW_DAILY_CAP) return false;
+  let changed = false;
+  dueAxis.slice(AXIS_REVIEW_DAILY_CAP).forEach((id, ix)=>{
+    const c = s.srs[id];
+    if(!c || c.leech || (c.lapses||0) > 0) return;
+    c.due = isoPlusDays(todayStr(), 1 + Math.floor(ix / AXIS_REVIEW_DAILY_CAP));
+    c.axisReview = true;
+    c.axisStaged = true;
+    changed = true;
+  });
+  return changed;
+}
+function repairTodayRouteSnapshot(target){
+  const s = target || state;
+  const d = s.days && s.days[todayStr()];
+  if(!d) return false;
+  const due = srsDueFor(s).length;
+  let changed = false;
+  if(d.due !== due){ d.due = due; changed = true; }
+  const untouched = !(d.r||0) && !(d.l||0) && !(d.d||0) && !(d.m||0) && !(d.ret||0) && !d.paid;
+  if(untouched){
+    const type = (due >= REVIEW_HARD_CAP || !nextLessonFor(s)) ? 'C' : 'L';
+    if(d.type !== type){ d.type = type; changed = true; }
+  }
+  return changed;
 }
 function axisQuestion(id){
   const p = parseAxisId(id); if(!p) return null;
@@ -4112,7 +4276,7 @@ function axisQuestion(id){
 }
 function axisCardLabel(id){
   const p = parseAxisId(id); if(!p) return '';
-  const labels = {glyph:'glyph recognition', class:'class recall', initial:'initial sound', final:'final job', live:'live/dead status', tone:'tone derivation', listen:'listening contrast', say:'reading aloud', transfer:'real-world transfer'};
+  const labels = {glyph:'letter shape', class:'class from memory', initial:'start sound', final:'ending job', live:'live or dead', tone:'tone rule', listen:'listen and pick Thai', say:'read aloud', transfer:'outside the app'};
   return labels[p.axis] || p.axis;
 }
 function buildRetentionQuiz(item){
@@ -4246,9 +4410,17 @@ function repairStateForV5(target){
       report.changed = true;
     }
   });
-  const seededAxes = seedAxisCardsForDoneLessons(s, 1);
+  const seededAxes = seedAxisCardsForDoneLessons(s, null, {stagger:true, backfilled:true});
   if(seededAxes){
     report.seededAxes = seededAxes;
+    report.changed = true;
+  }
+  if(repairAxisReviewFlood(s)){
+    report.axisFloodRepaired = true;
+    report.changed = true;
+  }
+  if(repairTodayRouteSnapshot(s)){
+    report.todayRouteSnapshotRepaired = true;
     report.changed = true;
   }
   if(ensureRetentionForDoneLessons(s, true)){
@@ -4623,6 +4795,74 @@ function validateV521HardeningContracts(){
     if(!state.srs['g:น'].shaky || state.srs['g:น'].iv > 5) errors.push('shaky correct answer should shorten the interval');
   });
   if(errors.length) throw new Error('V5.2.1 hardening contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV525RouteSimplificationContracts(){
+  const errors = [];
+  const dueCard = n=>['test-due-' + n, {iv:0, due:todayStr(), lapses:0, sameDayMisses:0}];
+  const withDue = (s, count)=>{
+    s.srs = s.srs || {};
+    for(let i=0;i<count;i++){
+      const [id, card] = dueCard(i);
+      s.srs[id] = card;
+    }
+    return s;
+  };
+  const l1To5 = LESSONS.slice(0,5).map(L=>L.id);
+  const l1To6 = LESSONS.slice(0,6).map(L=>L.id);
+  const baseAtL6 = extra=>Object.assign({done:l1To5.slice(), checks:{[checkpointId(2)]:true}, srs:{}, days:{}, retention:{}, pathDone:{'p:class':true}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}}, extra||{});
+  const assertClearBlocker = (label, blocker)=>{
+    if(!blocker) return;
+    ['code','title','explanation','actionLabel','actionRoute'].forEach(k=>{
+      if(!blocker[k]) errors.push(label + ': blocker missing ' + k);
+    });
+  };
+  const clean = baseAtL6();
+  if(getLessonBlocker('l6', clean)) errors.push('clean Lesson 5 user should be able to start Lesson 6');
+  const migrated = {done:l1To5.slice(), checks:{[checkpointId(2)]:true}, srs:{'g:ก':{iv:0,due:'2024-01-01',lapses:0}}, days:{}, retention:{}};
+  repairStateForV5(migrated);
+  repairStateForV501(migrated);
+  const migratedBlocker = getLessonBlocker('l6', migrated);
+  assertClearBlocker('migrated Lesson 5 user', migratedBlocker);
+  if(!migratedBlocker || migratedBlocker.code !== 'foundation-refresh') errors.push('migrated Lesson 5 user should have exactly the foundation refresh blocker');
+  const due33 = withDue(baseAtL6(), 33);
+  if(getLessonBlocker('l6', due33)) errors.push('33 due review items should not block Lesson 6');
+  const due37 = withDue(baseAtL6(), 37);
+  if(getLessonBlocker('l6', due37)) errors.push('37 due review items should not block Lesson 6');
+  const due45 = withDue(baseAtL6(), 45);
+  const over = getLessonBlocker('l6', due45);
+  assertClearBlocker('45 due review items', over);
+  if(!over || over.code !== 'review-overload') errors.push('45 due review items should be the review-overload blocker');
+  const delayed = baseAtL6({retention:{l5:{completed:isoPlusDays(todayStr(), -1), due1:todayStr(), due7:isoPlusDays(todayStr(), 6), retained:false, stabilised:false, attempts:{retained:0, stabilised:0}}}});
+  if(!nextRetentionCheck(delayed)) errors.push('due delayed check should still appear');
+  if(getLessonBlocker('l6', delayed)) errors.push('due delayed checks alone should not block Lesson 6');
+  const axisFlood = withDue(baseAtL6({days:{[todayStr()]:{r:0,l:0,d:0,m:0,ret:0,due:136,paid:false,type:'C',bridge:{}}}}), 33);
+  LESSONS.slice(0,5).forEach(L=>seedAxisCardsForLesson(L, axisFlood, 0));
+  if(srsDueFor(axisFlood).filter(id=>id.startsWith('a:')).length <= AXIS_REVIEW_DAILY_CAP) errors.push('test setup should create an axis review flood');
+  repairAxisReviewFlood(axisFlood);
+  repairTodayRouteSnapshot(axisFlood);
+  if(srsDueFor(axisFlood).filter(id=>id.startsWith('a:')).length > AXIS_REVIEW_DAILY_CAP) errors.push('axis review flood should be staged to the daily cap');
+  if(axisFlood.days[todayStr()].type !== 'L') errors.push('untouched day snapshot should be repaired after axis flood staging');
+  if(getLessonBlocker('l6', axisFlood)) errors.push('staged axis review should not make a 33-card Lesson 6 route hard-block');
+  const manyBackfilled = {done:LESSONS.slice(0,10).map(L=>L.id), srs:{}, days:{}, retention:{}, checks:{[checkpointId(2)]:true,[checkpointId(5)]:true,[checkpointId(8)]:true}};
+  ensureRetentionForDoneLessons(manyBackfilled, true);
+  if(dueRetentionChecks(manyBackfilled).filter(x=>x.backfilled).length > BACKFILLED_RETENTION_DAILY_CAP) errors.push('backfilled delayed checks should be capped per day');
+  withTemporaryState({done:['l1'], checks:{}, srs:{}, days:{}, retention:{}, pathDone:{'p:class':true}}, ()=>{
+    const cur = currentPathNode();
+    if(!cur || !cur.lesson || cur.lesson.id !== 'l2') errors.push('stale Course Map practice node should not block Lesson 2');
+  });
+  withTemporaryState({done:['l1'], checks:{}, srs:{}, days:{[todayStr()]:{r:0,l:0,d:0,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}}}, retention:{}, pathDone:{'p:class':true}}, ()=>{
+    markDailyDepth('practice');
+    const cur = currentPathNode();
+    if(!cur || !cur.lesson || cur.lesson.id !== 'l2') errors.push('Today practice completion should keep Course Map progression open');
+  });
+  withTemporaryState(baseAtL6(), ()=>{
+    const todayNode = mainTaskNode(), mapNode = currentPathNode();
+    if(!todayNode || !todayNode.lesson || todayNode.lesson.id !== 'l6') errors.push('Today should point at Lesson 6 when available');
+    if(!mapNode || !mapNode.lesson || mapNode.lesson.id !== 'l6') errors.push('Course Map should point at Lesson 6 when available');
+    if(!!getLessonBlocker('l6') !== !!getLessonBlocker((mapNode.lesson||{}).id)) errors.push('Today and Course Map availability should agree');
+  });
+  if(errors.length) throw new Error('V5.2.5 route simplification contract failed:\n' + errors.join('\n'));
   return true;
 }
 function finalJobHtml(ch, lessonId){
@@ -5005,20 +5245,69 @@ function buildPath(){
     {type:'class', label:'Meet the three classes', sub:'the dial that sets every tone', id:'p:class', go:()=>showClassPrimer()},
   ];
   LESSONS.forEach((L,i)=>{
-	    N.push({type:'lesson', label:'Lesson: '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
+		    N.push({type:'lesson', label:'Lesson: '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
     const pool = i<3 ? W_START : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
-    N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, go:w.go});
+    N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, lessonScope:L.id, go:w.go});
     const story = STORIES.find(s=>s.gate===L.id);
-    if(story) N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
+    if(story) N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, lessonScope:L.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
     if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'prove ≥80% on everything so far to unlock the next lessons', id:checkpointId(i), checkpoint:i});
   });
   N.push({type:'checkpoint', label:'Letters boss: class of all 42', sub:'Phase 1 capstone · prove ≥90% on every consonant', id:'letters42', letters42:true});
   return N;
 }
+function isCoursePracticeNode(n){
+  return !!(n && !n.lesson && !n.letters42 && n.type !== 'checkpoint' && n.type !== 'class');
+}
+function practiceNodeType(n){
+  const label = String((n && n.label) || '').toLowerCase();
+  if(label.includes('hear & pick')) return 'hear-thai';
+  if(label.includes('class sprint')) return 'sprint';
+  if(label.includes('echo')) return 'echo';
+  if(label.includes('spell')) return 'spell';
+  if(label.includes('sound twins')) return 'twins';
+  if(label.includes('confusion')) return 'clinic';
+  if(label.includes('glyph ghost')) return 'ghost';
+  if(label.includes('tone-rule')) return 'tone-rule';
+  if((n && n.type) === 'read' || label.includes('read:')) return 'reading';
+  if((n && n.type) === 'speak') return 'echo';
+  return (n && n.type) || 'practice';
+}
+function equivalentPracticeTypes(type){
+  const t = String(type || '').toLowerCase();
+  const map = {
+    practice:['practice','hear-thai','sprint','echo','spell','twins','clinic','ghost','tone-rule','reading'],
+    speak:['echo'],
+    read:['reading'],
+    reading:['reading'],
+    contrast:['echo','practice'],
+    transfer:['practice'],
+    mission:['practice']
+  };
+  return map[t] || [t];
+}
+function markEquivalentPracticeNodeComplete(practiceType, lessonScope){
+  if(!state.pathDone) state.pathDone = {};
+  const types = equivalentPracticeTypes(practiceType);
+  let changed = false;
+  buildPath().forEach(n=>{
+    if(!isCoursePracticeNode(n)) return;
+    const sameScope = !lessonScope || !n.lessonScope || n.lessonScope === lessonScope || lessonNum(n.lessonScope) <= lessonNum(lessonScope);
+    const sameType = types.includes(practiceNodeType(n));
+    if((sameScope && sameType) || practiceType === 'practice'){
+      if(!state.pathDone[n.id]){ state.pathDone[n.id] = true; changed = true; }
+    }
+  });
+  if(changed) saveState();
+  return changed;
+}
 function nodeDone(n){
   if(n.lesson) return state.done.includes(n.lesson.id);
   if(n.letters42) return !!(state.checks||{}).letters42;               // capstone passed
   if(n.type === 'checkpoint') return checkpointPassed(n.checkpoint);   // gate: done only once passed
+  if(isCoursePracticeNode(n)){
+    if((state.pathDone||{})[n.id]) return true;
+    return !!(n.lessonScope && state.done.includes(n.lessonScope));     // practice nodes are suggestions, not locks
+  }
   return !!(state.pathDone||{})[n.id];
 }
 function pathIndex(P){ for(let i=0;i<P.length;i++) if(!nodeDone(P[i])) return i; return P.length; }
@@ -5071,8 +5360,33 @@ function renderRail(){
   const cur = P[ci];
   const phase = governorPhase();
   const due = srsDue().length;
+  const next = nextLesson(), blocker = next && getLessonBlocker(next.id);
   const goReview = ()=>{ gotoView('practice'); setTimeout(()=>el('cta-flash').click(), 60); };
-  if(cur.type === 'checkpoint'){
+  const renderAfterMainOptions = (label, sub)=>{
+    const nextAllowed = next && !blocker;
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">Route options</div>
+      <div class="pn-label">${esc(label)}</div>
+      <div class="pn-sub">${esc(sub)}</div>
+      ${due ? `<button class="btn full ghost path-start" id="path-review">Continue with recommended review →</button>` : ''}
+      ${nextAllowed ? `<button class="btn full path-start" id="path-next-anyway" style="margin-top:8px">Start Lesson ${lessonNum(next.id)} anyway →</button>` : blocker ? `<div class="notebox" style="margin-top:8px">${esc(blocker.explanation)}</div>` : ''}
+      <button class="btn full ghost path-start" id="path-contrast" style="margin-top:8px">Do contrast practice →</button>
+      <button class="btn full ghost path-start" id="path-stop" style="margin-top:8px">Stop for today</button></div>`;
+    const rb = el('path-review'), nb = el('path-next-anyway'), cb = el('path-contrast'), sb = el('path-stop');
+    if(rb) rb.onclick = goReview;
+    if(nb) nb.onclick = ()=>startLessonFromUser(next);
+    if(cb) cb.onclick = ()=>{ const c = nextContrastBlock() || contrastBlocks()[0]; c ? startContrastBlock(c) : startDepthBlock(); };
+    if(sb) sb.onclick = showEndDayModal;
+  };
+  if(phase === 'foundations'){
+    const b = next && getLessonBlocker(next.id);
+    host.innerHTML = `<div class="path-now">
+      <div class="pn-step">Endings Refresh</div>
+      <div class="pn-label">${esc(b ? b.title : 'Updated foundations')}</div>
+      <div class="pn-sub">${esc(b ? b.explanation : 'Complete the refresh before normal route work resumes.')}</div>
+      <button class="btn full path-start" id="path-refresh">Start Endings Refresh →</button></div>`;
+    el('path-refresh').onclick = startFoundationRefresh;
+  } else if(cur.type === 'checkpoint'){
     // mastery gate always takes priority - it's the blocking ≥80% review, not "new content"
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">👑 mastery gate</div>
@@ -5080,18 +5394,13 @@ function renderRail(){
       <div class="pn-sub">${esc(cur.sub||'')} · free retries</div>
       <button class="btn full path-start" id="path-start">Take the check →</button></div>`;
     el('path-start').onclick = ()=>launchNode(cur);
-  } else if(phase === 'rest'){
-    host.innerHTML = `<div class="path-now">
-      <div class="pn-step">🌙 done for today</div>
-      <div class="pn-label">That is enough for today</div>
-      <div class="pn-sub">You reviewed, learned and practised. Extra work should stay on current material.</div>
-      <button class="btn full ghost path-start" id="path-depth">Bonus practice →</button></div>`;
-    el('path-depth').onclick = startDepthBlock;
+	  } else if(phase === 'rest'){
+    renderAfterMainOptions('That is enough for today', 'You can stop, review, practise, or start the next lesson if no true blocker exists.');
   } else if(phase === 'review'){
     host.innerHTML = `<div class="path-now">
-      <div class="pn-step">🌅 warm-up first</div>
-      <div class="pn-label">Clear the current deck</div>
-      <div class="pn-sub">${due} card${due>1?'s':''} waiting. New material opens after the warm-up.</div>
+      <div class="pn-step">Review overload</div>
+      <div class="pn-label">Reduce the current deck</div>
+      <div class="pn-sub">${due} card${due>1?'s':''} due. New lessons reopen below ${REVIEW_HARD_CAP}.</div>
       <button class="btn full path-start" id="path-review">Review ${due} →</button></div>`;
     el('path-review').onclick = goReview;
   } else if(phase === 'retention'){
@@ -5113,17 +5422,12 @@ function renderRail(){
     el('path-start').onclick = ()=>{ if(bonus) startLessonFromUser(bonus); };
     el('path-depth').onclick = startDepthBlock;
   } else if(phase === 'deepen'){
-    host.innerHTML = `<div class="path-now">
-      <div class="pn-step">🌱 practise before moving on</div>
-      <div class="pn-label">Use today's material</div>
-      <div class="pn-sub">Use a story, spelling, tone or lookalike drill before adding more letters.</div>
-      <button class="btn full path-start" id="path-depth">Start practice →</button></div>`;
-    el('path-depth').onclick = startDepthBlock;
+    renderAfterMainOptions('Main task is done', 'Recommended practice is still useful, but it is not a hidden lesson lock.');
   } else {
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
       <div class="pn-label">${esc(cur.label)}</div>
-      <div class="pn-sub">${esc(cur.sub||'')}</div>
+      <div class="pn-sub">${esc(cur.lesson ? lessonAvailabilityMessage(cur.lesson) : (cur.sub||''))}</div>
       <button class="btn full path-start" id="path-start">Start →</button></div>`;
     el('path-start').onclick = ()=>launchNode(cur);
   }
@@ -5911,12 +6215,12 @@ function renderLessonPayoff(p){
   if(!payoff){ p.i++; renderLessonStep(); return; }
   clearLocalRecording();
   el('stage').innerHTML = `
-    <div class="center"><div class="eyebrow">Useful payoff</div><h2>Decode first</h2></div>
+    <div class="center"><div class="eyebrow">Useful Thai</div><h2>Read the Thai first</h2></div>
     <div class="payoff-card">
       <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
       <div class="sub" style="text-align:center">Read the Thai before revealing meaning.</div>
       <div class="stage-actions" id="payoff-reveal-wrap">
-        <button class="btn full" id="payoff-reveal">I decoded it · reveal audio and use →</button>
+        <button class="btn full" id="payoff-reveal">I read it. Show audio and meaning</button>
       </div>
     </div>
     <div class="stage-actions">
@@ -5926,11 +6230,11 @@ function renderLessonPayoff(p){
   if(back) back.onclick = ()=>{ p.i = Math.max(0, p.i-1); renderLessonStep(); };
   el('payoff-reveal').onclick = ()=>{
     el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">Useful payoff</div><h2>${esc(payoff.capability)}</h2></div>
+      <div class="center"><div class="eyebrow">Useful Thai</div><h2>${esc(payoff.capability)}</h2></div>
       <div class="payoff-card">
         <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
         <div class="fc-tr" style="text-align:center">${esc(payoff.tr)}</div>
-        <div class="payoff-context"><b>Meaning after decoding:</b> ${esc(payoff.meaning)}<br>${esc(payoff.context)}</div>
+        <div class="payoff-context"><b>Meaning:</b> ${esc(payoff.meaning)}<br>${esc(payoff.context)}</div>
         <div class="row" style="justify-content:center;gap:10px;margin:14px 0">${speakBtn(payoff.thai, 'Hear: '+payoff.thai)}</div>
         <div class="compare-box">
           <div class="q-feedback" style="margin-bottom:8px">Say it once from Thai script. Record only if you want to compare.</div>
@@ -5938,7 +6242,7 @@ function renderLessonPayoff(p){
           <audio class="own-audio" id="payoff-own" controls style="display:none"></audio>
         </div>
       </div>
-      <div class="stage-actions"><button class="btn full" id="payoff-next">Start the quiz →</button></div>`;
+      <div class="stage-actions"><button class="btn full" id="payoff-next">Start the quiz</button></div>`;
     const rb = el('payoff-record'), au = el('payoff-own');
     rb.onclick = ()=>toggleLocalRecording(rb, au);
     speak(payoff.thai);
@@ -6122,7 +6426,7 @@ function finishLesson(){
     state.done.push(L.id);
     L.glyphs.forEach(g=>srsAdd('g:'+g));
     finalGlyphsForLesson(L).forEach(g=>srsAdd('f:'+g));
-    seedAxisCardsForLesson(L, state, 1);
+    seedAxisCardsForLesson(L, state, null, {stagger:true});
     scheduleRetentionForLesson(L.id);
     // pure letters (v2.27): the review deck is letters-only. Words live IN the lesson as decode
     // practice (you see / hear / sound them out) but aren't drilled as meaning + reverse cards -
@@ -7020,7 +7324,7 @@ function renderReviewTab(){
   const leeches = srsLeechesDue().length;
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due. Add phrases or finish lessons.';
   const leechSub = el('leech-sub');
-  if(leechSub) leechSub.textContent = leeches ? leeches + ' tough card' + (leeches>1?'s':'') + ' waiting' : 'No tough cards waiting';
+  if(leechSub) leechSub.textContent = leeches ? leeches + ' hard card' + (leeches>1?'s':'') + ' waiting' : 'No hard cards waiting';
   renderLap();
   renderPath();
   renderTones();        // tone licence panel now lives in the Review tab (folded in v2.27)
@@ -7031,7 +7335,7 @@ el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
   if(!due.length){
     const leeches = srsLeechesDue().length;
-    toast(leeches ? 'Normal deck is clear. Leech clinic has ' + leeches + ' tough card' + (leeches>1?'s':'') + '.' : 'No cards due right now');
+    toast(leeches ? 'Normal deck is clear. Leech clinic has ' + leeches + ' hard card' + (leeches>1?'s':'') + '.' : 'No cards due right now');
     return;
   }
   const session = buildBalancedReviewSession(due, 40);
@@ -7072,10 +7376,10 @@ function renderAxisSpeakFlash(id, advance, counterLabel){
   clearLocalRecording();
   el('stage').innerHTML = `
     <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Read aloud from Thai</h2></div>
-    <div class="axis-tag">reading aloud axis</div>
+    <div class="axis-tag">read-aloud card</div>
     <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
     <div class="sub" style="text-align:center">No English cue. Read it once, then reveal the model and compare.</div>
-    <div class="stage-actions"><button class="btn full" id="axis-say-show">I read it · reveal model →</button></div>`;
+    <div class="stage-actions"><button class="btn full" id="axis-say-show">I read it. Show the model</button></div>`;
   el('axis-say-show').onclick = ()=>{
     logSpeakAttempt();
     el('stage').innerHTML = `
@@ -7088,7 +7392,7 @@ function renderAxisSpeakFlash(id, advance, counterLabel){
           <button class="btn small ghost record-btn" id="axis-rec">● Record yourself</button>
         </div>
         <audio class="own-audio" id="axis-own" controls style="display:none"></audio>
-        <div class="sub" style="font-size:11px;margin-top:8px">Check the contrast named by the lesson. This is practice evidence, not certified mastery.</div>
+        <div class="sub" style="font-size:11px;margin-top:8px">Check the sound named by the lesson. This is practice, not a score.</div>
       </div>
       <div class="rw-grid">
         <button class="btn ghost" id="axis-again">Needs another pass</button>
@@ -7105,9 +7409,9 @@ function renderAxisTransferFlash(id, advance, counterLabel){
   const p = parseAxisId(id), L = p && lessonById(p.key), payoff = L && lessonPayoff(L);
   if(!payoff){ advance(false); return; }
   el('stage').innerHTML = `
-    <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Transfer check</h2></div>
+    <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Use it outside the app</h2></div>
     <div class="payoff-card">
-      <div class="axis-tag">real-world transfer axis</div>
+      <div class="axis-tag">outside-the-app card</div>
       <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
       <div class="fc-tr" style="text-align:center">${esc(payoff.tr)}</div>
       <div class="payoff-context">${esc(payoff.context)}</div>
@@ -7115,7 +7419,7 @@ function renderAxisTransferFlash(id, advance, counterLabel){
     </div>
     <div class="rw-grid">
       <button class="btn ghost" id="axis-transfer-again">Not yet</button>
-      <button class="btn" id="axis-transfer-good">I can spot/use this</button>
+      <button class="btn" id="axis-transfer-good">I can spot this</button>
     </div>`;
   el('axis-transfer-again').onclick = ()=>advance(false);
   el('axis-transfer-good').onclick = ()=>advance(true);
@@ -7152,7 +7456,7 @@ function renderFlash(){
     bumpStreak(); questCheck();
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak · ${p.reviewed} ${p.opts && p.opts.leechClinic ? 'tough cards practised' : 'cards reviewed'}</div>
+      <div class="result-sub">gèng mâak · ${p.reviewed} ${p.opts && p.opts.leechClinic ? 'hard cards reviewed' : 'cards reviewed'}</div>
       ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
@@ -7295,7 +7599,7 @@ function finishContrastBlock(){
   setProg(100);
   el('stage').innerHTML = `
     <div class="result-big">${p.correct} / ${p.rounds.length}</div>
-    <div class="result-sub">${esc(block.title)} contrast banked · ${p.clear} self-check${p.clear===1?'':'s'} clear · +2💎</div>
+    <div class="result-sub">${esc(block.title)} done · ${p.clear} clear read-aloud check${p.clear===1?'':'s'} · +2💎</div>
     <div class="result-sub" style="font-size:12px">${esc(block.capability)}</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
@@ -7318,7 +7622,7 @@ function renderContrastBlock(){
           <button class="btn small ghost" id="contrast-slow">slow</button>
         </div>
         <div class="compare-box">
-          <div class="q-feedback" style="margin-bottom:8px">Read from Thai, record, wait a moment, then play yourself back beside the model.</div>
+          <div class="q-feedback" style="margin-bottom:8px">Read from Thai, record, then play yourself back beside the model.</div>
           <button class="btn full ghost record-btn" id="contrast-record">Record yourself</button>
           <audio class="own-audio" id="contrast-own" controls style="display:none"></audio>
           <div class="sub" style="font-size:11px;margin-top:8px">No pronunciation score. Check the specific contrast: ${esc(block.contrast)}.</div>
@@ -7375,7 +7679,7 @@ function markBangkokMissionDone(mission){
   saveState(); bumpStreak();
   if(first) award(2);
   questCheck();
-  toast(first ? 'Mission checked off · +2💎' : 'Mission checked off');
+  toast(first ? 'Mission done · +2💎' : 'Mission done');
 }
 function showBangkokMissions(focusId){
   const items = bangkokMissions();
@@ -7383,13 +7687,13 @@ function showBangkokMissions(focusId){
   openOverlay();
   setProg(0);
   if(!items.length){
-    el('stage').innerHTML = `<div class="center"><h2>Bangkok mission</h2><p class="sub">Missions open once Lesson 3 gives you enough real-world Thai to spot.</p></div>`;
+    el('stage').innerHTML = `<div class="center"><h2>Bangkok mission</h2><p class="sub">Missions open once Lesson 3 gives you enough Thai to spot outside the app.</p></div>`;
     return;
   }
   const done = ensureMissions().done || {};
   const focus = focusId || (nextBangkokMission() || items[0]).id;
   el('stage').innerHTML = `
-    <div class="center"><h2>Bangkok mission</h2><p class="sub">No camera, upload, location or web access. Tick only what you actually notice or rehearse outside the app.</p></div>
+    <div class="center"><h2>Bangkok mission</h2><p class="sub">No camera, upload, location or web access. Tick only what you notice or rehearse outside the app.</p></div>
     <div class="sign-list">
       ${items.map(item=>{
         const seen = done[item.id];
@@ -7765,18 +8069,18 @@ function nextGenericQ(){
         rec[retentionStageKey(item.stage)] = todayStr();
         if(item.stage === 'retained' && !rec.due7) rec.due7 = isoPlusDays(todayStr(), 6);
         d.ret = (d.ret||0) + 1;
-        state.lastCapability = {date:todayStr(), text:(L ? 'Lesson ' + lessonNum(L.id) + ' moved from completed toward retained mastery.' : 'Delayed mastery check passed.')};
+        state.lastCapability = {date:todayStr(), text:(L ? 'You remembered Lesson ' + lessonNum(L.id) + ' after a gap.' : 'You passed a later memory check.')};
         saveState(); questCheck();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">${esc(retentionStageLabel(item.stage))} passed. ${L ? esc(L.title) : 'Lesson'} is now ${item.stage === 'stabilised' ? 'stabilised' : 'retained'}.</div>
+          <div class="result-sub">${esc(retentionStageLabel(item.stage))} passed. ${L ? esc(L.title) : 'Lesson'} held up after a gap.</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       } else {
         saveState(); questCheck();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">Not retained yet. You need 80%. This check stays due, because completed is not mastered.</div>
+          <div class="result-sub">Not solid yet. You need 80%. This check stays due.</div>
           <div class="stage-actions">
             <button class="btn full" id="retention-retry">Retry now →</button>
             <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
@@ -8116,6 +8420,7 @@ function renderStory(s){
     if(!state.stories) state.stories = {};
     const first = !state.stories[s.id];
     state.stories[s.id] = todayStr();
+    markEquivalentPracticeNodeComplete('reading', s.gate);
     const d = ensureDay(); d.d++; saveState();
     if(first) award(3);
     bumpStreak(); questCheck();
@@ -8170,6 +8475,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV52BridgeContracts();
   validateV52FullBriefContracts();
   validateV521HardeningContracts();
+  validateV525RouteSimplificationContracts();
   await loadState();
   const migrated = repairStateForV5(state);
   const migrated501 = repairStateForV501(state);

@@ -2,26 +2,37 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
-## v5.2.1 — 2026-06-27
+## v5.2.5 - 2026-06-27
 
-- Added review hardening on top of v5.2: repeated misses now mark a card as a leech after three lapses, remove it from the normal due deck and surface it in a dedicated Leech clinic until two clean passes clear it.
-- Added a “Felt shaky” path for correct flashcard answers; shaky correct answers keep the card on a shorter interval instead of treating recognition as full confidence.
+- Kept the v5.2/v5.2.1 learning model intact while simplifying route gating through a single canonical lesson blocker.
+- New lessons are now hard-blocked only by missing prerequisite lessons, required mastery checks, the migrated-user Endings Refresh, review overload at 45+ due cards, or invalid/corrupt state.
+- Review load now uses three bands: 0-24 normal, 25-44 review recommended but lesson allowed, 45+ consolidation/review required before new lessons.
+- Delayed +1/+7 checks remain visible and recommended, but no longer block progression by themselves; migrated/backfilled checks are capped per day.
+- Staged `a:` axis review cards so the full axis pool does not become a same-day review flood; existing due-axis floods are repaired down to a small daily slice.
+- Course Map practice nodes are non-blocking and can be auto-completed by equivalent Today practice via `markEquivalentPracticeNodeComplete()`.
+- Added `getLessonBlocker()` and `validateV525RouteSimplificationContracts()` covering clean/migrated Lesson 5 states, Lesson 6 at 33/37 due items, staged axis-review floods, stale Course Map practice nodes, soft delayed checks and the 45+ hard cap.
+- Validation run: embedded script parse, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS including `v525RouteSimplification`.
+
+## v5.2.1 - 2026-06-27
+
+- Added review hardening on top of v5.2: three misses now mark a card as a leech, keep it out of normal review, and send it to Leech clinic until two clean passes clear it.
+- Added a "Felt shaky" path for correct flashcard answers. Shaky correct answers keep the card on a shorter interval.
 - Added axis-balanced review sessions: normal flashcard review now samples across script, mechanism, listening, read-aloud/transfer and phrase buckets before filling the 40-card cap.
-- Added utility tags for lesson payoffs and Bangkok Missions so high-utility Phase 1 language can be prioritised without adding English-definition vocab quizzes.
+- Added utility tags for lesson payoffs and Bangkok Missions, so useful Phase 1 language can be prioritised without adding English-definition vocab quizzes.
 - Added human-audio readiness: speaker taps can prefer future bundled local recordings for core tone/aspiration/final-stop targets, while today’s app still falls back to the device Thai voice.
 - Added named hardening validators: `validateRecallAxisContracts()`, `validateDelayedMasteryContracts()`, `validateContrastCoverageContracts()`, `validateMigrationTrustContracts()`, `validateUtilityMissionContracts()`, `validateHumanAudioFallbackContracts()` and `validateV521HardeningContracts()`.
-- Parked v6/Phase 2 note: audio-first micro-scenes, controlled dialogues and useful-pattern retrieval remain a bridge-plan item, not Phase 1 scope.
+- Parked v6/Phase 2 note: audio-first small scenes, controlled dialogues and useful pattern retrieval remain a bridge-plan item, not Phase 1 scope.
 - Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS including the new v5.2.1 hardening contracts.
 
-## v5.2 — 2026-06-26
+## v5.2 - 2026-06-26
 
-- Added a required lesson payoff step to all 24 lessons: Thai script first, learner decodes before reveal, then audio, meaning/context and script-cued read-aloud.
-- Added axis-based recall with new `a:` SRS card ids for separate glyph recognition, class recall, initial sound, final job, live/dead status, tone derivation, listening contrast, reading aloud and real-world transfer.
-- Added delayed lesson mastery checks: each completed lesson now schedules +1 day retained and +7 day stabilised checks, and Today treats a due delayed check as the main task before new lessons.
-- Added Contrast Block as a guided daily/practice surface: listen-first discrimination, Thai-script imitation, local record/playback and a tiny no-score self-rubric.
+- Added a required Useful Thai step to all 24 lessons: Thai script first, then audio, meaning/context and script-cued read-aloud after reveal.
+- Added `a:` SRS cards for separate memories: letter shape, class, start sound, ending job, live/dead status, tone rule, listening contrast, read-aloud and outside-the-app use.
+- Added later lesson checks: each completed lesson now schedules a +1 day check and a +7 day check, and Today puts a due check before new lessons.
+- Added Contrast Block as a guided daily/practice surface: listen first, pick the Thai, read from script, then record and compare.
 - Covered high-risk Thai contrasts across their lesson gates: tone marks, initial `ง`, vowel length, `ต/ท/ถ`, `ก/ค/ข`, `ป/พ`, final `-k/-t/-p`, `ร/ล` and true/fake clusters.
-- Added Bangkok Missions as local real-world check-offs from already-covered Thai, with no camera, upload, location or web access.
-- Updated Today/Daily win so the practice block remains due until the required bridge pieces are complete: transfer mission from Lesson 3, then contrast + read-aloud + transfer from Lesson 4 onward.
+- Added Bangkok Missions as outside-the-app checks from already-covered Thai, with no camera, upload, location or web access.
+- Updated Today/Daily win so the practice block remains due until the required pieces are complete: Bangkok Mission from Lesson 3, then contrast + read-aloud + outside-the-app practice from Lesson 4 onward.
 - Added `retention`, `a:` review ids, `days[].ret`, `days[].bridge`, `missions.done`, `contrastLog`, `lastCapability` and `migrations.v52Full` while preserving existing lesson progress, mastery gates and legacy card ids.
 - Added `validateV52BridgeContracts()` and `validateV52FullBriefContracts()`; extended the generated Phase 1 audit with Lesson payoff, Axis review and Delayed retention rows.
 - Validation run: embedded script `node --check`, `tools/phase1-audit.js` syntax check and `node tools/phase1-audit.js`; generated audit validator suite PASS including `v52Bridge` and `v52FullBrief`.

@@ -480,7 +480,7 @@ globalThis.__phase1Audit = (function(){
     const mouthCount = mouthCoachCards(doneIds).length;
     const dueBeforeCap = learnedGlyphs.length + learnedFinals.length;
     const dueServedAfterCap = Math.min(40, dueBeforeCap);
-    const dayType = (dueBeforeCap > 45 || index === LESSONS.length - 1) ? 'Consolidation day' : 'Lesson day';
+    const dayType = (dueBeforeCap >= 45 || index === LESSONS.length - 1) ? 'Consolidation day' : 'Lesson day';
     const earlyFoundation = index < 3;
     const depthBlock = storyCount ? 'Reading room or drill' : 'Progression drill';
     return {
@@ -603,7 +603,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('migrationTrust', validateMigrationTrustContracts),
     validatorResult('utilityMission', validateUtilityMissionContracts),
     validatorResult('humanAudioFallback', validateHumanAudioFallbackContracts),
-    validatorResult('v521Hardening', validateV521HardeningContracts)
+    validatorResult('v521Hardening', validateV521HardeningContracts),
+    validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -619,7 +620,9 @@ globalThis.__phase1Audit = (function(){
     workload:{
       srsCap:40,
       consolidationTrigger:45,
-      note:'Lesson payload, available pools and Today governor served workload are separate. Served review is capped by Today/SRS, and due > 45 creates a consolidation day.'
+      axisReviewDailyCap:AXIS_REVIEW_DAILY_CAP,
+      axisReviewFirstDelay:AXIS_REVIEW_FIRST_DELAY,
+      note:'Lesson payload, available pools and Today governor served workload are separate. Served review is capped by Today/SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, and due >= 45 creates a consolidation day.'
     },
     lessons:LESSONS.map(lessonAudit)
   };
@@ -658,10 +661,13 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('## Workload Audit');
   lines.push('');
-  lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, due loads over the consolidation trigger become consolidation days, and Lessons 1-3 remain shorter foundation days.');
+  lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
+  lines.push('');
+  lines.push("v5.2.5 keeps the v5.2/v5.2.1 learning model: Useful Thai, delayed recall, axis review, Contrast Blocks, Bangkok Missions, leech/shaky review, Endings Refresh, Course Map and Today all remain. Route gating is simplified through one lesson blocker: missing prerequisite lessons, required mastery checks, Endings Refresh, review overload at 45+ due cards, or invalid state. Delayed checks are recommended rather than normally blocking, migrated backfilled checks are capped per day, axis review backlogs are staged so the full axis pool is not treated as today's chore, and Course Map practice nodes are non-blocking/auto-completed by equivalent Today practice.");
   lines.push('');
   lines.push(`- SRS cap: ${audit.workload.srsCap} cards per review session`);
-  lines.push(`- Consolidation trigger: due > ${audit.workload.consolidationTrigger}`);
+  lines.push(`- Axis review staging: up to ${audit.workload.axisReviewDailyCap} ordinary axis cards become due per day after a ${audit.workload.axisReviewFirstDelay}-day first delay; existing floods are repaired into that staged queue.`);
+  lines.push(`- Consolidation trigger: due >= ${audit.workload.consolidationTrigger}`);
   lines.push('- Lessons 1-3: 20-30 minute foundation days, with only the existing optional Lesson 2/3 stretch before Lesson 4.');
   lines.push('');
   lines.push('| Day | Lesson payload | Available pool after lesson | Today governor route | Depth block |');
