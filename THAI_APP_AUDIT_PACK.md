@@ -6,7 +6,7 @@ Live app shell: `index.html`
 Generated audit refreshed during this pack: `docs/phase1_audit.md` and `docs/phase1_audit.json`
 Smoke checklist added: `docs/smoke_test_checklist.md`
 
-This v5.4.1 pass keeps the v5.3 review-shape governor, v5.4 controlled fluency reads and TTS-safety boundary, then removes the manual post-correct routine-review shaky decision. Objective routine review correct answers now advance immediately and use hidden conservative weak-correct timing/support signals. It keeps Phase 1 as a script/decoding trainer, with no Phase 2, backend, human-audio pipeline, AI audio, scraped audio or broad phrasebook module.
+This v5.4.1 pass keeps the v5.3 review-shape governor, v5.4 controlled fluency reads and TTS-safety boundary, then removes the manual post-correct routine-review shaky decision. Objective routine review correct answers now advance immediately and use hidden conservative weak-correct timing/support signals: 7 seconds for letter/final cards and 10 seconds for word-style cards. It keeps Phase 1 as a script/decoding trainer, with no Phase 2, backend, human-audio pipeline, AI audio, scraped audio or broad phrasebook module.
 
 ## 1. Full Project Structure
 
@@ -135,7 +135,7 @@ Lesson selection: Today routes the learner to the next available lesson when per
 
 Lesson completion: `startLesson()` builds an overlay player. `finishLesson()` marks first-time lessons done, adds eligible `g:` cards, adds `f:` final cards from Lesson 2 onward where relevant, seeds `a:` axis cards, schedules +1/+7 retention checks, increments the daily lesson count, updates the streak, saves state and shows the result.
 
-Review flow: Practice -> Flashcards starts due SRS cards unless Endings Refresh is required. Normal due review excludes leech cards; Leech clinic serves repeated-problem cards separately. Missed review cards are requeued in-session. Correct objective routine review answers advance immediately; a hidden conservative timer/support signal may mark weak-correct for shorter spacing. Axis speaking/transfer cards are trust-based because the static app cannot certify pronunciation or real-world noticing.
+Review flow: Practice -> Flashcards starts due SRS cards unless Endings Refresh is required. Normal due review excludes leech cards; Leech clinic serves repeated-problem cards separately. Missed review cards are requeued in-session. Correct objective routine review answers advance immediately; a hidden conservative timer/support signal may mark weak-correct for shorter spacing at 7 seconds on letter/final cards and 10 seconds on word-style cards. Axis speaking/transfer cards are trust-based because the static app cannot certify pronunciation or real-world noticing.
 
 Progress persistence: state is saved under `thai_state_v1`. Saves are debounced by 350 ms and flushed synchronously on `visibilitychange` and `pagehide`. Export copies raw state JSON to the clipboard or prompt fallback. Import accepts pasted JSON if it has at least `srs` and `streak`.
 

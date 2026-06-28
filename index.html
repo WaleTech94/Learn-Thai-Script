@@ -2084,7 +2084,9 @@ const REVIEW_AXIS_QUOTAS = [
 const LEECH_LAPSE_LIMIT = 3;
 const LEECH_CLEAR_TARGET = 2;
 const AUTO_CONFIDENCE_TIMING = {
-  basicMcqSlowMs:18000,
+  letterSlowMs:7000,
+  wordSlowMs:10000,
+  fallbackSlowMs:10000,
   repeatedAudioWeakCount:2,
   minReliableMs:400
 };
@@ -3351,8 +3353,18 @@ function reviewAutoConfidenceEligible(q){
   if(q.say && q.autoplay) return false;
   return Array.isArray(q.options) && q.options.length > 1;
 }
+function reviewAutoConfidenceCardKind(q){
+  const id = q && q.autoConfidence && q.autoConfidence.reviewId ? String(q.autoConfidence.reviewId) : '';
+  if(id.startsWith('g:') || id.startsWith('f:')) return 'letter';
+  if(id.startsWith('w:') || id.startsWith('r:')) return 'word';
+  return 'other';
+}
 function reviewAutoConfidenceThreshold(q){
-  return reviewAutoConfidenceEligible(q) ? AUTO_CONFIDENCE_TIMING.basicMcqSlowMs : null;
+  if(!reviewAutoConfidenceEligible(q)) return null;
+  const kind = reviewAutoConfidenceCardKind(q);
+  if(kind === 'letter') return AUTO_CONFIDENCE_TIMING.letterSlowMs;
+  if(kind === 'word') return AUTO_CONFIDENCE_TIMING.wordSlowMs;
+  return AUTO_CONFIDENCE_TIMING.fallbackSlowMs;
 }
 function classifyReviewCorrectConfidence(q, timing){
   const t = timing || {};
@@ -5426,13 +5438,23 @@ function validateV521HardeningContracts(){
 function validateV541AutoConfidenceContracts(){
   const errors = [];
   const basicQ = {kind:'mcq', text:'What sound?', answer:'g', options:['g','k','ng','bp']};
+  const letterQ = Object.assign({}, basicQ, {autoConfidence:{reviewId:'g:ก'}});
+  const wordQ = Object.assign({}, basicQ, {autoConfidence:{reviewId:'w:กิน'}});
   const fluencyQ = Object.assign({}, basicQ, {axis:'fluency-decode'});
   const phase1Q = Object.assign({}, basicQ, {axis:'phase1-completion'});
-  const slow = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:true, firstCard:false});
-  if(!slow.weakCorrect) errors.push('slow reliable routine MCQ correct should classify as weak correct');
-  const first = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:true, firstCard:true});
+  if(reviewAutoConfidenceThreshold(letterQ) !== 7000) errors.push('letter review weak-correct threshold should be 7 seconds');
+  if(reviewAutoConfidenceThreshold(wordQ) !== 10000) errors.push('word review weak-correct threshold should be 10 seconds');
+  const slowLetter = classifyReviewCorrectConfidence(letterQ, {elapsedMs:7001, reliable:true, firstCard:false});
+  if(!slowLetter.weakCorrect) errors.push('slow reliable letter MCQ correct should classify as weak correct after 7 seconds');
+  const quickLetter = classifyReviewCorrectConfidence(letterQ, {elapsedMs:6999, reliable:true, firstCard:false});
+  if(quickLetter.weakCorrect) errors.push('letter MCQ correct below 7 seconds should stay solid');
+  const slowWord = classifyReviewCorrectConfidence(wordQ, {elapsedMs:10001, reliable:true, firstCard:false});
+  if(!slowWord.weakCorrect) errors.push('slow reliable word MCQ correct should classify as weak correct after 10 seconds');
+  const quickWord = classifyReviewCorrectConfidence(wordQ, {elapsedMs:9999, reliable:true, firstCard:false});
+  if(quickWord.weakCorrect) errors.push('word MCQ correct below 10 seconds should stay solid');
+  const first = classifyReviewCorrectConfidence(letterQ, {elapsedMs:7001, reliable:true, firstCard:true});
   if(first.weakCorrect) errors.push('first-card timing alone should default to solid correct');
-  const uncertain = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:false});
+  const uncertain = classifyReviewCorrectConfidence(letterQ, {elapsedMs:7001, reliable:false});
   if(uncertain.weakCorrect) errors.push('unreliable/background timing should default to solid correct');
   const singleAudio = classifyReviewCorrectConfidence(basicQ, {elapsedMs:1000, reliable:true, supportUsed:true, audioOnly:true, audioSupportCount:1});
   if(singleAudio.weakCorrect) errors.push('one support-audio tap alone should not mark weak correct');

@@ -6,6 +6,7 @@ Every versioned app release must update this file and `AGENTS.md` in the same co
 
 - Removed the manual post-correct "Felt shaky / Solid" fork from objective routine review cards; correct routine MCQ answers now advance without the extra decision.
 - Added hidden conservative auto-confidence for routine review MCQs only. A weak correct can come from clearly slow reliable timing or repeated support audio, while first-card timing, hidden/background/focus-lost timing, active TTS time, v5.4 fluency reads and the final checkpoint default to solid.
+- Set weak-correct timing thresholds to 7 seconds for letter/final review cards and 10 seconds for word-style routine review cards.
 - Kept the old shorter-spacing behaviour for weak correct answers by using the same shorter multiplier as legacy shaky-correct, but wrong answers remain the primary driver of lapses and leech status.
 - Preserved the `thai_state_v1` storage key and old `shaky` metadata compatibility; v5.2.1-v5.4 imports still validate and repair safely.
 - Added `validateV541AutoConfidenceContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.1` and 32 validators passing.
