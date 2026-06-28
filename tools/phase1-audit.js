@@ -173,7 +173,7 @@ globalThis.__phase1Audit = (function(){
   }
   function surfaceRow(id, name, availableItems, servedCount, cap, rawCount, prereq, role){
     const availableCount = Array.isArray(availableItems) ? availableItems.length : availableItems;
-    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories','sign-safari':'signs','mouth-coach':'cards','contrast-block':'blocks','bangkok-mission':'missions','axis-review':'cards','retention-check':'checks'}[id]) || 'items';
+    const unit = ({'sound-twins':'sets','mixed-review':'questions','reading-stories':'stories','fluency-read':'reads','phase1-completion':'checks','sign-safari':'signs','mouth-coach':'cards','contrast-block':'blocks','bangkok-mission':'missions','axis-review':'cards','retention-check':'checks'}[id]) || 'items';
     return {
       id,
       name,
@@ -355,6 +355,36 @@ globalThis.__phase1Audit = (function(){
       roleContract('N/A', [], 'stories use their own decodability/prerequisite gate')
     );
   }
+  function fluencySurface(doneIds){
+    const raw = FLUENCY_READS.filter(read=>lessonGateMet(read.gate, doneIds));
+    const available = fluencyReadsAvailable(doneIds);
+    const flatItems = available.flatMap(read=>fluencyReadItems(read).map(item=>({thai:item.t})));
+    return surfaceRow(
+      'fluency-read',
+      'Fluency reads',
+      available,
+      available.length ? 1 : 0,
+      1,
+      raw.length,
+      prereqStatus(flatItems, doneIds, 'fluency-read'),
+      roleContract('N/A', [], 'slow pass, smoother pass, decoding check and self-rating; no speech scoring')
+    );
+  }
+  function phase1CompletionSurface(doneIds){
+    const raw = doneIds.length >= LESSONS.length ? 1 : 0;
+    const qs = raw ? buildPhase1CompletionQuiz() : [];
+    const thaiItems = qs.flatMap(q=>thaiStringsFromQuestion(q).map(thai=>({thai})));
+    return surfaceRow(
+      'phase1-completion',
+      'Phase 1 completion checkpoint',
+      raw ? qs : [],
+      raw ? 1 : 0,
+      1,
+      raw,
+      prereqStatus(thaiItems, doneIds, 'phase1-completion'),
+      roleContract('N/A', [], 'final observable reading behaviours; 85% quiz plus smooth/slow final read')
+    );
+  }
   function chunkSurface(doneIds){
     const raw = CHUNK_ITEMS.filter(item=>lessonGateMet(item.gate, doneIds));
     const available = chunkItems(doneIds);
@@ -454,6 +484,8 @@ globalThis.__phase1Audit = (function(){
       axisReviewSurface(doneIds),
       retentionSurface(doneIds),
       storySurface(doneIds),
+      fluencySurface(doneIds),
+      phase1CompletionSurface(doneIds),
       chunkSurface(doneIds),
       signSafariSurface(doneIds),
       fontShockSurface(doneIds),
@@ -474,12 +506,13 @@ globalThis.__phase1Audit = (function(){
     const twinSets = readableTwinSets(taught, doneIds);
     const echoItems = readableEchoItems(doneIds);
     const storyCount = STORIES.filter(s=>doneIds.includes(s.gate)).length;
+    const fluencyCount = fluencyReadsAvailable(doneIds).length;
     const chunkCount = chunkItems(doneIds).length;
     const signCount = signSafariItems(doneIds).length;
     const fontCount = fontShockItems(doneIds).length;
     const mouthCount = mouthCoachCards(doneIds).length;
     const dueBeforeCap = learnedGlyphs.length + learnedFinals.length;
-    const dueServedAfterCap = Math.min(40, dueBeforeCap);
+    const dueServedAfterCap = Math.min(REVIEW_TODAY_TARGET_MAX, dueBeforeCap);
     const dayType = (dueBeforeCap >= 45 || index === LESSONS.length - 1) ? 'Consolidation day' : 'Lesson day';
     const earlyFoundation = index < 3;
     const depthBlock = storyCount ? 'Reading room or drill' : 'Progression drill';
@@ -499,6 +532,7 @@ globalThis.__phase1Audit = (function(){
         twinSets:twinSets.length,
         echoItems:echoItems.length,
         stories:storyCount,
+        fluencyReads:fluencyCount,
         chunks:chunkCount,
         signs:signCount,
         fontShock:fontCount,
@@ -507,7 +541,8 @@ globalThis.__phase1Audit = (function(){
       servedDailyLoad:{
         dueSrsBeforeCap:dueBeforeCap,
         dueSrsServedAfterCap:dueServedAfterCap,
-        srsCap:40,
+        srsCap:REVIEW_TODAY_TARGET_MAX,
+        manualReviewCap:REVIEW_MANUAL_CAP,
         consolidationTrigger:45,
         todayType:dayType,
         depthBlockLikely:depthBlock,
@@ -517,7 +552,8 @@ globalThis.__phase1Audit = (function(){
       todayGovernorRouteAtThisDueLoad:{
         dueSrsBeforeCap:dueBeforeCap,
         dueSrsServedAfterCap:dueServedAfterCap,
-        srsCap:40,
+        srsCap:REVIEW_TODAY_TARGET_MAX,
+        manualReviewCap:REVIEW_MANUAL_CAP,
         consolidationTrigger:45,
         todayType:dayType,
         depthBlockLikely:depthBlock,
@@ -572,7 +608,8 @@ globalThis.__phase1Audit = (function(){
         twinSets,
         echoItems,
         unlockedDrills:DRILLS.filter(d=>lessonGateMet(d.gate, doneIds)).map(d=>d.id),
-        unlockedStories:STORIES.filter(s=>doneIds.includes(s.gate)).map(s=>s.id)
+        unlockedStories:STORIES.filter(s=>doneIds.includes(s.gate)).map(s=>s.id),
+        unlockedFluencyReads:FLUENCY_READS.filter(read=>lessonGateMet(read.gate, doneIds)).map(read=>read.id)
       },
       surfaceAudit:surfaces,
       workload:workloadAudit(L, index),
@@ -603,10 +640,16 @@ globalThis.__phase1Audit = (function(){
     validatorResult('contrastCoverage', validateContrastCoverageContracts),
     validatorResult('migrationTrust', validateMigrationTrustContracts),
     validatorResult('utilityMission', validateUtilityMissionContracts),
-    validatorResult('humanAudioFallback', validateHumanAudioFallbackContracts),
+    validatorResult('noHumanAudio', validateNoHumanAudioContracts),
+    validatorResult('ttsAssessmentSafety', validateTtsAssessmentSafetyContracts),
+    validatorResult('phase1CompletionStandard', validatePhase1CompletionStandardContracts),
+    validatorResult('productionSafety', validateProductionSafetyContracts),
     validatorResult('v521Hardening', validateV521HardeningContracts),
     validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts),
-    validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts)
+    validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts),
+    validatorResult('v53ReviewGovernor', validateV53ReviewGovernorContracts),
+    validatorResult('v531TtsSafety', validateV531TtsSafetyContracts),
+    validatorResult('v54Fluency', validateV54FluencyContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -620,11 +663,26 @@ globalThis.__phase1Audit = (function(){
       all:prerequisite.lessonIssues.concat(prerequisite.poolIssues, prerequisite.roleIssues)
     },
     workload:{
-      srsCap:40,
+      srsCap:REVIEW_TODAY_TARGET_MAX,
+      manualReviewCap:REVIEW_MANUAL_CAP,
       consolidationTrigger:45,
       axisReviewDailyCap:AXIS_REVIEW_DAILY_CAP,
       axisReviewFirstDelay:AXIS_REVIEW_FIRST_DELAY,
-      note:'Lesson payload, available pools and Today governor served workload are separate. Served review is capped by Today/SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, and due >= 45 creates a consolidation day.'
+      recoveryTargets:REVIEW_RECOVERY_TARGETS,
+      note:'Lesson payload, available pools and Today governor served workload are separate. Today review serves a bounded default slice, full manual catch-up stays capped separately, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, and due >= 45 creates a consolidation/recovery day.'
+    },
+    fluencyReads:FLUENCY_READS.map(read=>({
+      id:read.id,
+      gate:read.gate,
+      title:read.title,
+      realWorld:!!read.realWorld,
+      itemCount:fluencyReadItems(read).length,
+      check:read.check && read.check.text
+    })),
+    phase1Completion:{
+      questionCount:buildPhase1CompletionQuiz().length,
+      axes:countBy(buildPhase1CompletionQuiz(), q=>q.axis || q._choice || q.kind || 'other'),
+      pass:'85% quiz plus smooth or slow-but-correct final controlled read'
     },
     lessons:LESSONS.map(lessonAudit)
   };
@@ -665,9 +723,10 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.2.6 keeps the v5.2/v5.2.1 learning model: Useful Thai, delayed recall, axis review, Contrast Blocks, Bangkok Missions, leech/shaky review, Endings Refresh, Course Map and Today all remain. Route gating is simplified through one lesson blocker: missing prerequisite lessons, required mastery checks, Endings Refresh, review overload at 45+ due cards, or invalid state. Delayed checks are recommended rather than normally blocking, migrated backfilled checks are capped per day, axis review backlogs are staged so the full axis pool is not treated as today's chore, Course Map practice nodes are non-blocking/auto-completed by equivalent Today practice, and tone-sign names are reference/teaching only rather than recurring review MCQs.");
+  lines.push("v5.4 keeps the v5.3 review-shape governor and TTS-safety boundary, then adds controlled cumulative fluency reads, controlled real-world reads and a final Phase 1 completion checkpoint. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads are short, prerequisite-safe and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
-  lines.push(`- SRS cap: ${audit.workload.srsCap} cards per review session`);
+  lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
+  lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
   lines.push(`- Axis review staging: up to ${audit.workload.axisReviewDailyCap} ordinary axis cards become due per day after a ${audit.workload.axisReviewFirstDelay}-day first delay; existing floods are repaired into that staged queue.`);
   lines.push(`- Consolidation trigger: due >= ${audit.workload.consolidationTrigger}`);
   lines.push('- Lessons 1-3: 20-30 minute foundation days, with only the existing optional Lesson 2/3 stretch before Lesson 4.');
@@ -677,10 +736,17 @@ function renderMarkdown(audit){
   audit.lessons.forEach(L=>{
     const w = L.workload;
     const payload = `glyph ${w.lessonPayloadIfTaken.newGlyphCards}, final ${w.lessonPayloadIfTaken.newFinalCards}, quiz ${w.lessonPayloadIfTaken.lessonQuizCount}`;
-    const avail = `glyph ${w.availablePool.glyphCards}, final ${w.availablePool.finalCards}, tone ${w.availablePool.toneItems}, twins ${w.availablePool.twinSets}, echo ${w.availablePool.echoItems}, stories ${w.availablePool.stories}, chunks ${w.availablePool.chunks}, signs ${w.availablePool.signs}, font ${w.availablePool.fontShock}, mouth ${w.availablePool.mouthCoach}`;
+    const avail = `glyph ${w.availablePool.glyphCards}, final ${w.availablePool.finalCards}, tone ${w.availablePool.toneItems}, twins ${w.availablePool.twinSets}, echo ${w.availablePool.echoItems}, stories ${w.availablePool.stories}, fluency ${w.availablePool.fluencyReads}, chunks ${w.availablePool.chunks}, signs ${w.availablePool.signs}, font ${w.availablePool.fontShock}, mouth ${w.availablePool.mouthCoach}`;
     const route = `due ${w.todayGovernorRouteAtThisDueLoad.dueSrsBeforeCap} -> served ${w.todayGovernorRouteAtThisDueLoad.dueSrsServedAfterCap} / cap ${w.todayGovernorRouteAtThisDueLoad.srsCap}; ${w.todayGovernorRouteAtThisDueLoad.todayType}`;
     lines.push(`| ${L.day} | ${safeCell(payload)} | ${safeCell(avail)} | ${safeCell(route)} | ${safeCell(w.todayGovernorRouteAtThisDueLoad.depthBlockLikely)} |`);
   });
+  lines.push('');
+  lines.push('## v5.4 Fluency Reads');
+  lines.push('');
+  (audit.fluencyReads||[]).forEach(read=>{
+    lines.push(`- Lesson ${String(read.gate||'').replace('l','')}: ${safeCell(read.title)}${read.realWorld ? ' (controlled real-world)' : ' (cumulative)'} · ${read.itemCount} Thai items · check: ${safeCell(read.check||'')}`);
+  });
+  lines.push(`- Final checkpoint: ${audit.phase1Completion.questionCount} questions; ${audit.phase1Completion.pass}.`);
   lines.push('');
   lines.push('## Named Surface Audit');
   lines.push('');

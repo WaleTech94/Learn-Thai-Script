@@ -2,6 +2,41 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4 - 2026-06-28
+
+- Added six controlled fluency reads at Lessons 6, 10, 13, 17, 23 and 24. Each read uses Thai script first, asks for a slow pass and smoother second pass, includes optional device voice support, a decoding check and a self-rating.
+- Added controlled real-world reads for price fragments and public/Bangkok sign-like Thai without creating a survival phrase module, conversation tree or Phase 2 route.
+- Added a final Phase 1 completion checkpoint after Lesson 24 and the Letters boss. It checks observable reading behaviours across class, tone logic, live/dead, final jobs, vowel length, clusters, taught sign-like items and a final controlled read.
+- Kept ordinary lesson progression non-blocking for fluency reads. Recovery mode still takes priority over fluency reads after 3/7/30-day gaps.
+- Added minimal state: `fluencyReads{id:{completed,rating,checkOk,gate}}` and `phase1Completion{date,pct,rating,passed,...}`. Existing storage key `thai_state_v1` is unchanged.
+- Added `repairStateForV54()`: completed-course states receive sensible default fluency-read completion records, but they do not auto-pass the new final completion checkpoint. Existing lesson completion, tokens, titles and checks are preserved.
+- Added `validateV54FluencyContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4`, 31 validators passing, six fluency reads and a 12-question final checkpoint.
+- Updated the service-worker cache name to `aan-thai-v5-4` for the versioned shell.
+
+## v5.3.1 - 2026-06-28
+
+- Added the v5.3 Step 2 TTS reliability policy: browser Thai `speechSynthesis` is device voice support only, useful as a rough model but not reliable assessment evidence for tone, vowel length, aspiration or final-stop mastery.
+- Kept existing audio buttons and iPhone Thai voice setup guidance, while removing the empty future human-audio hook path. No manifest, asset folder, recording pipeline, demo recordings, AI audio or scraped audio were added.
+- Softened learner-facing audio/listening copy to say "device voice support", "rough model" and "compare, but don't treat this as a native-speaker recording" where needed.
+- Renamed visible Tone licence copy to Tone practice badge and kept the underlying `toneLicence` state key unchanged for compatibility.
+- Regrounded high-stakes Phase 1 completion copy in script evidence: decoding taught Thai without Romanisation, consonant class and tone logic, live/dead recognition, final consonant jobs and controlled cumulative reading.
+- Clarified that Phase 1 completion does not claim native listening or speaking mastery, and that listening tasks remain useful practice rather than proof of native-like perception.
+- Added lightweight text/visual contrast support for tone rules, live/dead syllables, vowel length, final consonant jobs and aspiration warnings without adding a contrast-lab UI or large content bank.
+- Added/extended validators: `validateNoHumanAudioContracts()`, `validateTtsAssessmentSafetyContracts()`, `validatePhase1CompletionStandardContracts()`, `validateProductionSafetyContracts()` and `validateV531TtsSafetyContracts()`.
+- Regenerated `docs/phase1_audit.md` and `docs/phase1_audit.json`; audit now reports app version `v5.3.1` and 30 validators.
+- Updated the service-worker cache name to `aan-thai-v5-3-1` for the versioned shell.
+
+## v5.3.0 - 2026-06-28
+
+- Added the Step 1 review-shape governor from the approved v5.3 plan: Today review now serves a bounded default slice up to 30 cards, while explicit Practice flashcard catch-up remains available at the existing 40-card cap.
+- Added return-after-gap recovery mode using existing local activity state. After 3/7/30-day gaps, Today foregrounds a recovery route with 18/16/12 review cards before optional new work.
+- Preserved the v5.2.5 lesson blocker: missing prerequisites, required mastery checks, Endings Refresh, invalid state and review overload at 45+ due cards still block new lessons.
+- Kept due cards intact: v5.3.0 does not delete, forgive or silently hide backlog; overload copy is phrased as consolidation/recovery work.
+- Added `validateV53ReviewGovernorContracts()` and generated audit coverage for due bands `0/8/24/25/30/33/37/45`, recovery gaps, low-energy review, leech exclusion, axis-flood staging, manual 40-card catch-up and completed Phase 1 returning without Phase 2.
+- Regenerated `docs/phase1_audit.md` and `docs/phase1_audit.json`; audit now reports Today review default max `30`, manual Review catch-up cap `40`, recovery targets `18/16/12`, 26 validators, and no prerequisite or role issues.
+- Updated the service-worker cache name to `aan-thai-v5-3-0` for the versioned shell.
+- Scope lock: no human-audio manifest/infrastructure work, no contrast labs, no Phase 2 content.
+
 ## v5.2.6 - 2026-06-28
 
 - Removed recurring tone-sign name review for `่`, `้`, `๊` and `๋`; the app no longer seeds or keeps `g:` glyph-name cards or `a:glyph` axis cards for those marks.
