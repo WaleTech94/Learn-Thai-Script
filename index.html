@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.4</span>
+      <span class="version-pill">v5.4.1</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.1 (PWA)</div>
     </div>
   </section>
 
@@ -2083,6 +2083,11 @@ const REVIEW_AXIS_QUOTAS = [
 ];
 const LEECH_LAPSE_LIMIT = 3;
 const LEECH_CLEAR_TARGET = 2;
+const AUTO_CONFIDENCE_TIMING = {
+  basicMcqSlowMs:18000,
+  repeatedAudioWeakCount:2,
+  minReliableMs:400
+};
 function classTilesHtml(xs, cls){
   return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${cls}">${ch}</span>`).join('')}</div>`;
 }
@@ -3315,19 +3320,20 @@ function srsLeechesDue(target){
 function srsGrade(id, grade, meta){ // 0 again, 1 hard, 2 good, 3 easy
   const c = state.srs[id]; if(!c) return;
   const m = meta || {};
+  const weakCorrect = !!(m.weakCorrect || m.shaky);
   if(grade === 0){
     c.iv = 0; c.lapses++; c.sameDayMisses = (c.sameDayMisses||0) + 1; c.leechClears = 0;
     if((c.lapses||0) >= LEECH_LAPSE_LIMIT){ c.leech = true; c.leechSince = c.leechSince || todayStr(); }
   }
   else if(grade === 1){ c.iv = Math.max(1, Math.round(c.iv * 1.2) || 1); }
-  else if(grade === 2){ c.iv = c.iv === 0 ? 1 : Math.round(c.iv * (m.shaky ? 1.2 : 2)); }
+  else if(grade === 2){ c.iv = c.iv === 0 ? 1 : Math.round(c.iv * (weakCorrect ? 1.2 : 2)); }
   else { c.iv = c.iv === 0 ? 3 : Math.round(c.iv * 3); }
   if(grade > 0){
     c.sameDayMisses = 0;
-    c.shaky = !!m.shaky;
-    c.lastResult = m.shaky ? 'shaky' : grade === 1 ? 'hard' : grade === 3 ? 'easy' : 'good';
+    c.shaky = weakCorrect;
+    c.lastResult = weakCorrect ? 'weak-correct' : grade === 1 ? 'hard' : grade === 3 ? 'easy' : 'good';
     if(c.leech){
-      c.leechClears = m.shaky ? 0 : (c.leechClears || 0) + 1;
+      c.leechClears = weakCorrect ? 0 : (c.leechClears || 0) + 1;
       if(c.leechClears >= LEECH_CLEAR_TARGET){
         c.leech = false;
         c.leechClears = 0;
@@ -3338,6 +3344,101 @@ function srsGrade(id, grade, meta){ // 0 again, 1 hard, 2 good, 3 easy
   const d = new Date(); d.setDate(d.getDate() + c.iv);
   c.due = d.toISOString().slice(0,10);
   saveState();
+}
+function reviewAutoConfidenceEligible(q){
+  if(!q || q.kind === 'type') return false;
+  if(q.axis === 'fluency-decode' || q.axis === 'phase1-completion') return false;
+  if(q.say && q.autoplay) return false;
+  return Array.isArray(q.options) && q.options.length > 1;
+}
+function reviewAutoConfidenceThreshold(q){
+  return reviewAutoConfidenceEligible(q) ? AUTO_CONFIDENCE_TIMING.basicMcqSlowMs : null;
+}
+function classifyReviewCorrectConfidence(q, timing){
+  const t = timing || {};
+  const threshold = reviewAutoConfidenceThreshold(q);
+  if(!threshold || t.reliable === false) return {weakCorrect:false, confidence:'solid', reason:'unreliable-or-ineligible'};
+  if(Number.isFinite(t.audioSupportCount) && t.audioSupportCount >= AUTO_CONFIDENCE_TIMING.repeatedAudioWeakCount){
+    return {weakCorrect:true, confidence:'weak', reason:'repeated-audio-support'};
+  }
+  if(t.supportUsed && !t.audioOnly) return {weakCorrect:true, confidence:'weak', reason:'support-used'};
+  if(t.firstCard) return {weakCorrect:false, confidence:'solid', reason:'first-card-default'};
+  const elapsed = Number(t.elapsedMs);
+  if(Number.isFinite(elapsed) && elapsed >= threshold && elapsed >= AUTO_CONFIDENCE_TIMING.minReliableMs){
+    return {weakCorrect:true, confidence:'weak', reason:'slow-correct'};
+  }
+  return {weakCorrect:false, confidence:'solid', reason:'within-threshold'};
+}
+function reviewCorrectAdvanceDelayMs(q){
+  return q && q.autoConfidence ? 0 : 700;
+}
+function nowMs(){
+  return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+}
+function createReviewResponseTimer(q, context){
+  if(!q || !q.autoConfidence || typeof document === 'undefined') return null;
+  let active = false, reliable = true, startAt = 0, elapsed = 0, pauseAt = null;
+  let supportCount = 0, audioSupportCount = 0, audioOnly = true;
+  const add = (target, event, fn)=>{
+    if(target && target.addEventListener) target.addEventListener(event, fn);
+  };
+  const remove = (target, event, fn)=>{
+    if(target && target.removeEventListener) target.removeEventListener(event, fn);
+  };
+  function pause(){
+    if(!active || pauseAt != null) return;
+    elapsed += Math.max(0, nowMs() - startAt);
+    pauseAt = nowMs();
+  }
+  function resume(){
+    if(!active || pauseAt == null || !reliable) return;
+    startAt = nowMs();
+    pauseAt = null;
+  }
+  function discard(){
+    reliable = false;
+    pause();
+  }
+  function onVisibility(){
+    if(document.hidden || document.visibilityState === 'hidden') discard();
+  }
+  function onAudioStart(){ pause(); }
+  function onAudioEnd(){ resume(); }
+  const timer = {
+    start(){
+      active = true;
+      if(document.hidden || document.visibilityState === 'hidden') reliable = false;
+      startAt = nowMs();
+      add(document, 'visibilitychange', onVisibility);
+      add(typeof window !== 'undefined' ? window : null, 'blur', discard);
+      add(document, 'thai-audio-start', onAudioStart);
+      add(document, 'thai-audio-end', onAudioEnd);
+      return timer;
+    },
+    markSupport(kind){
+      supportCount++;
+      if(kind === 'audio') audioSupportCount++;
+      else audioOnly = false;
+    },
+    finish(){
+      if(active && pauseAt == null) elapsed += Math.max(0, nowMs() - startAt);
+      active = false;
+      remove(document, 'visibilitychange', onVisibility);
+      remove(typeof window !== 'undefined' ? window : null, 'blur', discard);
+      remove(document, 'thai-audio-start', onAudioStart);
+      remove(document, 'thai-audio-end', onAudioEnd);
+      const result = classifyReviewCorrectConfidence(q, {
+        elapsedMs:elapsed,
+        reliable,
+        supportUsed:supportCount > 0,
+        audioSupportCount,
+        audioOnly,
+        firstCard:!!(context && context.firstCard)
+      });
+      return Object.assign({elapsedMs:Math.round(elapsed)}, result);
+    }
+  };
+  return timer;
 }
 function weakestCards(n){ // n trickiest cards: most lapses, then lowest interval
   return Object.keys(state.srs)
@@ -3811,6 +3912,13 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
    SPEECH
 ===================================================== */
 let thaiVoice = null, voiceWarned = false, audioSetupOpen = false;
+function emitReviewTimingEvent(name){
+  try{
+    if(typeof document !== 'undefined' && document.dispatchEvent && typeof CustomEvent === 'function'){
+      document.dispatchEvent(new CustomEvent(name));
+    }
+  }catch(e){}
+}
 function pickVoice(){
   if(!('speechSynthesis' in window)) return [];
   const vs = speechSynthesis.getVoices();
@@ -3916,15 +4024,24 @@ function speakWithDeviceVoice(text, btn, rate){
   const u = new SpeechSynthesisUtterance(text);
   if(thaiVoice) u.voice = thaiVoice;
   u.lang = 'th-TH'; u.rate = rate || 0.75;
+  let timingClosed = false;
+  const closeTiming = ()=>{
+    if(timingClosed) return;
+    timingClosed = true;
+    emitReviewTimingEvent('thai-audio-end');
+  };
+  emitReviewTimingEvent('thai-audio-start');
   if(btn){
     btn.classList.add('playing');
-    u.onend = ()=>btn.classList.remove('playing');
+    u.onend = ()=>{ btn.classList.remove('playing'); closeTiming(); };
     u.onerror = e=>{
       btn.classList.remove('playing');
+      closeTiming();
       if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text);
     };
   } else {
-    u.onerror = e=>{ if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text); };
+    u.onend = closeTiming;
+    u.onerror = e=>{ closeTiming(); if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text); };
   }
   speechSynthesis.speak(u);
 }
@@ -5304,6 +5421,51 @@ function validateV521HardeningContracts(){
     if(!state.srs['g:น'].shaky || state.srs['g:น'].iv > 5) errors.push('shaky correct answer should shorten the interval');
   });
   if(errors.length) throw new Error('V5.2.1 hardening contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV541AutoConfidenceContracts(){
+  const errors = [];
+  const basicQ = {kind:'mcq', text:'What sound?', answer:'g', options:['g','k','ng','bp']};
+  const fluencyQ = Object.assign({}, basicQ, {axis:'fluency-decode'});
+  const phase1Q = Object.assign({}, basicQ, {axis:'phase1-completion'});
+  const slow = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:true, firstCard:false});
+  if(!slow.weakCorrect) errors.push('slow reliable routine MCQ correct should classify as weak correct');
+  const first = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:true, firstCard:true});
+  if(first.weakCorrect) errors.push('first-card timing alone should default to solid correct');
+  const uncertain = classifyReviewCorrectConfidence(basicQ, {elapsedMs:AUTO_CONFIDENCE_TIMING.basicMcqSlowMs + 1000, reliable:false});
+  if(uncertain.weakCorrect) errors.push('unreliable/background timing should default to solid correct');
+  const singleAudio = classifyReviewCorrectConfidence(basicQ, {elapsedMs:1000, reliable:true, supportUsed:true, audioOnly:true, audioSupportCount:1});
+  if(singleAudio.weakCorrect) errors.push('one support-audio tap alone should not mark weak correct');
+  const repeatedAudio = classifyReviewCorrectConfidence(basicQ, {elapsedMs:1000, reliable:true, supportUsed:true, audioOnly:true, audioSupportCount:AUTO_CONFIDENCE_TIMING.repeatedAudioWeakCount});
+  if(!repeatedAudio.weakCorrect) errors.push('repeated support audio should mark weak correct');
+  const support = classifyReviewCorrectConfidence(basicQ, {elapsedMs:1000, reliable:true, supportUsed:true, audioOnly:false, audioSupportCount:0});
+  if(!support.weakCorrect) errors.push('non-audio support before answering should mark weak correct');
+  if(classifyReviewCorrectConfidence(fluencyQ, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('fluency-read decoding checks must not use review timer weak-correct logic');
+  if(classifyReviewCorrectConfidence(phase1Q, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('Phase 1 completion checks must not use review timer weak-correct logic');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{}}) !== 0) errors.push('routine review correct answers should advance immediately');
+  if(/Felt shaky|q-shaky|type-shaky|allowShaky/.test(String(renderQuizQ) + String(renderTypeQ) + String(renderFlash))){
+    errors.push('routine review should not expose Felt shaky/Solid post-correct controls');
+  }
+  withTemporaryState({done:['l1'], srs:{
+    'g:ก':{iv:4,due:todayStr(),lapses:0,sameDayMisses:0},
+    'g:น':{iv:4,due:todayStr(),lapses:0,sameDayMisses:0},
+    'g:ม':{iv:0,due:todayStr(),lapses:2,sameDayMisses:0}
+  }, days:{}, retention:{}}, ()=>{
+    srsGrade('g:ก', 2, {weakCorrect:true});
+    srsGrade('g:น', 2, {});
+    if(!(state.srs['g:ก'].iv < state.srs['g:น'].iv)) errors.push('weak correct should use shorter spacing than solid correct');
+    if((state.srs['g:ก'].lapses||0) !== 0) errors.push('weak correct should not count as a lapse');
+    srsGrade('g:ม', 0);
+    if(!state.srs['g:ม'].leech) errors.push('wrong answers should still drive leech handling');
+  });
+  const oldImported = importProgressState({streak:{count:1,last:'2024-01-01'}, done:['l1'], srs:{'g:ก':{iv:4,due:'2024-01-01',lapses:0,shaky:true,lastResult:'shaky'}}}).state;
+  if(!oldImported.srs['g:ก'] || !oldImported.srs['g:ก'].shaky) errors.push('old shaky metadata should import safely');
+  const labels = FLUENCY_RATINGS.map(r=>r.label.toLowerCase()).join('|');
+  ['smooth','slow but correct','shaky','needs review'].forEach(label=>{
+    if(!labels.includes(label)) errors.push('fluency self-rating missing ' + label);
+  });
+  if(!phase1CompletionRatingPass('slow') || phase1CompletionRatingPass('shaky')) errors.push('Phase 1 checkpoint should keep slow-but-correct pass and shaky fail ratings');
+  if(errors.length) throw new Error('V5.4.1 auto-confidence contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV525RouteSimplificationContracts(){
@@ -7734,10 +7896,18 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     <div class="q-feedback" id="q-fb"></div>`;
   if(q.autoplay && q.say) setTimeout(()=>speak(q.say), 350);
   const opts = stage.querySelectorAll('.q-opt');
+  const responseTimer = createReviewResponseTimer(q, q.autoConfidence);
+  if(responseTimer){
+    responseTimer.start();
+    stage.querySelectorAll('[data-say]').forEach(btn=>{
+      btn.addEventListener('click', ()=>responseTimer.markSupport('audio'));
+    });
+  }
   let settled = false;
   function settle(ok, pickedBtn, timedOut){
     if(settled) return; settled = true;
     clearInterval(window._qTimer);
+    const confidenceMeta = responseTimer ? responseTimer.finish() : null;
     if(!ok && q._set){
       if(!state.confs) state.confs = {};
       state.confs[q._set] = (state.confs[q._set] || 0) + 1;
@@ -7748,19 +7918,9 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     const fb = el('q-fb');
     const hint = q.wrongExplain || q.explain || targetedWrongFeedback(q);
     fb.className = 'q-feedback ' + (ok?'ok':'no');
-    if(ok && q.allowShaky){
-      fb.innerHTML = `
-        <div>Correct</div>
-        <div class="rw-grid" style="margin-top:10px">
-          <button class="btn ghost" id="q-shaky">Felt shaky</button>
-          <button class="btn" id="q-solid">Solid</button>
-        </div>`;
-      el('q-shaky').onclick = ()=>onDone(true, {shaky:true});
-      el('q-solid').onclick = ()=>onDone(true, {shaky:false});
-      return;
-    }
     fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
-    setTimeout(()=>onDone(ok), ok ? 700 : 1700);
+    const meta = ok && confidenceMeta ? {weakCorrect:!!confidenceMeta.weakCorrect, confidence:confidenceMeta.confidence, confidenceReason:confidenceMeta.reason} : undefined;
+    setTimeout(()=>onDone(ok, meta), ok ? reviewCorrectAdvanceDelayMs(q) : 1700);
   }
   if(timedSecs){
     const bar = el('qtimer'), t0 = Date.now(), ms = timedSecs*1000;
@@ -7797,17 +7957,6 @@ function renderTypeQ(q, onDone, counterLabel){
     if(inp) inp.disabled = true;
     const fb = el('q-fb');
     fb.className = 'q-feedback ' + (ok?'ok':'no');
-    if(ok && q.allowShaky){
-      fb.innerHTML = `
-        <div>Correct</div>
-        <div class="rw-grid" style="margin-top:10px">
-          <button class="btn ghost" id="type-shaky">Felt shaky</button>
-          <button class="btn" id="type-solid">Solid</button>
-        </div>`;
-      el('type-shaky').onclick = ()=>onDone(true, {shaky:true});
-      el('type-solid').onclick = ()=>onDone(true, {shaky:false});
-      return;
-    }
     fb.textContent = ok ? 'Correct' : 'Answer: ' + q.answer;
     setTimeout(()=>onDone(ok), ok ? 700 : 1500);
   }
@@ -8290,7 +8439,7 @@ function renderFlash(){
   }
 
   // READING / ALPHABET → objective multiple choice (you never rate yourself)
-  const q = Object.assign({}, mcCard(id), {allowShaky:true});
+  const q = Object.assign({}, mcCard(id), {autoConfidence:{firstCard:p.reviewed === 0, reviewId:id}});
   if(q.kind === 'type') renderTypeQ(q, advance, `${p.i+1} of ${p.queue.length}`);
   else renderQuizQ(q, advance, `${p.i+1} of ${p.queue.length}`, 0);
 }
@@ -9456,6 +9605,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV52BridgeContracts();
   validateV52FullBriefContracts();
   validateV521HardeningContracts();
+  validateV541AutoConfidenceContracts();
   validateV525RouteSimplificationContracts();
   validateV526ToneSignReviewContracts();
   validateV53ReviewGovernorContracts();

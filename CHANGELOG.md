@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.1 - 2026-06-28
+
+- Removed the manual post-correct "Felt shaky / Solid" fork from objective routine review cards; correct routine MCQ answers now advance without the extra decision.
+- Added hidden conservative auto-confidence for routine review MCQs only. A weak correct can come from clearly slow reliable timing or repeated support audio, while first-card timing, hidden/background/focus-lost timing, active TTS time, v5.4 fluency reads and the final checkpoint default to solid.
+- Kept the old shorter-spacing behaviour for weak correct answers by using the same shorter multiplier as legacy shaky-correct, but wrong answers remain the primary driver of lapses and leech status.
+- Preserved the `thai_state_v1` storage key and old `shaky` metadata compatibility; v5.2.1-v5.4 imports still validate and repair safely.
+- Added `validateV541AutoConfidenceContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.1` and 32 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-1` for the versioned shell.
+
 ## v5.4 - 2026-06-28
 
 - Added six controlled fluency reads at Lessons 6, 10, 13, 17, 23 and 24. Each read uses Thai script first, asks for a slow pass and smoother second pass, includes optional device voice support, a decoding check and a self-rating.

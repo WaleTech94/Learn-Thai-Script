@@ -645,6 +645,7 @@ globalThis.__phase1Audit = (function(){
     validatorResult('phase1CompletionStandard', validatePhase1CompletionStandardContracts),
     validatorResult('productionSafety', validateProductionSafetyContracts),
     validatorResult('v521Hardening', validateV521HardeningContracts),
+    validatorResult('v541AutoConfidence', validateV541AutoConfidenceContracts),
     validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts),
     validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts),
     validatorResult('v53ReviewGovernor', validateV53ReviewGovernorContracts),
@@ -723,7 +724,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.4 keeps the v5.3 review-shape governor and TTS-safety boundary, then adds controlled cumulative fluency reads, controlled real-world reads and a final Phase 1 completion checkpoint. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads are short, prerequisite-safe and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v5.4.1 keeps the v5.3 review-shape governor, v5.4 fluency reads and TTS-safety boundary, then removes the manual post-correct shaky/solid fork from objective routine review. Correct routine MCQ review answers now advance immediately; hidden conservative auto-confidence can shorten spacing only for weak correct answers when timing/support evidence is reliable. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
