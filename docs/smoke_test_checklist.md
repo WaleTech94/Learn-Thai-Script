@@ -1,11 +1,11 @@
-# v5.4.3 Smoke-Test Checklist
+# v5.4.4 Smoke-Test Checklist
 
 Use this as the lightweight manual pass before external source review or a live deploy. Keep imported/exported progress JSON private.
 
 ## Fresh user
 
 - Setup: clear `localStorage["thai_state_v1"]`, then open `index.html` or the deployed PWA online.
-- Check: Today loads, version shows `v5.4.3`, Lesson 1 is available, no Endings Refresh appears, no fluency read appears yet, and no validator alert/error appears.
+- Check: Today loads, version shows `v5.4.4`, Lesson 1 is available, no Endings Refresh appears, no fluency read appears yet, and no validator alert/error appears.
 - Pass: first-use route starts at the class primer/Lesson 1 path and progress can be exported.
 
 ## Device voice safety copy
@@ -24,7 +24,7 @@ Use this as the lightweight manual pass before external source review or a live 
 
 - Setup: import or create a state with at least one due objective `g:` or `f:` review card, then start Practice -> Flashcards.
 - Check: answer a routine objective review card correctly.
-- Pass: the card shows `Correct` for about 1 second, then advances without showing a `Felt shaky` / `Solid` decision, and no visible timer or slow-answer message appears.
+- Pass: short green feedback advances quickly; longer green answer text stays visible longer before auto-advance. No `Felt shaky` / `Solid` decision, visible timer or slow-answer message appears.
 
 ## Today copy
 
@@ -76,5 +76,5 @@ Use this as the lightweight manual pass before external source review or a live 
 ## iPhone installed-PWA update path
 
 - Setup: deploy a validated build, then open the installed PWA online on iPhone.
-- Check: swipe the installed app closed, reopen online, and confirm the footer version is still `v5.4.3` for this pass.
-- Pass: the updated shell loads without clearing progress; if service-worker assets changed, the active cache should be `aan-thai-v5-4-3`.
+- Check: swipe the installed app closed, reopen online, and confirm the footer version is still `v5.4.4` for this pass.
+- Pass: the updated shell loads without clearing progress; if service-worker assets changed, the active cache should be `aan-thai-v5-4-4`.

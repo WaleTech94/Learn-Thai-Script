@@ -648,6 +648,7 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v541AutoConfidence', validateV541AutoConfidenceContracts),
     validatorResult('v542StreamlinedCopy', validateV542StreamlinedCopyContracts),
     validatorResult('v543CorrectDwell', validateV543CorrectDwellContracts),
+    validatorResult('v544AdaptiveCorrectDwell', validateV544AdaptiveCorrectDwellContracts),
     validatorResult('v525RouteSimplification', validateV525RouteSimplificationContracts),
     validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts),
     validatorResult('v53ReviewGovernor', validateV53ReviewGovernorContracts),
@@ -726,7 +727,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.4.3 keeps the v5.4.1 automatic weak-correct timing and the v5.4.2 streamlined Today/Course Map review copy, then restores a brief 1-second correct-feedback dwell before routine review auto-advance. Learner-facing task cards use compact status such as Clear, 29 due, Review first and Done instead of explaining hard caps, default slices or catch-up policy. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v5.4.4 keeps the v5.4.1 automatic weak-correct timing and the v5.4.2 streamlined Today/Course Map review copy, then makes routine review correct-feedback dwell adaptive to the visible green text. Short correct feedback still uses a 1-second minimum; longer green answer text gets more reading time up to a cap. Learner-facing task cards use compact status such as Clear, 29 due, Review first and Done instead of explaining hard caps, default slices or catch-up policy. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);

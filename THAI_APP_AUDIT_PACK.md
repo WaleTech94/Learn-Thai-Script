@@ -6,7 +6,7 @@ Live app shell: `index.html`
 Generated audit refreshed during this pack: `docs/phase1_audit.md` and `docs/phase1_audit.json`
 Smoke checklist added: `docs/smoke_test_checklist.md`
 
-This v5.4.3 pass keeps the v5.4.1 automatic weak-correct timing and v5.4.2 streamlined Today/Course Map review copy, then restores a brief 1-second visible `Correct` dwell before routine review auto-advance. Task cards use short status such as `Clear`, `29 due`, `Review first`, `Done` and `Practice` instead of explaining hard caps, default slices or catch-up policy. It keeps Phase 1 as a script/decoding trainer, with no Phase 2, backend, human-audio pipeline, AI audio, scraped audio or broad phrasebook module.
+This v5.4.4 pass keeps the v5.4.1 automatic weak-correct timing and v5.4.2 streamlined Today/Course Map review copy, then makes routine review correct-feedback dwell adaptive to the visible green text. Short green feedback still uses a 1-second minimum; longer green answer text gets more reading time up to a cap. Task cards use short status such as `Clear`, `29 due`, `Review first`, `Done` and `Practice` instead of explaining hard caps, default slices or catch-up policy. It keeps Phase 1 as a script/decoding trainer, with no Phase 2, backend, human-audio pipeline, AI audio, scraped audio or broad phrasebook module.
 
 ## 1. Full Project Structure
 
@@ -135,7 +135,7 @@ Lesson selection: Today routes the learner to the next available lesson when per
 
 Lesson completion: `startLesson()` builds an overlay player. `finishLesson()` marks first-time lessons done, adds eligible `g:` cards, adds `f:` final cards from Lesson 2 onward where relevant, seeds `a:` axis cards, schedules +1/+7 retention checks, increments the daily lesson count, updates the streak, saves state and shows the result.
 
-Review flow: Practice -> Flashcards starts due SRS cards unless Endings Refresh is required. Normal due review excludes leech cards; Leech clinic serves repeated-problem cards separately. Missed review cards are requeued in-session. Correct objective routine review answers show `Correct` for about 1 second, then auto-advance without a shaky/solid decision; a hidden conservative timer/support signal may mark weak-correct for shorter spacing at 7 seconds on letter/final cards and 10 seconds on word-style cards. Today and Course Map show short task status rather than scheduler policy. Axis speaking/transfer cards are trust-based because the static app cannot certify pronunciation or real-world noticing.
+Review flow: Practice -> Flashcards starts due SRS cards unless Endings Refresh is required. Normal due review excludes leech cards; Leech clinic serves repeated-problem cards separately. Missed review cards are requeued in-session. Correct objective routine review answers auto-advance after an adaptive green-feedback dwell: 1 second minimum for short text, longer for sentence-length green answer text, capped so review still moves. No shaky/solid decision returns; a hidden conservative timer/support signal may mark weak-correct for shorter spacing at 7 seconds on letter/final cards and 10 seconds on word-style cards. Today and Course Map show short task status rather than scheduler policy. Axis speaking/transfer cards are trust-based because the static app cannot certify pronunciation or real-world noticing.
 
 Progress persistence: state is saved under `thai_state_v1`. Saves are debounced by 350 ms and flushed synchronously on `visibilitychange` and `pagehide`. Export copies raw state JSON to the clipboard or prompt fallback. Import accepts pasted JSON if it has at least `srs` and `streak`.
 
@@ -168,7 +168,7 @@ Storage keys:
 - `localStorage["thai_state_v1"]`: primary browser/PWA progress store.
 - `window.storage["thai_state_v1"]`: Codex/Claude artifact fallback when available.
 - `sessionStorage`: no live usage found.
-- Service worker Cache API cache name in `sw.js`: `aan-thai-v5-4-3`.
+- Service worker Cache API cache name in `sw.js`: `aan-thai-v5-4-4`.
 
 Saved progress format is a single JSON object. The default state currently includes:
 
@@ -249,7 +249,7 @@ Return loop: daily plan completion, streak/heatmap, due SRS, +1/+7 delayed check
 
 `manifest.json`: PWA metadata, app name, icon list, portrait orientation, standalone display and colours. Depended on by browsers/install flow and listed in `sw.js`.
 
-`sw.js`: service worker. Network-first for shell and cache-first for other assets. Cache name now matches the current v5.4.3 release family: `aan-thai-v5-4-3`.
+`sw.js`: service worker. Network-first for shell and cache-first for other assets. Cache name now matches the current v5.4.4 release family: `aan-thai-v5-4-4`.
 
 `vercel.json`: static Vercel deployment config. No framework, no build command, output directory `.`, and must-revalidate cache headers for `index.html`, `sw.js` and `manifest.json`.
 
@@ -257,13 +257,13 @@ Return loop: daily plan completion, streak/heatmap, due SRS, +1/+7 delayed check
 
 `README.md`: concise current project summary and local/deploy instructions. It now mentions the device voice support boundary, controlled v5.4 fluency reads, the final checkpoint, hidden weak-correct review timing and no recurring tone-sign name MCQs.
 
-`AGENTS.md`: canonical project instructions and architecture/pedagogy context. Its top "Current state" now matches the live app version, `v5.4.3`.
+`AGENTS.md`: canonical project instructions and architecture/pedagogy context. Its top "Current state" now matches the live app version, `v5.4.4`.
 
-`CLAUDE.md`: local mirror of project instructions. Its top "Current state" now matches `AGENTS.md` and the live app version, `v5.4.3`.
+`CLAUDE.md`: local mirror of project instructions. Its top "Current state" now matches `AGENTS.md` and the live app version, `v5.4.4`.
 
-`CHANGELOG.md`: release history. Current top entry is `v5.4.3 - 2026-06-29`, describing the 1-second correct-feedback dwell and the new dwell validator.
+`CHANGELOG.md`: release history. Current top entry is `v5.4.4 - 2026-06-29`, describing adaptive correct-feedback dwell and the new adaptive dwell validator.
 
-`docs/phase1_audit.md`: generated readable Phase 1 audit. Refreshed during this pack; reports app version `v5.4.3`, 24 lessons, six fluency reads and all validators passing.
+`docs/phase1_audit.md`: generated readable Phase 1 audit. Refreshed during this pack; reports app version `v5.4.4`, 24 lessons, six fluency reads and all validators passing.
 
 `docs/phase1_audit.json`: generated machine-readable Phase 1 audit. Refreshed during this pack; includes validators, prerequisites, workload and lesson extraction.
 
@@ -271,7 +271,7 @@ Return loop: daily plan completion, streak/heatmap, due SRS, +1/+7 delayed check
 
 `docs/smoke_test_checklist.md`: lightweight manual smoke checklist for fresh, Lesson 8, Lesson 15, Lesson 24, completed-course, return-gap recovery, migrated Endings Refresh, malformed import, offline reload and iPhone installed-PWA update scenarios.
 
-`release-review-packet/`: old v5.1 senior-developer review handoff. Useful historical context, but stale for current v5.4.3.
+`release-review-packet/`: old v5.1 senior-developer review handoff. Useful historical context, but stale for current v5.4.4.
 
 `thai-pwa-v5.1-senior-dev-review-2026-06-26.zip`: old v5.1 review packet zip. Do not treat as current source.
 
@@ -349,9 +349,9 @@ stdout: none
 
 Generated audit result after refresh:
 
-- App version: `v5.4.3`
+- App version: `v5.4.4`
 - Lesson count: 24
-- Validators: 34 total; audio, vocabulary, coverage, prerequisites, reviewChoices, finalSounds, structuralClarity, balancedChoices, misconceptionChoices, v5Migration, v501FoundationRefresh, importRepair, v5Transfer, v51Polish, v52Bridge, v52FullBrief, recallAxis, delayedMastery, contrastCoverage, migrationTrust, utilityMission, noHumanAudio, ttsAssessmentSafety, phase1CompletionStandard, productionSafety, v521Hardening, v541AutoConfidence, v542StreamlinedCopy, v543CorrectDwell, v525RouteSimplification, v526ToneSignReview, v53ReviewGovernor, v531TtsSafety, v54Fluency
+- Validators: 35 total; audio, vocabulary, coverage, prerequisites, reviewChoices, finalSounds, structuralClarity, balancedChoices, misconceptionChoices, v5Migration, v501FoundationRefresh, importRepair, v5Transfer, v51Polish, v52Bridge, v52FullBrief, recallAxis, delayedMastery, contrastCoverage, migrationTrust, utilityMission, noHumanAudio, ttsAssessmentSafety, phase1CompletionStandard, productionSafety, v521Hardening, v541AutoConfidence, v542StreamlinedCopy, v543CorrectDwell, v544AdaptiveCorrectDwell, v525RouteSimplification, v526ToneSignReview, v53ReviewGovernor, v531TtsSafety, v54Fluency
 - Failures: none
 - Prerequisite audit: 0 lesson issues, 0 pool issues, 0 role-contract issues
 - v5.4 read audit: 6 fluency reads, 3 controlled real-world reads, 12 final-checkpoint quiz items
@@ -360,7 +360,7 @@ Note: running `node tools/phase1-audit.js` regenerated `docs/phase1_audit.md` an
 
 ## 10. Known Issues Or Suspicious Areas
 
-Version sync: the live footer/generated audit/changelog, `AGENTS.md` and `CLAUDE.md` all describe the current app as `v5.4.3`. The generated audit workload narrative still describes the v5.4 fluency-read scope where relevant.
+Version sync: the live footer/generated audit/changelog, `AGENTS.md` and `CLAUDE.md` all describe the current app as `v5.4.4`. The generated audit workload narrative still describes the v5.4 fluency-read scope where relevant.
 
 Generated docs changed during checks: `docs/phase1_audit.*` were rewritten by the audit command. This is expected for that generator, but should be reviewed before committing.
 
@@ -368,7 +368,7 @@ Git status verified during this pass: tracked changes are the intentional app, s
 
 Stale local artifacts: `PROJECT_NOTES.md` says v2.6; `release-review-packet/` and the zip represent v5.1; `idea-engine` proposal logs mention older removed mechanics such as confidence wagering. External auditors must not treat these as current app truth.
 
-Service worker cache name: `sw.js` now uses `aan-thai-v5-4-3`, aligned with the current release family. The existing network-first shell strategy is unchanged.
+Service worker cache name: `sw.js` now uses `aan-thai-v5-4-4`, aligned with the current release family. The existing network-first shell strategy is unchanged.
 
 Progress import: import now rejects obviously malformed progress shapes before merge, repairs valid imports through `repairStateForV5()`, `repairStateForV501()` and `repairStateForV54()`, validates the repaired deck, saves, and re-renders the main app surfaces. The `importRepair` validator covers malformed import, old valid import and completed-course import; `v54Fluency` covers completed-course fluency defaults and confirms the final checkpoint is not auto-passed.
 
@@ -384,7 +384,7 @@ Definition leakage: `startGenericQuiz()` asserts definition-free generated quizz
 
 Accessibility/mobile: no automated a11y/mobile smoke suite is present. Real iPhone installed-PWA testing is important for safe-area layout, tab bar ergonomics, speech synthesis, microphone permission, reset/import/export prompts and service-worker update behaviour.
 
-Audio reliability: Thai voice availability is device/browser-dependent. The app has setup guidance, but browser TTS is device voice support only. There are no human-audio assets or fallback hooks in v5.4.3.
+Audio reliability: Thai voice availability is device/browser-dependent. The app has setup guidance, but browser TTS is device voice support only. There are no human-audio assets or fallback hooks in v5.4.4.
 
 Data safety/privacy: progress, notes, mission ticks and recordings are local. Recordings are meant to be discarded when leaving the activity. There is no account or backend, but manual export puts full progress JSON on the clipboard/prompt.
 

@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.4.3</span>
+      <span class="version-pill">v5.4.4</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.3 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.4 (PWA)</div>
     </div>
   </section>
 
@@ -2087,7 +2087,11 @@ const AUTO_CONFIDENCE_TIMING = {
   letterSlowMs:7000,
   wordSlowMs:10000,
   fallbackSlowMs:10000,
-  correctDwellMs:1000,
+  correctDwellMinMs:1000,
+  correctDwellShortChars:16,
+  correctDwellBaseMs:700,
+  correctDwellPerCharMs:45,
+  correctDwellMaxMs:4200,
   repeatedAudioWeakCount:2,
   minReliableMs:400
 };
@@ -3398,8 +3402,16 @@ function classifyReviewCorrectConfidence(q, timing){
   }
   return {weakCorrect:false, confidence:'solid', reason:'within-threshold'};
 }
-function reviewCorrectAdvanceDelayMs(q){
-  return q && q.autoConfidence ? AUTO_CONFIDENCE_TIMING.correctDwellMs : 700;
+function adaptiveCorrectDwellMs(visibleText){
+  const text = String(visibleText || '').replace(/\s+/g, ' ').trim();
+  if(!text) return AUTO_CONFIDENCE_TIMING.correctDwellMinMs;
+  if(text.length <= AUTO_CONFIDENCE_TIMING.correctDwellShortChars) return AUTO_CONFIDENCE_TIMING.correctDwellMinMs;
+  const raw = AUTO_CONFIDENCE_TIMING.correctDwellBaseMs + text.length * AUTO_CONFIDENCE_TIMING.correctDwellPerCharMs;
+  const rounded = Math.round(raw / 50) * 50;
+  return Math.max(AUTO_CONFIDENCE_TIMING.correctDwellMinMs, Math.min(AUTO_CONFIDENCE_TIMING.correctDwellMaxMs, rounded));
+}
+function reviewCorrectAdvanceDelayMs(q, visibleText){
+  return q && q.autoConfidence ? adaptiveCorrectDwellMs(visibleText) : 700;
 }
 function nowMs(){
   return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
@@ -5481,7 +5493,7 @@ function validateV541AutoConfidenceContracts(){
   if(!support.weakCorrect) errors.push('non-audio support before answering should mark weak correct');
   if(classifyReviewCorrectConfidence(fluencyQ, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('fluency-read decoding checks must not use review timer weak-correct logic');
   if(classifyReviewCorrectConfidence(phase1Q, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('Phase 1 completion checks must not use review timer weak-correct logic');
-  if(reviewCorrectAdvanceDelayMs({autoConfidence:{}}) !== AUTO_CONFIDENCE_TIMING.correctDwellMs) errors.push('routine review correct answers should show brief feedback before auto-advance');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{}}, 'Correct') !== AUTO_CONFIDENCE_TIMING.correctDwellMinMs) errors.push('routine review correct answers should show brief feedback before auto-advance');
   if(/Felt shaky|q-shaky|type-shaky|allowShaky/.test(String(renderQuizQ) + String(renderTypeQ) + String(renderFlash))){
     errors.push('routine review should not expose Felt shaky/Solid post-correct controls');
   }
@@ -5509,13 +5521,27 @@ function validateV541AutoConfidenceContracts(){
 }
 function validateV543CorrectDwellContracts(){
   const errors = [];
-  if(AUTO_CONFIDENCE_TIMING.correctDwellMs !== 1000) errors.push('routine correct feedback dwell should be 1 second');
-  if(reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}) !== AUTO_CONFIDENCE_TIMING.correctDwellMs) errors.push('routine correct answers should dwell briefly before auto-advance');
+  if(AUTO_CONFIDENCE_TIMING.correctDwellMinMs !== 1000) errors.push('routine correct feedback dwell should keep a 1-second minimum');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}, 'Correct') !== AUTO_CONFIDENCE_TIMING.correctDwellMinMs) errors.push('routine correct answers should dwell briefly before auto-advance');
   if(reviewCorrectAdvanceDelayMs({}) !== 700) errors.push('non-review correct-answer dwell should remain unchanged');
   if(/Felt shaky|q-shaky|type-shaky|allowShaky/.test(String(renderQuizQ) + String(renderTypeQ) + String(renderFlash))){
     errors.push('correct feedback dwell must not reintroduce Felt shaky/Solid controls');
   }
   if(errors.length) throw new Error('V5.4.3 correct-dwell contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV544AdaptiveCorrectDwellContracts(){
+  const errors = [];
+  const short = reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}, 'Correct ก');
+  const long = reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}, 'Correct Makes ม follow high-class tone rules');
+  const veryLong = reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}, 'Correct ' + 'read this green explanation '.repeat(20));
+  if(short !== AUTO_CONFIDENCE_TIMING.correctDwellMinMs) errors.push('short green feedback should use the minimum dwell');
+  if(!(long > short)) errors.push('longer green feedback should get more reading time');
+  if(veryLong !== AUTO_CONFIDENCE_TIMING.correctDwellMaxMs) errors.push('very long green feedback should be capped');
+  if(AUTO_CONFIDENCE_TIMING.correctDwellShortChars !== 16 || AUTO_CONFIDENCE_TIMING.correctDwellBaseMs !== 700 || AUTO_CONFIDENCE_TIMING.correctDwellPerCharMs !== 45 || AUTO_CONFIDENCE_TIMING.correctDwellMaxMs !== 4200){
+    errors.push('adaptive correct dwell thresholds should stay explicit and conservative');
+  }
+  if(errors.length) throw new Error('V5.4.4 adaptive correct-dwell contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV542StreamlinedCopyContracts(){
@@ -8003,7 +8029,8 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     fb.className = 'q-feedback ' + (ok?'ok':'no');
     fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
     const meta = ok && confidenceMeta ? {weakCorrect:!!confidenceMeta.weakCorrect, confidence:confidenceMeta.confidence, confidenceReason:confidenceMeta.reason} : undefined;
-    setTimeout(()=>onDone(ok, meta), ok ? reviewCorrectAdvanceDelayMs(q) : 1700);
+    const visibleCorrectText = ok ? [fb.textContent, q.answer].filter(Boolean).join(' ') : '';
+    setTimeout(()=>onDone(ok, meta), ok ? reviewCorrectAdvanceDelayMs(q, visibleCorrectText) : 1700);
   }
   if(timedSecs){
     const bar = el('qtimer'), t0 = Date.now(), ms = timedSecs*1000;
@@ -9691,6 +9718,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV541AutoConfidenceContracts();
   validateV542StreamlinedCopyContracts();
   validateV543CorrectDwellContracts();
+  validateV544AdaptiveCorrectDwellContracts();
   validateV525RouteSimplificationContracts();
   validateV526ToneSignReviewContracts();
   validateV53ReviewGovernorContracts();

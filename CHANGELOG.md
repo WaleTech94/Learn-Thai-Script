@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.4 - 2026-06-29
+
+- Made objective routine review correct-feedback dwell adaptive to the visible green text after answering: short `Correct` feedback still uses a 1-second minimum, while longer green answer text gets more reading time up to a cap.
+- Kept the one-tap routine review flow: no `Felt shaky / Solid` decision returns, no visible timer appears, and weak-correct timing/spacing remains hidden.
+- Added `validateV544AdaptiveCorrectDwellContracts()` to guard short, long and capped correct-feedback dwell cases.
+- Regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.4` and 35 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-4` for the versioned shell.
+
 ## v5.4.3 - 2026-06-29
 
 - Restored a brief automatic 1-second correct-feedback dwell for objective routine review cards so the learner can see `Correct` before the next card loads.
