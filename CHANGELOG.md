@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.3 - 2026-06-29
+
+- Restored a brief automatic 1-second correct-feedback dwell for objective routine review cards so the learner can see `Correct` before the next card loads.
+- Kept the v5.4.1 one-tap routine review flow: no `Felt shaky / Solid` decision returns, and weak-correct timing/spacing remains hidden.
+- Added `validateV543CorrectDwellContracts()` to guard the feedback dwell and prevent the shaky/solid controls from returning.
+- Regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.3` and 34 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-3` for the versioned shell.
+
 ## v5.4.2 - 2026-06-29
 
 - Streamlined learner-facing Today and Course Map review copy: task cards now use short states such as `Clear`, `29 due`, `Review first`, `Done`, and `Practice` instead of explaining hard caps, default slices or catch-up policy.

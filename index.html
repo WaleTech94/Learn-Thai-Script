@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.4.2</span>
+      <span class="version-pill">v5.4.3</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.2 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.3 (PWA)</div>
     </div>
   </section>
 
@@ -2087,6 +2087,7 @@ const AUTO_CONFIDENCE_TIMING = {
   letterSlowMs:7000,
   wordSlowMs:10000,
   fallbackSlowMs:10000,
+  correctDwellMs:1000,
   repeatedAudioWeakCount:2,
   minReliableMs:400
 };
@@ -3398,7 +3399,7 @@ function classifyReviewCorrectConfidence(q, timing){
   return {weakCorrect:false, confidence:'solid', reason:'within-threshold'};
 }
 function reviewCorrectAdvanceDelayMs(q){
-  return q && q.autoConfidence ? 0 : 700;
+  return q && q.autoConfidence ? AUTO_CONFIDENCE_TIMING.correctDwellMs : 700;
 }
 function nowMs(){
   return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
@@ -5480,7 +5481,7 @@ function validateV541AutoConfidenceContracts(){
   if(!support.weakCorrect) errors.push('non-audio support before answering should mark weak correct');
   if(classifyReviewCorrectConfidence(fluencyQ, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('fluency-read decoding checks must not use review timer weak-correct logic');
   if(classifyReviewCorrectConfidence(phase1Q, {elapsedMs:60000, reliable:true}).weakCorrect) errors.push('Phase 1 completion checks must not use review timer weak-correct logic');
-  if(reviewCorrectAdvanceDelayMs({autoConfidence:{}}) !== 0) errors.push('routine review correct answers should advance immediately');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{}}) !== AUTO_CONFIDENCE_TIMING.correctDwellMs) errors.push('routine review correct answers should show brief feedback before auto-advance');
   if(/Felt shaky|q-shaky|type-shaky|allowShaky/.test(String(renderQuizQ) + String(renderTypeQ) + String(renderFlash))){
     errors.push('routine review should not expose Felt shaky/Solid post-correct controls');
   }
@@ -5504,6 +5505,17 @@ function validateV541AutoConfidenceContracts(){
   });
   if(!phase1CompletionRatingPass('slow') || phase1CompletionRatingPass('shaky')) errors.push('Phase 1 checkpoint should keep slow-but-correct pass and shaky fail ratings');
   if(errors.length) throw new Error('V5.4.1 auto-confidence contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV543CorrectDwellContracts(){
+  const errors = [];
+  if(AUTO_CONFIDENCE_TIMING.correctDwellMs !== 1000) errors.push('routine correct feedback dwell should be 1 second');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}) !== AUTO_CONFIDENCE_TIMING.correctDwellMs) errors.push('routine correct answers should dwell briefly before auto-advance');
+  if(reviewCorrectAdvanceDelayMs({}) !== 700) errors.push('non-review correct-answer dwell should remain unchanged');
+  if(/Felt shaky|q-shaky|type-shaky|allowShaky/.test(String(renderQuizQ) + String(renderTypeQ) + String(renderFlash))){
+    errors.push('correct feedback dwell must not reintroduce Felt shaky/Solid controls');
+  }
+  if(errors.length) throw new Error('V5.4.3 correct-dwell contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV542StreamlinedCopyContracts(){
@@ -9678,6 +9690,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV521HardeningContracts();
   validateV541AutoConfidenceContracts();
   validateV542StreamlinedCopyContracts();
+  validateV543CorrectDwellContracts();
   validateV525RouteSimplificationContracts();
   validateV526ToneSignReviewContracts();
   validateV53ReviewGovernorContracts();
