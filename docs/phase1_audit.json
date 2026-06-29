@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-29T01:05:26.462Z",
-  "appVersion": "v5.4.4",
+  "generatedAt": "2026-06-29T09:04:06.927Z",
+  "appVersion": "v5.4.5",
   "lessonCount": 24,
   "validators": [
     {
@@ -338,36 +338,37 @@
       "quiz": {
         "count": 10,
         "axes": {
+          "mcq": 3,
+          "word-reading": 1,
+          "glyph-choice": 1,
           "listen": 2,
-          "glyph-sound": 3,
-          "mcq": 4,
-          "word-reading": 1
+          "glyph-sound": 2,
+          "class-pick": 1
         },
         "prompts": [
           {
-            "axis": "listen",
+            "axis": "mcq",
             "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "มา",
+            "prompt": "ก",
+            "text": "Which class?",
+            "answer": "Mid class",
             "options": [
-              "มา",
-              "กา",
-              "กี",
-              "มี"
+              "Low class",
+              "Mid class",
+              "High class"
             ]
           },
           {
-            "axis": "glyph-sound",
+            "axis": "word-reading",
             "kind": "mcq",
-            "prompt": "อา",
-            "text": "What vowel sound?",
-            "answer": "aa (long)",
+            "prompt": "มา",
+            "text": "Mini decode: how does this read?",
+            "answer": "maa",
             "options": [
-              "aa (long)",
-              "a (short)",
-              "ii (long)",
-              "i (short)"
+              "mii",
+              "maa",
+              "gaa",
+              "gii"
             ]
           },
           {
@@ -376,44 +377,6 @@
             "prompt": "ม",
             "text": "Which class?",
             "answer": "Low class",
-            "options": [
-              "Low class",
-              "Mid class",
-              "High class"
-            ]
-          },
-          {
-            "axis": "glyph-sound",
-            "kind": "mcq",
-            "prompt": "อี",
-            "text": "What vowel sound?",
-            "answer": "ii (long)",
-            "options": [
-              "i (short)",
-              "ii (long)",
-              "u (short)",
-              "aa (long)"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "มี",
-            "options": [
-              "นี",
-              "นา",
-              "มา",
-              "มี"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Which class?",
-            "answer": "Mid class",
             "options": [
               "Mid class",
               "High class",
@@ -427,49 +390,85 @@
             "text": "Which class?",
             "answer": "Low class",
             "options": [
-              "Mid class",
               "Low class",
-              "High class"
+              "High class",
+              "Mid class"
+            ]
+          },
+          {
+            "axis": "glyph-choice",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Hear it. Which consonant is it?",
+            "answer": "น",
+            "options": [
+              "ม",
+              "ก",
+              "น"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "มา",
+            "options": [
+              "กี",
+              "มี",
+              "กา",
+              "มา"
             ]
           },
           {
             "axis": "glyph-sound",
             "kind": "mcq",
-            "prompt": "น",
+            "prompt": "อี",
+            "text": "What vowel sound?",
+            "answer": "ii (long)",
+            "options": [
+              "ii (long)",
+              "aa (long)",
+              "u (short)",
+              "i (short)"
+            ]
+          },
+          {
+            "axis": "class-pick",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Pick the mid class consonant",
+            "answer": "ก",
+            "options": [
+              "น",
+              "ม",
+              "ก"
+            ]
+          },
+          {
+            "axis": "glyph-sound",
+            "kind": "mcq",
+            "prompt": "ม",
             "text": "What consonant sound?",
-            "answer": "n",
+            "answer": "m",
             "options": [
               "g",
-              "n",
+              "th",
               "m",
-              "th"
+              "n"
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "listen",
             "kind": "mcq",
-            "prompt": "มี",
-            "text": "<span class=\"classchip low\">Low class</span> มี has no tone mark. What tone do we read here?",
-            "answer": "Mid",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "มี",
             "options": [
-              "Low",
-              "High",
-              "Mid",
-              "Rising",
-              "Falling"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "มี",
-            "text": "Mini decode: how does this read?",
-            "answer": "mii",
-            "options": [
-              "nii",
-              "naa",
-              "maa",
-              "mii"
+              "มา",
+              "นี",
+              "มี",
+              "นา"
             ]
           }
         ]
@@ -1054,11 +1053,11 @@
         "count": 13,
         "axes": {
           "final-job": 5,
-          "live-dead": 1,
-          "listen": 2,
+          "mcq": 3,
           "final": 1,
+          "live-dead": 1,
           "vowel-length": 1,
-          "mcq": 3
+          "listen": 2
         },
         "prompts": [
           {
@@ -1068,10 +1067,48 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-t",
             "options": [
-              "d",
-              "-t",
               "-m",
+              "-t",
+              "d",
               "-n"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "อ",
+            "text": "Which class?",
+            "answer": "Mid class",
+            "options": [
+              "High class",
+              "Low class",
+              "Mid class"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "-n",
+              "n",
+              "-m",
+              "-ng"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "กิน",
+            "text": "Ending job: what sound does น make here?",
+            "answer": "-n",
+            "options": [
+              "-n",
+              "-ng",
+              "n",
+              "-m"
             ]
           },
           {
@@ -1086,6 +1123,93 @@
             ]
           },
           {
+            "axis": "vowel-length",
+            "kind": "mcq",
+            "prompt": "กิน",
+            "text": "Vowel length: short or long?",
+            "answer": "Short",
+            "options": [
+              "Short",
+              "Long"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ด",
+            "text": "Which class?",
+            "answer": "Mid class",
+            "options": [
+              "Mid class",
+              "Low class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ม",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-m",
+            "options": [
+              "-m",
+              "-ng",
+              "m",
+              "-n"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "-n",
+              "-k",
+              "g",
+              "-m"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "บ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-p",
+            "options": [
+              "-m",
+              "-p",
+              "-n",
+              "b"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "บ",
+            "text": "Which class?",
+            "answer": "Mid class",
+            "options": [
+              "Low class",
+              "Mid class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ดี",
+            "options": [
+              "ดู",
+              "ดี",
+              "บู",
+              "บี"
+            ]
+          },
+          {
             "axis": "listen",
             "kind": "mcq",
             "prompt": "",
@@ -1096,131 +1220,6 @@
               "กี",
               "บิน",
               "กิน"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "g",
-              "-n",
-              "-k",
-              "-m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ม",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-m",
-            "options": [
-              "-n",
-              "-m",
-              "-ng",
-              "m"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "กิน",
-            "text": "Ending job: what sound does น make here?",
-            "answer": "-n",
-            "options": [
-              "-ng",
-              "n",
-              "-m",
-              "-n"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "-ng",
-              "-m",
-              "-n",
-              "n"
-            ]
-          },
-          {
-            "axis": "vowel-length",
-            "kind": "mcq",
-            "prompt": "กิน",
-            "text": "Vowel length: short or long?",
-            "answer": "Short",
-            "options": [
-              "Long",
-              "Short"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ด",
-            "text": "Which class?",
-            "answer": "Mid class",
-            "options": [
-              "Low class",
-              "High class",
-              "Mid class"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ดี",
-            "options": [
-              "บี",
-              "ดี",
-              "ดู",
-              "บู"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "บ",
-            "text": "Which class?",
-            "answer": "Mid class",
-            "options": [
-              "Mid class",
-              "High class",
-              "Low class"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "บ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-p",
-            "options": [
-              "b",
-              "-m",
-              "-n",
-              "-p"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "อ",
-            "text": "Which class?",
-            "answer": "Mid class",
-            "options": [
-              "High class",
-              "Mid class",
-              "Low class"
             ]
           }
         ]
@@ -1808,38 +1807,61 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "vowel-order": 1,
-          "final-job": 3,
-          "mcq": 2,
+          "final": 1,
           "listen": 2,
           "live-dead": 1,
-          "final": 1
+          "mcq": 2,
+          "final-job": 3,
+          "vowel-order": 1
         },
         "prompts": [
           {
-            "axis": "vowel-order",
+            "axis": "final",
             "kind": "mcq",
-            "prompt": "ไป",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "written before, spoken after",
+            "prompt": "บาท",
+            "text": "Ending job: what sound does ท make here?",
+            "answer": "-t",
             "options": [
-              "written before, spoken after",
-              "written after, spoken after",
-              "three pieces around the consonant",
-              "wraps the consonant"
+              "th",
+              "-n",
+              "-m",
+              "-t"
             ]
           },
           {
-            "axis": "final-job",
+            "axis": "listen",
             "kind": "mcq",
-            "prompt": "ท",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "บาท",
             "options": [
-              "-t",
-              "-n",
-              "-m",
-              "th"
+              "ปาท",
+              "บาท",
+              "ปาก",
+              "บาก"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "บาท",
+            "text": "Sound feel: live or dead?",
+            "answer": "Dead",
+            "options": [
+              "Dead",
+              "Live"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ป",
+            "text": "Which class?",
+            "answer": "Mid class",
+            "options": [
+              "High class",
+              "Mid class",
+              "Low class"
             ]
           },
           {
@@ -1850,8 +1872,34 @@
             "answer": "Low class",
             "options": [
               "Low class",
-              "High class",
-              "Mid class"
+              "Mid class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ไป",
+            "options": [
+              "ไบ",
+              "บี",
+              "ปี",
+              "ไป"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ป",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-p",
+            "options": [
+              "-p",
+              "-m",
+              "bp",
+              "-n"
             ]
           },
           {
@@ -1868,78 +1916,29 @@
             ]
           },
           {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "บาท",
-            "options": [
-              "บาท",
-              "บาก",
-              "ปาท",
-              "ปาก"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ไป",
-            "options": [
-              "ไป",
-              "บี",
-              "ไบ",
-              "ปี"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ป",
-            "text": "Which class?",
-            "answer": "Mid class",
-            "options": [
-              "Mid class",
-              "High class",
-              "Low class"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "บาท",
-            "text": "Sound feel: live or dead?",
-            "answer": "Dead",
-            "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "บาท",
-            "text": "Ending job: what sound does ท make here?",
-            "answer": "-t",
-            "options": [
-              "th",
-              "-t",
-              "-n",
-              "-m"
-            ]
-          },
-          {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ป",
+            "prompt": "ท",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-p",
+            "answer": "-t",
             "options": [
               "-m",
+              "th",
               "-n",
-              "-p",
-              "bp"
+              "-t"
+            ]
+          },
+          {
+            "axis": "vowel-order",
+            "kind": "mcq",
+            "prompt": "ไป",
+            "text": "Vowel order: how do you read the vowel shape here?",
+            "answer": "written before, spoken after",
+            "options": [
+              "written after, spoken after",
+              "written before, spoken after",
+              "wraps the consonant",
+              "three pieces around the consonant"
             ]
           }
         ]
@@ -2527,27 +2526,26 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "word-reading": 2,
-          "mcq": 1,
-          "listen": 2,
-          "class-pick": 1,
           "final-job": 1,
-          "glyph-choice": 1,
+          "mcq": 2,
           "live-dead": 1,
-          "final": 1
+          "final": 1,
+          "listen": 2,
+          "word-reading": 1,
+          "glyph-sound": 2
         },
         "prompts": [
           {
-            "axis": "word-reading",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ห้า",
-            "text": "Mini decode: how does this read?",
-            "answer": "hâa",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
             "options": [
-              "mâa",
-              "hâa",
-              "maa",
-              "haa"
+              "-n",
+              "-m",
+              "n",
+              "-ng"
             ]
           },
           {
@@ -2560,84 +2558,6 @@
               "Mid class",
               "Low class",
               "High class"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ไม่",
-            "options": [
-              "ไน่",
-              "ไม่",
-              "น้าน",
-              "ม้าน"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "บ้าน",
-            "options": [
-              "ม้าน",
-              "ไบ่",
-              "ไม่",
-              "บ้าน"
-            ]
-          },
-          {
-            "axis": "class-pick",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Pick the high class consonant",
-            "answer": "ห",
-            "options": [
-              "ก",
-              "ห",
-              "ม",
-              "น"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "n",
-              "-n",
-              "-m",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "glyph-choice",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Hear it. Which consonant is it?",
-            "answer": "ห",
-            "options": [
-              "ก",
-              "ม",
-              "ห",
-              "น"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "บ้าน",
-            "text": "Mini decode: how does this read?",
-            "answer": "bâan",
-            "options": [
-              "bâan",
-              "bpaan",
-              "baan",
-              "bpâan"
             ]
           },
           {
@@ -2658,10 +2578,89 @@
             "text": "Ending job: what sound does น make here?",
             "answer": "-n",
             "options": [
-              "-m",
               "-ng",
               "n",
-              "-n"
+              "-n",
+              "-m"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ไม่",
+            "options": [
+              "ไน่",
+              "ม้าน",
+              "ไม่",
+              "น้าน"
+            ]
+          },
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "ห้า",
+            "text": "Mini decode: how does this read?",
+            "answer": "hâa",
+            "options": [
+              "maa",
+              "mâa",
+              "haa",
+              "hâa"
+            ]
+          },
+          {
+            "axis": "glyph-sound",
+            "kind": "mcq",
+            "prompt": "ก่",
+            "text": "What does this mark do?",
+            "answer": "mái èek",
+            "options": [
+              "mái thoo",
+              "mái èek",
+              "shortener mark",
+              "mái dtrii"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "บ้าน",
+            "options": [
+              "ม้าน",
+              "บ้าน",
+              "ไบ่",
+              "ไม่"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ห้า",
+            "text": "<span class=\"classchip high\">High class</span> + Thai tone mark: which tone?",
+            "answer": "Falling",
+            "options": [
+              "Falling",
+              "Mid",
+              "Low",
+              "High",
+              "Rising"
+            ]
+          },
+          {
+            "axis": "glyph-sound",
+            "kind": "mcq",
+            "prompt": "ห",
+            "text": "What consonant sound?",
+            "answer": "h",
+            "options": [
+              "g",
+              "h",
+              "m",
+              "n"
             ]
           }
         ]
@@ -3304,63 +3303,23 @@
       "quiz": {
         "count": 13,
         "axes": {
-          "final-job": 4,
-          "listen": 2,
-          "mcq": 4,
-          "vowel-order": 1,
+          "live-dead": 1,
           "final": 1,
-          "live-dead": 1
+          "final-job": 4,
+          "mcq": 4,
+          "listen": 2,
+          "vowel-order": 1
         },
         "prompts": [
           {
-            "axis": "final-job",
+            "axis": "live-dead",
             "kind": "mcq",
-            "prompt": "ร",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
+            "prompt": "ยาว",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
             "options": [
-              "-n",
-              "r",
-              "-m",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "เรา",
-            "options": [
-              "ราว",
-              "เยา",
-              "เรา",
-              "ยาว"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ย",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "Low class",
-              "High class",
-              "Mid class"
-            ]
-          },
-          {
-            "axis": "vowel-order",
-            "kind": "mcq",
-            "prompt": "เรา",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "wraps the consonant",
-            "options": [
-              "three pieces around the consonant",
-              "written before, spoken after",
-              "written after, spoken after",
-              "wraps the consonant"
+              "Dead",
+              "Live"
             ]
           },
           {
@@ -3370,22 +3329,10 @@
             "text": "Ending job: what sound does ว make here?",
             "answer": "-aao",
             "options": [
-              "w",
+              "-m",
               "-n",
-              "-aao",
-              "-m"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ร",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "Mid class",
-              "Low class",
-              "High class"
+              "w",
+              "-aao"
             ]
           },
           {
@@ -3395,46 +3342,10 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-n",
             "options": [
-              "l",
+              "-ng",
               "-n",
               "-m",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "ยาว",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
-            "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ล",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "Mid class",
-              "Low class",
-              "High class"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ว",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ao/-aao",
-            "options": [
-              "-n",
-              "-ao/-aao",
-              "-m",
-              "w"
+              "l"
             ]
           },
           {
@@ -3456,10 +3367,10 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-y glide",
             "options": [
-              "-m",
-              "-n",
+              "y",
               "-y glide",
-              "y"
+              "-m",
+              "-n"
             ]
           },
           {
@@ -3469,10 +3380,98 @@
             "text": "Listen: which Thai did you hear?",
             "answer": "รอ",
             "options": [
-              "รอ",
-              "เรา",
               "เยา",
-              "ยอ"
+              "ยอ",
+              "รอ",
+              "เรา"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ว",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ao/-aao",
+            "options": [
+              "-m",
+              "-n",
+              "w",
+              "-ao/-aao"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "เรา",
+            "options": [
+              "เรา",
+              "ราว",
+              "ยาว",
+              "เยา"
+            ]
+          },
+          {
+            "axis": "vowel-order",
+            "kind": "mcq",
+            "prompt": "เรา",
+            "text": "Vowel order: how do you read the vowel shape here?",
+            "answer": "wraps the consonant",
+            "options": [
+              "wraps the consonant",
+              "three pieces around the consonant",
+              "written after, spoken after",
+              "written before, spoken after"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ร",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "r",
+              "-ng",
+              "-m",
+              "-n"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ย",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "Low class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ร",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "High class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ล",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "High class",
+              "Low class"
             ]
           }
         ]
@@ -4125,37 +4124,23 @@
       "quiz": {
         "count": 10,
         "axes": {
+          "mcq": 2,
           "final-job": 4,
           "listen": 2,
           "live-dead": 1,
-          "mcq": 2,
           "final": 1
         },
         "prompts": [
           {
-            "axis": "final-job",
+            "axis": "mcq",
             "kind": "mcq",
-            "prompt": "ว",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ao/-aao",
+            "prompt": "ส",
+            "text": "Which class?",
+            "answer": "High class",
             "options": [
-              "-n",
-              "-m",
-              "w",
-              "-ao/-aao"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "สี",
-            "options": [
-              "สอ",
-              "สี",
-              "ขี",
-              "ขอ"
+              "High class",
+              "Low class",
+              "Mid class"
             ]
           },
           {
@@ -4166,32 +4151,9 @@
             "answer": "-m",
             "options": [
               "-ng",
-              "-m",
               "m",
+              "-m",
               "-n"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "สาม",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
-            "options": [
-              "Dead",
-              "Live"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ส",
-            "text": "Which class?",
-            "answer": "High class",
-            "options": [
-              "Low class",
-              "Mid class",
-              "High class"
             ]
           },
           {
@@ -4213,23 +4175,10 @@
             "text": "Listen: which Thai did you hear?",
             "answer": "ขอ",
             "options": [
-              "ขี",
-              "สี",
               "ขอ",
-              "สอ"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ส",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "-n",
-              "-t",
-              "-m",
-              "s"
+              "สอ",
+              "ขี",
+              "สี"
             ]
           },
           {
@@ -4239,10 +4188,60 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-k",
             "options": [
-              "-n",
               "-m",
+              "kh",
               "-k",
-              "kh"
+              "-n"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ส",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-t",
+            "options": [
+              "-m",
+              "-t",
+              "s",
+              "-n"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "สี",
+            "options": [
+              "สอ",
+              "ขี",
+              "สี",
+              "ขอ"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "สาม",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ว",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ao/-aao",
+            "options": [
+              "w",
+              "-n",
+              "-ao/-aao",
+              "-m"
             ]
           },
           {
@@ -4252,10 +4251,10 @@
             "text": "Ending job: what sound does ม make here?",
             "answer": "-m",
             "options": [
+              "m",
               "-n",
               "-ng",
-              "-m",
-              "m"
+              "-m"
             ]
           }
         ]
@@ -4937,14 +4936,62 @@
       "quiz": {
         "count": 12,
         "axes": {
-          "vowel-length": 1,
+          "mcq": 3,
           "live-dead": 1,
           "final-job": 4,
-          "mcq": 3,
-          "listen": 2,
-          "final": 1
+          "vowel-length": 1,
+          "final": 1,
+          "listen": 2
         },
         "prompts": [
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "จ",
+            "text": "Which class?",
+            "answer": "Mid class",
+            "options": [
+              "High class",
+              "Low class",
+              "Mid class"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "งาน",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "จ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-t",
+            "options": [
+              "-m",
+              "-t",
+              "j",
+              "-n"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "High class",
+              "Low class",
+              "Mid class"
+            ]
+          },
           {
             "axis": "vowel-length",
             "kind": "mcq",
@@ -4957,14 +5004,28 @@
             ]
           },
           {
-            "axis": "live-dead",
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ช",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "High class",
+              "Mid class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "final",
             "kind": "mcq",
             "prompt": "งาน",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
+            "text": "Ending job: what sound does น make here?",
+            "answer": "-n",
             "options": [
-              "Dead",
-              "Live"
+              "n",
+              "-n",
+              "-m",
+              "-ng"
             ]
           },
           {
@@ -4974,22 +5035,10 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-t",
             "options": [
-              "-t",
-              "-m",
+              "-n",
               "ch",
-              "-n"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "จ",
-            "text": "Which class?",
-            "answer": "Mid class",
-            "options": [
-              "Low class",
-              "Mid class",
-              "High class"
+              "-m",
+              "-t"
             ]
           },
           {
@@ -4999,22 +5048,9 @@
             "text": "Listen: which Thai did you hear?",
             "answer": "งาน",
             "options": [
+              "จ้าง",
+              "จาน",
               "ง้าง",
-              "จาน",
-              "งาน",
-              "จ้าง"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "วันนี้",
-            "options": [
-              "ช้าง",
-              "วันนี้",
-              "จาน",
               "งาน"
             ]
           },
@@ -5025,34 +5061,23 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-n",
             "options": [
-              "-n",
+              "-ng",
               "-m",
               "n",
-              "-ng"
+              "-n"
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "listen",
             "kind": "mcq",
-            "prompt": "ง",
-            "text": "Which class?",
-            "answer": "Low class",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "วันนี้",
             "options": [
-              "Mid class",
-              "High class",
-              "Low class"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ช",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "High class",
-              "Mid class",
-              "Low class"
+              "จาน",
+              "งาน",
+              "วันนี้",
+              "ช้าง"
             ]
           },
           {
@@ -5063,35 +5088,9 @@
             "answer": "-ng",
             "options": [
               "-m",
-              "ng",
-              "-n",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "งาน",
-            "text": "Ending job: what sound does น make here?",
-            "answer": "-n",
-            "options": [
-              "-n",
               "-ng",
-              "n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "จ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "j",
-              "-n",
-              "-m",
-              "-t"
+              "ng",
+              "-n"
             ]
           }
         ]
@@ -5824,76 +5823,12 @@
         "count": 14,
         "axes": {
           "mcq": 4,
-          "listen": 2,
           "final-job": 6,
+          "final": 1,
           "live-dead": 1,
-          "final": 1
+          "listen": 2
         },
         "prompts": [
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ถ",
-            "text": "Which class?",
-            "answer": "High class",
-            "options": [
-              "Mid class",
-              "High class",
-              "Low class"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ถูก",
-            "options": [
-              "ตา",
-              "ถูก",
-              "ถา",
-              "ตูก"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "พ่อ",
-            "options": [
-              "พา",
-              "ฟ่อ",
-              "พ่อ",
-              "ฟา"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "พ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-p",
-            "options": [
-              "-n",
-              "-p",
-              "ph",
-              "-m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ต",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "dt",
-              "-n",
-              "-t",
-              "-m"
-            ]
-          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -5901,35 +5836,48 @@
             "text": "Which class?",
             "answer": "Low class",
             "options": [
-              "High class",
+              "Mid class",
               "Low class",
-              "Mid class"
+              "High class"
             ]
           },
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "น",
+            "prompt": "ก",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
+            "answer": "-k",
             "options": [
               "-n",
+              "-k",
               "-m",
-              "-ng",
-              "n"
+              "g"
             ]
           },
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ถ",
+            "prompt": "ฟ",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
+            "answer": "-p",
             "options": [
-              "-n",
-              "-t",
+              "f",
               "-m",
-              "th"
+              "-n",
+              "-p"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "ถูก",
+            "text": "Ending job: what sound does ก make here?",
+            "answer": "-k",
+            "options": [
+              "g",
+              "-m",
+              "-n",
+              "-k"
             ]
           },
           {
@@ -5950,35 +5898,35 @@
             "text": "Which class?",
             "answer": "Mid class",
             "options": [
-              "High class",
               "Mid class",
-              "Low class"
+              "Low class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "พ่อ",
+            "options": [
+              "พา",
+              "ฟา",
+              "ฟ่อ",
+              "พ่อ"
             ]
           },
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ฟ",
+            "prompt": "ต",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-p",
+            "answer": "-t",
             "options": [
               "-n",
-              "-p",
-              "-m",
-              "f"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "ถูก",
-            "text": "Ending job: what sound does ก make here?",
-            "answer": "-k",
-            "options": [
-              "g",
-              "-m",
-              "-k",
-              "-n"
+              "dt",
+              "-t",
+              "-m"
             ]
           },
           {
@@ -5988,22 +5936,73 @@
             "text": "Which class?",
             "answer": "Low class",
             "options": [
-              "Low class",
               "Mid class",
+              "High class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ถูก",
+            "options": [
+              "ตูก",
+              "ตา",
+              "ถา",
+              "ถูก"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ถ",
+            "text": "Which class?",
+            "answer": "High class",
+            "options": [
+              "Mid class",
+              "Low class",
               "High class"
             ]
           },
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ก",
+            "prompt": "ถ",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
+            "answer": "-t",
             "options": [
-              "-k",
+              "th",
               "-m",
               "-n",
-              "g"
+              "-t"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "n",
+              "-m",
+              "-ng",
+              "-n"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "พ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-p",
+            "options": [
+              "-p",
+              "-m",
+              "ph",
+              "-n"
             ]
           }
         ]
@@ -6745,39 +6744,14 @@
       "quiz": {
         "count": 14,
         "axes": {
-          "final": 1,
           "mcq": 4,
-          "final-job": 5,
           "listen": 2,
+          "live-dead": 1,
+          "final-job": 5,
           "hidden-vowel": 1,
-          "live-dead": 1
+          "final": 1
         },
         "prompts": [
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "คน",
-            "text": "Ending job: what sound does น make here?",
-            "answer": "-n",
-            "options": [
-              "-n",
-              "-ng",
-              "n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ซ",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "High class",
-              "Mid class",
-              "Low class"
-            ]
-          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -6791,31 +6765,6 @@
             ]
           },
           {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ย",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-y glide",
-            "options": [
-              "-n",
-              "-y glide",
-              "-m",
-              "y"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ผ",
-            "text": "Which class?",
-            "answer": "High class",
-            "options": [
-              "Low class",
-              "High class",
-              "Mid class"
-            ]
-          },
-          {
             "axis": "listen",
             "kind": "mcq",
             "prompt": "",
@@ -6824,8 +6773,8 @@
             "options": [
               "ผม",
               "ฝน",
-              "ผน",
-              "ฝม"
+              "ฝม",
+              "ผน"
             ]
           },
           {
@@ -6836,8 +6785,19 @@
             "answer": "High class",
             "options": [
               "Mid class",
-              "High class",
-              "Low class"
+              "Low class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "คน",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Dead",
+              "Live"
             ]
           },
           {
@@ -6847,10 +6807,22 @@
             "text": "Listen: which Thai did you hear?",
             "answer": "คน",
             "options": [
-              "ผม",
-              "ซ้าย",
               "ฝน",
+              "ซ้าย",
+              "ผม",
               "คน"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ซ",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "High class",
+              "Low class"
             ]
           },
           {
@@ -6869,14 +6841,78 @@
           {
             "axis": "final-job",
             "kind": "mcq",
+            "prompt": "ค",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "kh",
+              "-m",
+              "-n",
+              "-k"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ย",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-y glide",
+            "options": [
+              "y",
+              "-y glide",
+              "-n",
+              "-m"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ผ",
+            "text": "Which class?",
+            "answer": "High class",
+            "options": [
+              "High class",
+              "Low class",
+              "Mid class"
+            ]
+          },
+          {
+            "axis": "hidden-vowel",
+            "kind": "mcq",
+            "prompt": "คน",
+            "text": "Hidden vowel: what sound is added here?",
+            "answer": "hidden o",
+            "options": [
+              "hidden o",
+              "no added vowel",
+              "hidden a",
+              "written vowel"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
             "prompt": "น",
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-n",
             "options": [
-              "n",
+              "-m",
               "-n",
               "-ng",
-              "-m"
+              "n"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "คน",
+            "text": "Ending job: what sound does น make here?",
+            "answer": "-n",
+            "options": [
+              "n",
+              "-m",
+              "-ng",
+              "-n"
             ]
           },
           {
@@ -6887,46 +6923,9 @@
             "answer": "-m",
             "options": [
               "-m",
-              "-n",
+              "m",
               "-ng",
-              "m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ค",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "kh",
-              "-n",
-              "-k",
-              "-m"
-            ]
-          },
-          {
-            "axis": "hidden-vowel",
-            "kind": "mcq",
-            "prompt": "คน",
-            "text": "Hidden vowel: what sound is added here?",
-            "answer": "hidden o",
-            "options": [
-              "hidden a",
-              "hidden o",
-              "written vowel",
-              "no added vowel"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "คน",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
-            "options": [
-              "Live",
-              "Dead"
+              "-n"
             ]
           }
         ]
@@ -7677,25 +7676,38 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "vowel-order": 1,
+          "listen": 2,
+          "live-dead": 1,
           "final-job": 2,
-          "live-dead": 2,
-          "glyph-choice": 2,
+          "vowel-order": 1,
+          "glyph-sound": 1,
+          "glyph-choice": 1,
           "final": 1,
-          "listen": 2
+          "word-reading": 1
         },
         "prompts": [
           {
-            "axis": "vowel-order",
+            "axis": "listen",
             "kind": "mcq",
-            "prompt": "แม่",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "written before, spoken after",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "แพง",
             "options": [
-              "three pieces around the consonant",
-              "wraps the consonant",
-              "written before, spoken after",
-              "written after, spoken after"
+              "แม่",
+              "แมง",
+              "แพง",
+              "แพ่"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "แพง",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Dead",
+              "Live"
             ]
           },
           {
@@ -7705,47 +7717,62 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-ng",
             "options": [
-              "-m",
               "-n",
               "ng",
+              "-m",
               "-ng"
             ]
           },
           {
-            "axis": "live-dead",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ลึก",
-            "text": "Sound feel: live or dead?",
-            "answer": "Dead",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
             "options": [
-              "Dead",
-              "Live"
+              "g",
+              "-k",
+              "-n",
+              "-m"
             ]
           },
           {
-            "axis": "glyph-choice",
+            "axis": "vowel-order",
+            "kind": "mcq",
+            "prompt": "แม่",
+            "text": "Vowel order: how do you read the vowel shape here?",
+            "answer": "written before, spoken after",
+            "options": [
+              "written after, spoken after",
+              "three pieces around the consonant",
+              "written before, spoken after",
+              "wraps the consonant"
+            ]
+          },
+          {
+            "axis": "listen",
             "kind": "mcq",
             "prompt": "",
-            "text": "Hear it. Which vowel is it?",
-            "answer": "เอ",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "แม่",
             "options": [
-              "แอ",
-              "อั",
-              "เอ",
-              "อิ"
+              "แม่",
+              "มือ",
+              "พือ",
+              "แพ่"
             ]
           },
           {
-            "axis": "final",
+            "axis": "glyph-sound",
             "kind": "mcq",
-            "prompt": "แพง",
-            "text": "Ending job: what sound does ง make here?",
-            "answer": "-ng",
+            "prompt": "แอ",
+            "text": "What vowel sound?",
+            "answer": "aae (long)",
             "options": [
-              "-ng",
-              "-n",
-              "ng",
-              "-m"
+              "ee (long)",
+              "i (short)",
+              "a (short)",
+              "aae (long)"
             ]
           },
           {
@@ -7762,53 +7789,29 @@
             ]
           },
           {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "-m",
-              "-k",
-              "-n",
-              "g"
-            ]
-          },
-          {
-            "axis": "live-dead",
+            "axis": "final",
             "kind": "mcq",
             "prompt": "แพง",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
+            "text": "Ending job: what sound does ง make here?",
+            "answer": "-ng",
             "options": [
-              "Dead",
-              "Live"
+              "-ng",
+              "-m",
+              "ng",
+              "-n"
             ]
           },
           {
-            "axis": "listen",
+            "axis": "word-reading",
             "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "แม่",
+            "prompt": "ลึก",
+            "text": "Mini decode: how does this read?",
+            "answer": "lúek",
             "options": [
-              "แม่",
-              "แพ่",
-              "มือ",
-              "พือ"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "แพง",
-            "options": [
-              "แม่",
-              "แพง",
-              "แมง",
-              "แพ่"
+              "làat",
+              "màat",
+              "múek",
+              "lúek"
             ]
           }
         ]
@@ -8570,65 +8573,15 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "final": 1,
-          "vowel-length": 1,
-          "final-job": 3,
           "live-dead": 1,
-          "hidden-vowel": 1,
           "listen": 2,
+          "final": 1,
+          "final-job": 3,
+          "hidden-vowel": 1,
+          "vowel-length": 1,
           "mcq": 1
         },
         "prompts": [
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "รถ",
-            "text": "Ending job: what sound does ถ make here?",
-            "answer": "-t",
-            "options": [
-              "-t",
-              "-n",
-              "th",
-              "-m"
-            ]
-          },
-          {
-            "axis": "vowel-length",
-            "kind": "mcq",
-            "prompt": "รถ",
-            "text": "Vowel length: short or long?",
-            "answer": "Short",
-            "options": [
-              "Long",
-              "Short"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ถ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "-t",
-              "th",
-              "-n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-ng",
-              "ng",
-              "-n"
-            ]
-          },
           {
             "axis": "live-dead",
             "kind": "mcq",
@@ -8641,16 +8594,42 @@
             ]
           },
           {
-            "axis": "hidden-vowel",
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "จะ",
+            "options": [
+              "กถ",
+              "กะ",
+              "จถ",
+              "จะ"
+            ]
+          },
+          {
+            "axis": "final",
             "kind": "mcq",
             "prompt": "รถ",
-            "text": "Hidden vowel: what sound is added here?",
-            "answer": "hidden o",
+            "text": "Ending job: what sound does ถ make here?",
+            "answer": "-t",
             "options": [
-              "hidden o",
-              "written vowel",
-              "no added vowel",
-              "hidden a"
+              "th",
+              "-n",
+              "-t",
+              "-m"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
+            "options": [
+              "-m",
+              "-ng",
+              "-n",
+              "ng"
             ]
           },
           {
@@ -8660,10 +8639,47 @@
             "text": "Listen: which Thai did you hear?",
             "answer": "รถ",
             "options": [
-              "ทถ",
-              "ทุก",
               "รถ",
+              "ทุก",
+              "ทถ",
               "รุก"
+            ]
+          },
+          {
+            "axis": "hidden-vowel",
+            "kind": "mcq",
+            "prompt": "รถ",
+            "text": "Hidden vowel: what sound is added here?",
+            "answer": "hidden o",
+            "options": [
+              "written vowel",
+              "no added vowel",
+              "hidden a",
+              "hidden o"
+            ]
+          },
+          {
+            "axis": "vowel-length",
+            "kind": "mcq",
+            "prompt": "รถ",
+            "text": "Vowel length: short or long?",
+            "answer": "Short",
+            "options": [
+              "Short",
+              "Long"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ถ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-t",
+            "options": [
+              "-n",
+              "-m",
+              "th",
+              "-t"
             ]
           },
           {
@@ -8674,36 +8690,23 @@
             "answer": "-k",
             "options": [
               "-k",
-              "g",
               "-n",
+              "g",
               "-m"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "จะ",
-            "options": [
-              "กะ",
-              "จถ",
-              "จะ",
-              "กถ"
             ]
           },
           {
             "axis": "mcq",
             "kind": "mcq",
-            "prompt": "จะ",
-            "text": "<span class=\"classchip mid\">Mid class</span> No tone mark: use class + live/dead. Which tone?",
-            "answer": "Low",
+            "prompt": "กุ้ง",
+            "text": "<span class=\"classchip mid\">Mid class</span> + Thai tone mark: which tone?",
+            "answer": "Falling",
             "options": [
-              "Mid",
-              "Rising",
               "Falling",
+              "Mid",
               "Low",
-              "High"
+              "High",
+              "Rising"
             ]
           }
         ]
@@ -9454,15 +9457,40 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "live-dead": 1,
-          "word-reading": 2,
-          "mcq": 2,
+          "word-reading": 3,
           "listen": 2,
-          "glyph-sound": 1,
-          "glyph-choice": 1,
-          "vowel-order": 1
+          "live-dead": 1,
+          "vowel-order": 1,
+          "mcq": 2,
+          "glyph-sound": 1
         },
         "prompts": [
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "น้ำ",
+            "text": "Mini decode: how does this read?",
+            "answer": "náam",
+            "options": [
+              "naan",
+              "náam",
+              "maan",
+              "máam"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "เขา",
+            "options": [
+              "ใน่",
+              "เนา",
+              "เขา",
+              "ใข่"
+            ]
+          },
           {
             "axis": "live-dead",
             "kind": "mcq",
@@ -9475,109 +9503,16 @@
             ]
           },
           {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "น้ำ",
-            "text": "Mini decode: how does this read?",
-            "answer": "náam",
-            "options": [
-              "naan",
-              "náam",
-              "máam",
-              "maan"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ทำ",
-            "text": "<span class=\"classchip low\">Low class</span> ทำ has no tone mark. What tone do we read here?",
-            "answer": "Mid",
-            "options": [
-              "Mid",
-              "High",
-              "Low",
-              "Rising",
-              "Falling"
-            ]
-          },
-          {
             "axis": "listen",
             "kind": "mcq",
             "prompt": "",
             "text": "Listen: which Thai did you hear?",
             "answer": "น้ำ",
             "options": [
+              "นำ",
               "ทำ",
-              "น้ำ",
               "ท้ำ",
-              "นำ"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "ใช่",
-            "text": "Mini decode: how does this read?",
-            "answer": "châi",
-            "options": [
-              "mâi",
-              "châi",
-              "chai",
-              "mai"
-            ]
-          },
-          {
-            "axis": "glyph-sound",
-            "kind": "mcq",
-            "prompt": "ใอ",
-            "text": "What vowel sound?",
-            "answer": "ai",
-            "options": [
-              "ai",
-              "ii (long)",
-              "aa (long)",
-              "oo (long)"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "เขา",
-            "options": [
-              "เนา",
-              "ใข่",
-              "ใน่",
-              "เขา"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ใช่",
-            "text": "<span class=\"classchip low\">Low class</span> + Thai tone mark: which tone?",
-            "answer": "Falling",
-            "options": [
-              "Low",
-              "Falling",
-              "High",
-              "Rising",
-              "Mid"
-            ]
-          },
-          {
-            "axis": "glyph-choice",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Hear it. Which vowel is it?",
-            "answer": "ใอ",
-            "options": [
-              "อี",
-              "อา",
-              "ใอ",
-              "โอ"
+              "น้ำ"
             ]
           },
           {
@@ -9587,10 +9522,77 @@
             "text": "Vowel order: how do you read the vowel shape here?",
             "answer": "wraps the consonant",
             "options": [
-              "three pieces around the consonant",
-              "written before, spoken after",
               "written after, spoken after",
-              "wraps the consonant"
+              "wraps the consonant",
+              "written before, spoken after",
+              "three pieces around the consonant"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "เขา",
+            "text": "<span class=\"classchip high\">High class</span> No tone mark: use class + live/dead. Which tone?",
+            "answer": "Rising",
+            "options": [
+              "Low",
+              "High",
+              "Rising",
+              "Mid",
+              "Falling"
+            ]
+          },
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "เขา",
+            "text": "Mini decode: how does this read?",
+            "answer": "khǎo",
+            "options": [
+              "khǎao",
+              "gǎo",
+              "gǎao",
+              "khǎo"
+            ]
+          },
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "ทำ",
+            "text": "Mini decode: how does this read?",
+            "answer": "tham",
+            "options": [
+              "thaan",
+              "dam",
+              "tham",
+              "daan"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "น้ำ",
+            "text": "<span class=\"classchip low\">Low class</span> + Thai tone mark: which tone?",
+            "answer": "High",
+            "options": [
+              "Rising",
+              "Low",
+              "Mid",
+              "Falling",
+              "High"
+            ]
+          },
+          {
+            "axis": "glyph-sound",
+            "kind": "mcq",
+            "prompt": "เอา",
+            "text": "What vowel sound?",
+            "answer": "ao",
+            "options": [
+              "ee (long)",
+              "aa (long)",
+              "ao",
+              "ii (long)"
             ]
           }
         ]
@@ -10358,140 +10360,18 @@
       "quiz": {
         "count": 12,
         "axes": {
-          "live-dead": 1,
           "mcq": 4,
           "final-job": 3,
+          "live-dead": 1,
+          "final": 1,
           "listen": 2,
-          "vowel-length": 1,
-          "final": 1
+          "vowel-length": 1
         },
         "prompts": [
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "จาก",
-            "text": "Sound feel: live or dead?",
-            "answer": "Dead",
-            "options": [
-              "Dead",
-              "Live"
-            ]
-          },
           {
             "axis": "mcq",
             "kind": "mcq",
             "prompt": "มาก",
-            "text": "Live or dead?",
-            "answer": "Dead",
-            "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ด",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "-t",
-              "d",
-              "-n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "-m",
-              "-n",
-              "g",
-              "-k"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "จาก",
-            "options": [
-              "พูด",
-              "จูด",
-              "จาก",
-              "พาก"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "-m",
-              "-n",
-              "n",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "พูด",
-            "options": [
-              "พูด",
-              "ราก",
-              "พาก",
-              "รูด"
-            ]
-          },
-          {
-            "axis": "vowel-length",
-            "kind": "mcq",
-            "prompt": "จาก",
-            "text": "Vowel length: short or long?",
-            "answer": "Long",
-            "options": [
-              "Long",
-              "Short"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "งาน",
-            "text": "Live or dead?",
-            "answer": "Live",
-            "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "จาก",
-            "text": "Ending job: what sound does ก make here?",
-            "answer": "-k",
-            "options": [
-              "-m",
-              "g",
-              "-n",
-              "-k"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "จะ",
             "text": "Live or dead?",
             "answer": "Dead",
             "options": [
@@ -10508,6 +10388,128 @@
             "options": [
               "Live",
               "Dead"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "งาน",
+            "text": "Live or dead?",
+            "answer": "Live",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "g",
+              "-m",
+              "-k",
+              "-n"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "จาก",
+            "text": "Sound feel: live or dead?",
+            "answer": "Dead",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "จะ",
+            "text": "Live or dead?",
+            "answer": "Dead",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "จาก",
+            "text": "Ending job: what sound does ก make here?",
+            "answer": "-k",
+            "options": [
+              "-k",
+              "g",
+              "-m",
+              "-n"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "-ng",
+              "-n",
+              "-m",
+              "n"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ด",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-t",
+            "options": [
+              "-t",
+              "-m",
+              "-n",
+              "d"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "จาก",
+            "options": [
+              "จาก",
+              "พูด",
+              "พาก",
+              "จูด"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "พูด",
+            "options": [
+              "รูด",
+              "พาก",
+              "พูด",
+              "ราก"
+            ]
+          },
+          {
+            "axis": "vowel-length",
+            "kind": "mcq",
+            "prompt": "จาก",
+            "text": "Vowel length: short or long?",
+            "answer": "Long",
+            "options": [
+              "Long",
+              "Short"
             ]
           }
         ]
@@ -11276,39 +11278,93 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "final-job": 1,
-          "mcq": 4,
-          "final": 1,
-          "word-reading": 1,
+          "mcq": 3,
+          "glyph-choice": 1,
           "listen": 2,
+          "word-reading": 1,
+          "final": 1,
+          "final-job": 1,
           "live-dead": 1
         },
         "prompts": [
           {
-            "axis": "final-job",
+            "axis": "mcq",
             "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
+            "prompt": "เก่า",
+            "text": "<span class='classchip mid'>mid class</span> + ไม้เอก ่ gives which tone?",
+            "answer": "Low",
+            "options": [
+              "Mid",
+              "Low",
+              "Falling",
+              "High",
+              "Rising"
+            ]
+          },
+          {
+            "axis": "glyph-choice",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Hear it. Which mark is it?",
+            "answer": "ก๋",
+            "options": [
+              "ก้",
+              "ก๊",
+              "ก๋",
+              "ก่"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ต้อง",
+            "options": [
+              "ต้อง",
+              "โต๊ะ",
+              "ด้อง",
+              "โด๊ะ"
+            ]
+          },
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "ได้",
+            "text": "Mini decode: how does this read?",
+            "answer": "dâi",
+            "options": [
+              "dâi",
+              "mai",
+              "mâi",
+              "dai"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "ต้อง",
+            "text": "Ending job: what sound does ง make here?",
             "answer": "-ng",
             "options": [
-              "-ng",
-              "-m",
               "ng",
-              "-n"
+              "-m",
+              "-n",
+              "-ng"
             ]
           },
           {
             "axis": "mcq",
             "kind": "mcq",
-            "prompt": "ต้อง",
-            "text": "<span class=\"classchip mid\">Mid class</span> + Thai tone mark: which tone?",
+            "prompt": "ได้",
+            "text": "<span class='classchip mid'>mid class</span> + ไม้โท ้ gives which tone?",
             "answer": "Falling",
             "options": [
-              "High",
-              "Rising",
-              "Falling",
               "Mid",
-              "Low"
+              "Low",
+              "Falling",
+              "High",
+              "Rising"
             ]
           },
           {
@@ -11326,56 +11382,16 @@
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "เก่า",
-            "text": "<span class='classchip mid'>mid class</span> + ไม้เอก ่ gives which tone?",
-            "answer": "Low",
-            "options": [
-              "Mid",
-              "Low",
-              "Falling",
-              "High",
-              "Rising"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "ต้อง",
-            "text": "Ending job: what sound does ง make here?",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-ng",
             "options": [
               "-n",
-              "-m",
               "ng",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "ต้อง",
-            "text": "Mini decode: how does this read?",
-            "answer": "dtôrng",
-            "options": [
-              "dtôrng",
-              "dôrng",
-              "dûng",
-              "dtûng"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ต้อง",
-            "options": [
-              "ต้อง",
-              "ด้อง",
-              "โด๊ะ",
-              "โต๊ะ"
+              "-ng",
+              "-m"
             ]
           },
           {
@@ -11398,22 +11414,8 @@
             "text": "Sound feel: live or dead?",
             "answer": "Live",
             "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ได้",
-            "text": "<span class='classchip mid'>mid class</span> + ไม้โท ้ gives which tone?",
-            "answer": "Falling",
-            "options": [
-              "Mid",
-              "Low",
-              "Falling",
-              "High",
-              "Rising"
+              "Dead",
+              "Live"
             ]
           }
         ]
@@ -12182,13 +12184,90 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "mcq": 3,
+          "final": 1,
+          "listen": 2,
           "live-dead": 1,
           "final-job": 3,
-          "listen": 2,
-          "final": 1
+          "mcq": 3
         },
         "prompts": [
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "ข้าว",
+            "text": "Ending job: what sound does ว make here?",
+            "answer": "-aao",
+            "options": [
+              "-aao",
+              "w",
+              "-n",
+              "-m"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ห้อง",
+            "options": [
+              "ห้อง",
+              "ข้าว",
+              "ห้าว",
+              "ข้อง"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "ข้าว",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Dead",
+              "Live"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
+            "options": [
+              "-m",
+              "-ng",
+              "ng",
+              "-n"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ถูก",
+            "text": "<span class='classchip high'>high class</span> + dead syllable gives which tone?",
+            "answer": "Low",
+            "options": [
+              "Mid",
+              "Low",
+              "Falling",
+              "High",
+              "Rising"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ว",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ao/-aao",
+            "options": [
+              "-m",
+              "w",
+              "-n",
+              "-ao/-aao"
+            ]
+          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -12218,27 +12297,16 @@
             ]
           },
           {
-            "axis": "live-dead",
+            "axis": "listen",
             "kind": "mcq",
-            "prompt": "ข้าว",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ข้าว",
             "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ว",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ao/-aao",
-            "options": [
-              "-m",
-              "-ao/-aao",
-              "w",
-              "-n"
+              "ห้อง",
+              "ห้าว",
+              "ข้อง",
+              "ข้าว"
             ]
           },
           {
@@ -12250,74 +12318,8 @@
             "options": [
               "-m",
               "-n",
-              "-ng",
-              "m"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ห้อง",
-            "options": [
-              "ห้อง",
-              "ห้าว",
-              "ข้อง",
-              "ข้าว"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "ข้าว",
-            "text": "Ending job: what sound does ว make here?",
-            "answer": "-aao",
-            "options": [
-              "-n",
-              "-m",
-              "w",
-              "-aao"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ข้าว",
-            "options": [
-              "ห้าว",
-              "ข้าว",
-              "ห้อง",
-              "ข้อง"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ถูก",
-            "text": "<span class='classchip high'>high class</span> + dead syllable gives which tone?",
-            "answer": "Low",
-            "options": [
-              "Mid",
-              "Low",
-              "Falling",
-              "High",
-              "Rising"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-ng",
-              "ng",
-              "-n"
+              "m",
+              "-ng"
             ]
           }
         ]
@@ -13099,10 +13101,10 @@
         "count": 10,
         "axes": {
           "listen": 2,
-          "mcq": 3,
           "final-job": 2,
-          "vowel-length": 1,
+          "mcq": 3,
           "live-dead": 1,
+          "vowel-length": 1,
           "final": 1
         },
         "prompts": [
@@ -13111,26 +13113,12 @@
             "kind": "mcq",
             "prompt": "",
             "text": "Listen: which Thai did you hear?",
-            "answer": "พี่",
+            "answer": "น้อง",
             "options": [
-              "นี่",
               "พี่",
-              "น้า",
-              "พ้า"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ไม่",
-            "text": "<span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone?",
-            "answer": "Falling",
-            "options": [
-              "Mid",
-              "Low",
-              "Falling",
-              "High",
-              "Rising"
+              "น้อง",
+              "นี่",
+              "พ้อง"
             ]
           },
           {
@@ -13140,10 +13128,23 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-k",
             "options": [
-              "g",
-              "-k",
               "-m",
-              "-n"
+              "g",
+              "-n",
+              "-k"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "พี่",
+            "options": [
+              "น้า",
+              "พี่",
+              "พ้า",
+              "นี่"
             ]
           },
           {
@@ -13161,6 +13162,17 @@
             ]
           },
           {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "น้อง",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Dead",
+              "Live"
+            ]
+          },
+          {
             "axis": "vowel-length",
             "kind": "mcq",
             "prompt": "เล็ก",
@@ -13172,29 +13184,17 @@
             ]
           },
           {
-            "axis": "final-job",
+            "axis": "mcq",
             "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
+            "prompt": "ไม่",
+            "text": "<span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone?",
+            "answer": "Falling",
             "options": [
-              "-m",
-              "ng",
-              "-ng",
-              "-n"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "น้อง",
-            "options": [
-              "พี่",
-              "พ้อง",
-              "นี่",
-              "น้อง"
+              "Mid",
+              "Low",
+              "Falling",
+              "High",
+              "Rising"
             ]
           },
           {
@@ -13212,14 +13212,16 @@
             ]
           },
           {
-            "axis": "live-dead",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "น้อง",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
             "options": [
-              "Live",
-              "Dead"
+              "-ng",
+              "-n",
+              "-m",
+              "ng"
             ]
           },
           {
@@ -13229,8 +13231,8 @@
             "text": "Ending job: what sound does ง make here?",
             "answer": "-ng",
             "options": [
-              "ng",
               "-m",
+              "ng",
               "-n",
               "-ng"
             ]
@@ -14020,79 +14022,14 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "final": 1,
-          "word-reading": 1,
-          "final-job": 1,
-          "listen": 2,
           "mcq": 4,
-          "live-dead": 1
+          "listen": 2,
+          "final": 1,
+          "final-job": 1,
+          "live-dead": 1,
+          "word-reading": 1
         },
         "prompts": [
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "อยาก",
-            "text": "Ending job: what sound does ก make here?",
-            "answer": "-k",
-            "options": [
-              "-n",
-              "g",
-              "-k",
-              "-m"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "หมา",
-            "text": "Mini decode: how does this read?",
-            "answer": "mǎa",
-            "options": [
-              "maa",
-              "mǎa",
-              "nǎa",
-              "naa"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "-m",
-              "g",
-              "-n",
-              "-k"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "อยู่",
-            "options": [
-              "หยู่",
-              "อมา",
-              "อยู่",
-              "หมา"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "หมา",
-            "text": "What does silent ห do here?",
-            "answer": "Makes ม follow high-class tone rules",
-            "options": [
-              "Makes ม follow high-class tone rules",
-              "Adds an h sound",
-              "Makes the vowel short",
-              "Makes the word formal"
-            ]
-          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -14112,26 +14049,78 @@
             "kind": "mcq",
             "prompt": "",
             "text": "Listen: which Thai did you hear?",
+            "answer": "อยู่",
+            "options": [
+              "หยู่",
+              "หมา",
+              "อยู่",
+              "อมา"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "อยาก",
+            "text": "Ending job: what sound does ก make here?",
+            "answer": "-k",
+            "options": [
+              "-m",
+              "-n",
+              "g",
+              "-k"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "-n",
+              "-k",
+              "g",
+              "-m"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
             "answer": "ไหน",
             "options": [
-              "ไหม",
-              "อยู่",
               "ไหน",
+              "อยู่",
+              "ไหม",
               "หมา"
             ]
           },
           {
             "axis": "mcq",
             "kind": "mcq",
-            "prompt": "อยู่",
-            "text": "<span class=\"classchip mid\">Mid class</span> + Thai tone mark: which tone?",
-            "answer": "Low",
+            "prompt": "หมา",
+            "text": "<span class=\"classchip high\">High class</span> No tone mark: use class + live/dead. Which tone?",
+            "answer": "Rising",
             "options": [
-              "High",
               "Rising",
+              "Falling",
               "Low",
-              "Mid",
-              "Falling"
+              "High",
+              "Mid"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "หมา",
+            "text": "What does silent ห do here?",
+            "answer": "Makes ม follow high-class tone rules",
+            "options": [
+              "Makes ม follow high-class tone rules",
+              "Adds an h sound",
+              "Makes the vowel short",
+              "Makes the word formal"
             ]
           },
           {
@@ -14143,6 +14132,19 @@
             "options": [
               "Dead",
               "Live"
+            ]
+          },
+          {
+            "axis": "word-reading",
+            "kind": "mcq",
+            "prompt": "อยู่",
+            "text": "Mini decode: how does this read?",
+            "answer": "yùu",
+            "options": [
+              "yùu",
+              "mùu",
+              "yuu",
+              "muu"
             ]
           },
           {
@@ -14953,55 +14955,16 @@
       "quiz": {
         "count": 11,
         "axes": {
-          "mcq": 3,
-          "listen": 2,
-          "cluster": 1,
           "final-job": 1,
-          "final": 1,
+          "mcq": 3,
           "live-dead": 1,
           "vowel-order": 1,
-          "vowel-length": 1
+          "final": 1,
+          "listen": 2,
+          "vowel-length": 1,
+          "cluster": 1
         },
         "prompts": [
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ครับ",
-            "text": "A true cluster takes its class from which letter?",
-            "answer": "ค",
-            "options": [
-              "ค",
-              "ร",
-              "บ",
-              "◌ั"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ครับ",
-            "options": [
-              "ครับ",
-              "ปลา",
-              "ใกล้",
-              "ครู"
-            ]
-          },
-          {
-            "axis": "cluster",
-            "kind": "mcq",
-            "prompt": "ครับ",
-            "text": "Cluster check: what is happening here?",
-            "answer": "true cluster",
-            "options": [
-              "true cluster",
-              "single consonant",
-              "fake cluster",
-              "silent leader"
-            ]
-          },
           {
             "axis": "final-job",
             "kind": "mcq",
@@ -15010,9 +14973,9 @@
             "answer": "-p",
             "options": [
               "-n",
+              "b",
               "-m",
-              "-p",
-              "b"
+              "-p"
             ]
           },
           {
@@ -15027,32 +14990,6 @@
               "Falling",
               "High",
               "Rising"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "ครับ",
-            "text": "Ending job: what sound does บ make here?",
-            "answer": "-p",
-            "options": [
-              "-m",
-              "b",
-              "-n",
-              "-p"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ครู",
-            "options": [
-              "ใกล้",
-              "ครับ",
-              "ครู",
-              "ปลา"
             ]
           },
           {
@@ -15075,8 +15012,47 @@
             "options": [
               "written before, spoken after",
               "three pieces around the consonant",
-              "written after, spoken after",
-              "wraps the consonant"
+              "wraps the consonant",
+              "written after, spoken after"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "ครับ",
+            "text": "Ending job: what sound does บ make here?",
+            "answer": "-p",
+            "options": [
+              "b",
+              "-p",
+              "-n",
+              "-m"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ครับ",
+            "text": "A true cluster takes its class from which letter?",
+            "answer": "ค",
+            "options": [
+              "ค",
+              "ร",
+              "บ",
+              "◌ั"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ครู",
+            "options": [
+              "ครับ",
+              "ครู",
+              "ใกล้",
+              "ปลา"
             ]
           },
           {
@@ -15101,6 +15077,32 @@
               "The vowel length",
               "The final consonant",
               "The class"
+            ]
+          },
+          {
+            "axis": "cluster",
+            "kind": "mcq",
+            "prompt": "ครับ",
+            "text": "Cluster check: what is happening here?",
+            "answer": "true cluster",
+            "options": [
+              "single consonant",
+              "true cluster",
+              "silent leader",
+              "fake cluster"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ครับ",
+            "options": [
+              "ปลา",
+              "ใกล้",
+              "ครับ",
+              "ครู"
             ]
           }
         ]
@@ -15915,14 +15917,27 @@
       "quiz": {
         "count": 11,
         "axes": {
+          "cluster": 1,
           "final-job": 3,
           "mcq": 3,
-          "live-dead": 1,
+          "final": 1,
           "listen": 2,
-          "cluster": 1,
-          "final": 1
+          "live-dead": 1
         },
         "prompts": [
+          {
+            "axis": "cluster",
+            "kind": "mcq",
+            "prompt": "จริง",
+            "text": "Cluster check: what is happening here?",
+            "answer": "fake cluster",
+            "options": [
+              "single consonant",
+              "fake cluster",
+              "silent leader",
+              "true cluster"
+            ]
+          },
           {
             "axis": "final-job",
             "kind": "mcq",
@@ -15930,10 +15945,10 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-y glide",
             "options": [
-              "y",
-              "-m",
               "-n",
-              "-y glide"
+              "-y glide",
+              "-m",
+              "y"
             ]
           },
           {
@@ -15950,16 +15965,81 @@
             ]
           },
           {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "จริง",
+            "text": "Ending job: what sound does ง make here?",
+            "answer": "-ng",
+            "options": [
+              "-m",
+              "ng",
+              "-ng",
+              "-n"
+            ]
+          },
+          {
             "axis": "final-job",
             "kind": "mcq",
             "prompt": "บ",
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-p",
             "options": [
-              "b",
               "-n",
               "-p",
-              "-m"
+              "-m",
+              "b"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "อร่อย",
+            "options": [
+              "สร้าง",
+              "จริง",
+              "อร่อย",
+              "ทราบ"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "จริง",
+            "options": [
+              "ทร้าง",
+              "จร้าง",
+              "ทริง",
+              "จริง"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ทราบ",
+            "text": "ทร usually begins with which sound?",
+            "answer": "s",
+            "options": [
+              "s",
+              "th",
+              "tr",
+              "r"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
+            "options": [
+              "-m",
+              "-ng",
+              "-n",
+              "ng"
             ]
           },
           {
@@ -15984,84 +16064,6 @@
               "Making an r sound",
               "Silencing ร",
               "Marking high class"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-ng",
-              "ng",
-              "-n"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "จริง",
-            "options": [
-              "ทร้าง",
-              "จร้าง",
-              "ทริง",
-              "จริง"
-            ]
-          },
-          {
-            "axis": "cluster",
-            "kind": "mcq",
-            "prompt": "จริง",
-            "text": "Cluster check: what is happening here?",
-            "answer": "fake cluster",
-            "options": [
-              "single consonant",
-              "fake cluster",
-              "true cluster",
-              "silent leader"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "จริง",
-            "text": "Ending job: what sound does ง make here?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-ng",
-              "-n",
-              "ng"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ทราบ",
-            "text": "ทร usually begins with which sound?",
-            "answer": "s",
-            "options": [
-              "s",
-              "th",
-              "tr",
-              "r"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "อร่อย",
-            "options": [
-              "อร่อย",
-              "จริง",
-              "สร้าง",
-              "ทราบ"
             ]
           }
         ]
@@ -16925,48 +16927,37 @@
         "count": 18,
         "axes": {
           "final-job": 7,
-          "mcq": 7,
-          "listen": 1,
-          "final": 1,
           "live-dead": 1,
-          "vowel-order": 1
+          "listen": 1,
+          "mcq": 7,
+          "vowel-order": 1,
+          "final": 1
         },
         "prompts": [
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ง",
+            "prompt": "ษ",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
+            "answer": "-t",
             "options": [
-              "-ng",
-              "-m",
               "-n",
-              "ng"
+              "-m",
+              "s",
+              "-t"
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ฮ",
-            "text": "Which class?",
-            "answer": "Low class",
+            "prompt": "ศ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-t",
             "options": [
-              "Low class",
-              "High class",
-              "Mid class"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ภ",
-            "text": "Which class?",
-            "answer": "Low class",
-            "options": [
-              "Low class",
-              "Mid class",
-              "High class"
+              "s",
+              "-t",
+              "-m",
+              "-n"
             ]
           },
           {
@@ -16976,22 +16967,34 @@
             "text": "Ending job: what sound does this letter make at the end?",
             "answer": "-t",
             "options": [
-              "th",
-              "-t",
               "-m",
-              "-n"
+              "th",
+              "-n",
+              "-t"
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "live-dead",
             "kind": "mcq",
-            "prompt": "ศ",
-            "text": "Which class?",
-            "answer": "High class",
+            "prompt": "หญิง",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
             "options": [
-              "Low class",
-              "High class",
-              "Mid class"
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
+            "options": [
+              "-ng",
+              "-m",
+              "ng",
+              "-n"
             ]
           },
           {
@@ -17003,96 +17006,21 @@
             "options": [
               "เธอ",
               "ศูนย์",
-              "ผู้หญิง",
-              "ภาษา"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "-m",
-              "-n",
-              "-ng",
-              "n"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "หญิง",
-            "text": "Ending job: what sound does ง make here?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-ng",
-              "ng",
-              "-n"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ญ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "y",
-              "-n",
-              "-m",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ศ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "-m",
-              "-n",
-              "s",
-              "-t"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ภ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-p",
-            "options": [
-              "-p",
-              "-n",
-              "-m",
-              "ph"
+              "ภาษา",
+              "ผู้หญิง"
             ]
           },
           {
             "axis": "mcq",
             "kind": "mcq",
-            "prompt": "ธ",
-            "text": "Which class?",
-            "answer": "Low class",
+            "prompt": "ศูนย์",
+            "text": "In ศูนย์, what does ์ do?",
+            "answer": "Silences the marked letter",
             "options": [
-              "High class",
-              "Mid class",
-              "Low class"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "หญิง",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
-            "options": [
-              "Dead",
-              "Live"
+              "Silences the marked letter",
+              "Makes the tone high",
+              "Repeats the word",
+              "Makes the vowel short"
             ]
           },
           {
@@ -17109,16 +17037,102 @@
             ]
           },
           {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ฮ",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "High class",
+              "Low class",
+              "Mid class"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ญ",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "High class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ภ",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "Mid class",
+              "High class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ธ",
+            "text": "Which class?",
+            "answer": "Low class",
+            "options": [
+              "High class",
+              "Mid class",
+              "Low class"
+            ]
+          },
+          {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ษ",
+            "prompt": "ญ",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
+            "answer": "-n",
             "options": [
-              "-t",
-              "s",
+              "y",
               "-n",
-              "-m"
+              "-m",
+              "-ng"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ศ",
+            "text": "Which class?",
+            "answer": "High class",
+            "options": [
+              "High class",
+              "Mid class",
+              "Low class"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "หญิง",
+            "text": "Ending job: what sound does ง make here?",
+            "answer": "-ng",
+            "options": [
+              "-n",
+              "-m",
+              "-ng",
+              "ng"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ภ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-p",
+            "options": [
+              "-m",
+              "-n",
+              "-p",
+              "ph"
             ]
           },
           {
@@ -17134,28 +17148,16 @@
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ญ",
-            "text": "Which class?",
-            "answer": "Low class",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
             "options": [
-              "Low class",
-              "Mid class",
-              "High class"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ศูนย์",
-            "text": "In ศูนย์, what does ์ do?",
-            "answer": "Silences the marked letter",
-            "options": [
-              "Silences the marked letter",
-              "Makes the tone high",
-              "Repeats the word",
-              "Makes the vowel short"
+              "-n",
+              "-m",
+              "-ng",
+              "n"
             ]
           }
         ]
@@ -18004,129 +18006,15 @@
       "quiz": {
         "count": 10,
         "axes": {
-          "hidden-vowel": 1,
-          "word-reading": 1,
           "mcq": 2,
+          "live-dead": 1,
           "listen": 1,
           "final-job": 3,
-          "live-dead": 1,
-          "final": 1
+          "class-pick": 1,
+          "final": 1,
+          "hidden-vowel": 1
         },
         "prompts": [
-          {
-            "axis": "hidden-vowel",
-            "kind": "mcq",
-            "prompt": "สนุก",
-            "text": "Hidden vowel: what sound is added here?",
-            "answer": "hidden a",
-            "options": [
-              "written vowel",
-              "hidden o",
-              "no added vowel",
-              "hidden a"
-            ]
-          },
-          {
-            "axis": "word-reading",
-            "kind": "mcq",
-            "prompt": "กีฬา",
-            "text": "Mini decode: how does this read?",
-            "answer": "gii-laa",
-            "options": [
-              "gin",
-              "gii-laa",
-              "gaa",
-              "mii"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ฉ",
-            "text": "Which class?",
-            "answer": "High class",
-            "options": [
-              "Low class",
-              "Mid class",
-              "High class"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "สนุก",
-            "options": [
-              "ฉัน",
-              "ผู้ใหญ่",
-              "กีฬา",
-              "สนุก"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ฬ",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "l",
-              "-ng",
-              "-n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "live-dead",
-            "kind": "mcq",
-            "prompt": "ฉัน",
-            "text": "Sound feel: live or dead?",
-            "answer": "Live",
-            "options": [
-              "Dead",
-              "Live"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "n",
-              "-m",
-              "-n",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "-n",
-              "g",
-              "-m",
-              "-k"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "ฉัน",
-            "text": "Ending job: what sound does น make here?",
-            "answer": "-n",
-            "options": [
-              "-ng",
-              "-m",
-              "-n",
-              "n"
-            ]
-          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -18137,6 +18025,120 @@
               "High class",
               "Mid class",
               "Low class"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "ฉัน",
+            "text": "Sound feel: live or dead?",
+            "answer": "Live",
+            "options": [
+              "Live",
+              "Dead"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "สนุก",
+            "options": [
+              "กีฬา",
+              "ฉัน",
+              "ผู้ใหญ่",
+              "สนุก"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "-k",
+              "-n",
+              "g",
+              "-m"
+            ]
+          },
+          {
+            "axis": "class-pick",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Pick the low class consonant",
+            "answer": "ฬ",
+            "options": [
+              "ก",
+              "ฬ",
+              "ษ",
+              "ด"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "ฉัน",
+            "text": "Ending job: what sound does น make here?",
+            "answer": "-n",
+            "options": [
+              "n",
+              "-ng",
+              "-n",
+              "-m"
+            ]
+          },
+          {
+            "axis": "hidden-vowel",
+            "kind": "mcq",
+            "prompt": "สนุก",
+            "text": "Hidden vowel: what sound is added here?",
+            "answer": "hidden a",
+            "options": [
+              "no added vowel",
+              "hidden o",
+              "hidden a",
+              "written vowel"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ฬ",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "l",
+              "-m",
+              "-ng",
+              "-n"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ฉ",
+            "text": "Which class?",
+            "answer": "High class",
+            "options": [
+              "Mid class",
+              "Low class",
+              "High class"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "-ng",
+              "-m",
+              "-n",
+              "n"
             ]
           }
         ]
@@ -18985,9 +18987,10 @@
         "count": 10,
         "axes": {
           "live-dead": 1,
-          "vowel-order": 3,
+          "mcq": 3,
+          "word-reading": 1,
           "final-job": 1,
-          "mcq": 2,
+          "vowel-order": 1,
           "final": 1,
           "listen": 2
         },
@@ -18999,34 +19002,8 @@
             "text": "Sound feel: live or dead?",
             "answer": "Live",
             "options": [
-              "Live",
-              "Dead"
-            ]
-          },
-          {
-            "axis": "vowel-order",
-            "kind": "mcq",
-            "prompt": "เพื่อน",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "three pieces around the consonant",
-            "options": [
-              "written after, spoken after",
-              "wraps the consonant",
-              "written before, spoken after",
-              "three pieces around the consonant"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "น",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
-            "options": [
-              "n",
-              "-m",
-              "-ng",
-              "-n"
+              "Dead",
+              "Live"
             ]
           },
           {
@@ -19044,16 +19021,29 @@
             ]
           },
           {
-            "axis": "mcq",
+            "axis": "word-reading",
             "kind": "mcq",
-            "prompt": "เพื่อน",
-            "text": "What still drives the tone in a three-piece vowel?",
-            "answer": "The consonant class",
+            "prompt": "เสื้อ",
+            "text": "Mini decode: how does this read?",
+            "answer": "sûea",
             "options": [
-              "The consonant class",
-              "The vowel shape",
-              "The word length",
-              "The lesson number"
+              "mûea",
+              "sǐi",
+              "sûea",
+              "mǐi"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "น",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
+            "options": [
+              "-n",
+              "-ng",
+              "n",
+              "-m"
             ]
           },
           {
@@ -19065,21 +19055,8 @@
             "options": [
               "written after, spoken after",
               "wraps the consonant",
-              "three pieces around the consonant",
-              "written before, spoken after"
-            ]
-          },
-          {
-            "axis": "vowel-order",
-            "kind": "mcq",
-            "prompt": "ตัว",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "three pieces around the consonant",
-            "options": [
               "written before, spoken after",
-              "three pieces around the consonant",
-              "written after, spoken after",
-              "wraps the consonant"
+              "three pieces around the consonant"
             ]
           },
           {
@@ -19089,10 +19066,37 @@
             "text": "Ending job: what sound does น make here?",
             "answer": "-n",
             "options": [
+              "n",
               "-ng",
-              "-n",
               "-m",
-              "n"
+              "-n"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "เพื่อน",
+            "options": [
+              "เตื่อน",
+              "เตียน",
+              "เพียน",
+              "เพื่อน"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "เรียน",
+            "text": "<span class=\"classchip low\">Low class</span> เรียน has no tone mark. What tone do we read here?",
+            "answer": "Mid",
+            "options": [
+              "High",
+              "Low",
+              "Rising",
+              "Falling",
+              "Mid"
             ]
           },
           {
@@ -19104,21 +19108,21 @@
             "options": [
               "เพื่อน",
               "เรื่อน",
-              "เรียน",
-              "เพียน"
+              "เพียน",
+              "เรียน"
             ]
           },
           {
-            "axis": "listen",
+            "axis": "mcq",
             "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "เพื่อน",
+            "prompt": "เพื่อน",
+            "text": "What still drives the tone in a three-piece vowel?",
+            "answer": "The consonant class",
             "options": [
-              "เพื่อน",
-              "เตื่อน",
-              "เพียน",
-              "เตียน"
+              "The consonant class",
+              "The vowel shape",
+              "The word length",
+              "The lesson number"
             ]
           }
         ]
@@ -19985,10 +19989,88 @@
           "mcq": 4,
           "final-job": 2,
           "listen": 2,
-          "live-dead": 1,
-          "final": 1
+          "final": 1,
+          "live-dead": 1
         },
         "prompts": [
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ทางเข้า",
+            "text": "How does this sign read?",
+            "answer": "thaang-khâo",
+            "options": [
+              "thaang-khâo",
+              "thaang-òrk",
+              "hôrng-náam",
+              "rá-wang"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ก",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-k",
+            "options": [
+              "g",
+              "-n",
+              "-m",
+              "-k"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ระวัง",
+            "options": [
+              "ทางออก",
+              "ระวัง",
+              "ห้องน้ำ",
+              "ทางเข้า"
+            ]
+          },
+          {
+            "axis": "listen",
+            "kind": "mcq",
+            "prompt": "",
+            "text": "Listen: which Thai did you hear?",
+            "answer": "ทางออก",
+            "options": [
+              "ระวัง",
+              "ทางออก",
+              "ทางเข้า",
+              "ห้องน้ำ"
+            ]
+          },
+          {
+            "axis": "final",
+            "kind": "mcq",
+            "prompt": "วัง",
+            "text": "Ending job: what sound does ง make here?",
+            "answer": "-ng",
+            "options": [
+              "-n",
+              "ng",
+              "-ng",
+              "-m"
+            ]
+          },
+          {
+            "axis": "final-job",
+            "kind": "mcq",
+            "prompt": "ง",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-ng",
+            "options": [
+              "-m",
+              "-ng",
+              "-n",
+              "ng"
+            ]
+          },
           {
             "axis": "mcq",
             "kind": "mcq",
@@ -20014,32 +20096,6 @@
             ]
           },
           {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ก",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-k",
-            "options": [
-              "-m",
-              "-n",
-              "g",
-              "-k"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ระวัง",
-            "options": [
-              "ทางออก",
-              "ห้องน้ำ",
-              "ระวัง",
-              "ทางเข้า"
-            ]
-          },
-          {
             "axis": "mcq",
             "kind": "mcq",
             "prompt": "ๆ",
@@ -20059,60 +20115,8 @@
             "text": "Sound feel: live or dead?",
             "answer": "Live",
             "options": [
-              "Dead",
-              "Live"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ง",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-n",
-              "ng",
-              "-ng"
-            ]
-          },
-          {
-            "axis": "listen",
-            "kind": "mcq",
-            "prompt": "",
-            "text": "Listen: which Thai did you hear?",
-            "answer": "ทางออก",
-            "options": [
-              "ระวัง",
-              "ทางเข้า",
-              "ห้องน้ำ",
-              "ทางออก"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ทางเข้า",
-            "text": "How does this sign read?",
-            "answer": "thaang-khâo",
-            "options": [
-              "thaang-khâo",
-              "thaang-òrk",
-              "hôrng-náam",
-              "rá-wang"
-            ]
-          },
-          {
-            "axis": "final",
-            "kind": "mcq",
-            "prompt": "วัง",
-            "text": "Ending job: what sound does ง make here?",
-            "answer": "-ng",
-            "options": [
-              "-m",
-              "-n",
-              "-ng",
-              "ng"
+              "Live",
+              "Dead"
             ]
           }
         ]
@@ -20990,24 +20994,74 @@
         "count": 11,
         "axes": {
           "final-job": 3,
+          "live-dead": 1,
           "mcq": 3,
-          "final": 1,
-          "listen": 2,
           "vowel-order": 1,
-          "live-dead": 1
+          "final": 1,
+          "listen": 2
         },
         "prompts": [
           {
             "axis": "final-job",
             "kind": "mcq",
-            "prompt": "ร",
+            "prompt": "ด",
             "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-n",
+            "answer": "-t",
             "options": [
               "-n",
-              "-ng",
+              "-t",
               "-m",
-              "r"
+              "d"
+            ]
+          },
+          {
+            "axis": "live-dead",
+            "kind": "mcq",
+            "prompt": "เปิด",
+            "text": "Sound feel: live or dead?",
+            "answer": "Dead",
+            "options": [
+              "Dead",
+              "Live"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "ห้าม",
+            "text": "How does this sign read?",
+            "answer": "hâam",
+            "options": [
+              "hâam",
+              "bpèrt",
+              "bpìt",
+              "aa-hǎan"
+            ]
+          },
+          {
+            "axis": "mcq",
+            "kind": "mcq",
+            "prompt": "อาหาร",
+            "text": "How does this read?",
+            "answer": "aa-hǎan",
+            "options": [
+              "aa-hǎan",
+              "bpèrt",
+              "bpìt",
+              "hâam"
+            ]
+          },
+          {
+            "axis": "vowel-order",
+            "kind": "mcq",
+            "prompt": "เปิด",
+            "text": "Vowel order: how do you read the vowel shape here?",
+            "answer": "written before, spoken after",
+            "options": [
+              "written after, spoken after",
+              "three pieces around the consonant",
+              "wraps the consonant",
+              "written before, spoken after"
             ]
           },
           {
@@ -21031,10 +21085,10 @@
             "text": "Ending job: what sound does ด make here?",
             "answer": "-t",
             "options": [
-              "-n",
               "d",
-              "-m",
-              "-t"
+              "-t",
+              "-n",
+              "-m"
             ]
           },
           {
@@ -21042,12 +21096,12 @@
             "kind": "mcq",
             "prompt": "",
             "text": "Listen: which Thai did you hear?",
-            "answer": "ปิด",
+            "answer": "เปิด",
             "options": [
-              "หิด",
               "ปิด",
-              "เปิด",
-              "เหิด"
+              "เหิด",
+              "หิด",
+              "เปิด"
             ]
           },
           {
@@ -21058,61 +21112,9 @@
             "answer": "-m",
             "options": [
               "-ng",
-              "m",
-              "-n",
-              "-m"
-            ]
-          },
-          {
-            "axis": "vowel-order",
-            "kind": "mcq",
-            "prompt": "เปิด",
-            "text": "Vowel order: how do you read the vowel shape here?",
-            "answer": "written before, spoken after",
-            "options": [
-              "wraps the consonant",
-              "three pieces around the consonant",
-              "written before, spoken after",
-              "written after, spoken after"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "อาหาร",
-            "text": "How does this read?",
-            "answer": "aa-hǎan",
-            "options": [
-              "aa-hǎan",
-              "bpèrt",
-              "bpìt",
-              "hâam"
-            ]
-          },
-          {
-            "axis": "final-job",
-            "kind": "mcq",
-            "prompt": "ด",
-            "text": "Ending job: what sound does this letter make at the end?",
-            "answer": "-t",
-            "options": [
-              "-n",
               "-m",
-              "-t",
-              "d"
-            ]
-          },
-          {
-            "axis": "mcq",
-            "kind": "mcq",
-            "prompt": "ห้าม",
-            "text": "How does this sign read?",
-            "answer": "hâam",
-            "options": [
-              "hâam",
-              "bpèrt",
-              "bpìt",
-              "aa-hǎan"
+              "-n",
+              "m"
             ]
           },
           {
@@ -21120,23 +21122,25 @@
             "kind": "mcq",
             "prompt": "",
             "text": "Listen: which Thai did you hear?",
-            "answer": "เปิด",
+            "answer": "ปิด",
             "options": [
-              "เหิด",
               "ปิด",
+              "เปิด",
               "หิด",
-              "เปิด"
+              "เหิด"
             ]
           },
           {
-            "axis": "live-dead",
+            "axis": "final-job",
             "kind": "mcq",
-            "prompt": "เปิด",
-            "text": "Sound feel: live or dead?",
-            "answer": "Dead",
+            "prompt": "ร",
+            "text": "Ending job: what sound does this letter make at the end?",
+            "answer": "-n",
             "options": [
-              "Live",
-              "Dead"
+              "-n",
+              "-ng",
+              "r",
+              "-m"
             ]
           }
         ]

@@ -1,53 +1,53 @@
-# Source Review Bundle Manifest
+# Current Source Review Manifest
 
-Purpose: identify the current source of truth for external review, separate generated evidence from stale/local artifacts, and avoid uploading noisy or misleading files.
+Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v5.2.6`.
+Verified current app version: `v5.4.5`.
+Verified current service-worker cache: `aan-thai-v5-4-5`.
 
-## Include: Current Source Of Truth
+## Current Tracked Source
 
-- `index.html` - the shipped single-file PWA: HTML shell, CSS, curriculum data, state/migration logic, import/export, validators, lesson player, review engines and UI.
+- `index.html` - shipped single-file PWA: HTML shell, CSS, curriculum data, state/migration logic, import/export, validators, lesson player, review engines and UI.
 - `manifest.json` - PWA metadata, icons, standalone display, portrait orientation and theme colours.
-- `sw.js` - service worker using network-first shell refresh and cache-first static assets; current cache name is `aan-thai-v5-2-6`.
+- `sw.js` - service worker using network-first shell refresh and cache-first static assets.
 - `vercel.json` - static Vercel deployment configuration with no build step and must-revalidate headers for shell files.
-- `icon-180.png`, `icon-192.png`, `icon-512.png` - local PWA icon assets.
+- `icon-180.png`, `icon-192.png`, `icon-512.png` - PWA icon assets.
 - `AGENTS.md` - canonical project instructions and current-state documentation.
-- `CLAUDE.md` - local mirror of `AGENTS.md`; keep synchronized when present.
+- `CLAUDE.md` - tracked local mirror of `AGENTS.md`; keep synchronized while it remains tracked.
 - `CHANGELOG.md` - release and stabilisation history.
 - `README.md` - concise project summary and local/deploy instructions.
-- `tools/phase1-audit.js` - Node extractor/validator for the embedded app script and generated Phase 1 audit.
+- `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
 
-## Include: Current Audit Evidence
+## Current Audit Evidence
 
 - `docs/phase1_audit.md` - generated readable Phase 1 audit from the current `index.html`.
 - `docs/phase1_audit.json` - generated machine-readable Phase 1 audit data from the current `index.html`.
 - `docs/smoke_test_checklist.md` - lightweight manual smoke checklist for import, migration, offline and installed-PWA update scenarios.
-- `THAI_APP_AUDIT_PACK.md` - human-readable external audit preparation notes for the current repo state.
-- `FILE_MANIFEST.md` - this source-review bundle manifest.
+- `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
+- `FILE_MANIFEST.md` - this current-source manifest.
 
-## Historical Or Local-Only: Do Not Treat As Current Truth
+## Ignored Local Artifacts
 
-- `release-review-packet/` - old v5.1 senior-developer review handoff; useful history only.
-- `thai-pwa-v5.1-senior-dev-review-2026-06-26.zip` - old v5.1 review packet zip; not current source.
-- `PROJECT_NOTES.md` - older local project notes, stale relative to v5.2.6.
-- `UPDATE_idea-engine_thai-app.md` - older idea-engine addendum, not shipped app behaviour.
-- `look-preview.html` - local visual preview artifact, likely stale relative to the current app.
-- `idea-engine/` - local proposal-generation and review harness. Its prompts, candidate logs and archived results are not shipped app content.
+These may exist in the working folder but are not current tracked source:
+
+- `PROJECT_NOTES.md` - older local notes.
+- `UPDATE_idea-engine_thai-app.md` - older idea-engine addendum.
+- `look-preview.html` - local visual preview artifact.
+- `idea-engine/` - local proposal/review harness and generated outputs.
 - `.vercel/` - local Vercel project binding metadata.
 - `.DS_Store` - macOS metadata.
 
-## Exclude From Future Uploaded Audit Zips
+## Exclude From Review Zips
 
 - `.git/` and any git internals.
 - `__MACOSX/`, `.DS_Store` and other OS metadata.
-- `node_modules/`, package-manager caches and conventional build outputs such as `dist/`, `build/` and `coverage/`.
-- Nested old zips or handoff bundles, including `*.zip` unless the zip is the actual deliverable being created.
-- Stale review packets such as `release-review-packet/` unless the review explicitly asks for historical comparison.
-- Local experiment/proposal artifacts under `idea-engine/` unless the review scope is the idea engine itself.
+- `node_modules/`, package-manager caches and conventional build outputs such as `dist/`, `build` and `coverage`.
+- Nested old zips or handoff bundles, unless the zip is the actual deliverable.
+- Ignored local notes, previews or proposal artifacts unless the review explicitly asks for historical comparison.
 
-## Recommended Minimal External Source Bundle
+## Minimal External Source Bundle
 
-For a clean current-source audit, include only:
+For a clean current-source audit, include:
 
 - `index.html`
 - `manifest.json`

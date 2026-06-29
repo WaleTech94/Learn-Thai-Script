@@ -24,6 +24,27 @@ function appScript(html){
   return match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for phase1 audit */\n');
 }
 
+function seededRandom(seedText){
+  let seed = 0x811c9dc5;
+  String(seedText).split('').forEach(ch=>{
+    seed ^= ch.charCodeAt(0);
+    seed = Math.imul(seed, 0x01000193) >>> 0;
+  });
+  return function random(){
+    seed = (seed + 0x6D2B79F5) >>> 0;
+    let t = seed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function deterministicMath(seedText){
+  const math = Object.create(Math);
+  math.random = seededRandom(seedText);
+  return math;
+}
+
 function stubElement(){
   return {
     style:{},
@@ -46,6 +67,7 @@ function stubElement(){
 }
 
 function sandbox(){
+  const math = deterministicMath('phase1-audit-v2');
   const doc = {
     body:{style:{}, classList:{add(){}, remove(){}, toggle(){}}},
     documentElement:{style:{}},
@@ -61,7 +83,7 @@ function sandbox(){
     setTimeout,
     clearTimeout,
     Date,
-    Math,
+    Math:math,
     JSON,
     RegExp,
     navigator:{},
@@ -727,7 +749,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.4.4 keeps the v5.4.1 automatic weak-correct timing and the v5.4.2 streamlined Today/Course Map review copy, then makes routine review correct-feedback dwell adaptive to the visible green text. Short correct feedback still uses a 1-second minimum; longer green answer text gets more reading time up to a cap. Learner-facing task cards use compact status such as Clear, 29 due, Review first and Done instead of explaining hard caps, default slices or catch-up policy. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v5.4.5 keeps the v5.4.4 learner-facing review behaviour: automatic weak-correct timing, streamlined Today/Course Map review copy and adaptive routine review correct-feedback dwell. Short correct feedback still uses a 1-second minimum; longer green answer text gets more reading time up to a cap. Learner-facing task cards use compact status such as Clear, 29 due, Review first and Done instead of explaining hard caps, default slices or catch-up policy. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -819,9 +841,26 @@ function renderMarkdown(audit){
   return lines.join('\n');
 }
 
+function stripGeneratedAt(audit){
+  const copy = JSON.parse(JSON.stringify(audit));
+  delete copy.generatedAt;
+  return copy;
+}
+
+function preserveGeneratedAtIfContentSame(audit){
+  try{
+    const previous = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8'));
+    if(JSON.stringify(stripGeneratedAt(previous)) === JSON.stringify(stripGeneratedAt(audit)) && previous.generatedAt){
+      audit.generatedAt = previous.generatedAt;
+    }
+  }catch(e){}
+  return audit;
+}
+
 const html = indexHtml();
 const box = sandbox();
 vm.runInNewContext(appScript(html) + auditSnippet(appVersionFromHtml(html)), box, {filename:INDEX});
+box.__phase1Audit = preserveGeneratedAtIfContentSame(box.__phase1Audit);
 fs.mkdirSync(DOCS_DIR, {recursive:true});
 fs.writeFileSync(JSON_OUT, JSON.stringify(box.__phase1Audit, null, 2));
 fs.writeFileSync(MD_OUT, renderMarkdown(box.__phase1Audit));

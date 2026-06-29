@@ -532,18 +532,11 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .juice #token-chip{ animation:gpulse 2.6s ease-in-out infinite; }
 @keyframes gpulse{ 0%,100%{ box-shadow:0 0 0 rgba(255,210,74,0);} 50%{ box-shadow:0 0 16px rgba(255,210,74,.5);} }
 #statusbar-scrim{transition:background .2s}
-.album{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.cap{aspect-ratio:1;border-radius:13px;background:var(--surface2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:26px}
-.cap .cnt{font-size:10px;color:var(--muted)}
-.cap.unowned{opacity:.3;font-size:18px;color:var(--muted)}
 .shop-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .shop-row:last-child{border-bottom:none}
 .shop-row .s-meta{flex:1;min-width:0}
 .shop-row .s-t{font-family:'Mitr',sans-serif;font-weight:500;font-size:15px}
 .shop-row .s-d{font-size:12px;color:var(--muted)}
-.pull-stage{text-align:center;padding:18px 0}
-.pull-stage .pull-e{font-size:74px;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
-@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
 
 /* ---------- v2.1 gamification ---------- */
 .chips{display:flex;gap:8px;align-items:center}
@@ -722,7 +715,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.4.4</span>
+      <span class="version-pill">v5.4.5</span>
     </header>
 
     <section class="today-focus">
@@ -815,7 +808,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.4 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.5 (PWA)</div>
     </div>
   </section>
 
@@ -1708,33 +1701,6 @@ const PHRASES = [
   {cat:"Survival", lvl:3, thai:"เรียกตำรวจ", tr:"rîak dtam-rùat", en:"call the police"},
   {cat:"Survival", lvl:3, thai:"ไฟไหม้", tr:"fai mâi", en:"fire!", note:"shout it - you won't have time to be shy"},
   {cat:"Survival", lvl:3, thai:"โรงพยาบาลอยู่ไหน", tr:"rohng phá-yaa-baan yùu nǎi", en:"where's the hospital?"}
-];
-
-const GACHA = [
- {id:"tuktuk", e:"🛺", thai:"ตุ๊กตุ๊ก", tr:"dtúk-dtúk", en:"tuk-tuk", fact:"named after its two-stroke engine sound"},
- {id:"taxi", e:"🚕", thai:"แท็กซี่", tr:"tháek-sîi", en:"taxi", fact:"the pink ones are individually owned"},
- {id:"mango", e:"🥭", thai:"ข้าวเหนียวมะม่วง", tr:"khâao-nǐao má-mûang", en:"mango sticky rice", fact:"best April-June, peak mango season"},
- {id:"soidog", e:"🐕", thai:"หมาจรจัด", tr:"mǎa-jorn-jàt", en:"soi dog", fact:"the true guardians of every soi"},
- {id:"seven", e:"🏪", thai:"เซเว่น", tr:"see-wên", en:"7-Eleven", fact:"over 14,000 branches - more than Japan"},
- {id:"bts", e:"🚝", thai:"รถไฟฟ้า", tr:"rót-fai-fáa", en:"the BTS", fact:"literally 'electric vehicle' - sky train"},
- {id:"market", e:"🏮", thai:"ตลาดนัด", tr:"dtà-làat-nát", en:"pop-up market", fact:"นัด = appointment: a market by appointment"},
- {id:"moto", e:"🏍️", thai:"มอเตอร์ไซค์", tr:"mor-dtooe-sai", en:"motorbike taxi", fact:"orange vests, soi-end queues, no fear"},
- {id:"somtam", e:"🥗", thai:"ส้มตำ", tr:"sôm-dtam", en:"papaya salad", fact:"ตำ = to pound, hence the mortar thud"},
- {id:"chayen", e:"🧋", thai:"ชาเย็น", tr:"chaa-yen", en:"Thai iced tea", fact:"that orange colour is the condensed milk"},
- {id:"wat", e:"🛕", thai:"วัด", tr:"wát", en:"temple", fact:"40,000+ across Thailand"},
- {id:"chang", e:"🐘", thai:"ช้าง", tr:"cháang", en:"elephant", fact:"national animal; the white ones are royal"},
- {id:"durian", e:"🍈", thai:"ทุเรียน", tr:"thú-rian", en:"durian", fact:"banned on the BTS, beloved everywhere else"},
- {id:"cart", e:"🛒", thai:"รถเข็น", tr:"rót-khěn", en:"street cart", fact:"a kitchen on wheels - เข็น = to push"},
- {id:"monk", e:"🧘", thai:"พระ", tr:"phrá", en:"monk", fact:"dawn alms rounds, barefoot, every day"},
- {id:"cat", e:"🐈", thai:"แมวไทย", tr:"maaeo-thai", en:"Siamese cat", fact:"the original Thai export"},
- {id:"gecko", e:"🦎", thai:"ตุ๊กแก", tr:"dtúk-gaae", en:"gecko", fact:"named after its call - listen tonight"},
- {id:"rain", e:"🌧️", thai:"ฝนตก", tr:"fǒn-dtòk", en:"rainstorm", fact:"literally 'rain falls' - daily, May to October"},
- {id:"boat", e:"🛶", thai:"เรือหางยาว", tr:"ruea-hǎang-yaao", en:"longtail boat", fact:"a car engine on a pole, somehow"},
- {id:"garland", e:"💮", thai:"พวงมาลัย", tr:"phuang-maa-lai", en:"jasmine garland", fact:"also the word for a steering wheel"},
- {id:"gaiyang", e:"🍗", thai:"ไก่ย่าง", tr:"gài-yâang", en:"grilled chicken", fact:"best bought from a smoking roadside drum"},
- {id:"traffic", e:"🚦", thai:"รถติด", tr:"rót-dtìt", en:"traffic jam", fact:"'vehicle stuck' - Bangkok's fourth season"},
- {id:"park", e:"🌳", thai:"สวนลุม", tr:"sǔan-lum", en:"Lumphini Park", fact:"home to monitor lizards the size of dogs"},
- {id:"river", e:"🌊", thai:"แม่น้ำ", tr:"mâae-náam", en:"river", fact:"literally 'mother of waters'"}
 ];
 
 const TEACHER = [
@@ -6352,7 +6318,6 @@ el('streak-shop-btn').addEventListener('click', openShop);
 
 function renderShop(){
   setProg(0);
-  if(!state.gacha) state.gacha = {};
   if(!state.themes) state.themes = [];
   if(!state.titles) state.titles = [];
   el('stage').innerHTML = `
@@ -6424,41 +6389,6 @@ function renderShop(){
   const off = el('title-off');
   if(off) off.addEventListener('click', ()=>{ state.title = null; saveState(); renderShop(); renderTitle(); });
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
-}
-function renderAlbum(){
-  el('album').innerHTML = GACHA.map(g=>{
-    const n = state.gacha[g.id] || 0;
-    return n
-      ? `<button class="cap" data-cap="${g.id}">${g.e}<span class="cnt">${g.thai}</span></button>`
-      : `<div class="cap unowned">?</div>`;
-  }).join('');
-  el('album').querySelectorAll('[data-cap]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const g = GACHA.find(x=>x.id===b.dataset.cap);
-      speak(g.thai);
-      toast(g.thai + ' · ' + g.tr + ' · ' + g.en);
-    });
-  });
-}
-function doPull(){
-  if((state.baht||0) < 10){ toast('Not enough tokens. Need 10 💎.'); return; }
-  award(-10);
-  const g = GACHA[Math.floor(Math.random()*GACHA.length)];
-  const dupe = !!state.gacha[g.id];
-  state.gacha[g.id] = (state.gacha[g.id]||0) + 1;
-  if(dupe) award(3);
-  saveState();
-  el('pull-zone').innerHTML = `
-    <div class="pull-stage">
-      <div class="pull-e">${g.e}</div>
-      <div class="name-thai" style="font-size:22px">${g.thai}</div>
-      <div class="translit" style="color:var(--blue)">${g.tr} · ${g.en}</div>
-      <div class="sub" style="font-size:13px;margin-top:4px">${g.fact}</div>
-      ${dupe?'<div class="sub" style="font-size:12px;color:var(--low);margin-top:4px">Duplicate. 3 💎 refunded.</div>':''}
-    </div>`;
-  speak(g.thai);
-  renderAlbum();
-  el('stage').querySelector('.sub').textContent = 'Balance: ' + state.baht + ' 💎';
 }
 function renderTitle(){
   const elT = el('user-title');

@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.5 - 2026-06-29
+
+- Made `tools/phase1-audit.js` deterministic for generated quiz/audit extraction by using a seeded `Math.random` inside the audit sandbox.
+- Made audit generation idempotent when substantive content is unchanged by preserving the previous `generatedAt` timestamp on identical regenerated audits.
+- Removed unreachable legacy collectible album/pull code and data from `index.html`; older `gacha` progress fields remain accepted by progress import shape checks.
+- Fixed source-review hygiene: `CLAUDE.md` is no longer ignored while tracked, `FILE_MANIFEST.md` / `THAI_APP_AUDIT_PACK.md` now describe the current tracked source, and `README.md` points at current review artifacts.
+- Regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.5` and 35 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-5` for the versioned shell.
+
 ## v5.4.4 - 2026-06-29
 
 - Made objective routine review correct-feedback dwell adaptive to the visible green text after answering: short `Correct` feedback still uses a 1-second minimum, while longer green answer text gets more reading time up to a cap.
