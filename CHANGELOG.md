@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.2 - 2026-06-29
+
+- Streamlined learner-facing Today and Course Map review copy: task cards now use short states such as `Clear`, `29 due`, `Review first`, `Done`, and `Practice` instead of explaining hard caps, default slices or catch-up policy.
+- Shortened review-related toasts and blocker text so taps do not surface scheduler paragraphs.
+- Added `validateV542StreamlinedCopyContracts()` to keep verbose scheduler phrases out of learner-facing Today/path functions.
+- Regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v5.4.2` and 33 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-2` for the versioned shell.
+
 ## v5.4.1 - 2026-06-28
 
 - Removed the manual post-correct "Felt shaky / Solid" fork from objective routine review cards; correct routine MCQ answers now advance without the extra decision.

@@ -722,7 +722,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:'Mitr',sans-serif;display:none"></div>
       </div>
-      <span class="version-pill">v5.4.1</span>
+      <span class="version-pill">v5.4.2</span>
     </header>
 
     <section class="today-focus">
@@ -738,17 +738,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="task-button" id="today-review-btn">
           <span class="task-kicker" id="today-review-state">Step 1</span>
           <span class="task-title" id="today-review-title">Review</span>
-          <span class="task-detail" id="today-review-detail">Warm-up due cards</span>
+          <span class="task-detail" id="today-review-detail">Due cards</span>
         </button>
         <button class="task-button" id="today-main-btn">
           <span class="task-kicker" id="today-main-state">Step 2</span>
           <span class="task-title" id="today-main-title">Main task</span>
-          <span class="task-detail" id="today-main-detail">Lesson, mastery check or consolidation</span>
+          <span class="task-detail" id="today-main-detail">Lesson/check</span>
         </button>
         <button class="task-button" id="today-depth-btn">
           <span class="task-kicker" id="today-depth-state">Step 3</span>
           <span class="task-title" id="today-depth-title">Practice block</span>
-          <span class="task-detail" id="today-depth-detail">Tone, class, spelling, story or listening</span>
+          <span class="task-detail" id="today-depth-detail">Practice</span>
         </button>
         <button class="task-button end" id="end-day-btn">
           <span class="task-kicker" id="end-day-state">Step 4</span>
@@ -815,7 +815,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.1 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.2 (PWA)</div>
     </div>
   </section>
 
@@ -2390,12 +2390,12 @@ function getLessonBlocker(lessonId, target){
 function lessonAvailabilityMessage(L){
   if(!L) return '';
   const blocker = getLessonBlocker(L.id);
-  if(blocker) return blocker.explanation;
+  if(blocker) return shortBlockerDetail(blocker);
   const due = srsDue().length;
-  if(reviewLoadBand(due) === 'recommend') return 'Lesson ' + lessonNum(L.id) + ' is available. You have ' + due + ' due review items, but this is below the hard cap. Review is recommended before starting.';
+  if(reviewLoadBand(due) === 'recommend') return 'Review first.';
   const retention = nextRetentionCheck();
-  if(retention) return 'Lesson ' + lessonNum(L.id) + ' is available. A delayed check is due, but it is recommended rather than locked.';
-  return 'Lesson ' + lessonNum(L.id) + ' is available.';
+  if(retention) return 'Check due.';
+  return 'Ready.';
 }
 function routeBlockerAction(blocker){
   if(!blocker) return;
@@ -2410,6 +2410,24 @@ function routeBlockerAction(blocker){
     if(L) startLessonFromUser(L);
     return;
   }
+}
+function shortBlockerTitle(blocker){
+  if(!blocker) return 'Locked';
+  if(blocker.code === 'review-overload') return 'Review first';
+  if(blocker.code === 'foundation-refresh') return 'Refresh';
+  if(blocker.code === 'missing-prerequisite') return 'Previous lesson';
+  if(blocker.code === 'invalid-state') return 'Reload';
+  if(blocker.code === 'mastery-check') return 'Mastery check';
+  return blocker.title || 'Locked';
+}
+function shortBlockerDetail(blocker){
+  if(!blocker) return 'Locked.';
+  if(blocker.code === 'review-overload') return 'Deck high.';
+  if(blocker.code === 'foundation-refresh') return 'Endings first.';
+  if(blocker.code === 'missing-prerequisite') return 'Lesson needed.';
+  if(blocker.code === 'invalid-state') return 'Reload app.';
+  if(blocker.code === 'mastery-check') return 'Check needed.';
+  return 'Locked.';
 }
 function ensureDay(){
   const t = todayStr();
@@ -2462,7 +2480,7 @@ function governorPhase(){
 function newLessonBlockReason(L){
   if(!L || state.done.includes(L.id)) return '';
   const blocker = getLessonBlocker(L.id);
-  return blocker ? blocker.explanation : '';
+  return blocker ? shortBlockerDetail(blocker) : '';
 }
 function startDepthBlock(){
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
@@ -2481,7 +2499,7 @@ function startLessonFromUser(L){
   const earlyBonus = isEarlyBonusLesson(L);
   const blocker = L && !state.done.includes(L.id) ? getLessonBlocker(L.id) : null;
   if(blocker){
-    toast(blocker.explanation);
+    toast(shortBlockerDetail(blocker));
     routeBlockerAction(blocker);
     return;
   }
@@ -2785,7 +2803,7 @@ function goTodayReviewTask(){
   const left = Math.max(0, due.length - session.length);
   if(left){
     const label = shape.recovery ? 'Recovery slice' : shape.lowEnergy ? 'Lighter review' : 'Today review';
-    toast(label + ': ' + session.length + ' now. Full ' + REVIEW_MANUAL_CAP + '-card catch-up stays in Practice.');
+    toast(label + ': ' + session.length + ' now.');
   }
   startFlashcards(session, {todayReview:true, recovery:!!shape.recovery, lowEnergy:shape.lowEnergy});
 }
@@ -2793,7 +2811,7 @@ function routeToMainTask(){
   const d = ensureDay();
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const next = nextLesson(), blocker = next && getLessonBlocker(next.id);
-  if(blocker){ toast(blocker.explanation); routeBlockerAction(blocker); return; }
+  if(blocker){ toast(shortBlockerDetail(blocker)); routeBlockerAction(blocker); return; }
   const n = mainTaskNode();
   if(n){ launchNode(n); return; }
   const drawer = el('course-map-drawer');
@@ -2967,87 +2985,85 @@ function renderTodayActions(){
   if(refreshBtn) refreshBtn.style.display = refreshRequired ? '' : 'none';
   if(refreshRequired){
     if(el('course-day-label')) el('course-day-label').textContent = 'UPDATED FOUNDATIONS';
-    el('today-heading').textContent = 'Relearn updated foundations';
-    el('today-brief').textContent = 'Ending-job cards have been added to older lessons. Complete this refresh before normal review resumes.';
+    el('today-heading').textContent = 'Refresh';
+    el('today-brief').textContent = 'Endings first.';
     setTaskButton('today-review-btn', {
       state:'Locked',
-      title:'Review paused',
-      detail:'Seeded ending-job cards unlock after the refresh.',
+      title:'Review',
+      detail:'Paused.',
       kind:'locked'
     });
     setTaskButton('today-main-btn', {
       state:'Required',
       title:'Endings refresh',
-      detail:'Lesson 2, Lesson 3 and Lesson 5 ending jobs.',
+      detail:'Ending jobs.',
       kind:'primary'
     });
     setTaskButton('today-depth-btn', {
       state:'Locked',
-      title:'Practice resumes after refresh',
-      detail:'Complete updated foundations first.',
+      title:'Practice',
+      detail:'Refresh first.',
       kind:'locked'
     });
     const end = el('end-day-btn');
 	    if(end){
 	      end.className = 'task-button end locked';
 	      el('end-day-state').textContent = 'Locked';
-	      el('end-day-detail').textContent = 'Finish the updated foundations refresh first.';
+	      el('end-day-detail').textContent = 'Refresh first.';
 	    }
 	    renderDailyWinCard();
 	    syncTabRecommendations();
 	    return;
 	  }
   if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
-  el('today-heading').textContent = recovery ? "Today's recovery" : d.type === 'C' ? "Today's consolidation" : early ? "Today's foundation" : "Today's route";
+  el('today-heading').textContent = recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
   el('today-brief').textContent = recovery
-    ? 'Start with a bounded recovery review after ' + recovery.gapDays + ' days away. New lessons stay available only when the normal blockers allow them.'
-    : lessonBlocker ? lessonBlocker.explanation : early ? 'Shorter foundation day. Review is useful, but only true blockers stop the next lesson.' : 'Review and delayed checks are recommended when due. Only the named blocker can stop the next lesson.';
+    ? 'Review first.'
+    : lessonBlocker ? shortBlockerDetail(lessonBlocker) : early ? 'Start at top.' : 'Start at top.';
   setTaskButton('today-review-btn', {
     state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
-    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review due cards',
-    detail: reviewDone ? 'Your current deck is clear for today.'
-      : band === 'hard' ? due + ' cards due. This is review overload: reduce the deck below ' + REVIEW_HARD_CAP + ' before a new lesson.'
-      : recoveryStillDue ? due + ' cards due. Do ' + shape.target + ' recovery cards now; full ' + REVIEW_MANUAL_CAP + '-card catch-up stays in Practice.'
-      : recovery ? due + ' card' + (due===1?'':'s') + ' still due. Recovery slice done; full catch-up is optional in Practice.'
-      : band === 'recommend' ? due + ' cards due. Today serves up to ' + shape.target + ' by default; full catch-up stays in Practice.'
-      : due + ' card' + (due===1?'':'s') + ' due. You can review now or continue.',
+    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
+    detail: reviewDone ? 'Clear.'
+      : recoveryStillDue ? shape.target + ' now.'
+      : recovery ? due + ' left.'
+      : due + ' due.',
     kind: !reviewDone && (band === 'hard' || recoveryStillDue) ? 'primary' : reviewDone ? 'done' : band === 'recommend' ? '' : ''
   });
   let mainTitle = d.type === 'C' ? 'Consolidate' : 'Main task';
-  let mainDetail = d.type === 'C' ? 'Use a current-material block before any extra practice.' : 'Lesson, class primer or mastery check.';
+  let mainDetail = d.type === 'C' ? 'Current work.' : 'Lesson/check.';
   if(main){
     mainTitle = main.label || mainTitle;
     mainDetail = main.sub || mainDetail;
   }
   if(next){
     if(lessonBlocker){
-      mainTitle = lessonBlocker.title;
-      mainDetail = lessonBlocker.explanation;
+      mainTitle = shortBlockerTitle(lessonBlocker);
+      mainDetail = shortBlockerDetail(lessonBlocker);
     } else if(recovery && main && main.lesson){
-      mainTitle = 'Lesson ' + lessonNum(next.id) + ' available later';
-      mainDetail = 'Safe to start if you choose, but recovery review is the default after this gap.';
+      mainTitle = 'Lesson ' + lessonNum(next.id);
+      mainDetail = 'Optional.';
     } else if(main && main.lesson){
       mainDetail = lessonAvailabilityMessage(next);
     }
   }
   setTaskButton('today-main-btn', {
     state: mainDone ? 'Done' : lessonBlocker ? 'Locked' : recovery && main && main.lesson ? 'Optional' : 'Next',
-    title: mainDone ? (d.ret ? 'Delayed check complete' : d.type === 'C' ? 'Consolidation started' : 'Main task complete') : mainTitle,
-    detail: mainDone ? 'Choose: review, start the next lesson anyway, contrast practice, or stop for today.' : mainDetail,
+    title: mainDone ? (d.ret ? 'Check done' : d.type === 'C' ? 'Started' : 'Main done') : mainTitle,
+    detail: mainDone ? 'Done.' : mainDetail,
     kind: !mainDone && missing === 'main' && !lessonBlocker && !(recovery && main && main.lesson) ? 'primary' : mainDone ? 'done' : lessonBlocker ? 'locked' : ''
   });
   const depthTask = todayDepthTask();
   setTaskButton('today-depth-btn', {
     state: depthDone ? 'Done' : (!mainDone || band === 'hard') ? 'Locked' : 'Next',
-    title: depthDone ? 'Practice complete' : (depthTask ? depthTask.title : 'Practice block'),
-    detail: depthDone ? (d.lite ? 'Optional practice moved to tomorrow.' : 'Practice is done for today.') : (depthTask ? depthTask.detail : 'Story, spelling, tone, class or listening practice.'),
+    title: depthDone ? 'Practice done' : (depthTask ? depthTask.title : 'Practice'),
+    detail: depthDone ? (d.lite ? 'Tomorrow.' : 'Done.') : (depthTask ? 'Practice.' : 'Open.'),
     kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || band === 'hard') ? 'locked' : ''
   });
   const end = el('end-day-btn');
 	  if(end){
 	    end.className = 'task-button end' + (!missing ? ' primary' : ' locked');
 	    el('end-day-state').textContent = missing ? 'Locked' : 'Ready';
-		    el('end-day-detail').textContent = missing ? 'Finish the highlighted task first.' : 'Mastery beats breadth. Stop here for today.';
+		    el('end-day-detail').textContent = missing ? 'Finish task.' : 'Done.';
 		  }
 	  renderDailyWinCard();
 	  syncTabRecommendations();
@@ -3066,56 +3082,56 @@ const DAILY_PRACTICE = [
   {id:'mission', title:'Mission', gate:'l3', go:()=>showBangkokMissions()},
 ];
 function practiceState(p){
-  if(p.gate && !state.done.includes(p.gate)) return {cls:'locked', text:'Locked until Lesson ' + p.gate.slice(1)};
+  if(p.gate && !state.done.includes(p.gate)) return {cls:'locked', text:'Lesson ' + p.gate.slice(1)};
   if(p.id === 'review'){
     const due = srsDue().length;
     if(due) return {cls:'recommended', text:due + ' due'};
-    return {cls:'done', text:'Clear today'};
+    return {cls:'done', text:'Clear'};
   }
-	  if(p.id === 'reading'){
+  if(p.id === 'reading'){
     const active = activeDepthTask();
-    if(active && active.id === 'reading') return {cls:'recommended', text:"Today's practice"};
-    if(nextUnreadStory()) return {cls:'', text:'Story ready'};
-	    const readToday = Object.values(state.stories||{}).includes(todayStr());
-	    if(readToday) return {cls:'done', text:'Done today'};
-	  }
+    if(active && active.id === 'reading') return {cls:'recommended', text:'Today'};
+    if(nextUnreadStory()) return {cls:'', text:'Story'};
+    const readToday = Object.values(state.stories||{}).includes(todayStr());
+    if(readToday) return {cls:'done', text:'Done'};
+  }
   if(p.id === 'fluency'){
     const active = activeDepthTask();
-    if(active && active.id === 'fluency') return {cls:'recommended', text:"Today's practice"};
+    if(active && active.id === 'fluency') return {cls:'recommended', text:'Today'};
     const nextRead = nextFluencyRead();
-    if(nextRead) return {cls:'', text:nextRead.title};
+    if(nextRead) return {cls:'', text:'Ready'};
     const doneN = FLUENCY_READS.filter(read=>fluencyReadDone(read)).length;
-    return doneN >= FLUENCY_READS.length ? {cls:'done', text:'All banked'} : {cls:'', text:'Available'};
+    return doneN >= FLUENCY_READS.length ? {cls:'done', text:'Done'} : {cls:'', text:'Open'};
   }
   if(p.id === 'contrast'){
-    if(contrastDoneToday()) return {cls:'done', text:'Done today'};
-    if(activeDepthTask() && activeDepthTask().id === 'contrast') return {cls:'recommended', text:"Today's practice"};
-    return contrastBlocks().length ? {cls:'', text:'Available'} : {cls:'locked', text:'Locked'};
+    if(contrastDoneToday()) return {cls:'done', text:'Done'};
+    if(activeDepthTask() && activeDepthTask().id === 'contrast') return {cls:'recommended', text:'Today'};
+    return contrastBlocks().length ? {cls:'', text:'Open'} : {cls:'locked', text:'Locked'};
   }
   if(p.id === 'mission'){
-    if(missionDoneToday()) return {cls:'done', text:'Done today'};
-    if(activeDepthTask() && activeDepthTask().id === 'mission') return {cls:'recommended', text:"Today's practice"};
-    return bangkokMissions().length ? {cls:'', text:'Available'} : {cls:'locked', text:'Locked'};
+    if(missionDoneToday()) return {cls:'done', text:'Done'};
+    if(activeDepthTask() && activeDepthTask().id === 'mission') return {cls:'recommended', text:'Today'};
+    return bangkokMissions().length ? {cls:'', text:'Open'} : {cls:'locked', text:'Locked'};
   }
-	  const log = state.drillLog && state.drillLog[p.id];
-	  if(log && log.last === todayStr()) return {cls:'done', text:'Done today'};
+  const log = state.drillLog && state.drillLog[p.id];
+  if(log && log.last === todayStr()) return {cls:'done', text:'Done'};
   const active = activeDepthTask();
-  if(active && active.id === p.id) return {cls:'recommended', text:"Today's practice"};
-	  return {cls:'', text:'Available'};
-	}
+  if(active && active.id === p.id) return {cls:'recommended', text:'Today'};
+  return {cls:'', text:'Open'};
+}
 function renderDailyPractice(){
   const host = el('daily-practice'); if(!host) return;
 		  const missing = dailyMissingStep();
 		  const active = activeDepthTask();
 		  const task = active || todayDepthTask();
 		  const due = srsDue().length, band = reviewLoadBand(due), shape = todayReviewShape();
-		  el('practice-next').textContent = band === 'hard' ? 'review first'
-		    : shape.recovery && recoveryReviewStillDue() ? 'recovery review first'
-		    : band === 'recommend' ? 'review recommended'
-		    : missing === 'main' ? 'main first'
-		    : active ? 'next: ' + active.title
-		    : task ? 'available: ' + task.title
-	    : 'all open';
+		  el('practice-next').textContent = band === 'hard' ? 'Review'
+		    : shape.recovery && recoveryReviewStillDue() ? 'Review'
+		    : band === 'recommend' ? 'Review'
+		    : missing === 'main' ? 'Main'
+		    : active ? active.title
+		    : task ? task.title
+	    : 'Open';
   host.innerHTML = DAILY_PRACTICE.map(p=>{
     const s = practiceState(p);
     return `<button class="practice-chip ${s.cls}" data-practice="${p.id}" ${s.cls==='locked'?'disabled':''}>
@@ -3157,26 +3173,26 @@ function renderPlan(){
   const retention = nextRetentionCheck();
   const nl = nextLesson();
   const blocker = nl && getLessonBlocker(nl.id);
-  if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY DAY ↓' : early ? 'FOUNDATION DAY ↓' : '45-MINUTE COURSE DAY ↓';
-  if(el('plan-sub')) el('plan-sub').textContent = recovery ? 'bounded return route · no backlog forgiven' : early ? '20-30 min core · optional stretch' : 'depth before speed · +10💎';
-  el('plan-title').textContent = recovery ? "Today's recovery route" : isL ? (early ? "Today's foundation · honest pace" : "Today's 45 · Lesson day") : "Today's 45 · Consolidation day";
-  el('plan-1').textContent = due ? (band === 'hard' ? 'Review overload: ' + due + ' due - reduce below ' + REVIEW_HARD_CAP + ' to unlock lessons' : recovery ? 'Recovery review: ' + shape.target + ' of ' + due + ' due now - full catch-up stays in Practice' : band === 'recommend' ? 'Review: ' + due + ' due - Today serves up to ' + shape.target + ' before lesson' : 'Review: ' + due + ' due - optional warm-up') : 'Review: clear';
+  if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY' : early ? 'FOUNDATION' : 'TODAY';
+  if(el('plan-sub')) el('plan-sub').textContent = recovery ? 'Review first.' : early ? 'Short day.' : 'Start at top.';
+  el('plan-title').textContent = recovery ? 'Recovery' : isL ? (early ? 'Foundation' : 'Today') : 'Consolidate';
+  el('plan-1').textContent = due ? 'Review: ' + due + ' due' : 'Review: clear';
   if(isL){
-    if(blocker) el('plan-2').textContent = 'Main: ' + blocker.explanation;
-    else if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) el('plan-2').textContent = bonus ? 'Main: first lesson complete. Review is clear.' : 'Main: task complete. Next lesson can still be started if you choose.';
-    else if(retention) el('plan-2').textContent = 'Recommended: delayed check due - ' + retentionStageLabel(retention.stage) + ' Lesson ' + lessonNum(retention.lessonId);
-    else if(recovery && nl) el('plan-2').textContent = 'Optional later: Lesson ' + nl.id.slice(1) + ' is visible, but recovery comes first';
-    else if(phase === 'review') el('plan-2').textContent = 'Main: review overload first';
-    else el('plan-2').textContent = nl ? 'Main: Lesson ' + nl.id.slice(1) + ': ' + nl.title : 'Main: course complete';
+    if(blocker) el('plan-2').textContent = 'Main: ' + shortBlockerDetail(blocker);
+    else if(d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) el('plan-2').textContent = 'Main: done';
+    else if(retention) el('plan-2').textContent = 'Check: Lesson ' + lessonNum(retention.lessonId);
+    else if(recovery && nl) el('plan-2').textContent = 'Lesson ' + nl.id.slice(1) + ': optional';
+    else if(phase === 'review') el('plan-2').textContent = 'Main: review';
+    else el('plan-2').textContent = nl ? 'Lesson ' + nl.id.slice(1) : 'Main: done';
     const missingBridge = dailyBridgeMissing(d);
-    el('plan-3').textContent = missingBridge.length ? 'Bridge: ' + missingBridge.join(' + ') + ' recommended after the main task' : bonus ? 'Stretch: optional Lesson ' + bonus.id.slice(1) + ' or ' + sugg : 'Deepen: ' + sugg + ' or a readable story';
+    el('plan-3').textContent = missingBridge.length ? 'Practice: bridge' : bonus ? 'Stretch: Lesson ' + bonus.id.slice(1) : 'Practice: open';
   } else {
     el('plan-2').textContent = phase1CompletionReady() && !phase1CompletionPassed()
-      ? 'Main: Phase 1 completion checkpoint'
-      : 'Main: consolidate current letters, tones and words';
-    el('plan-3').textContent = 'Deepen: two blocks from Spell it, drills or stories';
+      ? 'Main: final check'
+      : 'Main: consolidate';
+    el('plan-3').textContent = 'Practice: two blocks';
   }
-  if(d.lite){ el('plan-3').textContent = '✓ Optional drill moved to tomorrow'; }
+  if(d.lite){ el('plan-3').textContent = 'Practice: tomorrow'; }
   const dThis = d;
   el('plan-l3').classList.toggle('done', dailyDepthComplete(dThis));
   // weekly status line
@@ -5490,6 +5506,39 @@ function validateV541AutoConfidenceContracts(){
   if(errors.length) throw new Error('V5.4.1 auto-confidence contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateV542StreamlinedCopyContracts(){
+  const errors = [];
+  const visibleTodayFns = [
+    renderTodayActions,
+    renderDailyPractice,
+    practiceState,
+    renderPlan,
+    renderPath,
+    renderRail,
+    lessonAvailabilityMessage,
+    newLessonBlockReason,
+    goTodayReviewTask,
+    routeToMainTask,
+    startLessonFromUser
+  ].map(fn=>String(fn)).join('\n');
+  [
+    'hard cap',
+    'full catch-up',
+    'serves up to',
+    'by default',
+    'review overload',
+    'reduce below',
+    'new lessons reopen',
+    'below the hard cap'
+  ].forEach(term=>{
+    if(visibleTodayFns.toLowerCase().includes(term)) errors.push('learner-facing Today copy should not mention "' + term + '"');
+  });
+  if(!visibleTodayFns.includes("detail: reviewDone ? 'Clear.'")) errors.push('review task should use short clear copy');
+  if(!visibleTodayFns.includes("return 'Review first.'")) errors.push('recommended-review availability should be short');
+  if(!visibleTodayFns.includes("toast(label + ': ' + session.length + ' now.')")) errors.push('partial review toast should stay short');
+  if(errors.length) throw new Error('V5.4.2 streamlined copy contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV525RouteSimplificationContracts(){
   const errors = [];
   const dueCard = n=>['test-due-' + n, {iv:0, due:todayStr(), lapses:0, sameDayMisses:0}];
@@ -6113,7 +6162,7 @@ function renderRail(){
   const P = buildPath(), ci = pathIndex(P), total = P.length;
   el('path-progress').textContent = ci >= total ? 'path complete 🎉' : 'step ' + (ci+1) + ' of ' + total;
   if(ci >= total){
-    host.innerHTML = `<div class="path-now"><div class="pn-label">You've reached the end 🎉</div><div class="pn-sub">More steps are on the way. Keep your reviews sharp.</div></div>`;
+    host.innerHTML = `<div class="path-now"><div class="pn-label">Complete 🎉</div><div class="pn-sub">Review daily.</div></div>`;
     el('path-map').innerHTML = ''; return;
   }
   const cur = P[ci];
@@ -6127,9 +6176,9 @@ function renderRail(){
       <div class="pn-step">Route options</div>
       <div class="pn-label">${esc(label)}</div>
       <div class="pn-sub">${esc(sub)}</div>
-      ${due ? `<button class="btn full ghost path-start" id="path-review">Continue with recommended review →</button>` : ''}
-      ${nextAllowed ? `<button class="btn full path-start" id="path-next-anyway" style="margin-top:8px">Start Lesson ${lessonNum(next.id)} anyway →</button>` : blocker ? `<div class="notebox" style="margin-top:8px">${esc(blocker.explanation)}</div>` : ''}
-      <button class="btn full ghost path-start" id="path-contrast" style="margin-top:8px">Do contrast practice →</button>
+      ${due ? `<button class="btn full ghost path-start" id="path-review">Review →</button>` : ''}
+      ${nextAllowed ? `<button class="btn full path-start" id="path-next-anyway" style="margin-top:8px">Lesson ${lessonNum(next.id)} →</button>` : blocker ? `<div class="notebox" style="margin-top:8px">${esc(shortBlockerDetail(blocker))}</div>` : ''}
+      <button class="btn full ghost path-start" id="path-contrast" style="margin-top:8px">Contrast →</button>
       <button class="btn full ghost path-start" id="path-stop" style="margin-top:8px">Stop for today</button></div>`;
     const rb = el('path-review'), nb = el('path-next-anyway'), cb = el('path-contrast'), sb = el('path-stop');
     if(rb) rb.onclick = goReview;
@@ -6142,54 +6191,54 @@ function renderRail(){
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">Endings Refresh</div>
       <div class="pn-label">${esc(b ? b.title : 'Updated foundations')}</div>
-      <div class="pn-sub">${esc(b ? b.explanation : 'Complete the refresh before normal route work resumes.')}</div>
-      <button class="btn full path-start" id="path-refresh">Start Endings Refresh →</button></div>`;
+      <div class="pn-sub">${esc(b ? shortBlockerDetail(b) : 'Refresh first.')}</div>
+      <button class="btn full path-start" id="path-refresh">Refresh →</button></div>`;
     el('path-refresh').onclick = startFoundationRefresh;
   } else if(cur.type === 'checkpoint'){
     // mastery gate always takes priority - it's the blocking ≥80% review, not "new content"
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">👑 mastery gate</div>
       <div class="pn-label">${esc(cur.label)}</div>
-      <div class="pn-sub">${esc(cur.sub||'')} · free retries</div>
-      <button class="btn full path-start" id="path-start">Take the check →</button></div>`;
+      <div class="pn-sub">Check.</div>
+      <button class="btn full path-start" id="path-start">Start →</button></div>`;
     el('path-start').onclick = ()=>launchNode(cur);
 	  } else if(phase === 'rest'){
-    renderAfterMainOptions('That is enough for today', 'You can stop, review, practise, or start the next lesson if no true blocker exists.');
+    renderAfterMainOptions('Done today', 'Stop or continue.');
   } else if(phase === 'review'){
     host.innerHTML = `<div class="path-now">
-      <div class="pn-step">Review overload</div>
-      <div class="pn-label">Reduce the current deck</div>
-      <div class="pn-sub">${due} card${due>1?'s':''} due. This is consolidation/recovery work; new lessons reopen below ${REVIEW_HARD_CAP}.</div>
-      <button class="btn full path-start" id="path-review">Review ${due} →</button></div>`;
+      <div class="pn-step">Review</div>
+      <div class="pn-label">${due} due</div>
+      <div class="pn-sub">Review first.</div>
+      <button class="btn full path-start" id="path-review">Review →</button></div>`;
     el('path-review').onclick = goReview;
   } else if(phase === 'recovery'){
     const shape = todayReviewShape();
     host.innerHTML = `<div class="path-now">
-      <div class="pn-step">Recovery route</div>
-      <div class="pn-label">Start with ${shape.target} review cards</div>
-      <div class="pn-sub">${due} card${due>1?'s':''} due after a ${shape.recovery.gapDays}-day gap. Full ${REVIEW_MANUAL_CAP}-card catch-up stays in Practice.</div>
-      <button class="btn full path-start" id="path-review">Start recovery review →</button></div>`;
+      <div class="pn-step">Recovery</div>
+      <div class="pn-label">${shape.target} now</div>
+      <div class="pn-sub">${due} due.</div>
+      <button class="btn full path-start" id="path-review">Review →</button></div>`;
     el('path-review').onclick = goReview;
   } else if(phase === 'retention'){
     const item = nextRetentionCheck(), L = item && lessonById(item.lessonId);
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">⏱ delayed check</div>
       <div class="pn-label">${esc(item ? retentionStageLabel(item.stage) + ' · Lesson ' + lessonNum(item.lessonId) : 'Delayed check')}</div>
-      <div class="pn-sub">${esc(L ? L.title : 'Completed is not mastered yet.')} · 80% to pass</div>
-      <button class="btn full path-start" id="path-retention">Take the check →</button></div>`;
+      <div class="pn-sub">Check due.</div>
+      <button class="btn full path-start" id="path-retention">Start →</button></div>`;
     el('path-retention').onclick = ()=>{ if(item) startRetentionCheck(item); };
   } else if(phase === 'bonus'){
     const bonus = earlyBonusLessonCandidate();
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">↗ optional foundation stretch</div>
       <div class="pn-label">${bonus ? 'Continue to Lesson ' + bonus.id.slice(1) : 'Foundation stretch'}</div>
-      <div class="pn-sub">Early lessons are lighter. Stop here, take a drill, or continue before Lesson 4 unlocks stories and richer practice.</div>
-      <button class="btn full path-start" id="path-start">Start ${bonus ? 'Lesson ' + bonus.id.slice(1) : 'next lesson'} →</button>
-      <button class="btn full ghost path-start" id="path-depth" style="margin-top:8px">Practice instead →</button></div>`;
+      <div class="pn-sub">Optional.</div>
+      <button class="btn full path-start" id="path-start">Start →</button>
+      <button class="btn full ghost path-start" id="path-depth" style="margin-top:8px">Practice →</button></div>`;
     el('path-start').onclick = ()=>{ if(bonus) startLessonFromUser(bonus); };
     el('path-depth').onclick = startDepthBlock;
   } else if(phase === 'deepen'){
-    renderAfterMainOptions('Main task is done', 'Recommended practice is still useful, but it is not a hidden lesson lock.');
+    renderAfterMainOptions('Main done', 'Practice next.');
   } else {
     host.innerHTML = `<div class="path-now">
       <div class="pn-step">${PATH_ICONS[cur.type]||'•'} next step</div>
@@ -9628,6 +9677,7 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   validateV52FullBriefContracts();
   validateV521HardeningContracts();
   validateV541AutoConfidenceContracts();
+  validateV542StreamlinedCopyContracts();
   validateV525RouteSimplificationContracts();
   validateV526ToneSignReviewContracts();
   validateV53ReviewGovernorContracts();
