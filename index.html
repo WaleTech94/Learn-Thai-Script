@@ -1066,7 +1066,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.0.3</span>
+      <span class="version-pill">v6.1.0</span>
     </header>
 
     <section class="today-focus">
@@ -1180,7 +1180,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.0.3 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.1.0 (PWA)</div>
     </div>
   </section>
 
@@ -2963,6 +2963,11 @@ function drillUnlocked(d){ return (state.done||[]).includes(d.gate); }
 function nextDrill(){
   const avail = DRILLS.filter(drillUnlocked);
   if(!avail.length) return null;
+  const focus = weaknessFocus();
+  if(focus){
+    const hit = avail.find(d=>d.id===focus.drillId);
+    if(hit) return hit;
+  }
   const log = state.drillLog || {};
   const last = id => (log[id] && log[id].last) || '';                  // '' = never practised → sorts first
   const order = id => DRILLS.findIndex(d=>d.id===id);
@@ -3143,12 +3148,14 @@ function todayDepthTask(){
   const drill = nextDrill();
   if(!drill) return null;
   const tone = TONE_DEPTH_IDS.has(drill.id);
+  const focus = weaknessFocus();
+  const focused = !!(focus && focus.drillId === drill.id);
   return {
     id:drill.id,
     kind:tone ? 'tone' : 'practice',
     tab:tone ? 'tones' : 'practice',
     title:tone ? 'Tones: ' + drill.title : drill.title,
-    detail:tone ? 'Work on tone, class or listening today.' : "Practise today's material.",
+    detail:focused ? 'Your weakest area right now.' : tone ? 'Work on tone, class or listening today.' : "Practise today's material.",
     drill,
     go:()=>launchDrill(drill.id)
   };
@@ -4800,6 +4807,122 @@ function toast(msg){
 }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function sample(a,n){ return shuffle(a).slice(0,n); }
+/* =====================================================
+   WEAKNESS-FIRST TARGETING (v6.1.0)
+   errorProfile buckets record wrong answers by mechanism so daily drills can
+   open at the learner's personal edge instead of uniform random sampling.
+   Additive state key only; never blocks lessons; empty profile degrades to
+   the previous plain-sample behaviour.
+===================================================== */
+const ERROR_PROFILE_KINDS = ['sound','class','final','tone','listen','pair','write'];
+const ERROR_PROFILE_KIND_CAP = 150;
+const WEAKNESS_FOCUS_MIN = 3;
+function ensureErrorProfile(target){
+  const s = target || state;
+  if(!s.errorProfile || typeof s.errorProfile !== 'object' || Array.isArray(s.errorProfile)) s.errorProfile = {};
+  return s.errorProfile;
+}
+function recordProfileError(kind, key){
+  if(!ERROR_PROFILE_KINDS.includes(kind) || !key) return false;
+  const prof = ensureErrorProfile();
+  const bucket = prof[kind] = prof[kind] || {};
+  const entry = bucket[key] = bucket[key] || {n:0, last:null};
+  entry.n += 1;
+  entry.last = todayStr();
+  const keys = Object.keys(bucket);
+  if(keys.length > ERROR_PROFILE_KIND_CAP){
+    keys.sort((a,b)=>String(bucket[a].last||'').localeCompare(String(bucket[b].last||'')));
+    keys.slice(0, keys.length - ERROR_PROFILE_KIND_CAP).forEach(k=>{ delete bucket[k]; });
+  }
+  return true;
+}
+function daysSinceDateStr(d){
+  if(!d) return 9999;
+  const then = new Date(d + 'T00:00:00');
+  const now = new Date(todayStr() + 'T00:00:00');
+  if(isNaN(then.getTime()) || isNaN(now.getTime())) return 9999;
+  return Math.max(0, Math.round((now.getTime() - then.getTime())/86400000));
+}
+function weaknessScore(kind, key){
+  const prof = ensureErrorProfile();
+  const entry = prof[kind] && prof[kind][key];
+  let score = entry ? entry.n * Math.pow(0.5, daysSinceDateStr(entry.last)/30) : 0;
+  const srsPrefix = (kind === 'sound' || kind === 'class') ? 'g:' : kind === 'final' ? 'f:' : null;
+  if(srsPrefix){
+    const card = state.srs && state.srs[srsPrefix + key];
+    if(card) score += Math.min(2, card.lapses||0) * 0.5 + (card.lastResult && card.lastResult !== 'good' && card.lastResult !== 'easy' ? 0.5 : 0);
+  }
+  return score;
+}
+function weightedWeakSample(pool, n, scoreFn){
+  const want = Math.min(n, pool.length);
+  if(want <= 0) return [];
+  const scored = pool.map(item=>({item, score:(scoreFn ? scoreFn(item) : 0) || 0}));
+  const weak = scored.filter(x=>x.score > 0).sort((a,b)=>b.score - a.score)
+    .slice(0, Math.ceil(want/2)).map(x=>x.item);
+  if(!weak.length) return sample(pool, want);
+  const rest = pool.filter(item=>!weak.includes(item));
+  return weak.concat(sample(rest, want - weak.length));
+}
+function ruleCellKey(w){
+  const cls = firstConsonantClass(w.thai) || 'x';
+  const m = (w.thai.match(/[่้๊๋]/) || ['none'])[0];
+  const f = wordFrame(w);
+  const live = String(liveDeadFromFrame(f) || 'x').toLowerCase();
+  const len = String((f && f.vowelLength) || 'x').toLowerCase();
+  return cls + '|' + m + '|' + live + '|' + len;
+}
+function twinSetKey(set){
+  return set.map(m=>m.t).slice().sort().join('|');
+}
+function glyphWeaknessSum(thai){
+  let score = 0;
+  String(thai||'').split('').forEach(ch=>{
+    if(GLYPHS[ch] && GLYPHS[ch].type === 'c'){
+      score += weaknessScore('sound', ch) + weaknessScore('class', ch);
+    }
+  });
+  return score;
+}
+function quizErrorTag(q){
+  if(!q) return null;
+  if(q._err && q._err.kind && q._err.key) return q._err;
+  const p = typeof q.prompt === 'string' ? q.prompt : '';
+  const g = p && GLYPHS[p];
+  const opts = q.options || [];
+  const clsLabels = Object.values(CLS_LABEL);
+  if(g && opts.length && opts.every(o=>clsLabels.includes(String(o)))) return {kind:'class', key:p};
+  if(g && (q._choice === 'glyph-sound' || q.kind === 'type')) return {kind:'sound', key:p};
+  if((q.axis === 'final' || q.axis === 'final-job') && p && finalJob(p)) return {kind:'final', key:p};
+  if(q._set) return {kind:'pair', key:q._set};
+  return null;
+}
+function recordQuizError(q){
+  const tag = quizErrorTag(q);
+  if(!tag) return false;
+  const ok = recordProfileError(tag.kind, tag.key);
+  if(ok) saveState();
+  return ok;
+}
+function errorProfileKindTotal(kind){
+  const prof = ensureErrorProfile();
+  const bucket = prof[kind] || {};
+  return Object.keys(bucket).reduce((t,k)=>t + weaknessScore(kind, k), 0);
+}
+const WEAKNESS_FOCUS_DRILLS = [
+  {kind:'tone',   drill:'tone-rule'},
+  {kind:'listen', drill:'tone-listen'},
+  {kind:'pair',   drill:'clinic'},
+  {kind:'class',  drill:'sprint'}
+];
+function weaknessFocus(){
+  let best = null;
+  WEAKNESS_FOCUS_DRILLS.forEach(x=>{
+    const total = errorProfileKindTotal(x.kind);
+    if(total >= WEAKNESS_FOCUS_MIN && (!best || total > best.total)) best = {kind:x.kind, drillId:x.drill, total};
+  });
+  return best;
+}
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 function escAttr(value){
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -5082,7 +5205,8 @@ function toneQuestionExplain(w){
 function toneQuestion(w, upToLessonNum){
   if(!toneTaughtBy(w, upToLessonNum)) return null;
   return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:toneQuestionText(w), answer:toneOf(w.tr),
-    options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w)};
+    options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w),
+    _err:{kind:'tone', key:ruleCellKey(w)}};
 }
 
 /* =====================================================
@@ -5476,7 +5600,7 @@ function ensureStateCollections(target){
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
     notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, retention:{}, signSafari:{seen:{}},
-    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, phase1Completion:null
+    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, phase1Completion:null, errorProfile:{}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
@@ -5491,6 +5615,7 @@ function ensureStateCollections(target){
   if(!target.contrastLog) target.contrastLog = {};
   if(!target.signSafari.seen) target.signSafari.seen = {};
   if(!target.fluencyReads) target.fluencyReads = {};
+  if(!target.errorProfile || typeof target.errorProfile !== 'object' || Array.isArray(target.errorProfile)) target.errorProfile = {};
   Object.keys(target.srs || {}).forEach(id=>{
     const c = target.srs[id] || {};
     if(c.sameDayMisses == null) c.sameDayMisses = 0;
@@ -6363,6 +6488,47 @@ function validateV603ProgressInteractionContracts(){
   if(String(renderNotes).includes('Test notes') || String(showResetFlow).includes('Test notes')) errors.push('notes copy should no longer say Test notes');
   if(String(shortBlockerDetail).includes('Check needed')) errors.push('mastery blocker fallback should not say Check needed');
   if(errors.length) throw new Error('V6.0.3 progress interaction contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateWeaknessTargetingContracts(){
+  const errors = [];
+  const clsTag = quizErrorTag({kind:'mcq', prompt:'ก', options:Object.values(CLS_LABEL), answer:CLS_LABEL.mid});
+  if(!clsTag || clsTag.kind !== 'class' || clsTag.key !== 'ก') errors.push('class questions must tag class errors');
+  const soundTag = quizErrorTag({kind:'type', prompt:'น', answer:'n'});
+  if(!soundTag || soundTag.kind !== 'sound') errors.push('typed sound recall must tag sound errors');
+  const fq = finalJobQuestion('น');
+  const finalTag = fq && quizErrorTag(fq);
+  if(!finalTag || finalTag.kind !== 'final' || finalTag.key !== 'น') errors.push('final-job questions must tag final errors');
+  const pairTag = quizErrorTag({kind:'mcq', _set:'ก|ถ', options:['a','b'], answer:'a'});
+  if(!pairTag || pairTag.kind !== 'pair') errors.push('confusion-set questions must tag pair errors');
+  const toneWord = LESSONS.flatMap(L=>L.words).find(w=>monoSyllable(w) && toneQuestion(w, 24));
+  if(toneWord){
+    const toneTag = quizErrorTag(toneQuestion(toneWord, 24));
+    if(!toneTag || toneTag.kind !== 'tone' || !toneTag.key) errors.push('tone questions must tag tone rule-cell errors');
+  } else {
+    errors.push('no tone-taggable word found for weakness targeting check');
+  }
+  withTemporaryState({done:['l1'], srs:{}, days:{}, retention:{}}, ()=>{
+    for(let i=0;i<ERROR_PROFILE_KIND_CAP+30;i++) recordProfileError('sound', 'k'+i);
+    if(Object.keys(ensureErrorProfile().sound || {}).length > ERROR_PROFILE_KIND_CAP) errors.push('errorProfile buckets must stay capped');
+    recordProfileError('class', 'ก'); recordProfileError('class', 'ก'); recordProfileError('class', 'ก');
+    if(!(weaknessScore('class', 'ก') > 0)) errors.push('recorded misses must produce a positive weakness score');
+    const pool = ['ก','จ','ด','ต','บ'];
+    const picked = weightedWeakSample(pool, 3, ch=>weaknessScore('class', ch));
+    if(picked.length !== 3) errors.push('weightedWeakSample must return the requested count');
+    if(!picked.every(ch=>pool.includes(ch))) errors.push('weightedWeakSample must stay inside its pool');
+    if(picked[0] !== 'ก') errors.push('weightedWeakSample must start with the weakest item');
+    if(!weaknessFocus()) errors.push('repeated class misses must produce a class weakness focus');
+    if(weaknessFocus().drillId !== 'sprint') errors.push('class weakness focus must map to Class sprint');
+  });
+  withTemporaryState({done:['l1'], srs:{}, days:{}, retention:{}}, ()=>{
+    const pool = ['a','b','c','d'];
+    const picked = weightedWeakSample(pool, 2, ()=>0);
+    if(picked.length !== 2 || !picked.every(x=>pool.includes(x))) errors.push('empty profile must degrade to plain sampling');
+    if(weaknessFocus()) errors.push('empty profile must not produce a weakness focus');
+  });
+  if(/errorProfile|weaknessScore|weightedWeakSample|weaknessFocus/.test(String(getLessonBlocker))) errors.push('weakness targeting must not enter lesson blocking');
+  if(errors.length) throw new Error('Weakness targeting contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV542StreamlinedCopyContracts(){
@@ -8892,6 +9058,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
       state.confs[q._set] = (state.confs[q._set] || 0) + 1;
       saveState();
     }
+    if(!ok) recordQuizError(q);
     opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
     revealClassPrompt(q, stage);
@@ -8988,7 +9155,7 @@ el('class-sprint-btn').addEventListener('click', ()=>{
   const met = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c' && state.srs['g:'+k]);
   const pool = met;
   if(pool.length < 2){ toast('Finish Lesson 1 first. Class sprint uses learned letters only.'); return; }
-  const qs = sample(pool, Math.min(15, pool.length)).map(ch=>({
+  const qs = weightedWeakSample(pool, Math.min(15, pool.length), ch=>weaknessScore('class', ch)).map(ch=>({
     kind:'mcq', prompt:ch, text:'Which class?', answer:CLS_LABEL[GLYPHS[ch].cls],
     options:shuffle(Object.values(CLS_LABEL)),
     explain: GLYPHS[ch].cls==='mid' ? 'one of the chicken-pecks nine' : GLYPHS[ch].cls==='high' ? 'one of the breathy eleven' : 'not in either set → low by default'
@@ -8999,10 +9166,11 @@ el('class-sprint-btn').addEventListener('click', ()=>{
 el('tone-drill-btn').addEventListener('click', ()=>{
   const pool = readableToneItems();
   if(pool.length < 4){ toast('Tone listening opens once enough tone examples are readable. Finish Lesson 4.'); return; }
-  const qs = sample(pool, 8).map(t=>({
+  const qs = weightedWeakSample(pool, 8, t=>weaknessScore('listen', t.name)).map(t=>({
     kind:'mcq', text:'Listen: which tone is it?', say:t.thai, autoplay:true,
     answer:t.name, options: shuffle(TONE_NAMES.slice()),
-    explain: t.thai + ' ' + t.tr
+    explain: t.thai + ' ' + t.tr,
+    _err:{kind:'listen', key:t.name}
   }));
   startGenericQuiz(qs, 'Tone drill', {toneLog:'listen'});
 });
@@ -9011,13 +9179,14 @@ el('tone-drill-btn').addEventListener('click', ()=>{
 el('twins-btn').addEventListener('click', ()=>{
   const pool = readableTwinSets();
   if(pool.length < 2){ toast('Sound Twins opens once enough pairs use letters you know. Finish Lesson 4.'); return; }
-  const sets = sample(pool, Math.min(10, pool.length));
+  const sets = weightedWeakSample(pool, Math.min(10, pool.length), set=>weaknessScore('pair', twinSetKey(set)));
   const qs = sets.map(set=>{
     const tgt = sample(set, 1)[0];
     return {
       kind:'mcq', text:'Listen: which Thai word did you hear?', say:tgt.t, autoplay:true,
       options: shuffle(set.map(m=>m.t)), thaiOpts:true, colourThaiOpts:true, answer:tgt.t,
-      explain: set.map(m=>`${m.t} ${m.tr}`).join('  ·  ')
+      explain: set.map(m=>`${m.t} ${m.tr}`).join('  ·  '),
+      _err:{kind:'pair', key:twinSetKey(set)}
     };
   });
   startGenericQuiz(qs, 'Sound twins', {toneLog:'listen'});
@@ -9075,10 +9244,11 @@ el('tone-rule-btn').addEventListener('click', ()=>{
   }
   let pool = learnedWords().filter(monoSyllable);
   if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
-  const qs = sample(pool, 10).map(w=>({
+  const qs = weightedWeakSample(pool, 10, w=>weaknessScore('tone', ruleCellKey(w))).map(w=>({
     kind:'mcq', prompt:w.thai, colourPrompt:true, text:toneQuestionText(w),
     answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
-    explain:toneQuestionExplain(w)
+    explain:toneQuestionExplain(w),
+    _err:{kind:'tone', key:ruleCellKey(w)}
   }));
   startGenericQuiz(qs, 'Tone rules', {toneLog:'rule'});
 });
@@ -9492,12 +9662,15 @@ function buildMixedQuiz(){
     const tq = toneQuestion(w, upToLessonNum);
     if(tq) qs.push(tq);
   });
-  return sample(qs, Math.min(10, qs.length));
+  return weightedWeakSample(qs, Math.min(10, qs.length), q=>{
+    const tag = quizErrorTag(q);
+    return tag ? weaknessScore(tag.kind, tag.key) : 0;
+  });
 }
 function buildHearPickThaiQuiz(){
   const pool = coveredSoundThaiItems();
   const taught = taughtGlyphSet();
-  return sample(pool, Math.min(10, pool.length)).map(w=>{
+  return weightedWeakSample(pool, Math.min(10, pool.length), w=>glyphWeaknessSum(w.thai)).map(w=>{
     const wrong = wordThaiDistractors(w, pool, 3, taught);
     return {kind:'mcq', text:'Hear it. Which Thai is it?', say:w.thai, autoplay:true,
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
@@ -10302,7 +10475,7 @@ function spellPool(){
 el('cta-spell').addEventListener('click', ()=>{
   const pool = spellPool();
   if(pool.length < 4){ toast('Finish a lesson or two first'); return; }
-  player = {type:'spell', rounds:sample(pool, Math.min(8, pool.length)), i:0, correct:0};
+  player = {type:'spell', rounds:weightedWeakSample(pool, Math.min(8, pool.length), w=>glyphWeaknessSum(w.thai)), i:0, correct:0};
   openOverlay(); renderSpell();
 });
 function renderSpell(){
@@ -10650,7 +10823,8 @@ function runFullStartupValidators(){
     validateV53ReviewGovernorContracts,
     validateV531TtsSafetyContracts,
     validateV54FluencyContracts,
-    validateContentPedagogyHardeningContracts
+    validateContentPedagogyHardeningContracts,
+    validateWeaknessTargetingContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

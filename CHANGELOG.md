@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.1.0 - 2026-07-02
+
+- Added a bounded `errorProfile` state bucket for wrong generated answers across glyph sound, class, final-job, tone-rule, listening and confusion-pair misses.
+- Made Class sprint, Tone drill, Sound twins, Tone-rule trainer, Mixed quiz, Hear & Pick Thai and Spell it start from the learner's weakest eligible items before normal random fill, while preserving existing gates, pool filters and session sizes.
+- Let Today choose the optional practice recommendation from the weakest current axis when enough evidence exists, with short display-only copy and no change to route blockers, day typing or lesson availability.
+- Kept all new targeting outside the main SRS due deck and review governor; no new lesson blockers, mastery gates, production scoring, network calls or dependencies were added.
+- Added `validateWeaknessTargetingContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.1.0` and 40 validators passing.
+- Updated the app footer version to `v6.1.0` with service-worker cache `aan-thai-v6-1-0`.
+
 ## v6.0.3 - 2026-07-01
 
 - Replaced the Today route hero's hardcoded percent ring with actual step pips and a matching step-fraction bar for review/main/practice or the single Endings Refresh step.

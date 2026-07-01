@@ -1,8 +1,8 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-07-01
+Prepared: 2026-07-02
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.0.3`
+Current app version: `v6.1.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -75,6 +75,14 @@ v6.0.3 is a progress-honesty and interaction-weight pass over v6.0.2:
 - Lesson stages top-align, Back is quieter, disabled CTAs look inert, Quick decode examples render as numbered steps, teaching-card chants reuse the structured chant helper, and transliteration uses a muted-warm non-link token.
 - `validateV603ProgressInteractionContracts()` guards the pass.
 
+v6.1.0 is a weakness-first targeting pass over v6.0.3:
+
+- Generated wrong answers record compact bounded `errorProfile` entries for sound, class, final-job, tone-rule, listening and confusion-pair misses.
+- Class sprint, Tone drill, Sound twins, Tone-rule trainer, Mixed quiz, Hear & Pick Thai and Spell it use weakness-first ordering while staying inside existing covered/prerequisite-safe pools.
+- Today can surface the weakest optional practice axis as display-only guidance.
+- No lesson blocker, route type, SRS due deck, review governor, network feature or dependency changed.
+- `validateWeaknessTargetingContracts()` guards the pass.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -107,9 +115,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.0.3`
+- app version `v6.1.0`
 - 24 lessons
-- 39 validators passing
+- 40 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -123,7 +131,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-0-3`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-1-0`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
