@@ -1,80 +1,73 @@
 # v5.4.5 Smoke-Test Checklist
 
-Use this as the lightweight manual pass before external source review or a live deploy. Keep imported/exported progress JSON private.
+Use this as the manual pass before external source review or live deploy. Keep imported/exported progress JSON private.
 
-## Fresh user
+## Fresh Load
 
-- Setup: clear `localStorage["thai_state_v1"]`, then open `index.html` or the deployed PWA online.
-- Check: Today loads, version shows `v5.4.5`, Lesson 1 is available, no Endings Refresh appears, no fluency read appears yet, and no validator alert/error appears.
-- Pass: first-use route starts at the class primer/Lesson 1 path and progress can be exported.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v5.4.5`.
+- Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, and no validator alert/error appears.
 
-## Device voice safety copy
+## Installed iPhone/iOS PWA Launch
 
-- Setup: open Thai Tones, then start any visible audio/listening practice such as Tone ear practice, Hear & Pick Thai, Read & say, Echo, Contrast Block or a fluency read.
-- Check: copy frames browser audio as `device voice support` / `rough model`; it does not claim native-speaker recording or perfect tone/length/aspiration/final-stop assessment.
-- Pass: audio buttons still play when a Thai system voice is available, and missing-voice setup guidance still appears when no Thai voice is exposed.
+- Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
+- Confirm footer version `v5.4.5`, cache `aan-thai-v5-4-5`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
 
-## User after Lesson 8
+## Service-Worker Update After Deploy
 
-- Setup: import or create a state with Lessons 1-8 complete, Lessons 1-3 and 4-6 mastery checks passed, no migrated-final quarantine, no return-gap recovery.
-- Check: the Lesson 6 fluency read is unlocked in Practice/Library/Course Map and does not block Lesson 9.
-- Pass: Today may recommend the read as a gentle depth task, but Course Map and Today still allow the next lesson when no hard blocker exists.
+- After a deploy, open online once, wait for the service worker, swipe closed/reopen, then confirm the latest shell loads without clearing progress.
+- Confirm online navigation still prefers fresh `index.html`, `sw.js` and `manifest.json`.
 
-## Routine review correct answer
+## Offline Reload
 
-- Setup: import or create a state with at least one due objective `g:` or `f:` review card, then start Practice -> Flashcards.
-- Check: answer a routine objective review card correctly.
-- Pass: short green feedback advances quickly; longer green answer text stays visible longer before auto-advance. No `Felt shaky` / `Solid` decision, visible timer or slow-answer message appears.
+- Open the deployed PWA online once, then disable network and reload.
+- Pass: cached shell opens and progress remains available.
 
-## Today copy
+## Weak-Network Timeout
 
-- Check: create or import a state with due review.
-- Pass: Today task cards use short status such as `Clear`, `29 due`, `Review first`, `Done`, or `Practice`; no task card mentions hard caps, default slices, or full catch-up policy.
+- With a throttled or unreliable connection, reload the installed app.
+- Pass: shell fetch does not hang indefinitely; cached shell appears after the bounded timeout if the network stalls.
 
-## User after Lesson 15
+## Malformed Import Handling
 
-- Setup: import or create a state with Lessons 1-15 complete and required checks passed.
-- Check: the Lesson 6, 10 and 13 reads are available; later silent-leader/endgame reads remain locked.
-- Pass: final Phase 1 completion checkpoint remains locked because Lesson 24, Letters boss and all v5.4 reads are not complete.
+- Import malformed progress such as `{"streak":{"count":"bad"},"srs":{}}` or an array-valued `srs`.
+- Pass: invalid import toast appears, existing progress stays unchanged, and the app continues without reload.
 
-## User after Lesson 24
+## Completed Phase 1 Import Handling
 
-- Setup: import or create a state with all lessons complete, all standard checkpoints passed, but no v5.4 fluency reads and no Letters boss pass.
-- Check: all six fluency reads are available; the final Phase 1 completion checkpoint lists the missing reads and Letters boss.
-- Pass: ordinary completed lessons remain playable and progress is not downgraded.
+- Import a completed Phase 1 state with all 24 lessons done and `checks.letters42` true.
+- Pass: lessons/tokens/titles/checks remain, stale legacy review cards are pruned, valid glyph/final/axis cards are repaired, six fluency reads default to completed, and the final Phase 1 checkpoint is available but not auto-passed.
 
-## Completed Phase 1 user
+## Review Correct-Answer Dwell
 
-- Setup: import a completed Phase 1 export with all 24 lessons done and `checks.letters42` true.
-- Check: import succeeds, tokens/titles/checks are preserved, stale legacy review cards are pruned, missing valid glyph/final/axis cards are repaired, and v5.4 defaults the six fluency reads as migrated completions.
-- Pass: the final Phase 1 completion checkpoint is available but not auto-passed; the Readiness report defines Phase 1 as script/controlled-reading mastery rather than real-world listening or speaking mastery.
+- Start routine objective review with due `g:` or `f:` cards and answer correctly.
+- Pass: short green feedback advances quickly, longer green feedback stays readable, and no `Felt shaky` / `Solid`, visible timer or slow-answer message appears.
 
-## Return-gap recovery
+## Delayed Checks
 
-- Setup: use a state with an eligible unlocked fluency read, then set the last active day to 3, 7 and 30 days before the test date.
-- Check: Today routes first to the relevant recovery review slice instead of the fluency read.
-- Pass: after recovery is no longer active, fluency reads can return as optional depth tasks.
+- Use a state with +1/+7 delayed checks due.
+- Pass: Today can route to the delayed check, passing stabilises it, and failed checks remain due without blocking normal lesson progress below hard blockers.
 
-## Migrated v5.0/v5.0.1 user needing Endings Refresh
+## Leech Clinic
 
-- Setup: import an older state with Lessons 1-5 complete where final cards are seeded by repair rather than already learned.
-- Check: import succeeds, progress is preserved, and Endings Refresh is the hard blocker before Lesson 6.
-- Pass: quarantined `f:` final cards do not appear in normal review until the refresh is completed.
+- Use or create a state with a three-lapse review card.
+- Pass: the card is excluded from normal review, appears in Leech clinic, and two clean clinic passes clear it.
 
-## Malformed import
+## Endings Refresh
 
-- Setup: try importing JSON with a malformed progress shape, such as `{"streak":{"count":"bad"},"srs":{}}` or an array-valued `srs`.
-- Check: the app shows the invalid import toast.
-- Pass: existing progress remains unchanged and the app does not need a reload to recover.
+- Import an older v5/v5.0.1-style state where early final cards were seeded by repair.
+- Pass: Endings Refresh is the hard blocker, quarantined `f:` cards stay out of normal review, and completion releases valid finals.
 
-## Offline reload
+## Phase 1 Checkpoint
 
-- Setup: open the deployed PWA online once, wait for service-worker install, then disable the network.
-- Check: reload the app shell offline.
-- Pass: the cached shell opens. When online returns, the network-first shell fetch still refreshes `index.html`.
+- Use a Lesson 24 state with Letters boss and all six v5.4 reads complete.
+- Pass: final checkpoint opens, requires 85% plus an acceptable controlled-read rating, and does not claim native listening/speaking mastery.
 
-## iPhone installed-PWA update path
+## Debug Validators
 
-- Setup: deploy a validated build, then open the installed PWA online on iPhone.
-- Check: swipe the installed app closed, reopen online, and confirm the footer version is still `v5.4.5` for this pass.
-- Pass: the updated shell loads without clearing progress; if service-worker assets changed, the active cache should be `aan-thai-v5-4-5`.
+- Open with `?debugValidators=1` or set `localStorage["thai_debug_validators"]="1"`.
+- Pass: full in-browser validator suite runs without errors; normal app load without the flag still starts quickly.
+
+## No Automatic Google Fonts Request
+
+- Open DevTools Network on a fresh load.
+- Pass: no automatic request to `fonts.googleapis.com` or `fonts.gstatic.com` appears; typography uses native/system stacks.

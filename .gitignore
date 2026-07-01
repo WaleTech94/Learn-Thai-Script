@@ -5,6 +5,7 @@ check.js
 validate*.js
 vdata.js
 vchecks*.js
+dist/
 
 # local-only project notes (kept off the public repo)
 PROJECT_NOTES.md
@@ -15,4 +16,4 @@ idea-engine/
 
 # local-only visual look preview (never on git)
 look-preview.html
-.vercel
+.vercel/

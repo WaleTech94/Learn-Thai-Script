@@ -5,7 +5,7 @@ Purpose: identify the current source of truth for review, separate generated evi
 Verified current app version: `v5.4.5`.
 Verified current service-worker cache: `aan-thai-v5-4-5`.
 
-## Current Tracked Source
+## Tracked Source For Review/Deploy Packages
 
 - `index.html` - shipped single-file PWA: HTML shell, CSS, curriculum data, state/migration logic, import/export, validators, lesson player, review engines and UI.
 - `manifest.json` - PWA metadata, icons, standalone display, portrait orientation and theme colours.
@@ -17,14 +17,18 @@ Verified current service-worker cache: `aan-thai-v5-4-5`.
 - `CHANGELOG.md` - release and stabilisation history.
 - `README.md` - concise project summary and local/deploy instructions.
 - `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
+- `tools/make-release-zip.sh` - dependency-free helper that packages tracked source from `HEAD` with `git archive`.
+- `.gitignore` - keeps generated zips and local-only artifacts out of source review.
 
-## Current Audit Evidence
+## Generated/Review Evidence
 
-- `docs/phase1_audit.md` - generated readable Phase 1 audit from the current `index.html`.
-- `docs/phase1_audit.json` - generated machine-readable Phase 1 audit data from the current `index.html`.
+- `docs/phase1_audit.md` - tracked generated readable Phase 1 audit from the current `index.html`.
+- `docs/phase1_audit.json` - tracked generated machine-readable Phase 1 audit data from the current `index.html`.
 - `docs/smoke_test_checklist.md` - lightweight manual smoke checklist for import, migration, offline and installed-PWA update scenarios.
+- `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
+- `dist/aan-thai-v5.4.5-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -35,6 +39,7 @@ These may exist in the working folder but are not current tracked source:
 - `look-preview.html` - local visual preview artifact.
 - `idea-engine/` - local proposal/review harness and generated outputs.
 - `.vercel/` - local Vercel project binding metadata.
+- `dist/` - generated release zip output.
 - `.DS_Store` - macOS metadata.
 
 ## Exclude From Review Zips
@@ -44,6 +49,16 @@ These may exist in the working folder but are not current tracked source:
 - `node_modules/`, package-manager caches and conventional build outputs such as `dist/`, `build` and `coverage`.
 - Nested old zips or handoff bundles, unless the zip is the actual deliverable.
 - Ignored local notes, previews or proposal artifacts unless the review explicitly asks for historical comparison.
+
+## Release Zip Helper
+
+From repo root:
+
+```bash
+tools/make-release-zip.sh
+```
+
+The helper writes `dist/aan-thai-v5.4.5-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
@@ -61,8 +76,10 @@ For a clean current-source audit, include:
 - `CHANGELOG.md`
 - `README.md`
 - `tools/phase1-audit.js`
+- `tools/make-release-zip.sh`
 - `docs/phase1_audit.md`
 - `docs/phase1_audit.json`
 - `docs/smoke_test_checklist.md`
+- `docs/phase2_refactor_plan.md`
 - `THAI_APP_AUDIT_PACK.md`
 - `FILE_MANIFEST.md`

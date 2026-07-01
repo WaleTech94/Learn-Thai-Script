@@ -18,6 +18,7 @@ Hosted on GitHub Pages and prepared for Vercel as a parallel static PWA deploy.
 
 - GitHub Pages: Settings → Pages → deploy from `main`, root. Push to `main` and Pages rebuilds in ~60s.
 - Vercel: import the GitHub repo as a static/no-framework project. `vercel.json` pins no build step, root output, and fresh cache checks for `index.html`, `sw.js`, and `manifest.json`.
+- Release review zip: run `tools/make-release-zip.sh` from repo root to create an ignored tracked-source package under `dist/`.
 
 ## Files
 - `index.html` — the entire app (vanilla JS, no build step)
@@ -28,4 +29,5 @@ Hosted on GitHub Pages and prepared for Vercel as a parallel static PWA deploy.
 - `CLAUDE.md` — tracked local mirror of project context
 - `CHANGELOG.md` — release-by-release shipped changes
 - `tools/phase1-audit.js`, `docs/phase1_audit.*` — generated Phase 1 audit and validator evidence
-- `FILE_MANIFEST.md`, `THAI_APP_AUDIT_PACK.md`, `docs/smoke_test_checklist.md` — current source-review manifest, audit pack notes and lightweight smoke checklist
+- `tools/make-release-zip.sh` — clean tracked-source review package helper
+- `FILE_MANIFEST.md`, `THAI_APP_AUDIT_PACK.md`, `docs/smoke_test_checklist.md`, `docs/phase2_refactor_plan.md` — source-review manifest, audit pack notes, smoke checklist and future refactor plan

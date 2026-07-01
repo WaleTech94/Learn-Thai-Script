@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.5 hardening - 2026-07-01
+
+- Kept the app footer version and service-worker cache at `v5.4.5` / `aan-thai-v5-4-5`; no curriculum, SRS, unlock, migration or Phase 2 behaviour changed.
+- Added `tools/make-release-zip.sh`, a dependency-free `git archive` helper that writes an ignored tracked-source zip under `dist/`.
+- Gated exhaustive startup validators behind `?debugValidators=1` or `localStorage["thai_debug_validators"]="1"` while keeping critical runtime checks and preserving the full `tools/phase1-audit.js` validator suite.
+- Added a bounded service-worker app-shell fetch timeout before cache fallback for weak mobile connections.
+- Added `escAttr()` and moved dynamic attribute interpolation to attribute-context escaping.
+- Removed automatic Google Fonts page-load requests and switched app typography to native/system Thai-capable stacks.
+- Refreshed release-review docs and added `docs/phase2_refactor_plan.md` as a future no-build/low-build split plan.
+
 ## v5.4.5 - 2026-06-29
 
 - Made `tools/phase1-audit.js` deterministic for generated quiz/audit extraction by using a seeded `Math.random` inside the audit sandbox.
