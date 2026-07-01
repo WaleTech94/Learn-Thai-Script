@@ -714,7 +714,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
         <div id="user-title" style="font-size:12px;color:var(--high);font-family:var(--font-display);display:none"></div>
       </div>
-      <span class="version-pill">v5.4.5</span>
+      <span class="version-pill">v5.4.6</span>
     </header>
 
     <section class="today-focus">
@@ -807,7 +807,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.5 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.6 (PWA)</div>
     </div>
   </section>
 
@@ -886,8 +886,8 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
   <!-- LIBRARY -->
   <section class="view" id="view-phrases">
     <div class="eyebrow">Library</div>
-    <h1 style="margin-bottom:4px">Phrases, stories, unlocks</h1>
-    <p class="sub" style="margin-bottom:14px">Core phrases and stories live here. Tokens unlock extras, not progress.</p>
+    <h1 style="margin-bottom:4px">Bonus phrasebook, stories, unlocks</h1>
+    <p class="sub" style="margin-bottom:14px">Useful survival extras live here, but they are not required for Phase 1. Add phrase cards only if you want extra vocabulary in review.</p>
     <div class="homecta" style="margin-bottom:14px">
       <button class="card cta-card" id="cta-shop">
         <div><div class="t">Unlock packs</div><div class="d">Spend tokens on extra language, not shortcuts</div></div>
@@ -928,9 +928,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     </div>
     <div class="card" style="margin-bottom:14px" id="pack-card">
       <div class="spread">
-        <div class="eyebrow" style="margin:0">This week's five</div>
-        <span class="sub" style="font-size:12px">rehearse or use one · +5💎</span>
+        <div class="eyebrow" style="margin:0">Optional phrasebook</div>
+        <span class="sub" style="font-size:12px">rehearse one · +5💎</span>
       </div>
+      <div class="sub" style="font-size:12px;margin:4px 0 10px">Phrase cards are bonus vocabulary, not Phase 1 mastery. Add them to review only when you want the extra load.</div>
       <div id="pack-list"></div>
     </div>
     <div class="cat-tabs" id="cat-tabs"></div>
@@ -1283,10 +1284,10 @@ function validateAudioContracts(){
 
 const LESSONS = [
   /* ---------------- UNIT A - Foundations ---------------- */
-  {id:"l1", we:{m:"มา → ม (low class) + า aa → live syllable, no mark → MID tone → maa = to come", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
+  {id:"l1", we:{m:"มา → ม + า aa → live syllable, no mark → MID tone preview → maa = to come", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"First sounds", sub:"ก น ม + two vowels", glyphs:["ก","น","ม","า","ี"],
    pre:[
-     {h:"Reading Thai: ask three things", body:"Every syllable, in order: <b>1.</b> the initial consonant - what <b>class</b> is it? Letters are class colour coded: <span style='color:var(--mid);font-weight:600'>mid</span>, <span style='color:var(--high);font-weight:600'>high</span>, <span style='color:var(--low);font-weight:600'>low</span>. <b>2.</b> is the syllable <b>live</b> (rings on) or <b>dead</b> (cut short)? <b>3.</b> any tone mark? Those three set the tone."},
-     {h:"No mark still has a tone", body:"Thai does not have a 'no tone' option. A syllable with no tone mark still uses one of the five tones. First rule: the Lesson 1 words are <b>live</b> and <b>unmarked</b>, so they sit on the flat <b>mid</b> tone: มา maa, มี mii, นาน naan, กา gaa. If the quiz asks for tone here, this is the rule it is checking."}
+     {h:"Thai reading has a route", body:"You will practise it all through Phase 1:<br><br><b>1.</b> Find the first consonant.<br><b>2.</b> Notice whether the syllable rings or stops.<br><b>3.</b> Check for a tone mark.<br><br>Today you only need the easiest case: <b>live syllable + no tone mark → mid tone</b>. Learn the shapes first. The full tone engine comes later."},
+     {h:"Lesson 1 job: shapes first", body:"ก น ม are your first consonants. า and ี are your first vowels. Read the Thai shape before looking at the meaning. The Lesson 1 words are live and unmarked, so the tone answer is simply <b>mid</b>: มา maa, มี mii, นาน naan, กา gaa."}
    ],
    note:"Thai has no spaces between words and no capital letters. Vowels attach to consonants - after, above, below, even before.",
    words:[
@@ -1315,13 +1316,15 @@ const LESSONS = [
      {thai:"มาก", tr:"mâak", en:"very / a lot", vocab:"core", frame:{text:"ม start m + า aa + ก ending -k (stop/dead)", final:"ก"}},
      {thai:"ปี", tr:"bpii", en:"year", vocab:"recognition"}
    ]},
-  {id:"l4", we:{m:"ไม่ → ม LOW class + ไม้เอก ่ → FALLING tone = not", twinIdx:1, ask:"tone"}, unit:"A · Foundations", title:"Tones on paper", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
-   pre:[{h:"Tone marks - the class decides", body:"Two Thai tone marks sit above the consonant: <b>่</b> is <b>ไม้เอก</b>, and <b>้</b> is <b>ไม้โท</b>. The mark is only one part of the rule. Read the initial consonant's class, then the Thai mark, then name the tone.<div class='tone-rule-tiles'><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter mid'>บ้</span>า<span class='class-letter low'>น</span></div><div class='tone-rule-parts'><span class='classchip mid'>mid class</span> บ + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter high'>ห้</span>า</div><div class='tone-rule-parts'><span class='classchip high'>high class</span> ห + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'>ไ<span class='class-letter low'>ม่</span></div><div class='tone-rule-parts'><span class='classchip low'>low class</span> ม + ไม้เอก ่</div><div class='tone-rule-result'>falling tone</div></div></div>The full table comes in Unit C."}],
+  {id:"l4", we:{m:"ไม่ → ม LOW class + ไม้เอก ่ → FALLING tone = not", twinIdx:1, ask:"tone"}, unit:"A · Foundations", title:"Tone-mark preview", sub:"Tone marks ่ ้ + ห", glyphs:["่","้","ห"],
+   pre:[{h:"Tone marks - preview only", body:"This is a preview, not the full table. Today's job is to notice that the mark is <b>not</b> the tone by itself. The consonant class decides what the mark does.<br><br>Two Thai tone marks sit above the consonant: <b>่</b> is <b>ไม้เอก</b>, and <b>้</b> is <b>ไม้โท</b>. Read the initial consonant's class, then the Thai mark, then name the tone.<div class='tone-rule-tiles'><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter mid'>บ้</span>า<span class='class-letter low'>น</span></div><div class='tone-rule-parts'><span class='classchip mid'>mid class</span> บ + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'><span class='class-letter high'>ห้</span>า</div><div class='tone-rule-parts'><span class='classchip high'>high class</span> ห + ไม้โท ้</div><div class='tone-rule-result'>falling tone</div></div><div class='tone-rule-tile'><div class='tone-rule-thai'>ไ<span class='class-letter low'>ม่</span></div><div class='tone-rule-parts'><span class='classchip low'>low class</span> ม + ไม้เอก ่</div><div class='tone-rule-result'>falling tone</div></div></div>The full table comes in Unit C."},
+     {h:"อ่าน means to read", body:"อ่าน means <b>to read</b>. It is the app's name and your Phase 1 goal. Read it from the parts: <span class='classchip mid'>อ</span> + <b>่</b> + <b>า</b> + <b>น</b>. This is a recognition teaching item, not extra vocabulary you must produce."}],
    note:"The same Thai tone mark can make different tones depending on consonant class. Use class + mark to name the tone.",
    words:[
      {thai:"ไม่", tr:"mâi", en:"no / not", vocab:"core"},
      {thai:"บ้าน", tr:"bâan", en:"house / home", vocab:"core", frame:{text:"บ start b + า aa + น ending -n (rings/live) + ้ tone mark", final:"น"}},
      {thai:"นี่", tr:"nîi", en:"this", vocab:"core"},
+     {thai:"อ่าน", tr:"àan", en:"to read", vocab:"recognition", review:false, frame:{text:"อ start/silent carrier + ่ tone mark + า aa + น ending -n (rings/live)", final:"น"}},
      {thai:"ห้า", tr:"hâa", en:"five", vocab:"recognition"}
    ]},
   {id:"l5", we:{m:"รอ → ร + อ acting as the vowel or → live → MID → ror = to wait", twinIdx:1, ask:"tr"}, unit:"A · Foundations", title:"Waiting and we", sub:"ร ล ว ย + อ and เ◌า", glyphs:["ร","ล","ว","ย","เ◌า"],
@@ -1344,7 +1347,8 @@ const LESSONS = [
      {thai:"ขาว", tr:"khǎao", en:"white", vocab:"decode", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live)", final:"ว", sound:"-aao"}}
    ]},
   /* ---------------- UNIT B - The workhorses ---------------- */
-  {id:"l7", we:{m:"งาน → ง start job ng + า aa + น ending job -n → rings/live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take ไม้โท ้ and jump to a <b>high</b> tone - ช้าง. (The full flip is the Unit-C payoff.)"}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
+  {id:"l7", we:{m:"งาน → ง start job ng + า aa + น ending job -n → rings/live → MID → ngaan = work", twinIdx:1, ask:"tr"}, unit:"B · The workhorses", title:"Work and elephants", pre:[{h:"More initials - class still leads", body:"ง 'ng' can <b>start</b> a syllable - งาน ngaan (English only ends with it). The short-a vowel always needs a final after it: วัน wan. And watch a <span style='color:var(--low);font-weight:600'>low</span>-class letter take ไม้โท ้ and jump to a <b>high</b> tone - ช้าง. You are seeing the result now; you do not need to memorise the full low-class table yet. Unit C will organise it."},
+     {h:"Review days are normal", body:"From here, review days are normal. Thai script sticks through repeated decoding, not by rushing new lessons. If Today gives you consolidation, that is the course working."}], sub:"จ ช ง + short a (◌ั)", glyphs:["จ","ช","ง","ั"],
    note:"ง 'ng' can START a syllable in Thai - งาน ngaan. English only allows it at the end. ◌ั is short a and always needs a final consonant: วัน wan.",
    words:[
      {thai:"งาน", tr:"ngaan", en:"work", vocab:"core", frame:{text:"ง start ng + า aa + น ending -n (rings/live)", final:"น"}},
@@ -1352,7 +1356,7 @@ const LESSONS = [
      {thai:"จาน", tr:"jaan", en:"plate", vocab:"recognition", frame:{text:"จ start j + า aa + น ending -n (rings/live)", final:"น"}},
      {thai:"วันนี้", tr:"wan-níi", en:"today", vocab:"core", frame:{text:"วัน = ว start w + ั short a + น ending -n (rings/live)", final:"น", focus:"วัน", vowelLength:"Short", lengthExplain:"◌ั is short a; the final น keeps วัน live."}}
    ]},
-  {id:"l8", we:{m:"ถูก → ถ start th + ู uu + ก ending -k → stop/dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Father is cheap-ish", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th - no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก (ก is doing its ending job: -k). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under ไม้เอก ่ gives falling tone: พ่อ."}], sub:"ต ถ พ ฟ", glyphs:["ต","ถ","พ","ฟ"],
+  {id:"l8", we:{m:"ถูก → ถ start th + ู uu + ก ending -k → stop/dead → LOW → thùuk = cheap", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"ต ถ พ ฟ + dead syllables", pre:[{h:"A new dead-syllable case", body:"ต dt is the unaspirated twin of ท th - no puff of air. New tone case: a <span style='color:var(--high);font-weight:600'>high</span>-class initial on a <b>dead</b> syllable → <b>low</b> tone, ถูก (ก is doing its ending job: -k). And a <span style='color:var(--low);font-weight:600'>low</span>-class letter under ไม้เอก ่ gives falling tone: พ่อ. This is still a preview: Unit C will organise the whole table."}], sub:"ต ถ พ ฟ + dead-syllable preview", glyphs:["ต","ถ","พ","ฟ"],
    note:"ต dt is the unaspirated twin of ท th - no puff of air. Hold your palm in front of your mouth: ท should blow it, ต shouldn't.",
    words:[
      {thai:"ตา", tr:"dtaa", en:"eye / maternal grandpa", vocab:"recognition"},
@@ -1369,7 +1373,7 @@ const LESSONS = [
      {thai:"ฝน", tr:"fǒn", en:"rain", vocab:"recognition", frame:{text:"ฝ start f + hidden o + น ending -n (rings/live)", final:"น", hiddenVowel:"hidden o", hiddenExplain:"ฝน has no written vowel between ฝ and น; add hidden o before the -n ending."}},
      {thai:"ซ้าย", tr:"sáai", en:"left", vocab:"core", frame:{text:"ซ start s + า aa + ย ending -ai (glides/live) + ้ tone mark", final:"ย", sound:"-ai"}}
    ]},
-  {id:"l10", we:{m:"แม่ → แ written first + ม LOW class + ไม้เอก ่ → FALLING tone = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Mother is expensive", pre:[{h:"Front vowels - tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have - listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with ไม้เอก ่ → <b>falling</b> tone."}], sub:"เ แ ◌ึ ◌ื", glyphs:["เ","แ","ึ","ื"],
+  {id:"l10", we:{m:"แม่ → แ written first + ม LOW class + ไม้เอก ่ → FALLING tone = mother", twinIdx:2, ask:"tr"}, unit:"B · The workhorses", title:"Front vowels เ แ + ึ ื", pre:[{h:"Front vowels - tone unchanged", body:"เ and แ are written <b>before</b> the consonant but said after: แม่ = m + ae. The vowel in มือ muue is the lips-spread 'oo' English doesn't have - listen and copy. Tone stays class-driven: <span style='color:var(--low);font-weight:600'>low</span> ม with ไม้เอก ่ → <b>falling</b> tone."}], sub:"แม่, แพง, มือ", glyphs:["เ","แ","ึ","ื"],
    note:"ึ/ื is the vowel English doesn't have: say 'oo' but spread your lips into a flat smile. Listen and copy.",
    words:[
      {thai:"แม่", tr:"mâae", en:"mother", vocab:"core", frame:{text:"แ is written before ม but spoken after: ม + aae + ่ tone mark", vowelOrder:"written before, spoken after", orderExplain:"แ is a front vowel: written before the consonant, spoken after the start sound."}},
@@ -1377,7 +1381,7 @@ const LESSONS = [
      {thai:"มือ", tr:"muue", en:"hand", vocab:"core"},
      {thai:"ลึก", tr:"lúek", en:"deep", vocab:"decode", frame:{text:"ล start l + ึ ue + ก ending -k (stop/dead)", final:"ก"}}
    ]},
-  {id:"l11", we:{m:"รถ → ร start r + hidden o + ถ ending -t → dead short on LOW class → HIGH tone = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> - like จะ, ทุก, or a hidden 'o' before a stop. รถ uses ถ as an ending -t, not the start sound th. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b> tone. Mid class stays low."}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
+  {id:"l11", we:{m:"รถ → ร start r + hidden o + ถ ending -t → dead short on LOW class → HIGH tone = car", twinIdx:0, ask:"tone"}, unit:"B · The workhorses", title:"Short and snappy", pre:[{h:"Dead-short shifts the tone", body:"A short vowel with no ringing final makes a syllable <b>dead</b> - like จะ, ทุก, or a hidden 'o' before a stop. รถ uses ถ as an ending -t, not the start sound th. Dead-short changes the tone, and here's the <span style='color:var(--low);font-weight:600'>low</span>-class case you'll formalise in Unit C: <span style='color:var(--low);font-weight:600'>low</span> + dead-short → <b>high</b> tone. You are seeing the result now; Unit C will organise the full low-class route."}], sub:"◌ุ ◌ะ + hidden o again", glyphs:["ุ","ะ"],
    note:"◌ะ chops a vowel short and makes the syllable DEAD - which changes its tone. จะ jà (will) is low tone for exactly that reason.",
    words:[
      {thai:"จะ", tr:"jà", en:"will (future marker)", vocab:"core"},
@@ -1396,6 +1400,8 @@ const LESSONS = [
   /* ---------------- UNIT C - The tone engine ---------------- */
   {id:"l13", we:{m:"มาก → ม start m + า aa + ก ending -k → dead with a LONG vowel → FALLING tone. But รัก → dead SHORT → different tone...", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"Live or dead?", sub:"The one concept behind every tone", glyphs:[],
    pre:[
+     {h:"Consolidation is expected", body:"You now know enough pieces that review will sometimes replace a new lesson. That is expected. Unit C is where earlier tone previews become one route you can reuse."},
+     {h:"Tone route", body:"Do not guess the tone from the meaning.<br><br>Use the route:<br><b>1.</b> Find the initial consonant or cluster leader.<br><b>2.</b> Identify the class: mid, high, or low.<br><b>3.</b> Check for a tone mark.<br><b>4.</b> If there is no mark, decide live/dead.<br><b>5.</b> For low-class dead syllables, check vowel length.<br><b>6.</b> Name the tone."},
      {h:"Every syllable is live or dead", body:"<b>Live</b>: ends in a long vowel or a ringing final (n, m, ng, ai, ao...). It can ring on. มา, กิน, งาน - live.<br><br><b>Dead</b>: ends in a short vowel or a stop final (k, t, p). It gets cut off. จะ, มาก, รถ - dead. Notice the final job first: ก at the end reads -k."},
      {h:"Why you care", body:"<i>Recap - you've read every one of these across Units A-B; here they are in one place.</i><br><br>A syllable with NO tone mark gets its tone from class + live/dead:<br><br>• Mid class + live → mid (ไป)<br>• Mid class + dead → low (จะ)<br>• High class + live → rising (ขอ)<br>• High class + dead → low (ถูก... wait, that has a long vowel - still dead, still low)<br>• Low class + live → mid (มา)<br>• Low class + dead-short → high (รัก)<br>• Low class + dead-long → falling (มาก)"}
    ],
@@ -1413,7 +1419,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"งาน", text:"Live or dead?", answer:"Live", options:["Live","Dead"], explain:"ends in -n, rings on"}
    ]},
   {id:"l14", we:{m:"ได้ → ด MID class + ไม้โท ้ → FALLING tone = can", twinIdx:3, ask:"tone"}, unit:"C · The tone engine", title:"Mid class: all five", sub:"Tone marks ๊ ๋ complete the set", glyphs:["๊","๋"],
-   pre:[{h:"Mid class is the only class that can make all 5 tones", body:"<i>You met ่ and ้ on mid class back in lesson 4 - ๊ and ๋ just finish the set.</i><br><br><span class='classchip mid'>mid class</span> กา → mid<br><span class='classchip mid'>mid class</span> ก่า + ไม้เอก ่ → low<br><span class='classchip mid'>mid class</span> ก้า + ไม้โท ้ → falling<br><span class='classchip mid'>mid class</span> ก๊า + ไม้ตรี ๊ → high<br><span class='classchip mid'>mid class</span> ก๋า + ไม้จัตวา ๋ → rising<br><br>๊ and ๋ only ever appear on mid-class consonants - mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
+   pre:[{h:"Tone route", body:"Do not guess the tone from the meaning. Find the initial consonant or cluster leader, identify the class, check for a tone mark, then use the matching class row. If there is no mark, decide live/dead; for low-class dead syllables, check vowel length."},
+     {h:"Mid class is the only class that can make all 5 tones", body:"<i>You met ่ and ้ on mid class back in lesson 4 - ๊ and ๋ just finish the set.</i><br><br><span class='classchip mid'>mid class</span> กา → mid<br><span class='classchip mid'>mid class</span> ก่า + ไม้เอก ่ → low<br><span class='classchip mid'>mid class</span> ก้า + ไม้โท ้ → falling<br><span class='classchip mid'>mid class</span> ก๊า + ไม้ตรี ๊ → high<br><span class='classchip mid'>mid class</span> ก๋า + ไม้จัตวา ๋ → rising<br><br>๊ and ๋ only ever appear on mid-class consonants - mostly in loanwords and noodle shops: โต๊ะ (table), ก๋วยเตี๋ยว (noodles)."}],
    note:"ได้ dâi after a verb = 'can'. พูดได้ = can speak. The single most useful grammar word in Thai.",
    words:[
      {thai:"เก่า", tr:"gào", en:"old (things)", vocab:"recognition"},
@@ -1427,7 +1434,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"เก่า", text:"<span class='classchip mid'>mid class</span> + ไม้เอก ่ gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ก is mid class; ไม้เอก gives low"}
    ]},
   {id:"l15", we:{m:"ข้าว → ข HIGH class + ไม้โท ้ → FALLING tone = rice", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"High class: the grid", sub:"ข้าว ห้อง and friends", glyphs:[],
-   pre:[{h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) - here's the full row.</i><br><br><span class='classchip high'>high class</span> plain + live → <b>rising</b>: ขอ<br><span class='classchip high'>high class</span> plain + dead → <b>low</b>: ถูก<br><span class='classchip high'>high class</span> + ไม้เอก ่ → <b>low</b>: สี่<br><span class='classchip high'>high class</span> + ไม้โท ้ → <b>falling</b>: ข้าว<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
+   pre:[{h:"Tone route", body:"Do not guess the tone from the meaning. Find the initial consonant or cluster leader, identify the class, check for a tone mark, then use the matching class row. If there is no mark, decide live/dead; for low-class dead syllables, check vowel length."},
+     {h:"High class makes 3 tones", body:"<i>You first met high class in lessons 6 (rising) and 8 (dead → low) - here's the full row.</i><br><br><span class='classchip high'>high class</span> plain + live → <b>rising</b>: ขอ<br><span class='classchip high'>high class</span> plain + dead → <b>low</b>: ถูก<br><span class='classchip high'>high class</span> + ไม้เอก ่ → <b>low</b>: สี่<br><span class='classchip high'>high class</span> + ไม้โท ้ → <b>falling</b>: ข้าว<br><br>High class never makes mid or high tones. If you hear a high tone, the consonant wasn't high class."}],
    note:"ข้าว khâao = rice, but also 'a meal'. กินข้าว literally 'eat rice' = to eat, full stop.",
    words:[
      {thai:"ข้าว", tr:"khâao", en:"rice / a meal", vocab:"core", frame:{text:"ข start kh + า aa + ว ending -aao (glides/live) + ้ tone mark", final:"ว", sound:"-aao"}},
@@ -1440,7 +1448,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"ถูก", text:"<span class='classchip high'>high class</span> + dead syllable gives which tone?", answer:"Low", options:["Mid","Low","Falling","High","Rising"], explain:"ถ is high class; a dead syllable gives low"}
    ]},
   {id:"l16", we:{m:"น้ำ → น LOW class + ไม้โท ้ → HIGH tone, not falling = water", twinIdx:1, ask:"tone"}, unit:"C · The tone engine", title:"Low class: the flip", sub:"Same marks, shifted tones", glyphs:["็"],
-   pre:[{h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br><span class='classchip low'>low class</span> + ไม้เอก ่ → <b>falling</b>: ไม่<br><span class='classchip low'>low class</span> + ไม้โท ้ → <b>high</b>: น้ำ<br><span class='classchip low'>low class</span> plain + dead-short → <b>high</b>: เล็ก<br><span class='classchip low'>low class</span> plain + dead-long → <b>falling</b>: มาก<br><br>This is the flip that breaks most learners. The class colour is there to remind you which row you are using."},
+   pre:[{h:"Tone route", body:"Do not guess the tone from the meaning. Find the initial consonant or cluster leader, identify the class, check for a tone mark, then use the matching class row. If there is no mark, decide live/dead; for low-class dead syllables, check vowel length."},
+     {h:"Low class shifts everything one notch", body:"<i>You've been previewing this flip since lessons 4, 7 and 11 - now the rule itself.</i><br><br><span class='classchip low'>low class</span> + ไม้เอก ่ → <b>falling</b>: ไม่<br><span class='classchip low'>low class</span> + ไม้โท ้ → <b>high</b>: น้ำ<br><span class='classchip low'>low class</span> plain + dead-short → <b>high</b>: เล็ก<br><span class='classchip low'>low class</span> plain + dead-long → <b>falling</b>: มาก<br><br>This is the flip that breaks most learners. The class colour is there to remind you which row you are using."},
      {h:"็ marks a short vowel", body:"ไม้ไต่คู้ ็ is not a tone mark. It makes the vowel short before a final consonant: เล็ก = ล + เ◌็ + ก, a dead-short syllable."}],
    note:"พี่ phîi (older) and น้อง nórng (younger) - Thais use these for everyone: siblings, colleagues, waiters. The ็ in เล็ก is mái tài-khúu - it shortens the vowel, no tone change.",
    words:[
@@ -1455,7 +1464,8 @@ const LESSONS = [
      {kind:"mcq", prompt:"เล็ก", text:"<span class='classchip low'>low class</span> + dead-short gives which tone?", answer:"High", options:["Mid","Low","Falling","High","Rising"], explain:"low dead-short syllables are high"}
    ]},
   {id:"l17", we:{m:"หมา → silent ห makes ม follow HIGH-class rules → live → RISING tone = dog", twinIdx:2, ask:"tone"}, unit:"C · The tone engine", title:"The silent leaders", sub:"ห nam and อ nam", glyphs:[],
-   pre:[{h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine - these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow <span class='classchip high'>high class</span> tone rules: หมา and ไหน are rising.<br><br>Silent อ does the same trick with <span class='classchip mid'>mid class</span> rules - but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
+   pre:[{h:"Tone route", body:"Do not guess the tone from the meaning. First find the real class row. Silent leaders change the class row for tone; they do not add a new spoken start sound."},
+     {h:"Silent ห upgrades low class", body:"<i>The last two pieces of the engine - these two are genuinely new.</i><br><br>A silent ห in front of a low-class consonant makes it follow <span class='classchip high'>high class</span> tone rules: หมา and ไหน are rising. It changes the class row, not the sound: หมา reads mǎa, not h-mǎa.<br><br>Silent อ does the same trick with <span class='classchip mid'>mid class</span> rules - but only in 4 words: อย่า อยู่ อย่าง อยาก. Two of them you'll use daily."}],
    note:"อยู่ marks location AND continuous action: อยู่ไหน = where are you? กินอยู่ = (I'm) eating.",
    words:[
      {thai:"หมา", tr:"mǎa", en:"dog", vocab:"recognition", frame:{text:"ห is silent here. It leads ม into high-class tone rules: ม sound + า aa, live/no mark → rising mǎa."}},
@@ -1485,7 +1495,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"ใกล้", text:"What makes ใกล้ different from ไกล?", answer:"The Thai tone mark", options:["The Thai tone mark","The vowel length","The final consonant","The class"], explain:"near vs far is a tone-mark distinction"}
    ]},
   {id:"l19", we:{m:"จริง → the ร is silent → j + ing → live → MID → jing = really", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Fake clusters", sub:"ทร says s, จร drops the r", glyphs:[],
-   pre:[{h:"Some clusters are lies", body:"ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Now you can read the most important food word in the country."}],
+   pre:[{h:"Common spelling patterns", body:"These are not random exceptions; they are common spelling patterns to recognise slowly.<br><br>ทร is pronounced <b>s</b>: ทราบ sâap (to know, formal).<br>In จริง the ร vanishes: jing (true).<br>สร้าง: the ร is silent, ส leads: sâang (to build).<br><br>And in อร่อย, a leading อ carries the vowel for ร: a-ròy. Read the pattern first, then the word."}],
    note:"จริง jing on its own = 'really?!' - say it with a rising intonation and you sound instantly more Thai.",
    words:[
      {thai:"จริง", tr:"jing", en:"true / really", vocab:"core", frame:{text:"จ start j + ร drops out + ิ i + ง ending -ng (rings/live)", final:"ง", clusterKind:"fake cluster", clusterExplain:"จร is a fake cluster here: ร drops out, so จริง reads jing."}},
@@ -1498,7 +1508,7 @@ const LESSONS = [
      {kind:"mcq", prompt:"ทราบ", text:"ทร usually begins with which sound?", answer:"s", options:["s","th","tr","r"], explain:"ทราบ reads sâap"},
      {kind:"mcq", prompt:"อร่อย", text:"What job is อ doing?", answer:"Carrying the opening vowel", options:["Carrying the opening vowel","Making an r sound","Silencing ร","Marking high class"], explain:"อ carries the a- before ร่อย"}
    ]},
-  {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING tone = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit - same tone engine. ศ and ษ are both high-class s-family letters. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b> tone."},
+  {id:"l20", we:{m:"ศูนย์ → ศ start s + ู uu + น ending -n; ◌์ kills the ย → live → RISING tone = zero", twinIdx:1, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Formal friends", pre:[{h:"Formal letters, same rules", body:"Loanword letters from Pali/Sanskrit are recognition-heavy here, not active vocabulary to memorise. Use the same tone engine. ศ and ษ are both high-class s-family letters. ◌์ (gaaran) <b>silences</b> the letter beneath it: ศูนย์ (the ย goes silent, so น is the ending -n). Class still sets the tone: <span style='color:var(--high);font-weight:600'>high</span> ศ on a plain live syllable → <b>rising</b> tone."},
      {h:"เ◌อ says er", body:"เ◌อ is the app's <b>er</b> vowel pattern: เธอ = ธ + เ◌อ → ter. It is useful for real speech, but recognition-level here."}], sub:"ธ ภ ศ ษ ญ ฮ + เ◌อ + ◌์", glyphs:["ธ","ภ","ศ","ษ","ญ","ฮ","เ◌อ","์"],
    note:"◌์ (gaa-ran) silences the letter under it - Thai's way of keeping loanword spellings without the sounds: ศูนย์ sǔun (zero), เบอร์ ber (number). This is a denser late-Phase lesson, so read the frames slowly and let the review deck do the repetition.",
    words:[
@@ -1510,14 +1520,20 @@ const LESSONS = [
    extraQuiz:[
      {kind:"mcq", prompt:"ศูนย์", text:"In ศูนย์, what does ์ do?", answer:"Silences the marked letter", options:["Silences the marked letter","Makes the tone high","Repeats the word","Makes the vowel short"], explain:"ย์ is written but not pronounced; น is the ending sound."}
    ]},
-  {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING tone = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"The long tail", sub:"ฉ ฬ + recognition-only rarities", glyphs:["ฉ","ฬ"],
-   pre:[{h:"Letters you only need to recognise", body:"These appear mostly in names, royal and Pali-Sanskrit words. Recognise them - and to read a tone you only need their <b>class</b>. Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ษ (s)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Two are RETIRED - ฃ and ฅ exist on keyboards but no living word uses them. That's the class of all 42 - the Letters boss will check you know them."}],
+  {id:"l21", we:{m:"ฉัน → ฉ HIGH class + ◌ั น → live → RISING tone = I", twinIdx:3, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Rare-letter class rows", sub:"ฉ ฬ + recognition-only rarities", glyphs:["ฉ","ฬ"], classOnlyGlyphs:["ฎ","ฏ","ฐ","ณ","ฌ","ฑ","ฒ","ฆ"],
+   pre:[{h:"Letters you only need to recognise", body:"Rare letters are mostly recognition work. You do not need to use them as active vocabulary. For the Letters boss, know their class row.<br><br>Grouped by class:<br><br><b style='color:var(--mid);font-weight:600'>Mid:</b> ฎ (d) · ฏ (dt)<br><b style='color:var(--high);font-weight:600'>High:</b> ฐ (th) · ศ ษ (s-family, already met/formal)<br><b style='color:var(--low);font-weight:600'>Low:</b> ณ (n) · ฌ (ch) · ฑ ฒ (th) · ฆ (kh) · ฬ (l)<br><br>Retired letters stay reference-only. The active job here is class recognition."}],
    note:"ฉัน chǎn = 'I', neutral-informal. As a male you'll mostly use ผม, but you'll hear ฉัน constantly in songs and from women.",
    words:[
      {thai:"ฉัน", tr:"chǎn", en:"I (informal)", vocab:"recognition", frame:{text:"ฉ start ch + ั a + น ending -n (rings/live)", final:"น"}},
      {thai:"กีฬา", tr:"gii-laa", en:"sport", vocab:"decode", frame:{text:"กีฬา = กี + ฬา; ฬ is a rare low-class l letter used in formal/Pali words."}},
      {thai:"ผู้ใหญ่", tr:"phûu-yài", en:"adult / senior", vocab:"recognition"},
      {thai:"สนุก", tr:"sà-nùk", en:"fun", vocab:"core", frame:{text:"สนุก = ส + hidden a, then นุก = น start n + ุ u + ก ending -k (stop/dead)", final:"ก", focus:"นุก", hiddenFocus:"สนุก", hiddenVowel:"hidden a", hiddenExplain:"สนุก starts with a short hidden a after ส: sà-nùk."}}
+   ],
+   extraQuiz:[
+     {kind:"mcq", prompt:"ฎ ฏ", text:"Rare-letter class row?", answer:"Mid class", options:["Mid class","High class","Low class"], axis:"rare-class", explain:"Rare letters are recognition work. ฎ and ฏ are mid class for the Letters boss."},
+     {kind:"mcq", prompt:"ฐ", text:"Rare-letter class row?", answer:"High class", options:["Mid class","High class","Low class"], axis:"rare-class", explain:"ฐ is high class. It is a recognition row, not active vocabulary."},
+     {kind:"mcq", prompt:"ณ ฌ ฑ ฒ ฆ ฬ", text:"Rare-letter class row?", answer:"Low class", options:["Mid class","High class","Low class"], axis:"rare-class", explain:"These rare letters are low class. Know the row; do not add them as normal words."},
+     {kind:"mcq", prompt:"ศ ษ", text:"Formal s-family class row?", answer:"High class", options:["Mid class","High class","Low class"], axis:"rare-class", explain:"ศ and ษ are high-class formal s-family letters."}
    ]},
   {id:"l22", we:{m:"เพื่อน → เ◌ือ in three pieces + ไม้เอก ่ on LOW class → FALLING tone = friend", twinIdx:0, ask:"tr"}, unit:"D · Clusters & the long tail", title:"Three-piece vowels", pre:[{h:"Wrap-around vowels - class still rules", body:"These vowels wrap the consonant in three pieces: เ◌ีย (-ia), เ◌ือ (-uea), ◌ัว (-ua). The class of that one consonant still drives the tone: <span style='color:var(--low);font-weight:600'>low</span> พ in เพื่อน takes ไม้เอก ่ → <b>falling</b> tone."}], sub:"เ◌ีย เ◌ือ ◌ัว", glyphs:["เ◌ีย","เ◌ือ","◌ัว"],
    note:"Find the consonant inside the three-piece vowel first, then read class, live/dead and any Thai tone mark.",
@@ -1798,8 +1814,8 @@ const STORIES = [
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"สอน",tr:"sǒrn",en:"teaches"},{t:"ภาษา",tr:"phaa-sǎa",en:"language"},{t:"ไทย",tr:"thai",en:"Thai"}],
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"เรียน",tr:"rian",en:"study"},{t:"ทุก",tr:"thúk",en:"every"},{t:"วัน",tr:"wan",en:"day"}],
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"ใจดี",tr:"jai-dii",en:"is kind"}],
-   [{t:"ผม",tr:"phǒm",en:"I"},{t:"อยาก",tr:"yàak",en:"want to"},{t:"พูด",tr:"phûut",en:"speak"},{t:"ได้",tr:"dâi",en:"well"}],
-   [{t:"ไม่",tr:"mâi",en:"not"},{t:"นาน",tr:"naan",en:"long now -"},{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"will speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"อยาก",tr:"yàak",en:"want to"},{t:"พูด",tr:"phûut",en:"speak"},{t:"ได้",tr:"dâi",en:"be able to"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"อ่าน",tr:"àan",en:"read"},{t:"ได้",tr:"dâi",en:"can"}]
  ]},
  {id:"s7", gate:"l18", title:"ครูกินข้าว - Teacher eats", lines:[
    [{t:"ครู",tr:"khruu",en:"the teacher"},{t:"มา",tr:"maa",en:"comes"}],
@@ -1820,14 +1836,14 @@ const STORIES = [
    [{t:"ปิด",tr:"bpìt",en:"closed"}],
    [{t:"ห้าม",tr:"hâam",en:"forbidden"}],
    [{t:"อาหาร",tr:"aa-hǎan",en:"food"},{t:"ดี",tr:"dii",en:"good"},{t:"มาก",tr:"mâak",en:"very"}],
-   [{t:"เรา",tr:"rao",en:"we"},{t:"ไป",tr:"bpai",en:"go"},{t:"อาหาร",tr:"aa-hǎan",en:"food"}]
+   [{t:"เรา",tr:"rao",en:"we"},{t:"กิน",tr:"gin",en:"eat"},{t:"อาหาร",tr:"aa-hǎan",en:"food"}]
  ]},
  {id:"s10", gate:"l24", title:"เพื่อนเรียนไทย - Friends study Thai", lines:[
    [{t:"เพื่อน",tr:"phûean",en:"friend"},{t:"เรียน",tr:"rian",en:"studies"},{t:"ภาษา",tr:"phaa-sǎa",en:"language"},{t:"ไทย",tr:"thai",en:"Thai"}],
    [{t:"ครู",tr:"khruu",en:"teacher"},{t:"สอน",tr:"sǒrn",en:"teaches"},{t:"ทุก",tr:"thúk",en:"every"},{t:"วัน",tr:"wan",en:"day"}],
    [{t:"เพื่อน",tr:"phûean",en:"friend"},{t:"อยู่",tr:"yùu",en:"is in"},{t:"ห้อง",tr:"hôrng",en:"the room"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"สนุก",tr:"sà-nùk",en:"have fun"},{t:"มาก",tr:"mâak",en:"a lot"}],
-   [{t:"เรา",tr:"rao",en:"we"},{t:"พูด",tr:"phûut",en:"speak"},{t:"เก่ง",tr:"gèng",en:"skilfully"}]
+   [{t:"เรา",tr:"rao",en:"we"},{t:"อ่าน",tr:"àan",en:"read"},{t:"ได้",tr:"dâi",en:"can"}]
  ]}
 ];
 
@@ -1999,7 +2015,7 @@ const LESSON_PAYOFFS = {
   l1:{thai:'มา', tr:'maa', meaning:'to come', context:'A small real verb: you can read มา before you know much Thai grammar.', capability:'You read มา from Thai script.'},
   l2:{thai:'กิน', tr:'gin', meaning:'to eat', context:'Your first useful start + vowel + ending word: ก + ิ + น.', capability:'You read a word with a ringing -n ending.'},
   l3:{thai:'บาท', tr:'bàat', meaning:'baht', context:'You will see บาท beside prices. Read the final -t before thinking about money.', capability:'You recognised บาท in a price word.'},
-  l4:{thai:'ไม่', tr:'mâi', meaning:'no / not', context:'This is an early word where the Thai tone mark matters.', capability:'You read ไม่ from the tone mark.'},
+  l4:{thai:'อ่าน', tr:'àan', meaning:'to read', context:'This is the app name and the Phase 1 goal. Read it from อ + ่ + า + น.', capability:'You read the course name from Thai script.'},
   l5:{thai:'เรา', tr:'rao', meaning:'we / us', context:'เ◌า wraps the consonant. Read ร first, then the ao vowel.', capability:'You read a useful wrap-vowel word.'},
   l6:{thai:'ขอ', tr:'khǒr', meaning:'may I have...', context:'Many polite requests start with ขอ. The rising tone comes from high class + live.', capability:'You read the start of a polite request.'},
   l7:{thai:'งาน', tr:'ngaan', meaning:'work', context:'Thai can start a word with ง. Hear it before the vowel, not only at the end.', capability:'You read and heard initial ง.'},
@@ -3169,7 +3185,7 @@ function renderPlan(){
   const bits = [];
   if(state.week && state.week.key === weekKey()){
     const usedN = Object.keys(state.week.used||{}).length;
-    if(state.week.picks.length) bits.push('phrase pack ' + usedN + '/' + state.week.picks.length + ' used');
+    if(state.week.picks.length) bits.push('phrase practice ' + usedN + '/' + state.week.picks.length);
   }
   const unread = STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id]);
   if(unread) bits.push('story ready: ' + unread.title.split(' - ')[1]);
@@ -4310,6 +4326,13 @@ function firstConsonantClass(thai){
   }
   return null;
 }
+function firstConsonantChar(thai){
+  for(const ch of String(thai||'')){
+    const g = GLYPHS[ch];
+    if(g && g.type === 'c') return ch;
+  }
+  return '';
+}
 function classBadgeHtml(cls){
   return cls ? '<span class="classchip ' + escAttr(cls) + '">' + esc(CLS_LABEL[cls]) + '</span>' : '';
 }
@@ -4353,16 +4376,21 @@ function toneQuestionExplain(w){
   const marked = /[่้๊๋]/.test(w.thai);
   const silentH = silentHLeadConsonant(w.thai);
   const cls = firstConsonantClass(w.thai);
-  const classText = cls ? CLS_LABEL[cls] + ' class' : 'class';
-  if(silentH) return 'ห is silent here; it makes ' + silentH + ' follow the high-class row. That gives ' + tone.toLowerCase() + ' tone.';
-  if(hasSilentOLead(w.thai)) return 'อ is silent here; it makes ย follow the mid-class row. That gives ' + tone.toLowerCase() + ' tone.';
+  const initial = firstConsonantChar(w.thai);
+  const classText = cls ? CLS_LABEL[cls] : 'class row';
+  const f = wordFrame(w);
+  const liveDead = liveDeadFromFrame(f);
+  const finalText = f && f.final ? f.final + ' closes as ' + ((finalJob(f.final)||{}).sound || 'the ending') : '';
+  const lengthText = f && f.vowelLength ? ' The vowel is ' + f.vowelLength.toLowerCase() + '.' : '';
+  if(silentH) return 'ห is silent here; it makes ' + silentH + ' follow the high-class row. Use the route from that row: ' + tone.toLowerCase() + ' tone.';
+  if(hasSilentOLead(w.thai)) return 'อ is silent here; it makes ย follow the mid-class row. Use the route from that row: ' + tone.toLowerCase() + ' tone.';
+  if(marked) return (initial ? initial + ' is ' + classText + '. ' : '') + 'Read the class first, then the Thai mark. This gives ' + tone.toLowerCase() + ' tone.';
   if(gate <= 2 && tone === 'Mid') return 'No mark still gives a tone. This live syllable is mid.';
-  if(gate === 3 && tone === 'Low') return classText + ' + dead syllable gives low tone.';
-  if(gate === 6 && tone === 'Rising') return classText + ' + plain live syllable gives rising tone.';
-  if(marked) return 'Read the class first, then the Thai mark. This is ' + tone.toLowerCase() + ' tone.';
-  if(tone === 'Mid') return 'No mark still gives a tone. This live syllable is mid.';
-  if(gate === 11 && tone === 'High') return classText + ' + dead-short gives high tone.';
-  return 'No mark means use class + live/dead. This is ' + tone.toLowerCase() + ' tone.';
+  if(gate === 3 && tone === 'Low') return (initial ? initial + ' is ' + classText + '. ' : '') + (finalText ? finalText + ', so it is dead. ' : '') + classText + ' + dead syllable gives low tone.';
+  if(gate === 6 && tone === 'Rising') return (initial ? initial + ' is ' + classText + '. ' : '') + classText + ' + plain live syllable gives rising tone.';
+  if(tone === 'Mid') return (initial ? initial + ' is ' + classText + '. ' : '') + 'No mark still gives a tone. This live syllable is mid.';
+  if(gate === 11 && tone === 'High') return (initial ? initial + ' is ' + classText + '. ' : '') + (liveDead ? w.thai + ' is ' + liveDead.toLowerCase() + '. ' : '') + classText + ' + dead-short gives high tone.';
+  return (initial ? initial + ' is ' + classText + '. ' : '') + (finalText ? w.thai + ' is dead because ' + finalText + '. ' : '') + lengthText + ' Use class + live/dead to get ' + tone.toLowerCase() + ' tone.';
 }
 function toneQuestion(w, upToLessonNum){
   if(!toneTaughtBy(w, upToLessonNum)) return null;
@@ -4570,6 +4598,7 @@ function axisCardIdsForLesson(L){
   });
   finalGlyphsForLesson(L).forEach(ch=>ids.push(axisId('final', ch)));
   (L.words||[]).forEach(w=>{
+    if(w.review === false) return;
     if(wordRole(w) !== 'decode') ids.push(axisId('listen', w.thai));
     ids.push(axisId('say', w.thai));
     if(liveDeadFromFrame(wordFrame(w))) ids.push(axisId('live', w.thai));
@@ -5379,7 +5408,7 @@ function validateV54FluencyContracts(){
   const finalQs = buildPhase1CompletionQuiz();
   if(finalQs.length < 10) errors.push('final Phase 1 completion checkpoint needs a broad enough item set');
   const finalAxes = finalQs.map(q=>q.axis || q._choice || q.kind).join(' ');
-  ['final','live-dead','tone','cluster','phase1-completion'].forEach(axis=>{
+  ['class','final','final-job','live-dead','vowel-length','tone','tone-mark','silent-leader','cluster','vowel-order','chunk','gaaran'].forEach(axis=>{
     if(!finalAxes.includes(axis)) errors.push('final checkpoint missing axis: ' + axis);
   });
   finalQs.forEach((q,idx)=>{
@@ -5415,6 +5444,34 @@ function validateV54FluencyContracts(){
   const pathText = buildPath().map(n=>[n.label,n.sub].join(' ')).join(' ');
   if(/Phase 2|conversation tree|dialogue route/i.test(pathText)) errors.push('Phase 2-style route appeared in the path');
   if(errors.length) throw new Error('V5.4 fluency contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateContentPedagogyHardeningContracts(){
+  const errors = [];
+  const l1Text = JSON.stringify((lessonById('l1')||{}).pre || []);
+  if(!/Today you only need the easiest case/.test(l1Text) || !/full tone engine comes later/.test(l1Text)) errors.push('Lesson 1 must frame the tone route as a preview');
+  const l4 = lessonById('l4');
+  const aan = l4 && l4.words && l4.words.find(w=>w.thai === 'อ่าน');
+  if(!aan || aan.vocab !== 'recognition' || aan.review !== false) errors.push('อ่าน must be a recognition-only signature item without recurring axis-review load');
+  const unitCText = ['l13','l14','l15','l16','l17'].map(id=>JSON.stringify((lessonById(id)||{}).pre || [])).join('\n');
+  if((unitCText.match(/Tone route/g)||[]).length < 5) errors.push('Unit C lessons must repeat the Tone route frame');
+  const l21Quiz = buildLessonQuiz(lessonById('l21')).filter(q=>q.axis === 'rare-class');
+  ['ฎ','ฏ','ฐ','ณ','ฌ','ฑ','ฒ','ฆ','ฬ','ศ','ษ'].forEach(ch=>{
+    if(!l21Quiz.some(q=>String(q.prompt||'').includes(ch))) errors.push('rare/formal consonant missing active class practice before Letters boss: ' + ch);
+  });
+  if(buildLettersBossQuiz().some(q=>/[ฃฅ]/.test(q.prompt||''))) errors.push('retired consonants should not be tested by the Letters boss');
+  const storyText = JSON.stringify(STORIES);
+  ['เรา","tr":"rao","en":"we"},{"t":"ไป","tr":"bpai","en":"go"},{"t":"อาหาร','พูด","tr":"phûut","en":"speak"},{"t":"เก่ง'].forEach(needle=>{
+    if(storyText.includes(needle)) errors.push('story copy retains awkward or overclaiming line: ' + needle);
+  });
+  const phraseCode = String(ensureWeek) + String(renderPhrases) + String(renderPack);
+  if(/picks\.forEach\(t=>srsAdd\('w:'/.test(phraseCode)) errors.push('weekly phrase suggestions must not auto-add to SRS');
+  if(!/Bonus phrasebook/.test(document.body ? document.body.innerHTML || '' : '') && !/Phase 1 progress does not depend on phrase cards/.test(phraseCode)) errors.push('phrasebook must be framed as optional');
+  const finalAxes = buildPhase1CompletionQuiz().map(q=>q.axis || q._choice || q.kind).join(' ');
+  ['vowel-length','silent-leader','gaaran','vowel-order','chunk'].forEach(axis=>{
+    if(!finalAxes.includes(axis)) errors.push('final checkpoint missing hardening axis: ' + axis);
+  });
+  if(errors.length) throw new Error('Content pedagogy hardening contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV521HardeningContracts(){
@@ -5807,12 +5864,12 @@ function taughtGlyphSet(doneIds){
   const doneSet = new Set(ids);
   const s = new Set();
   Object.defineProperty(s, '_doneIds', {value:ids.slice ? ids.slice() : Array.from(doneSet), enumerable:false});
-  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>{ for(const ch of String(g)){ if(ch !== '◌') s.add(ch); } }); }
+  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).concat(L.classOnlyGlyphs||[]).forEach(g=>{ for(const ch of String(g)){ if(ch !== '◌') s.add(ch); } }); }
   return s;
 }
 function taughtGlyphIdSet(doneIds){
   const doneSet = new Set(doneIds || state.done || []), s = new Set();
-  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).forEach(g=>s.add(g)); }
+  for(const L of LESSONS){ if(doneSet.has(L.id)) (L.glyphs||[]).concat(L.classOnlyGlyphs||[]).forEach(g=>s.add(g)); }
   return s;
 }
 function isLessonWord(thai){ return LESSONS.some(L=>L.words.some(w=>w.thai===thai)); }
@@ -6504,7 +6561,7 @@ function renderEarnBoard(){
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Every week</div>
-      ${row("Rehearse or use a pack phrase", "+5 💎 each", packUsed + "/" + packN + " this week")}
+      ${row("Rehearse an optional phrase", "+5 💎 each", packUsed + "/" + packN + " this week")}
       ${row("Read a new story", "+3 💎 first read", storiesRead + "/" + STORIES.length + " read")}
     </div>
     <div class="card section-gap">
@@ -6987,28 +7044,40 @@ function buildLettersBossQuiz(){
   })));
 }
 function startLettersBoss(rematch){ startGenericQuiz(buildLettersBossQuiz(), rematch ? 'Boss rematch · Letters boss' : 'Letters boss', {letters42:true, rematch:!!rematch}); }
-function thaiMechanismChoice(text, answer, options, explain, prompt){
+function thaiMechanismChoice(text, answer, options, explain, prompt, axis){
+  const opts = shuffle(options);
+  const thaiOptions = [answer].concat(opts).every(hasThaiText);
   return {kind:'mcq', prompt:prompt || '', promptBig:!!prompt, colourPrompt:!!prompt,
-    text, answer, options:shuffle(options), thaiOpts:true, colourThaiOpts:true,
-    _choice:'phase1-completion', axis:'phase1-completion', explain};
+    text, answer, options:opts, thaiOpts:thaiOptions, colourThaiOpts:thaiOptions,
+    _choice:'phase1-completion', axis:axis || 'phase1-completion', explain};
 }
 function taggedQuestion(q, axis){
   return q ? Object.assign({axis}, q) : null;
 }
+function silentLeaderClassQuestion(){
+  return {kind:'mcq', prompt:'อยู่', promptBig:true, colourPrompt:true,
+    text:'อยู่ uses silent อ. Which class row does it follow?',
+    answer:'Mid class', options:shuffle(Object.values(CLS_LABEL)),
+    axis:'silent-leader',
+    explain:'Silent อ does not add a sound here; it makes ย follow the mid-class row.'};
+}
 function buildPhase1CompletionQuiz(){
   const qs = [
-    classFromMemoryQuestion('ก'),
-    classFromMemoryQuestion('ข'),
-    classFromMemoryQuestion('ค'),
+    taggedQuestion(classFromMemoryQuestion('ก'), 'class'),
     finalJobQuestion('บ'),
     finalSoundQuestion(findWord('พูด')),
     liveDeadQuestion(findWord('มาก')),
+    vowelLengthQuestion(findWord('รัก')),
+    taggedQuestion(toneQuestion(findWord('ได้'), 24), 'tone-mark'),
     taggedQuestion(toneQuestion(findWord('ครับ'), 24), 'tone'),
     taggedQuestion(toneQuestion(findWord('หมา'), 24), 'tone'),
+    silentLeaderClassQuestion(),
+    clusterQuestion(findWord('ครับ')),
     clusterQuestion(findWord('จริง')),
-    thaiMechanismChoice('Which word has the long vowel before the final ก?', 'มาก', ['มาก','รัก','รถ','เปิด'], 'มาก uses long า before final ก.', 'รัก / มาก'),
-    thaiMechanismChoice('Pick the public-sign word built from ทาง + ออก.', 'ทางออก', ['ทางออก','ทางเข้า','ห้องน้ำ','ระวัง'], 'ทางออก chunks as ทาง + ออก.'),
-    thaiMechanismChoice('Pick the word with the เ◌ิ pattern.', 'เปิด', ['เปิด','ปิด','อาหาร','ภาษา'], 'เปิด uses เ before the consonant plus ิ over it.')
+    thaiMechanismChoice('Which word uses the เ◌ือ pattern?', 'เพื่อน', ['เพื่อน','เปิด','ทางออก','อาหาร'], 'เพื่อน uses เ◌ือ around พ before final น.', 'เพื่อน', 'vowel-order'),
+    thaiMechanismChoice('Pick the public-sign word built from ทาง + ออก.', 'ทางออก', ['ทางออก','ทางเข้า','ห้องน้ำ','ระวัง'], 'ทางออก chunks as ทาง + ออก.', 'ทางออก', 'chunk'),
+    thaiMechanismChoice('In ศูนย์, what does ์ do?', 'Silences the marked letter', ['Silences the marked letter','Makes a high tone','Repeats the word','Makes the vowel short'], 'In ศูนย์, ย์ is written but not pronounced; น is the ending sound.', 'ศูนย์', 'gaaran'),
+    thaiMechanismChoice('Pick the word with the เ◌ิ pattern.', 'เปิด', ['เปิด','ปิด','อาหาร','ภาษา'], 'เปิด uses เ before the consonant plus ิ over it.', 'เปิด', 'vowel-order')
   ].filter(Boolean);
   return qs;
 }
@@ -7427,6 +7496,7 @@ function classFromMemoryQuestion(ch){
   const g = GLYPHS[ch];
   return {kind:'mcq', prompt:ch, promptBig:true, text:classQuestionText(g.cls),
     answer:CLS_LABEL[g.cls], options:shuffle(Object.values(CLS_LABEL)),
+    axis:'class',
     explain:classReason(g.cls)};
 }
 function classPickQuestion(ch, L){
@@ -7920,10 +7990,15 @@ function validateMisconceptionChoiceContracts(){
 /* generic MCQ renderer used by lessons, mixed quiz, tone drill */
 function targetedWrongFeedback(q){
   if(!q) return '';
+  if(q.axis === 'class') return 'Class is the tone row. Check whether the consonant is in the small mid set, the high set, or the default low group.';
+  if(q.axis === 'rare-class') return 'Rare letters are recognition work: know the class row, not a new word.';
   if(q.axis === 'final' || q.axis === 'final-job') return 'Check the ending job, not the start sound.';
   if(q.axis === 'vowel-order') return 'Find the consonant first, then read the vowel shape around it.';
   if(q.axis === 'live-dead') return 'Listen for whether the sound rings on or stops short.';
   if(q.axis === 'vowel-length') return 'Short and long vowels can change the tone rule.';
+  if(q.axis === 'tone-mark') return 'The Thai mark is only one step. Read class first, then the mark.';
+  if(q.axis === 'silent-leader') return 'A silent leader changes the class row for tone; it does not add a new spoken start sound.';
+  if(q.axis === 'gaaran') return 'Gaaran ์ silences the marked letter; use the spoken ending that remains.';
   if(q.axis === 'cluster') return 'Decide whether the pair blends, hides a letter, or changes sound.';
   if(q.axis === 'chunk') return 'Read the word in chunks, then decode each chunk.';
   if(q.axis === 'font-shock') return 'Ignore the style change and match the Thai letters.';
@@ -8165,7 +8240,6 @@ function ensureWeek(){
     .concat(slangOwned()?['Slang']:[]);
   const pool = order.flatMap(c=>catSrc(c).filter(p=>p.cat===c).sort((a,b)=>(a.lvl||1)-(b.lvl||1)));  // within a category, lower levels first
   const picks = pool.filter(p=>!state.srs['w:'+p.thai]).slice(0,5).map(p=>p.thai);
-  picks.forEach(t=>srsAdd('w:'+t));
   state.week = {key:wk, picks, used:{}};
   saveState();
   return state.week;
@@ -8175,13 +8249,13 @@ function claimPhrase(t){
   if(!state.week.used) state.week.used = {};
   state.week.used[t] = todayStr();
   award(5); saveState();
-  toast('Rehearsed or used it · +5💎');
+  toast('Optional phrase practice · +5💎');
   return true;
 }
 function renderPack(){
   const w = ensureWeek();
   if(!w.picks.length){
-    el('pack-card').innerHTML = '<div class="sub">Every phrase is already in your deck. เก่งมาก. New packs resume in Phase 2.</div>';
+    el('pack-card').innerHTML = '<div class="sub">No new optional phrase suggestions right now. Phase 1 progress does not depend on phrase cards.</div>';
     return;
   }
   el('pack-list').innerHTML = w.picks.map(t=>{
@@ -8189,7 +8263,7 @@ function renderPack(){
     if(!p) return '';
     const used = w.used[t];
     return `<div class="quest-line ${used?'done':''}" style="text-decoration:none">
-      <button class="btn small ${used?'ghost':''}" data-used="${t}" style="flex:none">${used?'✓':'used it'}</button>
+      <button class="btn small ${used?'ghost':''}" data-used="${t}" style="flex:none">${used?'✓':'rehearse'}</button>
       <span style="flex:1"><span class="thai" style="font-family:var(--font-display);font-size:17px">${t}</span> <span class="sub" style="font-size:12px">${p.tr}</span></span>
       ${speakBtn(t)}
     </div>`;
@@ -9678,7 +9752,8 @@ function runFullStartupValidators(){
     validateV526ToneSignReviewContracts,
     validateV53ReviewGovernorContracts,
     validateV531TtsSafetyContracts,
-    validateV54FluencyContracts
+    validateV54FluencyContracts,
+    validateContentPedagogyHardeningContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

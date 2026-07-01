@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-01
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v5.4.5`
+Current app version: `v5.4.6`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -11,7 +11,7 @@ This pack is a current-source review guide, not a historical archive. It should 
 
 Phase 1 script mastery is complete. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
 
-v5.4.5 is a source-hygiene release. It keeps the v5.4.4 learner behaviour and changes reviewability:
+v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
 - `tools/phase1-audit.js` uses seeded randomness for generated audit extraction.
 - Audit generation preserves the previous timestamp when substantive output is unchanged.
@@ -20,7 +20,7 @@ v5.4.5 is a source-hygiene release. It keeps the v5.4.4 learner behaviour and ch
 - `CLAUDE.md` is tracked and no longer hidden by `.gitignore`.
 - Source-review notes now describe the current tracked source instead of old local handoff artifacts.
 
-The post-v5.4.5 hardening pass keeps the app version/cache name unchanged while adding:
+The post-v5.4.5 source hardening pass added:
 
 - `tools/make-release-zip.sh` for clean tracked-source review packages.
 - Production startup gating for exhaustive validators; use `?debugValidators=1` or `thai_debug_validators=1` locally for the full in-browser suite.
@@ -28,6 +28,17 @@ The post-v5.4.5 hardening pass keeps the app version/cache name unchanged while 
 - Attribute-context escaping via `escAttr()`.
 - Native/system font stacks with no automatic Google Fonts page-load requests.
 - `docs/phase2_refactor_plan.md` as a future split plan only.
+
+v5.4.6 is a targeted content/pedagogy hardening pass:
+
+- Lesson 1 frames the full tone route as a preview and only requires the easiest live + no-mark -> mid case.
+- Unit C repeats one Tone route across live/dead, class-grid and silent-leader lessons.
+- Lesson 21 adds class-only rare-letter preparation for the Letters boss without normal review seeding for those rare rows.
+- อ่าน is introduced as the app-name/course-goal recognition item without recurring axis-review load.
+- Late story lines now avoid awkward `เรา ไป อาหาร` and speaking-fluency overclaims.
+- Phrasebook review is opt-in; weekly phrase suggestions do not auto-add `w:` cards.
+- The final checkpoint now samples silent leaders, three-piece vowels, public-sign chunking and gaaran as well as class, tone, finals, live/dead, vowel length and clusters.
+- `docs/phase1_content_pedagogy_notes.md` and `docs/content_pedagogy_checklist.md` record the pass and future edit checks.
 
 ## Current Tracked Source
 
@@ -39,6 +50,7 @@ The post-v5.4.5 hardening pass keeps the app version/cache name unchanged while 
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
+- `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/phase2_refactor_plan.md` - future no-build/low-build split plan.
 - `FILE_MANIFEST.md`, `THAI_APP_AUDIT_PACK.md` - source-review guidance.
 
@@ -59,9 +71,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v5.4.5`
+- app version `v5.4.6`
 - 24 lessons
-- 35 validators passing
+- 36 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -75,10 +87,11 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v5-4-5`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v5-4-6`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
+- content-pedagogy hardening boundaries: rare-letter class-only prep, optional phrasebook scope, no speaking-fluency overclaims
 
 Out of scope for this release:
 

@@ -2,6 +2,21 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v5.4.6 - 2026-07-01
+
+- Shipped the targeted Phase 1 content/pedagogy hardening pass without adding Phase 2, broad vocabulary, grammar lessons, native audio, speech scoring, dependencies, backend services or an architecture split.
+- Reduced Lesson 1 cognitive load by making the full tone route a preview and limiting the first lesson to the easiest live + no-mark -> mid-tone case.
+- Added อ่าน as the Lesson 4 app-name/course-goal recognition item and kept it out of recurring axis-review burden with `review:false`.
+- Standardised Unit C tone pedagogy around one repeated Tone route and labelled earlier tone outcomes in Lessons 4, 7, 8 and 11 as previews.
+- Added consolidation-day framing around Lesson 7 and Lesson 13 so review-heavy days read as normal course design.
+- Added Lesson 21 rare-letter class-only preparation for the Letters boss using `classOnlyGlyphs` plus active class-recognition quiz items, without normal glyph/axis review seeding for those rare rows.
+- Cleaned controlled-reading stories: removed `เรา ไป อาหาร`, replaced late speaking-fluency overclaims with reading outcomes, and kept Phase 1 completion copy bounded to controlled script reading.
+- Reframed the Library phrasebook as optional/bonus and stopped weekly phrase suggestions from auto-adding `w:` review cards; learners now opt into phrase-card review load.
+- Rebalanced the final Phase 1 checkpoint to 15 questions covering class, final jobs, live/dead, vowel length, tone marks, tone results, silent leaders, true/fake clusters, three-piece vowels, public-sign chunking and gaaran.
+- Added targeted feedback for class, rare class, tone mark, silent leader and gaaran axes, plus `validateContentPedagogyHardeningContracts()` in the generated audit.
+- Added `docs/phase1_content_pedagogy_notes.md` and `docs/content_pedagogy_checklist.md`; regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`, now reporting app version `v5.4.6` and 36 validators passing.
+- Updated the service-worker cache name to `aan-thai-v5-4-6` for the versioned shell.
+
 ## v5.4.5 hardening - 2026-07-01
 
 - Kept the app footer version and service-worker cache at `v5.4.5` / `aan-thai-v5-4-5`; no curriculum, SRS, unlock, migration or Phase 2 behaviour changed.

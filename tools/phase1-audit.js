@@ -675,7 +675,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v526ToneSignReview', validateV526ToneSignReviewContracts),
     validatorResult('v53ReviewGovernor', validateV53ReviewGovernorContracts),
     validatorResult('v531TtsSafety', validateV531TtsSafetyContracts),
-    validatorResult('v54Fluency', validateV54FluencyContracts)
+    validatorResult('v54Fluency', validateV54FluencyContracts),
+    validatorResult('contentPedagogyHardening', validateContentPedagogyHardeningContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -749,7 +750,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v5.4.5 keeps the v5.4.4 learner-facing review behaviour: automatic weak-correct timing, streamlined Today/Course Map review copy and adaptive routine review correct-feedback dwell. Short correct feedback still uses a 1-second minimum; longer green answer text gets more reading time up to a cap. Learner-facing task cards use compact status such as Clear, 29 due, Review first and Done instead of explaining hard caps, default slices or catch-up policy. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint waits for Lesson 24, the Letters boss and the v5.4 reads, then checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v5.4.6 keeps the v5.4.4 learner-facing review behaviour and the v5.4.5 source-hygiene hardening while tightening Phase 1 pedagogy: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);

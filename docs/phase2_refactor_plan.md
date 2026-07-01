@@ -1,6 +1,6 @@
 # Phase 2 Refactor Plan
 
-This is a future plan only. The current app remains a static, buildless single-file PWA for v5.4.5.
+This is a future plan only. The current app remains a static, buildless single-file PWA for v5.4.6.
 
 ## Why Split Before Phase 2
 

@@ -1,16 +1,16 @@
-# v5.4.5 Smoke-Test Checklist
+# v5.4.6 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep imported/exported progress JSON private.
 
 ## Fresh Load
 
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v5.4.5`.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v5.4.6`.
 - Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, and no validator alert/error appears.
 
 ## Installed iPhone/iOS PWA Launch
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v5.4.5`, cache `aan-thai-v5-4-5`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
+- Confirm footer version `v5.4.6`, cache `aan-thai-v5-4-6`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
 
 ## Service-Worker Update After Deploy
 
@@ -61,6 +61,13 @@ Use this as the manual pass before external source review or live deploy. Keep i
 
 - Use a Lesson 24 state with Letters boss and all six v5.4 reads complete.
 - Pass: final checkpoint opens, requires 85% plus an acceptable controlled-read rating, and does not claim native listening/speaking mastery.
+
+## Content/Pedagogy Checks
+
+- Start Lesson 1 and confirm it says the full tone route is a preview and that today only needs live + no mark -> mid tone.
+- Start Lesson 4 and confirm อ่าน is taught as the app-name/course-goal item without claiming active vocabulary production.
+- Start Lesson 21 and confirm rare letters are class-recognition work before the Letters boss, not ordinary vocabulary.
+- Open Library and confirm phrasebook copy says phrase cards are optional and only enter review when added.
 
 ## Debug Validators
 
