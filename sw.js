@@ -1,5 +1,5 @@
 /* อ่าน — Learn Thai service worker */
-const CACHE = 'aan-thai-v5-4-6';
+const CACHE = 'aan-thai-v6-0-0';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 const SHELL_TIMEOUT_MS = 4000;
 

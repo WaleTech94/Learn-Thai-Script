@@ -27,6 +27,22 @@
   --accent2:#5BA8FF;
   --good:#5BD179;
   --bad:#FF6B6B;
+  --ui-primary:var(--blue);
+  --ui-secondary:var(--accent2);
+  --ui-progress:var(--blue);
+  --ui-info:var(--accent2);
+  --ui-warning:#FFCB66;
+  --ui-success:var(--good);
+  --ui-danger:var(--bad);
+  --ui-reward:var(--gold);
+  --ui-progress-soft:rgba(127,168,255,.18);
+  --ui-progress-mid:rgba(127,168,255,.48);
+  --ui-info-soft:rgba(91,168,255,.1);
+  --ui-warning-soft:rgba(255,203,102,.12);
+  --ui-success-soft:rgba(91,209,121,.1);
+  --ui-danger-soft:rgba(255,107,107,.1);
+  --ui-reward-soft:rgba(255,210,74,.12);
+  --focus:var(--ui-primary);
   --radius:18px;
   --nav-h:64px;
   --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Tahoma,Arial,sans-serif;
@@ -64,6 +80,7 @@ h2{font-size:20px;margin-bottom:4px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
 .sub{color:var(--muted);font-size:14px}
 .thai{font-weight:400}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ---------- shared ---------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
@@ -81,6 +98,40 @@ h2{font-size:20px;margin-bottom:4px}
 .btn.small{padding:11px 16px;font-size:13px;border-radius:12px;min-height:42px}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn.full{width:100%}
+.screen-head{margin-bottom:18px}
+.screen-kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px}
+.screen-title{font-size:30px;margin-bottom:5px}
+.screen-sub{color:var(--muted);font-size:14px;line-height:1.5;max-width:58ch}
+.section-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.section-sub{color:var(--muted);font-size:13px;line-height:1.45}
+.action-stack{display:flex;flex-direction:column;gap:10px}
+.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.action-card{
+  min-height:82px;border-radius:15px;background:rgba(255,255,255,.025);border:1px solid var(--line);
+  padding:13px 14px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.action-card.primary{border-color:rgba(127,168,255,.55);background:rgba(127,168,255,.09)}
+.action-card.optional{border-color:rgba(91,168,255,.32)}
+.action-card.locked{opacity:.52}
+.action-card.done{border-color:rgba(91,209,121,.42);color:var(--muted)}
+.action-card .t{font-family:var(--font-display);font-weight:500;font-size:16px}
+.action-card .d{font-size:12.5px;color:var(--muted);line-height:1.35}
+.status-pill{
+  display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--line);font-size:10px;line-height:1;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+}
+.status-pill.required{border-color:var(--ui-warning);color:var(--ui-warning);background:var(--ui-warning-soft)}
+.status-pill.recommended{border-color:var(--ui-reward);color:var(--ui-reward);background:var(--ui-reward-soft)}
+.status-pill.today{border-color:var(--ui-primary);color:var(--ui-primary);background:var(--ui-info-soft)}
+.status-pill.optional{border-color:var(--ui-info);color:var(--ui-info);background:var(--ui-info-soft)}
+.status-pill.available{border-color:var(--ui-primary);color:var(--ui-primary);background:var(--ui-info-soft)}
+.status-pill.done{border-color:var(--ui-success);color:var(--ui-success);background:var(--ui-success-soft)}
+.status-pill.locked{border-color:var(--line);color:var(--muted);background:var(--surface2)}
+.helper-copy{color:var(--muted);font-size:13px;line-height:1.5}
+.danger-zone{border-color:rgba(255,107,107,.48);background:linear-gradient(160deg,var(--surface),var(--ui-danger-soft))}
+.compact-meta{color:var(--muted);font-size:12px;line-height:1.35}
+.icon-right{font-size:20px;color:var(--ui-primary);flex:none}
 .classchip{
   display:inline-flex;align-items:center;gap:6px;
   font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
@@ -107,13 +158,13 @@ h2{font-size:20px;margin-bottom:4px}
 /* ---------- header ---------- */
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .brand{font-family:var(--font-display);font-weight:600;font-size:21px}
-.brand .thai-accent{color:var(--high)}
+.brand .thai-accent{color:var(--ui-reward)}
 .streak{
   display:flex;align-items:center;gap:7px;
   background:var(--surface);border:1px solid var(--line);
   border-radius:99px;padding:7px 14px;font-family:var(--font-display);font-weight:500;font-size:14px;
 }
-.streak .flame{color:var(--low);display:inline-block;animation:flick 2.6s ease-in-out infinite}
+.streak .flame{color:var(--ui-reward);display:inline-block;animation:flick 2.6s ease-in-out infinite}
 /* streak ember: tier-coloured flame (v2.7) */
 .streak.cool .flame{filter:hue-rotate(180deg) saturate(1.1)}
 .streak.warm .flame{filter:none}
@@ -180,6 +231,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.version-pill{flex:none;border:1px solid var(--line);border-radius:99px;padding:7px 11px;color:var(--muted);font-size:12px;background:var(--surface)}
 	.today-focus{margin-bottom:16px;padding:4px 0 2px}
 	.today-focus h1{font-size:32px;margin-bottom:6px}
+	.route-summary{border-color:rgba(127,168,255,.35);background:linear-gradient(160deg,var(--surface),var(--ui-info-soft))}
+	.route-summary-grid{display:grid;grid-template-columns:1fr;gap:10px}
+	.route-summary-main{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+	.route-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+	.route-value{font-family:var(--font-display);font-size:17px;font-weight:500;line-height:1.3}
+	.route-reason{font-size:13px;color:var(--muted);line-height:1.45}
+	.route-summary .btn{min-width:112px}
 	.today-task-list{display:grid;gap:10px;margin-top:16px}
 	.task-button{
 	  display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:center;
@@ -214,10 +272,12 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	  padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:6px;
 	}
 	.practice-chip.recommended{border-color:var(--gold)}
+	.practice-chip.required{border-color:var(--ui-warning);background:linear-gradient(160deg,var(--surface),var(--ui-warning-soft))}
+	.practice-chip.available{border-color:rgba(127,168,255,.32)}
 	.practice-chip.done{border-color:rgba(91,209,121,.42);color:var(--muted)}
 	.practice-chip.locked{opacity:.48}
 		.practice-chip .p-title{font-family:var(--font-display);font-size:15px;font-weight:500}
-		.practice-chip .p-state{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+		.practice-chip .p-state{align-self:flex-start}
 		.review-layout{display:grid;gap:14px;margin-bottom:16px}
 		.review-panel{
 		  background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;
@@ -227,8 +287,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 		  content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--panel-accent,var(--blue));opacity:.9;
 		}
 		.review-panel.core{--panel-accent:var(--blue);background:linear-gradient(160deg,var(--surface),rgba(127,168,255,.07))}
-		.review-panel.tones{--panel-accent:var(--high);background:linear-gradient(160deg,var(--surface),rgba(255,92,158,.06))}
-		.review-panel.reference{--panel-accent:var(--mid);background:linear-gradient(160deg,var(--surface),rgba(47,212,181,.05))}
+		.review-panel.tones{--panel-accent:var(--ui-info);background:linear-gradient(160deg,var(--surface),var(--ui-info-soft))}
+		.review-panel.reference{--panel-accent:var(--ui-secondary);background:linear-gradient(160deg,var(--surface),var(--ui-info-soft))}
 		.review-head{padding-top:2px;margin-bottom:12px}
 		.review-head h2{font-size:21px;margin-bottom:3px}
 		.review-action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -251,7 +311,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 		.review-drawer summary b{display:block;font-family:var(--font-display);font-weight:500}
 		.review-drawer-body{padding:14px;display:flex;flex-direction:column;gap:14px}
 		@media (max-width:520px){
-		  .review-action-grid,.tone-button-grid{grid-template-columns:1fr}
+		  .review-action-grid,.tone-button-grid,.action-grid{grid-template-columns:1fr}
 		}
 		.course-drawer{
 		  border:1px solid var(--line);border-radius:18px;margin-top:16px;overflow:hidden;background:rgba(255,255,255,.015);
@@ -318,7 +378,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .overlay-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .xbtn{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);font-size:17px;flex:none}
 .progressbar{flex:1;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
-.progressbar i{display:block;height:100%;width:0%;background:var(--mid);border-radius:99px;transition:width .25s ease}
+.progressbar i{display:block;height:100%;width:0%;background:var(--ui-progress);border-radius:99px;transition:width .25s ease}
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;gap:18px;padding:8px 0;min-height:0}
 	.stage .glyph-big{
 	  text-align:center;font-family:var(--font-display);font-size:120px;font-weight:400;line-height:1.1;
@@ -422,7 +482,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .phrase .p-thai{font-family:var(--font-display);font-size:21px;line-height:1.4}
 .phrase .p-tr{color:var(--blue);font-size:14px}
 .phrase .p-en{color:var(--muted);font-size:13px}
-.phrase .p-note{color:var(--low);font-size:12px;margin-top:2px}
+.phrase .p-note{color:var(--ui-warning);font-size:12px;margin-top:2px}
 .lvl-head{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
 .lvl-head:first-child{margin-top:2px}
 
@@ -449,8 +509,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .grade-grid .btn{padding:12px 4px;font-size:13px}
 .g-again{background:var(--bad)!important;color:#fff!important}
-.g-hard{background:var(--low)!important;color:var(--bg)!important}
-.g-good{background:var(--mid)!important;color:var(--bg)!important}
+.g-hard{background:var(--ui-warning)!important;color:var(--bg)!important}
+.g-good{background:var(--ui-success)!important;color:var(--bg)!important}
 .g-easy{background:var(--good)!important;color:var(--bg)!important}
 .empty{
   text-align:center;color:var(--muted);padding:40px 16px;font-size:14px;
@@ -477,13 +537,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tab{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   color:var(--muted);font-size:10.5px;font-weight:400;letter-spacing:.03em;position:relative;overflow:hidden;
-  --tab-accent:var(--high);--tab-soft:rgba(255,92,158,.1);
+  --tab-accent:var(--ui-primary);--tab-soft:var(--ui-info-soft);
 }
 .tab::before{content:"";position:absolute;inset:7px 8px;border-radius:15px;background:var(--tab-soft);opacity:0;transition:opacity .16s ease}
 .tab::after{content:"";position:absolute;left:22%;right:22%;top:0;height:3px;border-radius:0 0 99px 99px;background:var(--tab-accent);opacity:.24}
 .tab[data-view="home"]{--tab-accent:var(--gold);--tab-soft:rgba(255,210,74,.12)}
 .tab[data-view="practice"]{--tab-accent:var(--blue);--tab-soft:rgba(127,168,255,.12)}
-.tab[data-view="tones"]{--tab-accent:var(--high);--tab-soft:rgba(255,92,158,.12)}
+.tab[data-view="tones"]{--tab-accent:var(--ui-info);--tab-soft:var(--ui-info-soft)}
 .tab[data-view="phrases"]{--tab-accent:var(--accent2);--tab-soft:rgba(91,168,255,.12)}
 .tab[data-view="streaks"]{--tab-accent:var(--good);--tab-soft:rgba(91,209,121,.11)}
 .tab .tab-glyph{font-family:var(--font-display);font-size:19px;line-height:1;color:var(--tab-accent);opacity:.75;position:relative}
@@ -494,7 +554,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tab.recommended:not(.active)::before{opacity:.62}
 .tab.recommended:not(.active)::after{opacity:1}
 .tab.recommended .tab-glyph{filter:drop-shadow(0 0 5px var(--tab-accent))}
-.tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible,.action-card:focus-visible,.practice-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 .result-big{text-align:center;font-family:var(--font-display);font-size:54px;font-weight:600;line-height:1.2}
 .result-sub{text-align:center;color:var(--muted);font-size:15px}
@@ -556,17 +616,17 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .tile.mastered.low{background:var(--low);color:#332208;border-color:var(--low)}
 .heatmap{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:12px}
 .hm{aspect-ratio:1;border-radius:3px;background:var(--surface2)}
-.hm.l1{background:rgba(47,212,181,.28)}
-.hm.l2{background:rgba(47,212,181,.6)}
-.hm.l3{background:var(--mid)}
+.hm.l1{background:var(--ui-progress-soft)}
+.hm.l2{background:var(--ui-progress-mid)}
+.hm.l3{background:var(--ui-progress)}
 .wagerrow{display:flex;gap:10px}
 .wager{flex:1;font-family:var(--font-display);font-weight:500;font-size:16px;padding:13px 4px;border-radius:13px;background:var(--surface2);border:1px solid var(--line);transition:transform .1s ease}
 .wager:active{transform:scale(.96)}
 .rw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .timerbar{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-bottom:10px}
 .timerbar i{display:block;height:100%;width:100%;background:var(--blue);border-radius:99px}
-.boss-card{border-color:rgba(255,178,62,.5)}
-.boss-card .glyphs{background:rgba(255,178,62,.12);color:var(--low)}
+.boss-card{border-color:rgba(255,210,74,.5)}
+.boss-card .glyphs{background:var(--ui-reward-soft);color:var(--ui-reward)}
 .calib-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
 .calib-row:last-child{border-bottom:none}
 .calib-row .pct{font-family:var(--font-display);font-weight:500}
@@ -597,11 +657,11 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 	.font-sample.c{font-family:Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:0}
 	.font-sample.d{font-family:var(--font-display);font-weight:500;letter-spacing:.04em}
 	.mouth-card{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:14px;margin:10px 0}
-	.mouth-card.contrast{border-color:rgba(47,212,181,.38)}
+	.mouth-card.contrast{border-color:rgba(91,168,255,.38)}
 	.mouth-card .thai{font-family:var(--font-display);font-size:42px;line-height:1.2}
 	.coach-tips{margin:8px 0 10px 18px;color:var(--muted);font-size:12px;line-height:1.55}
 	.coach-tips li{padding-left:2px}
-	.contrast-card{border:1px solid rgba(47,212,181,.38);border-radius:8px;background:var(--surface2);padding:14px;margin:12px 0}
+	.contrast-card{border:1px solid rgba(91,168,255,.38);border-radius:8px;background:var(--surface2);padding:14px;margin:12px 0}
 	.contrast-word{font-family:var(--font-display);font-size:50px;line-height:1.2;text-align:center;margin:12px 0}
 	.contrast-focus{font-size:13px;color:var(--muted);line-height:1.55;text-align:left}
 	.contrast-rubric{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
@@ -712,15 +772,33 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <header class="today-header">
       <div>
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span style="font-weight:400;font-size:14px;color:var(--muted)">àan means to read</span></div>
-        <div id="user-title" style="font-size:12px;color:var(--high);font-family:var(--font-display);display:none"></div>
+        <div id="user-title" class="compact-meta" style="display:none"></div>
       </div>
-      <span class="version-pill">v5.4.6</span>
+      <span class="version-pill">v6.0.0</span>
     </header>
 
     <section class="today-focus">
       <div class="progress-divider" id="course-day-label">COURSE DAY</div>
       <h1 id="today-heading">Today's route</h1>
-      <p class="sub" id="today-brief">Use the buttons in order. If something is missing, End today will send you back to it.</p>
+      <p class="sub" id="today-brief">Start with the highlighted action. Required work unlocks End today. Optional practice can wait.</p>
+      <div class="section-card route-summary" id="today-route-summary">
+        <div class="route-summary-grid">
+          <div class="route-summary-main">
+            <div>
+              <div class="route-label" id="route-day-type">Course day</div>
+              <div class="route-value">Next: <span id="route-next-action">Review</span></div>
+            </div>
+            <button class="btn small" id="route-summary-action">Start</button>
+          </div>
+          <div class="route-reason" id="route-reason">Review is clear enough for new material.</div>
+        </div>
+      </div>
+      <div class="section-head" style="margin-top:12px;margin-bottom:0">
+        <div>
+          <div class="screen-kicker">Today's route</div>
+          <div class="section-sub">Required steps use the highlighted action first.</div>
+        </div>
+      </div>
       <div class="today-task-list">
         <button class="task-button primary" id="foundation-refresh-btn" style="display:none">
           <span class="task-kicker">Required update</span>
@@ -745,7 +823,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="task-button end" id="end-day-btn">
           <span class="task-kicker" id="end-day-state">Step 4</span>
           <span class="task-title">End today</span>
-          <span class="task-detail" id="end-day-detail">Opens only after the day is complete</span>
+          <span class="task-detail" id="end-day-detail">Ready after required work</span>
         </button>
       </div>
       <div class="daily-win-card" id="daily-win-card" hidden></div>
@@ -759,8 +837,8 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <section class="daily-section">
       <div class="spread">
         <div>
-          <div class="eyebrow" style="margin:0">Daily practice</div>
-          <h2>Consistent activities</h2>
+          <div class="eyebrow" style="margin:0">Optional practice</div>
+          <h2>Available after your main route</h2>
         </div>
         <span class="sub" style="font-size:12px" id="practice-next">&nbsp;</span>
       </div>
@@ -807,28 +885,23 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v5.4.6 (PWA)</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Phase 1 &middot; Script mastery &middot; v6.0.0 (PWA)</div>
     </div>
   </section>
 
-  <!-- STREAKS -->
+  <!-- PROGRESS -->
   <section class="view" id="view-streaks">
-    <div class="eyebrow">Streaks</div>
-    <h1 style="margin-bottom:4px">Momentum and shop</h1>
-    <p class="sub" style="margin-bottom:16px">Your streak, tokens, shop, letter wall and progress tools.</p>
+    <div class="screen-head">
+      <div class="screen-kicker">Progress</div>
+      <h1 class="screen-title">Progress &amp; settings</h1>
+      <p class="screen-sub">Track script progress, streaks, saved progress, and optional extras.</p>
+    </div>
     <div class="streak-kpis">
       <button class="streak kpi-chip" id="token-chip">💎<span id="baht-num" style="margin-left:4px">0</span><span class="kpi-label">tokens</span></button>
       <button class="streak kpi-chip" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span><span class="kpi-label">days</span></button>
       <div class="streak kpi-chip"><span id="freeze-n">0</span><span class="kpi-label">freezes</span></div>
     </div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Last 16 weeks</div>
-        <button class="btn small ghost" id="buy-freeze">Freeze 30💎</button>
-      </div>
-      <div class="heatmap" id="heatmap"></div>
-    </div>
-    <div class="card" style="margin-bottom:16px">
+    <div class="section-card">
       <div class="spread">
         <div class="eyebrow" style="margin:0">The letter wall</div>
         <span class="sub" style="font-size:12px" id="wall-count">0 / 42</span>
@@ -836,10 +909,21 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div class="wall" id="wall"></div>
       <div class="sub" style="font-size:12px;margin-top:10px">Dim = not met · outline = learning · tint = growing · solid = mastered. Tap any tile to hear it.</div>
     </div>
+    <div class="section-card constel-card" id="constel-card">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Skill profile</div>
+        <span class="sub" style="font-size:12px" id="constel-status">building...</span>
+      </div>
+      <div class="constel-wrap">
+        <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
+        <div class="constel-legend" id="constel-legend"></div>
+      </div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary stay separate. This is a check-in, not a reward.</div>
+    </div>
     <details class="review-drawer" style="margin-bottom:16px">
       <summary>
         <div><b>Progress</b><span class="sub">Practice ladder, skill checks and clean-run lap</span></div>
-        <span class="sub">open</span>
+        <span class="sub">Open</span>
       </summary>
       <div class="review-drawer-body">
         <div class="review-panel reference">
@@ -864,166 +948,205 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         </div>
       </div>
     </details>
-    <div class="card" style="margin-bottom:16px">
-      <div class="eyebrow">Shop</div>
-      <div class="sub" style="margin-bottom:12px">Spend tokens on useful extras, not lesson progress.</div>
-      <div class="row" style="gap:10px;justify-content:center;flex-wrap:wrap">
-        <button class="btn small" id="streak-shop-btn">Open shop</button>
-        <button class="btn small ghost" id="earn-board-btn">Earn rules</button>
+    <div class="section-card">
+      <div class="spread">
+        <div class="eyebrow" style="margin:0">Last 16 weeks</div>
+        <button class="btn small ghost" id="buy-freeze">Freeze 30💎</button>
       </div>
+      <div class="heatmap" id="heatmap"></div>
     </div>
-    <div class="card">
+    <div class="section-card">
       <div class="eyebrow">Progress tools</div>
       <button class="btn full ghost" id="notes-btn" style="margin-bottom:12px">Test notes</button>
       <div class="row" style="justify-content:center;gap:10px;margin-bottom:14px">
         <button class="btn small ghost" id="export-btn">Export progress</button>
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
-      <button class="btn small ghost" id="reset-btn" style="color:var(--bad);border-color:var(--bad)">Reset all progress</button>
+    </div>
+    <div class="section-card">
+      <div class="eyebrow">Optional extras</div>
+      <div class="sub" style="margin-bottom:12px">Spend tokens on useful extras, not lesson progress.</div>
+      <div class="row" style="gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn small" id="streak-shop-btn">Open shop</button>
+        <button class="btn small ghost" id="earn-board-btn">Earn rules</button>
+      </div>
+    </div>
+    <div class="section-card danger-zone">
+      <div class="eyebrow">Danger zone</div>
+      <button class="btn small ghost" id="reset-btn" style="color:var(--ui-danger);border-color:var(--ui-danger)">Reset all progress</button>
     </div>
   </section>
 
-  <!-- LIBRARY -->
+  <!-- READ -->
   <section class="view" id="view-phrases">
-    <div class="eyebrow">Library</div>
-    <h1 style="margin-bottom:4px">Bonus phrasebook, stories, unlocks</h1>
-    <p class="sub" style="margin-bottom:14px">Useful survival extras live here, but they are not required for Phase 1. Add phrase cards only if you want extra vocabulary in review.</p>
-    <div class="homecta" style="margin-bottom:14px">
-      <button class="card cta-card" id="cta-shop">
-        <div><div class="t">Unlock packs</div><div class="d">Spend tokens on extra language, not shortcuts</div></div>
-        <span style="font-size:20px">💎</span>
-      </button>
-      <button class="card cta-card" id="library-read">
+    <div class="screen-head">
+      <div class="screen-kicker">Read</div>
+      <h1 class="screen-title">Reading library</h1>
+      <p class="screen-sub">Controlled reads and signs from taught patterns. Bonus phrases are optional.</p>
+    </div>
+    <div class="action-stack" style="margin-bottom:14px">
+      <button class="action-card primary" id="library-read">
         <div><div class="t">Reading room</div><div class="d">Micro-stories from letters you know</div></div>
-        <span style="font-size:20px">→</span>
+        <span class="icon-right">→</span>
       </button>
-      <button class="card cta-card" id="library-fluency">
+      <button class="action-card primary" id="library-fluency">
         <div><div class="t">Fluency reads</div><div class="d">Controlled Thai from taught patterns</div></div>
-        <span style="font-size:20px">→</span>
+        <span class="icon-right">→</span>
       </button>
-      <button class="card cta-card" id="library-signs">
+      <button class="action-card" id="library-signs">
         <div><div class="t">Seen in the wild</div><div class="d">Tick off real signs you can read</div></div>
-        <span style="font-size:20px">→</span>
+        <span class="icon-right">→</span>
       </button>
-      <button class="card cta-card" id="library-readiness">
+      <button class="action-card" id="library-readiness">
         <div><div class="t">Readiness report</div><div class="d">Phase 1 can-do check after the boss</div></div>
-        <span style="font-size:20px">→</span>
+        <span class="icon-right">→</span>
+      </button>
+      <button class="action-card optional" id="cta-shop">
+        <div><div class="t">Bonus phrasebook / unlock packs</div><div class="d">Optional phrase practice · not required for Phase 1</div></div>
+        <span class="icon-right">💎</span>
       </button>
     </div>
-    <div class="card" style="margin-bottom:14px">
-      <div class="eyebrow">Class reference</div>
-      <div class="sub">Class sets the tone. Memorise the two small sets; everything else is low by default.</div>
-      <div class="class-set">
-        <div class="class-set-label mid">Mid 9</div>
-        <div class="class-tiles" id="mid-class-tiles"></div>
-      </div>
-      <div class="class-set">
-        <div class="class-set-label high">High 11</div>
-        <div class="class-tiles" id="high-class-tiles"></div>
-      </div>
-      <div class="class-set">
-        <div class="class-set-label low">Low class</div>
-        <div class="sub" style="font-size:13px">Any consonant that is not in the mid or high set.</div>
-      </div>
-    </div>
-    <div class="card" style="margin-bottom:14px" id="pack-card">
+    <div class="section-card" id="pack-card">
       <div class="spread">
-        <div class="eyebrow" style="margin:0">Optional phrasebook</div>
+        <div class="eyebrow" style="margin:0">Optional weekly five</div>
         <span class="sub" style="font-size:12px">rehearse one · +5💎</span>
       </div>
-      <div class="sub" style="font-size:12px;margin:4px 0 10px">Phrase cards are bonus vocabulary, not Phase 1 mastery. Add them to review only when you want the extra load.</div>
+      <div class="sub" style="font-size:12px;margin:4px 0 10px">Bonus phrase practice · not required for Phase 1. Add phrase cards to review only when you want the extra load.</div>
       <div id="pack-list"></div>
+    </div>
+    <div class="screen-head" style="margin-top:18px;margin-bottom:10px">
+      <div class="screen-kicker">Bonus phrasebook</div>
+      <p class="screen-sub">Useful extras. These do not define Phase 1 mastery.</p>
     </div>
     <div class="cat-tabs" id="cat-tabs"></div>
     <div class="phrase-list" id="phrase-list"></div>
-    <div class="card constel-card" id="constel-card" style="margin-top:16px">
-      <div class="spread">
-        <div class="eyebrow" style="margin:0">Skill profile</div>
-        <span class="sub" style="font-size:12px" id="constel-status">building…</span>
-      </div>
-      <div class="constel-wrap">
-        <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
-        <div class="constel-legend" id="constel-legend"></div>
-      </div>
-      <div class="sub" style="font-size:12px;margin-top:10px">Script, tone and vocabulary stay separate. This is a check-in, not a reward.</div>
-    </div>
   </section>
 
   <!-- PRACTICE -->
   <section class="view" id="view-practice">
-    <div class="eyebrow">Practice</div>
-    <h1 style="margin-bottom:4px">Keep it fresh</h1>
-    <p class="sub" style="margin-bottom:18px">Quick practice for letters, reading and words you have already met.</p>
+    <div class="screen-head">
+      <div class="screen-kicker">Practice</div>
+      <h1 class="screen-title">Keep it fresh</h1>
+      <p class="screen-sub">Quick practice for letters, reading and words you have already met.</p>
+    </div>
     <div class="review-layout">
-      <section class="review-panel core">
-        <div class="review-head">
-          <div class="eyebrow">Core practice</div>
-          <h2>Review the script</h2>
-          <p class="sub">Short practice for letters, reading and covered words.</p>
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Due review</div>
+            <h2>Review the script</h2>
+            <p class="section-sub">Clear due cards and repeated-problem items first.</p>
+          </div>
         </div>
-        <div class="review-action-grid">
-          <button class="review-action primary" id="cta-flash">
+        <div class="action-grid">
+          <button class="action-card primary" id="cta-flash">
             <div><div class="t">Flashcards</div><div class="d" id="flash-sub">0 cards due</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-leech">
+          <button class="action-card" id="cta-leech">
             <div><div class="t">Leech clinic</div><div class="d" id="leech-sub">0 hard cards</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-quiz">
+          <button class="action-card" id="cta-quiz">
             <div><div class="t">Mixed quiz</div><div class="d">10 questions from what you know</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-hear-thai">
-            <div><div class="t">Hear &amp; pick Thai</div><div class="d">Device voice to script, covered words only</div></div>
-            <span class="arrow">→</span>
-          </button>
-          <button class="review-action" id="cta-spell">
-            <div><div class="t">Spell it</div><div class="d">Build words from letter tiles</div></div>
-            <span class="arrow">→</span>
-          </button>
-          <button class="review-action" id="cta-clinic">
-            <div><div class="t">Confusion clinic</div><div class="d">Lookalike letters you mix up</div></div>
-            <span class="arrow">→</span>
-          </button>
-          <button class="review-action" id="cta-read">
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Script and reading</div>
+            <h2>Read taught patterns</h2>
+            <p class="section-sub">Stories, fluency reads and visual variation from covered material.</p>
+          </div>
+        </div>
+        <div class="action-grid">
+          <button class="action-card" id="cta-read">
             <div><div class="t">Reading room</div><div class="d" id="read-sub">Micro-stories from letters you know</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-fluency">
+          <button class="action-card" id="cta-fluency">
             <div><div class="t">Fluency reads</div><div class="d" id="fluency-sub">Controlled Thai from taught patterns</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-chunk">
+          <button class="action-card" id="cta-chunk">
             <div><div class="t">Chunk this word</div><div class="d">Break longer Thai into readable pieces</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-font-shock">
+          <button class="action-card" id="cta-font-shock">
             <div><div class="t">Font shock</div><div class="d">Read familiar words in different styles</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-contrast">
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Tone, hearing, and recall</div>
+            <h2>Listen and retrieve</h2>
+            <p class="section-sub">Device voice support is a rough model. Written rules still do the serious work.</p>
+          </div>
+        </div>
+        <div class="action-grid">
+          <button class="action-card" id="cta-hear-thai">
+            <div><div class="t">Hear &amp; pick Thai</div><div class="d">Device voice to script, covered words only</div></div>
+            <span class="icon-right">→</span>
+          </button>
+          <button class="action-card" id="cta-spell">
+            <div><div class="t">Spell it</div><div class="d">Build words from letter tiles</div></div>
+            <span class="icon-right">→</span>
+          </button>
+          <button class="action-card" id="cta-clinic">
+            <div><div class="t">Confusion clinic</div><div class="d">Lookalike letters you mix up</div></div>
+            <span class="icon-right">→</span>
+          </button>
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Transfer practice</div>
+            <h2>Use it outside the quiz shape</h2>
+            <p class="section-sub">Read aloud, compare locally, and notice covered Thai around Bangkok.</p>
+          </div>
+        </div>
+        <div class="action-grid">
+          <button class="action-card" id="cta-contrast">
             <div><div class="t">Contrast block</div><div class="d">Read, listen, record and compare</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-mouth">
+          <button class="action-card" id="cta-mouth">
             <div><div class="t">Mouth coach</div><div class="d">Slow read-aloud cards with no score</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
-          <button class="review-action" id="cta-mission">
+          <button class="action-card" id="cta-mission">
             <div><div class="t">Bangkok mission</div><div class="d">Spot covered Thai outside the app</div></div>
-            <span class="arrow">→</span>
+            <span class="icon-right">→</span>
           </button>
         </div>
       </section>
     </div>
   </section>
 
-  <!-- THAI TONES -->
+  <!-- TONES -->
   <section class="view" id="view-tones">
-    <div class="eyebrow">Tone &amp; class</div>
-    <h1 style="margin-bottom:4px">Thai Tones</h1>
-    <p class="sub" style="margin-bottom:18px">Tone, class and listening practice. Today will highlight this tab when it is due.</p>
+    <div class="screen-head">
+      <div class="screen-kicker">Tone &amp; class</div>
+      <h1 class="screen-title">Tone route</h1>
+      <p class="screen-sub">Use the written procedure first. Device voice support is a rough model, not real-world listening proof.</p>
+    </div>
+    <section class="section-card">
+      <div class="eyebrow">Tone route</div>
+      <ol class="helper-copy" style="margin-left:20px;line-height:1.8">
+        <li>Find the initial consonant or cluster leader.</li>
+        <li>Identify the class: mid, high, or low.</li>
+        <li>Check for a tone mark.</li>
+        <li>If there is no mark, decide live/dead.</li>
+        <li>For low-class dead syllables, check vowel length.</li>
+        <li>Name the tone.</li>
+      </ol>
+    </section>
 	    <section class="review-panel tones" style="margin-bottom:16px">
 	      <div class="review-head">
 	        <div class="eyebrow">Tone practice</div>
@@ -1041,7 +1164,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
       <p class="sub" style="margin-top:10px;font-size:12px">Audio is device voice support. Listen for a rough model, then use the written tone rule.</p>
     </section>
-    <div class="card" style="margin-bottom:16px">
+    <div class="section-card">
       <div class="spread">
         <div class="eyebrow" style="margin:0">Tone practice badge</div>
         <span class="sub" style="font-size:12px" id="lic-state">not yet earned</span>
@@ -1050,7 +1173,23 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div class="calib-row"><span>Tone rules <span class="sub" style="font-size:12px">(target 90%)</span></span><span class="pct" id="lic-rule">&nbsp;</span></div>
       <div class="sub" style="font-size:12px;margin-top:8px">Rolling last 30 answers per drill, minimum 20 each. The badge is practice evidence, not real-world listening proof.</div>
     </div>
-    <div class="card" style="margin-bottom:16px">
+    <div class="section-card">
+      <div class="eyebrow">Class reference</div>
+      <div class="sub">Class sets the tone. Memorise the two small sets; everything else is low by default.</div>
+      <div class="class-set">
+        <div class="class-set-label mid">Mid 9</div>
+        <div class="class-tiles" id="mid-class-tiles"></div>
+      </div>
+      <div class="class-set">
+        <div class="class-set-label high">High 11</div>
+        <div class="class-tiles" id="high-class-tiles"></div>
+      </div>
+      <div class="class-set">
+        <div class="class-set-label low">Low class</div>
+        <div class="sub" style="font-size:13px">Any consonant that is not in the mid or high set.</div>
+      </div>
+    </div>
+    <div class="section-card">
       <div class="eyebrow">The five tones</div>
       <p class="sub" style="margin-bottom:12px">The classic example: five words that are all "khaa".</p>
       <div class="phrase-list" id="tone-list"></div>
@@ -1059,7 +1198,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <p class="sub" style="margin-bottom:12px">The "mai" family. You'll hear these daily in Bangkok.</p>
       <div class="phrase-list" id="tone-list2"></div>
     </div>
-    <div class="card">
+    <div class="section-card">
       <div class="eyebrow">Transliteration key</div>
       <div class="sub">
         Transliteration tone signs: <b style="color:var(--text);font-weight:500">a</b> mid · <b style="color:var(--text);font-weight:500">à</b> low · <b style="color:var(--text);font-weight:500">â</b> falling · <b style="color:var(--text);font-weight:500">á</b> high · <b style="color:var(--text);font-weight:500">ǎ</b> rising. These are reading hints, not Thai tone marks.
@@ -1085,11 +1224,11 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 
 <nav id="tabbar">
 	<div class="tabbar-inner">
-		    <button class="tab active" data-view="home"><span class="tab-glyph">บ้</span>Today</button>
-		    <button class="tab" data-view="practice"><span class="tab-glyph">ซ้ำ</span>Practice</button>
-		    <button class="tab" data-view="tones"><span class="tab-glyph">เสียง</span>Thai Tones</button>
-		    <button class="tab" data-view="phrases"><span class="tab-glyph">พูด</span>Library</button>
-		    <button class="tab" data-view="streaks"><span class="tab-glyph">🔥</span>Streaks</button>
+		    <button class="tab active" data-view="home" aria-label="Today" aria-current="page"><span class="tab-glyph">ทาง</span>Today</button>
+		    <button class="tab" data-view="practice" aria-label="Practice"><span class="tab-glyph">ซ้ำ</span>Practice</button>
+		    <button class="tab" data-view="tones" aria-label="Tones"><span class="tab-glyph">เสียง</span>Tones</button>
+		    <button class="tab" data-view="phrases" aria-label="Read"><span class="tab-glyph">อ่าน</span>Read</button>
+		    <button class="tab" data-view="streaks" aria-label="Progress"><span class="tab-glyph">✓</span>Progress</button>
 		  </div>
 </nav>
 </div>
@@ -2704,7 +2843,7 @@ function todayDepthTask(){
     id:drill.id,
     kind:tone ? 'tone' : 'practice',
     tab:tone ? 'tones' : 'practice',
-    title:tone ? 'Thai Tones: ' + drill.title : drill.title,
+    title:tone ? 'Tones: ' + drill.title : drill.title,
     detail:tone ? 'Work on tone, class or listening today.' : "Practise today's material.",
     drill,
     go:()=>launchDrill(drill.id)
@@ -2892,6 +3031,83 @@ function routeToDailyStep(step){
   if(step === 'main'){ routeToMainTask(); return; }
   if(step === 'depth'){ routeToDepthTask(); }
 }
+function todayRouteSummary(){
+  const d = ensureDay();
+  const due = srsDue().length;
+  const band = reviewLoadBand(due);
+  const shape = todayReviewShape();
+  const recovery = shape.recovery;
+  const missing = dailyMissingStep();
+  const early = earlyFoundationWindow();
+  const main = mainTaskNode();
+  const next = nextLesson();
+  const blocker = next && getLessonBlocker(next.id);
+  const dayType = foundationRefreshRequired() ? 'Updated foundations'
+    : recovery ? 'Recovery day'
+    : d.type === 'C' ? 'Consolidation day'
+    : early ? 'Foundation day'
+    : 'Course day';
+  if(missing === 'foundations'){
+    return {
+      dayType,
+      next:'Endings refresh',
+      reason:'Ending jobs must be repaired before normal review resumes.',
+      actionLabel:'Refresh',
+      action:()=>routeToDailyStep('foundations')
+    };
+  }
+  if(missing === 'review'){
+    const reason = recovery ? 'Start with a smaller return-after-gap slice.'
+      : band === 'hard' ? 'Thai script sticks through repeated decoding.'
+      : 'Clear due cards before new work.';
+    return {
+      dayType,
+      next:recovery ? 'Recovery review' : 'Review',
+      reason,
+      actionLabel:'Review',
+      action:()=>routeToDailyStep('review')
+    };
+  }
+  if(missing === 'main'){
+    return {
+      dayType,
+      next:blocker ? shortBlockerTitle(blocker) : main && main.label ? main.label : 'Main task',
+      reason:blocker ? shortBlockerDetail(blocker) : d.type === 'C' ? 'Consolidation comes before adding new load.' : 'Review is clear enough for new material.',
+      actionLabel:'Start',
+      action:()=>routeToDailyStep('main')
+    };
+  }
+  if(missing === 'depth'){
+    const task = activeDepthTask() || todayDepthTask();
+    return {
+      dayType,
+      next:task ? task.title : 'Practice block',
+      reason:'Finish the bridge practice for today, or leave optional extras for later.',
+      actionLabel:'Practice',
+      action:()=>routeToDailyStep('depth')
+    };
+  }
+  return {
+    dayType,
+    next:'End today',
+    reason:'Required route is complete. Optional practice can wait.',
+    actionLabel:'Ready',
+    action:showEndDayModal
+  };
+}
+function renderTodayRouteSummary(){
+  const card = el('today-route-summary');
+  if(!card) return;
+  const summary = todayRouteSummary();
+  el('route-day-type').textContent = summary.dayType;
+  el('route-next-action').textContent = summary.next;
+  el('route-reason').textContent = summary.reason;
+  const btn = el('route-summary-action');
+  if(btn){
+    btn.textContent = summary.actionLabel;
+    btn.onclick = summary.action;
+  }
+}
 function showEndDayModal(){
   const missing = dailyMissingStep();
   const wrap = document.createElement('div');
@@ -2972,7 +3188,7 @@ function renderTodayActions(){
   if(refreshRequired){
     if(el('course-day-label')) el('course-day-label').textContent = 'UPDATED FOUNDATIONS';
     el('today-heading').textContent = 'Refresh';
-    el('today-brief').textContent = 'Endings first.';
+    el('today-brief').textContent = 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
     setTaskButton('today-review-btn', {
       state:'Locked',
       title:'Review',
@@ -2994,18 +3210,17 @@ function renderTodayActions(){
     const end = el('end-day-btn');
 	    if(end){
 	      end.className = 'task-button end locked';
-	      el('end-day-state').textContent = 'Locked';
+	      el('end-day-state').textContent = 'Refresh first';
 	      el('end-day-detail').textContent = 'Refresh first.';
 	    }
+	    renderTodayRouteSummary();
 	    renderDailyWinCard();
 	    syncTabRecommendations();
 	    return;
 	  }
   if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
-  el('today-brief').textContent = recovery
-    ? 'Review first.'
-    : lessonBlocker ? shortBlockerDetail(lessonBlocker) : early ? 'Start at top.' : 'Start at top.';
+  el('today-brief').textContent = 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
   setTaskButton('today-review-btn', {
     state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
     title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
@@ -3042,15 +3257,21 @@ function renderTodayActions(){
   setTaskButton('today-depth-btn', {
     state: depthDone ? 'Done' : (!mainDone || band === 'hard') ? 'Locked' : 'Next',
     title: depthDone ? 'Practice done' : (depthTask ? depthTask.title : 'Practice'),
-    detail: depthDone ? (d.lite ? 'Tomorrow.' : 'Done.') : (depthTask ? 'Practice.' : 'Open.'),
+    detail: depthDone ? (d.lite ? 'Tomorrow.' : 'Done.') : (depthTask ? 'Practice.' : 'Available.'),
     kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || band === 'hard') ? 'locked' : ''
   });
   const end = el('end-day-btn');
 	  if(end){
 	    end.className = 'task-button end' + (!missing ? ' primary' : ' locked');
-	    el('end-day-state').textContent = missing ? 'Locked' : 'Ready';
-		    el('end-day-detail').textContent = missing ? 'Finish task.' : 'Done.';
+	    const endLabel = missing === 'review' ? 'Review first'
+	      : missing === 'main' ? 'Main task first'
+	      : missing === 'depth' ? 'Practice first'
+	      : missing === 'foundations' ? 'Refresh first'
+	      : 'Ready';
+	    el('end-day-state').textContent = endLabel;
+		    el('end-day-detail').textContent = missing ? endLabel + '.' : 'Done.';
 		  }
+	  renderTodayRouteSummary();
 	  renderDailyWinCard();
 	  syncTabRecommendations();
 		}
@@ -3068,42 +3289,45 @@ const DAILY_PRACTICE = [
   {id:'mission', title:'Mission', gate:'l3', go:()=>showBangkokMissions()},
 ];
 function practiceState(p){
-  if(p.gate && !state.done.includes(p.gate)) return {cls:'locked', text:'Lesson ' + p.gate.slice(1)};
+  if(p.gate && !state.done.includes(p.gate)) return {cls:'locked', pill:'locked', text:'Locked'};
   if(p.id === 'review'){
     const due = srsDue().length;
-    if(due) return {cls:'recommended', text:due + ' due'};
-    return {cls:'done', text:'Clear'};
+    if(due){
+      const required = reviewLoadBand(due) === 'hard' || recoveryReviewStillDue();
+      return {cls:required ? 'required' : 'recommended', pill:required ? 'required' : 'recommended', text:required ? 'Required' : 'Recommended'};
+    }
+    return {cls:'done', text:'Done'};
   }
   if(p.id === 'reading'){
     const active = activeDepthTask();
-    if(active && active.id === 'reading') return {cls:'recommended', text:'Today'};
-    if(nextUnreadStory()) return {cls:'', text:'Story'};
+    if(active && active.id === 'reading') return {cls:'recommended', pill:'today', text:'Today'};
+    if(nextUnreadStory()) return {cls:'available', pill:'available', text:'Available'};
     const readToday = Object.values(state.stories||{}).includes(todayStr());
     if(readToday) return {cls:'done', text:'Done'};
   }
   if(p.id === 'fluency'){
     const active = activeDepthTask();
-    if(active && active.id === 'fluency') return {cls:'recommended', text:'Today'};
+    if(active && active.id === 'fluency') return {cls:'recommended', pill:'today', text:'Today'};
     const nextRead = nextFluencyRead();
-    if(nextRead) return {cls:'', text:'Ready'};
+    if(nextRead) return {cls:'available', pill:'available', text:'Available'};
     const doneN = FLUENCY_READS.filter(read=>fluencyReadDone(read)).length;
-    return doneN >= FLUENCY_READS.length ? {cls:'done', text:'Done'} : {cls:'', text:'Open'};
+    return doneN >= FLUENCY_READS.length ? {cls:'done', text:'Done'} : {cls:'available', pill:'available', text:'Available'};
   }
   if(p.id === 'contrast'){
     if(contrastDoneToday()) return {cls:'done', text:'Done'};
-    if(activeDepthTask() && activeDepthTask().id === 'contrast') return {cls:'recommended', text:'Today'};
-    return contrastBlocks().length ? {cls:'', text:'Open'} : {cls:'locked', text:'Locked'};
+    if(activeDepthTask() && activeDepthTask().id === 'contrast') return {cls:'recommended', pill:'today', text:'Today'};
+    return contrastBlocks().length ? {cls:'available', pill:'available', text:'Available'} : {cls:'locked', pill:'locked', text:'Locked'};
   }
   if(p.id === 'mission'){
     if(missionDoneToday()) return {cls:'done', text:'Done'};
-    if(activeDepthTask() && activeDepthTask().id === 'mission') return {cls:'recommended', text:'Today'};
-    return bangkokMissions().length ? {cls:'', text:'Open'} : {cls:'locked', text:'Locked'};
+    if(activeDepthTask() && activeDepthTask().id === 'mission') return {cls:'recommended', pill:'today', text:'Today'};
+    return bangkokMissions().length ? {cls:'available', pill:'available', text:'Available'} : {cls:'locked', pill:'locked', text:'Locked'};
   }
   const log = state.drillLog && state.drillLog[p.id];
   if(log && log.last === todayStr()) return {cls:'done', text:'Done'};
   const active = activeDepthTask();
-  if(active && active.id === p.id) return {cls:'recommended', text:'Today'};
-  return {cls:'', text:'Open'};
+  if(active && active.id === p.id) return {cls:'recommended', pill:'today', text:'Today'};
+  return {cls:'available', pill:'available', text:'Available'};
 }
 function renderDailyPractice(){
   const host = el('daily-practice'); if(!host) return;
@@ -3117,12 +3341,12 @@ function renderDailyPractice(){
 		    : missing === 'main' ? 'Main'
 		    : active ? active.title
 		    : task ? task.title
-	    : 'Open';
+	    : 'Available';
   host.innerHTML = DAILY_PRACTICE.map(p=>{
     const s = practiceState(p);
-    return `<button class="practice-chip ${s.cls}" data-practice="${p.id}" ${s.cls==='locked'?'disabled':''}>
+    return `<button class="practice-chip ${s.cls}" data-practice="${p.id}">
       <span class="p-title">${p.title}</span>
-      <span class="p-state">${s.text}</span>
+      <span class="p-state status-pill ${escAttr(s.pill || s.cls || 'optional')}">${s.text}</span>
     </button>`;
   }).join('');
 	  host.querySelectorAll('[data-practice]').forEach(b=>{
@@ -3195,7 +3419,7 @@ function renderPlan(){
     if(daysLeft <= 7 && daysLeft >= 0) bits.push('tone practice badge refreshes in ' + daysLeft + 'd');
     else if(daysLeft < 0) bits.push('tone practice badge ready to refresh');
   }
-  el('plan-week').textContent = bits.length ? 'This week: ' + bits.join(' · ') : 'This week: all caught up';
+  el('plan-week').textContent = bits.length ? 'Optional weekly five: ' + bits.join(' · ') : 'Optional weekly five: all caught up';
   el('plan-week').style.display = '';
   renderRunway();
 }
@@ -4254,7 +4478,7 @@ function renderTones(){
       card.innerHTML = `
         <div class="spread">
           <div>
-            <div class="eyebrow" style="margin:0;color:var(--high)">Today's tone task</div>
+            <div class="eyebrow" style="margin:0;color:var(--ui-info)">Today's tone task</div>
             <h2 style="margin-top:3px">${esc(active.drill.title)}</h2>
             <p class="sub">${esc(active.detail)}</p>
           </div>
@@ -4403,15 +4627,20 @@ function toneQuestion(w, upToLessonNum){
 ===================================================== */
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x=>{
+      x.classList.remove('active');
+      x.removeAttribute('aria-current');
+    });
     t.classList.add('active');
+    t.setAttribute('aria-current', 'page');
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
 	    el('view-'+t.dataset.view).classList.add('active');
 	    if(t.dataset.view==='home') renderHome();
 	    if(t.dataset.view==='streaks') renderStreaks();
-	    if(t.dataset.view==='phrases'){ renderCats(); renderPhrases(); renderPack(); renderConstellation(); renderClassTiles(); }
+	    if(t.dataset.view==='phrases'){ renderCats(); renderPhrases(); renderPack(); }
 	    if(t.dataset.view==='practice' || t.dataset.view==='tones') renderReviewTab();
-	    if(t.dataset.view==='streaks') renderReviewTab();
+	    if(t.dataset.view==='tones') renderClassTiles();
+	    if(t.dataset.view==='streaks'){ renderReviewTab(); renderConstellation(); }
 	    window.scrollTo({top:0});
 	  });
 	});
@@ -6396,7 +6625,7 @@ function renderShop(){
           <div class="s-meta"><div class="s-t">${t}</div><div class="s-d">${d}</div></div>
           <button class="btn small ${ownsPack(id)?'ghost':''}" data-pack="${escAttr(id)}" data-price="${escAttr(pr)}">${ownsPack(id)?'✓ owned':pr+' 💎'}</button>
         </div>`).join('')}
-      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in the Library. Packs add useful extras.</div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in Read. Packs add useful extras.</div>
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Quiet extras</div>
@@ -6425,7 +6654,7 @@ function renderShop(){
       const id = b.dataset.pack;
       if(ownsPack(id)){ toast('Already owned'); return; }
       if(buy(+b.dataset.price, ()=>state.packs.push(id))){
-        toast('Pack unlocked. Find it in Library.'); renderShop(); renderCats(); renderPhrases();
+        toast('Pack unlocked. Find it in Read.'); renderShop(); renderCats(); renderPhrases();
       }
     });
   });
@@ -8054,7 +8283,7 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     window._qTimer = setInterval(()=>{
       const left = Math.max(0, 1 - (Date.now()-t0)/ms);
       bar.style.width = (left*100) + '%';
-      bar.style.background = left < .25 ? 'var(--bad)' : left < .5 ? 'var(--low)' : 'var(--blue)';
+      bar.style.background = left < .25 ? 'var(--ui-danger)' : left < .5 ? 'var(--ui-warning)' : 'var(--ui-primary)';
       if(left <= 0) settle(false, null, true);
     }, 100);
   }
@@ -8363,7 +8592,7 @@ function renderReviewTab(){
   const nextRead = nextFluencyRead();
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due. Add phrases or finish lessons.';
   if(el('read-sub')) el('read-sub').textContent = unreadStory ? 'Story ready: ' + unreadStory.title : 'Micro-stories from letters you know';
-  if(el('fluency-sub')) el('fluency-sub').textContent = nextRead ? 'Ready: ' + nextRead.title : FLUENCY_READS.filter(read=>fluencyReadDone(read)).length + '/' + FLUENCY_READS.length + ' reads banked';
+  if(el('fluency-sub')) el('fluency-sub').textContent = nextRead ? 'Available: ' + nextRead.title : FLUENCY_READS.filter(read=>fluencyReadDone(read)).length + '/' + FLUENCY_READS.length + ' reads banked';
   const leechSub = el('leech-sub');
   if(leechSub) leechSub.textContent = leeches ? leeches + ' hard card' + (leeches>1?'s':'') + ' waiting' : 'No hard cards waiting';
   renderLap();

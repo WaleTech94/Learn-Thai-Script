@@ -2,6 +2,19 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.0.0 - 2026-07-01
+
+- Shipped a UI hierarchy, accessibility, mobile ergonomics and scope-separation pass without changing curriculum sequencing, SRS/review scheduling, state schema, migration semantics, lesson gates, vocabulary roles or Phase 1 pedagogy.
+- Added semantic UI tokens and reusable screen/action/status classes, then moved generic progress, warning, reward, heatmap, tab and grade colours away from the Thai class-colour tokens.
+- Renamed the bottom tabs to Today / Practice / Tones / Read / Progress while preserving internal routes, and added tab `aria-label` values plus active `aria-current="page"` handling.
+- Added a display-only Today route summary card above the existing task list using the current route/review/blocker helpers.
+- Reframed Daily practice as Optional practice and changed practice chips to consistent states such as Required, Recommended, Today, Available, Done and Locked.
+- Reorganised Practice into Due review, Script and reading, Tone/hearing/recall and Transfer practice groups while preserving all existing button IDs.
+- Reworked Tones around the written Tone route, kept TTS safety copy, and moved the class reference there.
+- Reframed Library as Read, prioritised Reading room / Fluency reads / Seen in the wild / Readiness report before optional phrases and unlock packs, and moved Skill profile into Progress.
+- Reworked Streaks into Progress & settings with KPI chips, letter wall, skill profile, training path, heatmap, progress tools, optional extras and reset danger zone.
+- Added `docs/v6_ui_pass_notes.md`; refreshed source-review docs and smoke checklist for version `v6.0.0` and service-worker cache `aan-thai-v6-0-0`.
+
 ## v5.4.6 - 2026-07-01
 
 - Shipped the targeted Phase 1 content/pedagogy hardening pass without adding Phase 2, broad vocabulary, grammar lessons, native audio, speech scoring, dependencies, backend services or an architecture split.

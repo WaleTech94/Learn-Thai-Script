@@ -1,16 +1,18 @@
-# v5.4.6 Smoke-Test Checklist
+# v6.0.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep imported/exported progress JSON private.
 
 ## Fresh Load
 
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v5.4.6`.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.0.0`.
 - Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, and no validator alert/error appears.
 
 ## Installed iPhone/iOS PWA Launch
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v5.4.6`, cache `aan-thai-v5-4-6`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
+- Confirm footer version `v6.0.0`, cache `aan-thai-v6-0-0`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
+- Confirm the bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
+- Confirm Today shows a route summary above the task list and End today uses specific states such as Review first, Main task first, Practice first or Ready.
 
 ## Service-Worker Update After Deploy
 
@@ -67,7 +69,9 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Start Lesson 1 and confirm it says the full tone route is a preview and that today only needs live + no mark -> mid tone.
 - Start Lesson 4 and confirm อ่าน is taught as the app-name/course-goal item without claiming active vocabulary production.
 - Start Lesson 21 and confirm rare letters are class-recognition work before the Letters boss, not ordinary vocabulary.
-- Open Library and confirm phrasebook copy says phrase cards are optional and only enter review when added.
+- Open Read and confirm controlled reading appears before the bonus phrasebook, and phrase cards are optional and only enter review when added.
+- Open Tones and confirm the written Tone route and class reference appear there.
+- Open Progress and confirm the letter wall, skill profile, streak heatmap, progress tools, optional extras and reset danger zone are separated.
 
 ## Debug Validators
 

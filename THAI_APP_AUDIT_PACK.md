@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-01
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v5.4.6`
+Current app version: `v6.0.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -40,6 +40,18 @@ v5.4.6 is a targeted content/pedagogy hardening pass:
 - The final checkpoint now samples silent leaders, three-piece vowels, public-sign chunking and gaaran as well as class, tone, finals, live/dead, vowel length and clusters.
 - `docs/phase1_content_pedagogy_notes.md` and `docs/content_pedagogy_checklist.md` record the pass and future edit checks.
 
+v6.0.0 is a UI hierarchy, accessibility and scope-separation pass:
+
+- Today has a display-only route summary above the existing required task list.
+- Daily practice is reframed as Optional practice, with short consistent state labels.
+- Practice is grouped into due review, script/reading, tone/hearing/recall and transfer sections.
+- Thai Tones is renamed to Tones, foregrounds the written Tone route and now contains the class reference.
+- Library is reframed as Read and prioritises controlled reading before optional phrases/unlocks.
+- Streaks is reframed as Progress, with the skill profile moved there.
+- Generic UI states use semantic tokens instead of the Thai class-colour tokens.
+- Bottom tabs now read Today / Practice / Tones / Read / Progress and manage active `aria-current`.
+- No curriculum, SRS/review scheduling, state key, migration semantics, lesson gates, vocabulary roles or Phase 1 pedagogy changed.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -51,6 +63,7 @@ v5.4.6 is a targeted content/pedagogy hardening pass:
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
+- `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
 - `docs/phase2_refactor_plan.md` - future no-build/low-build split plan.
 - `FILE_MANIFEST.md`, `THAI_APP_AUDIT_PACK.md` - source-review guidance.
 
@@ -71,7 +84,7 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v5.4.6`
+- app version `v6.0.0`
 - 24 lessons
 - 36 validators passing
 - 0 lesson prerequisite issues
@@ -87,11 +100,12 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v5-4-6`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-0-0`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
 - content-pedagogy hardening boundaries: rare-letter class-only prep, optional phrasebook scope, no speaking-fluency overclaims
+- v6 UI separation: Tones owns class/tone reference, Read prioritises controlled reading, Progress owns settings/diagnostics and class colours stay reserved for pedagogy
 
 Out of scope for this release:
 
