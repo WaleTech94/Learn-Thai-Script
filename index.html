@@ -1117,7 +1117,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <section class="course-block" id="boss-rematch-block" hidden>
           <div class="spread">
             <div class="eyebrow">Boss rematches</div>
-            <span class="sub meta-mini">optional · no extra reward</span>
+            <span class="sub meta-mini">optional · no extra tokens</span>
           </div>
           <div class="rematch-grid" id="boss-rematches"></div>
         </section>
@@ -1150,7 +1150,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <span class="sub meta-mini" id="wall-count">0 / 42</span>
       </div>
       <div class="wall" id="wall"></div>
-      <div class="sub meta-mini mt-10">Dim = not met · outline = learning · tint = growing · solid = mastered. Tap any tile to hear it.</div>
+      <div class="sub meta-mini mt-10">Grey = not started · outline = learning · tint = getting there · solid = known. Tap any tile to hear it.</div>
     </div>
     <div class="section-card constel-card" id="constel-card">
       <div class="spread">
@@ -1161,7 +1161,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <svg class="constel-svg" id="constel-svg" viewBox="0 0 132 120" aria-hidden="true"></svg>
         <div class="constel-legend" id="constel-legend"></div>
       </div>
-      <div class="sub meta-mini mt-10">Script, tone and vocabulary stay separate. This is a check-in, not a reward.</div>
+      <div class="sub meta-mini mt-10">Script, tone and vocabulary are counted separately.</div>
     </div>
     <details class="review-drawer mb-12">
       <summary>
@@ -1175,7 +1175,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="sub meta-mini" id="path-next">&nbsp;</span>
           </div>
           <div id="path-body"></div>
-          <div class="sub meta-mini mt-10">Start with reading, class and tone logic. Audio is device voice support. The gold drill is your next best move.</div>
+          <div class="sub meta-mini mt-10">Start with reading, class and tone logic. The highlighted practice is next.</div>
         </div>
         <div class="card">
           <div class="spread">
@@ -1183,11 +1183,11 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="sub meta-mini">kept separate</span>
           </div>
           <div id="skill-evidence"></div>
-          <div class="sub meta-mini mt-10">Script checks unlock lessons because they can be marked. Listening is checked separately. Speaking stays as record-and-compare practice.</div>
+          <div class="sub meta-mini mt-10">Script, device-voice checks and read-aloud practice are tracked separately.</div>
         </div>
         <div class="card">
           <div class="eyebrow">Personal best lap</div>
-          <div id="lap-body"><div class="sub">Your clean run is the share of cards you got right first time. Finish a flashcard session to set one.</div></div>
+          <div id="lap-body"><div class="sub">This is the share of flashcards you answer correctly on the first try. Finish a flashcard session to set it.</div></div>
         </div>
       </div>
     </details>
@@ -1252,14 +1252,14 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="section-card phrase-bonus-card" id="pack-card">
       <div class="spread">
         <div class="eyebrow">Optional weekly five</div>
-        <span class="optional-pill">bonus · +5💎</span>
+        <span class="optional-pill">optional · +5💎</span>
       </div>
       <div class="sub meta-mini mb-12">Bonus phrase practice · not required for Phase 1. Add phrase cards to review only when you want the extra load.</div>
       <div id="pack-list"></div>
     </div>
     <div class="screen-head bonus-head">
       <div class="screen-kicker">Bonus phrasebook</div>
-      <p class="screen-sub">Useful extras. These do not define Phase 1 mastery.</p>
+      <p class="screen-sub">Useful extras. Not required for Phase 1.</p>
     </div>
     <div class="cat-tabs" id="cat-tabs"></div>
     <div class="phrase-list" id="phrase-list"></div>
@@ -1278,7 +1278,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           <div>
             <div class="eyebrow">Due review</div>
             <h2>Review the script</h2>
-            <p class="section-sub">Clear due cards and repeated-problem items first.</p>
+            <p class="section-sub">Review due cards and hard cards first.</p>
           </div>
         </div>
         <div class="action-grid">
@@ -1328,12 +1328,12 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
           <div>
             <div class="eyebrow">Tone, hearing, and recall</div>
             <h2>Listen and retrieve</h2>
-            <p class="section-sub">Device voice support is a rough model. Written rules still do the serious work.</p>
+            <p class="section-sub">Listen, spell and clean up confusions from covered material.</p>
           </div>
         </div>
         <div class="action-grid">
           <button class="action-card" id="cta-hear-thai">
-            <div><div class="t">Hear &amp; pick Thai</div><div class="d">Device voice to script, covered words only</div></div>
+            <div><div class="t">Hear &amp; pick Thai</div><div class="d">Audio to script, covered words only</div></div>
             <span class="icon-right">→</span>
           </button>
           <button class="action-card" id="cta-spell">
@@ -1364,7 +1364,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
             <span class="icon-right">→</span>
           </button>
           <button class="action-card" id="cta-mission">
-            <div><div class="t">Bangkok mission</div><div class="d">Spot covered Thai outside the app</div></div>
+            <div><div class="t">Bangkok mission</div><div class="d">Notice covered Thai outside the app</div></div>
             <span class="icon-right">→</span>
           </button>
         </div>
@@ -1377,7 +1377,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="screen-head">
       <div class="screen-kicker">Tone &amp; class</div>
       <h1 class="screen-title">Tone route</h1>
-      <p class="screen-sub">Use the written procedure first. Device voice support is a rough model, not real-world listening proof.</p>
+      <p class="screen-sub">Start with the written route: class, mark, live/dead, length, tone.</p>
     </div>
     <section class="section-card tone-lab-card">
       <div class="eyebrow">Tone route</div>
@@ -1413,7 +1413,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <button class="btn ghost" id="echo-btn">Echo chamber</button>
         <button class="btn ghost" id="cta-ghost">Glyph ghost</button>
       </div>
-      <p class="lab-note mt-10">Audio is device voice support. Listen for a rough model, then use the written tone rule.</p>
+      <p class="lab-note mt-10">Try the rule first, then listen and compare.</p>
     </section>
     <div class="section-card tone-badge-card">
       <div class="spread">
@@ -1422,7 +1422,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
       <div class="calib-row"><span>Device-voice ear practice <span class="sub meta-mini">(target 85%)</span></span><span class="pct" id="lic-listen">&nbsp;</span></div>
       <div class="calib-row"><span>Tone rules <span class="sub meta-mini">(target 90%)</span></span><span class="pct" id="lic-rule">&nbsp;</span></div>
-      <div class="sub meta-mini mt-10">Rolling last 30 answers per drill, minimum 20 each. The badge is practice evidence, not real-world listening proof.</div>
+      <div class="sub meta-mini mt-10">Rolling last 30 answers per drill, minimum 20 each. Practice evidence, not listening proof.</div>
     </div>
     <div class="section-card">
       <div class="eyebrow">Class reference</div>
@@ -1442,7 +1442,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     </div>
     <div class="section-card">
       <div class="eyebrow">The five tones</div>
-      <p class="sub mb-12">The classic example: five words that are all "khaa".</p>
+      <p class="sub mb-12">Five Thai words with "khaa" readings.</p>
       <div class="phrase-list" id="tone-list"></div>
       <div class="section-gap"></div>
       <div class="eyebrow">Real-life set</div>
@@ -2323,7 +2323,7 @@ const SIGN_SAFARI_ITEMS = [
 ];
 const FONT_SHOCK_ITEMS = SIGN_SAFARI_ITEMS.slice();
 const MOUTH_COACH_CARDS = [
-  {gate:'l4', title:'Tone mark shadow', thai:'ไม่ บ้าน นี่ ห้า', tr:'mâi · bâan · nîi · hâa', note:'Say the Thai first, then compare with device voice support. No score.'},
+  {gate:'l4', title:'Tone mark shadow', thai:'ไม่ บ้าน นี่ ห้า', tr:'mâi · bâan · nîi · hâa', note:'Say the Thai first, then listen and compare.'},
   {gate:'l13', title:'Dead-stop endings', thai:'ถูก พูด รถ ทุก', tr:'thùuk · phûut · rót · thúk', note:'Make the ending stop cleanly. Then replay your voice. No score.'},
   {gate:'l18', title:'True clusters', thai:'ครับ ปลา ครู ใกล้', tr:'khráp · bplaa · khruu · glâi', note:'Blend the cluster as one start sound. No score.'},
   {gate:'l23', title:'Street signs', thai:'ทางออก ทางเข้า ห้องน้ำ ระวัง', tr:'thaang-òrk · thaang-khâo · hôrng-náam · rá-wang', note:'Read chunk by chunk before pressing play. No score.'},
@@ -3219,17 +3219,17 @@ function dailyWinSummary(d){
   if(d.lite) return review + ' · lighter day accepted · streak safe';
   if(d.type === 'C') return review + ' · current-material block complete';
   if((d.ret||0) > 0) return review + ' · memory check done';
-  if((d.m||0) > 0) return review + ' · mastery gate complete';
-  return review + ' · lesson/practice route complete';
+  if((d.m||0) > 0) return review + ' · Mastery check complete';
+  return review + ' · lesson or practice complete';
 }
 function dailyCapabilityStatement(d){
   if(state.lastCapability && state.lastCapability.date === todayStr()) return state.lastCapability.text;
   const doneN = (state.done || []).length;
-  if(d && d.type === 'C') return 'Today kept older Thai fresh instead of rushing ahead.';
-  if(doneN >= 23) return 'You are reading real Bangkok signs with the tools from this course.';
-  if(doneN >= 18) return 'You are turning clusters and ครับ into readable everyday Thai.';
-  if(doneN >= 13) return 'Live/dead and tone choices are getting quicker.';
-  if(doneN >= 6) return 'Class, tone marks and useful words are starting to connect.';
+  if(d && d.type === 'C') return 'Today reviewed older Thai instead of adding a new lesson.';
+  if(doneN >= 23) return 'You are reading Bangkok sign words from this course.';
+  if(doneN >= 18) return 'You are reading clusters and ครับ in everyday Thai.';
+  if(doneN >= 13) return 'You are choosing live/dead and tone more quickly.';
+  if(doneN >= 6) return 'You are connecting class, tone marks and useful words.';
   if(doneN >= 2) return 'You are reading starts, vowels and endings as one word.';
   return 'You are building the letter, class and tone habit.';
 }
@@ -3261,8 +3261,8 @@ function routeVisualClass(summary, missing){
 }
 function routeOptionalHint(missing, summary){
   if(!missing) return 'All clear. Stop for today or choose optional reading.';
-  if(missing === 'review') return 'Optional after review: controlled reading or today\'s bridge practice.';
-  if(missing === 'main') return 'Optional after main task: bridge practice, then stop.';
+  if(missing === 'review') return 'Optional after review: controlled reading or today\'s practice task.';
+  if(missing === 'main') return 'Optional after main task: the practice task, then stop.';
   if(missing === 'depth') return 'After this: End today is ready.';
   if(summary.dayType === 'Updated foundations') return 'Normal review resumes after this refresh.';
   return 'Optional after today: controlled reading or stop.';
@@ -3292,7 +3292,7 @@ function renderDailyWinCard(){
   card.innerHTML = `
     <div>
       <div class="eyebrow">Daily win</div>
-      <h2>${d.type === 'C' ? 'Consolidation banked' : due ? 'Main route complete' : 'Today is complete'}</h2>
+      <h2>${d.type === 'C' ? 'Consolidation complete' : due ? 'Main task complete' : 'Today is complete'}</h2>
       <p class="sub">${esc(dailyWinSummary(d))}${d.paid ? ' · +10💎 claimed' : ''}</p>
       <div class="capability-line">${esc(dailyCapabilityStatement(d))}</div>
     </div>
@@ -3357,8 +3357,8 @@ function todayRouteSummary(){
     };
   }
   if(missing === 'review'){
-    const reason = recovery ? 'Start with a smaller return-after-gap slice.'
-      : band === 'hard' ? 'Thai script sticks through repeated decoding.'
+    const reason = recovery ? 'Start with a smaller return-after-gap review.'
+      : band === 'hard' ? 'Review due cards before adding more.'
       : 'Clear due cards before new work.';
     return {
       dayType,
@@ -3372,7 +3372,7 @@ function todayRouteSummary(){
     return {
       dayType,
       next:blocker ? shortBlockerTitle(blocker) : main && main.label ? main.label : 'Main task',
-      reason:blocker ? shortBlockerDetail(blocker) : d.type === 'C' ? 'Consolidation comes before adding new load.' : 'Review is clear enough for new material.',
+      reason:blocker ? shortBlockerDetail(blocker) : d.type === 'C' ? 'Review today before new lessons.' : 'Start the next lesson.',
       actionLabel:'Start',
       action:()=>routeToDailyStep('main')
     };
@@ -3382,7 +3382,7 @@ function todayRouteSummary(){
     return {
       dayType,
       next:task ? task.title : 'Practice block',
-      reason:'Finish the bridge practice for today, or leave optional extras for later.',
+      reason:'Finish today\'s practice task, or leave optional extras for later.',
       actionLabel:'Practice',
       action:()=>routeToDailyStep('depth')
     };
@@ -4518,7 +4518,7 @@ function audioSetupCopy(reason){
     };
   }
   return {
-    context:'Thai audio uses your browser and operating system text-to-speech voices as device voice support.',
+    context:'Thai audio uses your browser or operating system text-to-speech voice. It is a rough model for practice, not a native speaker.',
     steps:[
       'Install or enable a Thai text-to-speech voice in your device language or accessibility settings.',
       'Restart the browser after the voice is installed.',
@@ -4613,10 +4613,10 @@ function glyphAudioPanel(ch){
   if(g && g.type === 'v'){
     const carrierLetter = labelledAudio(glyphAudio(ch, 'carrier-letter'));
     const carrier = labelledAudio(glyphAudio(ch, 'carrier'));
-    return `<div class="glyph-audio">${primary}${carrierLetter}${carrier}</div><div class="audio-help">Device voice support only: listen for a rough model. In ${esc(g.disp)}, อ is a silent carrier, so the full carrier form should still sound like the vowel.</div>`;
+    return `<div class="glyph-audio">${primary}${carrierLetter}${carrier}</div><div class="audio-help">Listen to the vowel sound. In ${esc(g.disp)}, อ is a silent carrier, so the full carrier form should still sound like the vowel.</div>`;
   }
   const name = g && g.type === 'c' ? labelledAudio(glyphAudio(ch, 'name')) : '';
-  const help = g && g.type === 'c' ? `<div class="audio-help">Device voice support only: listen to the beginning of ${esc(sound.value)} for a rough "${esc(g.sound)}" model.</div>` : '';
+  const help = g && g.type === 'c' ? `<div class="audio-help">Listen to the beginning of ${esc(sound.value)} for "${esc(g.sound)}".</div>` : '';
   return `<div class="glyph-audio">${primary}${name}</div>${help}`;
 }
 
@@ -4640,7 +4640,7 @@ async function toggleLocalRecording(btn, audio){
     return;
   }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !('MediaRecorder' in window)){
-    toast('Recording is not supported here. Say it aloud and compare with device voice support.');
+    toast('Recording is not supported here. Say it aloud and compare.');
     return;
   }
   try{
@@ -4836,7 +4836,7 @@ function renderSkillEvidence(){
       <span class="evidence-value">${fluencyDone}/${FLUENCY_READS.length} fluency reads${phase1CompletionPassed()?' · final ✓':''}</span>
     </div>
     <div class="evidence-row">
-      <span>Listening</span><span class="evidence-bar"><span style="width:${earPct}%;background:var(--blue)"></span></span>
+      <span>Device voice</span><span class="evidence-bar"><span style="width:${earPct}%;background:var(--blue)"></span></span>
       <span class="evidence-value">${ear.pct==null?'no checks yet':ear.pct+'% · n='+ear.n}</span>
     </div>
     <div class="evidence-row">
@@ -5872,8 +5872,9 @@ function validatePhase1CompletionStandardContracts(){
     'Apply consonant class and tone logic',
     'Recognise live/dead syllables and final consonant jobs',
     'Read controlled cumulative items',
-    'Real-world listening or speaking mastery',
-    'Device-voice proof of tone, vowel length, aspiration or final-stop mastery'
+    'Keep practising',
+    'Real-world listening',
+    'Speaking naturally in open conversation'
   ].forEach(phrase=>{
     if(!readiness.includes(phrase)) errors.push('readiness report missing Phase 1 standard: ' + phrase);
   });
@@ -5943,7 +5944,7 @@ function validateV54FluencyContracts(){
   ['conversation tree','dialogue','survival phrase module','phrasebook module','AI chat','leaderboard','dashboard'].forEach(phrase=>{
     if(new RegExp(phrase, 'i').test(fluencyText)) errors.push('v5.4 drifted into blocked module scope: ' + phrase);
   });
-  if(!/Device voice support is optional/.test(String(renderPhase1CompletionRead)) || !/not the proof of mastery/.test(String(renderPhase1CompletionRead))) errors.push('final read must keep TTS as optional support, not proof');
+  if(!/Audio is optional/.test(String(renderPhase1CompletionRead)) || !/Use your reading route first/.test(String(renderPhase1CompletionRead))) errors.push('final read must keep audio optional and foreground the reading route');
   const finalQs = buildPhase1CompletionQuiz();
   if(finalQs.length < 10) errors.push('final Phase 1 completion checkpoint needs a broad enough item set');
   const finalAxes = finalQs.map(q=>q.axis || q._choice || q.kind).join(' ');
@@ -6647,10 +6648,10 @@ function buildPath(){
     {t:'speak', l:'Echo chamber', s:'record and compare aloud', go:()=>el('echo-btn').click()},
   ];
   const W_MID = W_TONE.concat([
-    {t:'drill', l:'Confusion clinic', s:'untangle lookalikes', go:()=>el('cta-clinic').click()},
+    {t:'drill', l:'Confusion clinic', s:'choose between similar letters', go:()=>el('cta-clinic').click()},
   ]);
   const W_LATE = W_MID.concat([
-    {t:'drill', l:'Glyph ghost', s:'spot the lookalike fast', go:()=>el('cta-ghost').click()},
+    {t:'drill', l:'Glyph ghost', s:'choose the missing letter', go:()=>el('cta-ghost').click()},
     {t:'drill', l:'Tone-rule trainer', s:'derive the tone from the script', go:()=>el('tone-rule-btn').click()},
   ]);
   const N = [
@@ -6673,14 +6674,14 @@ function isCoursePracticeNode(n){
 }
 function practiceNodeType(n){
   const label = String((n && n.label) || '').toLowerCase();
-  if(label.includes('hear & pick')) return 'hear-thai';
-  if(label.includes('class sprint')) return 'sprint';
-  if(label.includes('echo')) return 'echo';
+  if(label.includes('hear & pick') || label.includes('listen and pick')) return 'hear-thai';
+  if(label.includes('class sprint') || label.includes('class practice')) return 'sprint';
+  if(label.includes('echo') || label.includes('read, listen, record')) return 'echo';
   if(label.includes('spell')) return 'spell';
-  if(label.includes('sound twins')) return 'twins';
-  if(label.includes('confusion')) return 'clinic';
-  if(label.includes('glyph ghost')) return 'ghost';
-  if(label.includes('tone-rule')) return 'tone-rule';
+  if(label.includes('sound twins') || label.includes('similar sounds')) return 'twins';
+  if(label.includes('confusion') || label.includes('lookalike')) return 'clinic';
+  if(label.includes('glyph ghost') || label.includes('hidden letter')) return 'ghost';
+  if(label.includes('tone-rule') || label.includes('tone rules')) return 'tone-rule';
   if((n && n.type) === 'read' || label.includes('read:')) return 'reading';
   if((n && n.type) === 'speak') return 'echo';
   return (n && n.type) || 'practice';
@@ -6744,7 +6745,7 @@ function bossRematchItems(target){
     }
   });
   if(checks.letters42) items.push({id:'letters42', label:'Letters boss', sub:'class of all 42', go:()=>startLettersBoss(true)});
-  if(checks.phase1Completion) items.push({id:'phase1Completion', label:'Phase 1 completion checkpoint', sub:'controlled reading behaviours', go:()=>startPhase1CompletionCheckpoint(true)});
+  if(checks.phase1Completion) items.push({id:'phase1Completion', label:'Phase 1 completion checkpoint', sub:'controlled reading and final read', go:()=>startPhase1CompletionCheckpoint(true)});
   return items;
 }
 function renderBossRematches(){
@@ -6756,7 +6757,7 @@ function renderBossRematches(){
   host.innerHTML = items.map((item,idx)=>`
     <button class="rematch-card" data-rematch="${escAttr(idx)}">
       <div class="t">${esc(item.label)}</div>
-      <div class="d">${esc(item.sub)} · no extra reward</div>
+      <div class="d">${esc(item.sub)} · no extra tokens</div>
     </button>`).join('');
   host.querySelectorAll('[data-rematch]').forEach(b=>{
     b.addEventListener('click', ()=>{
@@ -6925,24 +6926,24 @@ function renderShop(){
   if(!state.themes) state.themes = [];
   if(!state.titles) state.titles = [];
   el('stage').innerHTML = `
-    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · extra language, not shortcuts</p></div>
+    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · optional language and display settings</p></div>
     <div class="card">
       <div class="eyebrow">Phrase packs</div>
-      ${[['teacher','Teacher pack','Classroom Thai for running your room',60],
-         ['food2','Food deep-dive','Tier 2 ordering tweaks: bags, ice, no MSG',60],
-         ['slang','Street slang','Casual useful Thai. Funny, not rude.',50]].map(([id,t,d,pr])=>`
+      ${[['teacher','Teacher pack','Classroom Thai for school',60],
+         ['food2','Food deep-dive','Ordering details: bags, ice, no MSG',60],
+         ['slang','Street slang','Casual Thai words. Funny, not rude.',50]].map(([id,t,d,pr])=>`
         <div class="shop-row">
           <div class="s-meta"><div class="s-t">${t}</div><div class="s-d">${d}</div></div>
           <button class="btn small ${ownsPack(id)?'ghost':''}" data-pack="${escAttr(id)}" data-price="${escAttr(pr)}">${ownsPack(id)?'✓ owned':pr+' 💎'}</button>
         </div>`).join('')}
-      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in Read. Packs add useful extras.</div>
+      <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in Read. These sets are optional.</div>
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Quiet extras</div>
       ${THEMES.map(t=>{
         const owned = ownsTheme(t.id), active = (state.theme||'night')===t.id;
         return `<div class="shop-row">
-          <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'the original':'class colours stay the same'}</div></div>
+          <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'default colours':'class colours stay the same'}</div></div>
           <button class="btn small ${owned?'ghost':''}" data-theme-id="${escAttr(t.id)}" data-price="${escAttr(t.price)}">${active?'● active':owned?'use':t.price+' 💎'}</button>
         </div>`;
       }).join('')}
@@ -6964,7 +6965,7 @@ function renderShop(){
       const id = b.dataset.pack;
       if(ownsPack(id)){ toast('Already owned'); return; }
       if(buy(+b.dataset.price, ()=>state.packs.push(id))){
-        toast('Pack unlocked. Find it in Read.'); renderShop(); renderCats(); renderPhrases();
+        toast('Phrase set added. Find it in Read.'); renderShop(); renderCats(); renderPhrases();
       }
     });
   });
@@ -6972,9 +6973,9 @@ function renderShop(){
     b.addEventListener('click', ()=>{
       const id = b.dataset.themeId;
       if(ownsTheme(id)){
-        state.theme = id; saveState(); applyTheme(); renderShop(); toast('Theme on');
+        state.theme = id; saveState(); applyTheme(); renderShop(); toast('Theme selected');
       } else if(buy(+b.dataset.price, ()=>{ state.themes.push(id); state.theme = id; })){
-        applyTheme(); renderShop(); toast('Theme bought and on');
+        applyTheme(); renderShop(); toast('Theme added and selected');
       }
     });
   });
@@ -7091,10 +7092,10 @@ function renderEarnBoard(){
   const lic = state.toneLicence;
   const row = (label, amount, prog) => `<div class="calib-row"><span>${label}<br><span class="sub" style="font-size:12px">${amount}</span></span><span class="pct">${prog}</span></div>`;
   el('stage').innerHTML = `
-    <div class="center"><h2>💎 Earnings board</h2><p class="sub">Everything that pays, and where you stand this week.</p></div>
+    <div class="center"><h2>💎 Earnings board</h2><p class="sub">How tokens are earned and spent.</p></div>
     <div class="card">
       <div class="eyebrow">Every day</div>
-      ${row("Complete the daily plan <span class='sub' style='font-size:12px'>(clear due cards + lesson or drill)</span>", "+10 💎 each day", wkPaid + "/7 this week")}
+      ${row("Complete the daily plan <span class='sub' style='font-size:12px'>(review due cards + lesson or practice)</span>", "+10 💎 each day", wkPaid + "/7 this week")}
       ${row("Spell it: first-try words", "+2 💎 per word", "")}
       ${row("Class sprint at 85%+", "+3 💎", "")}
     </div>
@@ -7237,10 +7238,10 @@ function renderConstellation(){
   const card = el('constel-card'), aligned = s.script>=55 && s.tone>=55 && s.vocab>=55;
   if(aligned && !state.constel.aligned){
     state.constel.aligned = true; if(card) card.classList.add('aligned');
-    el('constel-status').textContent = 'balanced evidence';
+    el('constel-status').textContent = 'balanced profile';
   } else {
     if(card) card.classList.toggle('aligned', !!state.constel.aligned);
-    el('constel-status').textContent = state.constel.aligned ? 'balanced evidence' : Math.round((s.script+s.tone+s.vocab)/3) + '% lit';
+    el('constel-status').textContent = state.constel.aligned ? 'balanced profile' : Math.round((s.script+s.tone+s.vocab)/3) + '% lit';
   }
   saveState();
 }
@@ -7248,13 +7249,13 @@ function renderConstellation(){
 function renderLap(){
   const host = el('lap-body'); if(!host) return;
   const lap = state.lap;
-  if(!lap || !lap.lastDate){ return; }   // keep the default prompt until first lap
+  if(!lap || !lap.lastDate){ return; }   // keep the default prompt until first session score
   const bar = (label, pct, cls) =>
     `<div class="lap-row"><div class="spread"><span>${label}</span><span class="pct" style="font-family:var(--font-display)">${pct}%</span></div><div class="lap-bar"><span class="lap-fill ${cls}" style="width:${pct}%"></span></div></div>`;
   host.innerHTML =
     bar('Last session' + (lap.lastDate===todayStr()?' (today)':''), lap.last||0, 'last') +
     bar('All-time best', lap.best||0, 'best') +
-    `<div class="sub" style="font-size:12px;margin-top:4px">Beat your best by getting cards right on the first try. New records pay +3💎.</div>`;
+    `<div class="sub" style="font-size:12px;margin-top:4px">Improve this by answering cards correctly on the first try. New best scores add +3💎.</div>`;
 }
 function renderProgressWall(){
   const host = el('progress-wall'); if(!host) return;
@@ -7263,7 +7264,7 @@ function renderProgressWall(){
   host.innerHTML = ['A','B','C','D'].map(u=>{
     const Ls = LESSONS.filter(L=>L.unit.charAt(0)===u);
     const doneN = Ls.filter(L=>state.done.includes(L.id)).length;
-    const boss = doneN === Ls.length;   // 👑 when the whole unit is done
+      const boss = doneN === Ls.length;   // visual marker when the whole unit is done
     const tiles = Ls.map(L=>{
       const cls = state.done.includes(L.id) ? 'done' : (L.id===nextId ? 'next' : '');
       return `<div class="pw-tile ${cls}" data-lesson="${L.id}">${L.id.slice(1)}</div>`;
@@ -7442,8 +7443,8 @@ function renderLearn(){
         bc.className = 'card lesson-card' + (!baseReady ? ' locked' : '');
         bc.innerHTML = `
           <div class="glyphs">🎧</div>
-          <div class="meta"><div class="t">Foundations baseline · listening</div>
-          <div class="d">${baseReady ? (ear ? `last result ${ear.pct}% · ${ear.date} · diagnostic only` : '10 familiar words · device-voice recognition · does not gate lessons') : 'pass the lessons 1-6 script checkpoint first'}</div></div>
+          <div class="meta"><div class="t">Foundations baseline · listening check (device voice)</div>
+            <div class="d">${baseReady ? (ear ? `last result ${ear.pct}% · ${ear.date}` : '10 familiar words · device-voice check · does not block lessons') : 'pass the lessons 1-6 script checkpoint first'}</div></div>
           <div class="state">${baseReady ? (ear?'recheck →':'check →') : '🔒'}</div>`;
       if(baseReady) bc.addEventListener('click', startFoundationEar);
         list.appendChild(bc);
@@ -7456,7 +7457,7 @@ function renderLearn(){
       fc.className = 'card lesson-card' + (doneRead ? ' done' : '') + (!open ? ' locked' : '');
       fc.innerHTML = `
         <div class="glyphs">${read.realWorld ? '🏙️' : '📜'}</div>
-        <div class="meta"><div class="t">${esc(read.title)}</div><div class="d">${read.realWorld ? 'Controlled real-world read' : 'Cumulative fluency read'} · ${esc(fluencyReadStatus(read))}</div></div>
+        <div class="meta"><div class="t">${esc(read.title)}</div><div class="d">${read.realWorld ? 'Sign-style read' : 'Controlled read'} · ${esc(fluencyReadStatus(read))}</div></div>
         <div class="state">${open ? (doneRead ? 'read again' : 'read →') : '🔒'}</div>`;
       if(open) fc.addEventListener('click', ()=>startFluencyRead(read));
       list.appendChild(fc);
@@ -7480,7 +7481,7 @@ function renderLearn(){
   finalCard.className = 'card lesson-card boss-card' + (!finalReady ? ' locked' : '') + (finalPassed ? ' done' : '');
   finalCard.innerHTML = `
     <div class="glyphs">✅</div>
-    <div class="meta"><div class="t">Phase 1 completion checkpoint</div><div class="d">${finalReady ? (finalPassed ? 'passed ✓ · controlled reading evidence banked' : 'observable reading behaviours · quiz plus smoothness self-rating') : finalBlockers.join(' · ')}</div></div>
+    <div class="meta"><div class="t">Phase 1 completion checkpoint</div><div class="d">${finalReady ? (finalPassed ? 'passed ✓ · final read complete' : 'quiz plus smoothness self-rating') : finalBlockers.join(' · ')}</div></div>
     <div class="state">${finalReady ? (finalPassed ? 'retake' : 'start check →') : '🔒'}</div>`;
   if(finalReady) finalCard.addEventListener('click', ()=>startPhase1CompletionCheckpoint(finalPassed));
   list.appendChild(finalCard);
@@ -7628,7 +7629,7 @@ function startPhase1CompletionCheckpoint(rematch){
     openOverlay();
     setProg(0);
     el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">Phase 1 completion checkpoint</div><h2>Not ready yet</h2><p class="sub">This checkpoint waits for observable script-reading evidence.</p></div>
+      <div class="center"><div class="eyebrow">Phase 1 completion checkpoint</div><h2>Not ready yet</h2><p class="sub">Finish the required reads first.</p></div>
       <div class="notebox" style="text-align:left">${blockers.map(b=>'• ' + esc(b)).join('<br>')}</div>
       <div class="stage-actions">
         ${nextRead ? '<button class="btn full" id="phase1-next-read">Open next fluency read →</button>' : ''}
@@ -7673,10 +7674,10 @@ function finishPhase1CompletionCheckpoint(pct, ratingId, rematch){
   setProg(100);
   el('stage').innerHTML = passed ? `
     <div class="result-big">Checkpoint passed</div>
-    <div class="result-sub">Controlled Thai reading evidence banked${firstPass ? ' · +20💎 first pass' : ''}</div>
+    <div class="result-sub">Final Thai read complete${firstPass ? ' · +20💎 first pass' : ''}</div>
     <div class="notebox" style="margin-top:14px;text-align:left">
-      This checks controlled reading, not full speaking ability.<br>
-      It does not certify free conversation, broad vocabulary or real-world listening mastery.
+      Phase 1 is reading, class and tone logic.<br>
+      Keep practising listening and speaking outside this checkpoint.
     </div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>` : `
     <div class="result-big">Keep this as practice</div>
@@ -7698,8 +7699,8 @@ function renderPhase1CompletionRead(pct, rematch){
     <div class="center"><div class="eyebrow">Final controlled read</div><h2>Read once, then smoother</h2><p class="sub">Read this slowly first. Now try a smoother second pass before you rate it.</p></div>
     ${fluencyReadHtml(read)}
     <div class="compare-box">
-      <div class="row" style="justify-content:center;gap:10px">${speakBtn(fluencyReadText(read), 'Hear rough model')}</div>
-      <div class="sub" style="font-size:12px;text-align:center;margin-top:8px">Device voice support is optional. It is not the proof of mastery.</div>
+      <div class="row" style="justify-content:center;gap:10px">${speakBtn(fluencyReadText(read), 'Hear Thai')}</div>
+      <div class="sub" style="font-size:12px;text-align:center;margin-top:8px">Audio is optional. Use your reading route first.</div>
     </div>
     <div class="q-options" style="margin-top:14px">
       ${FLUENCY_RATINGS.map(r=>`<button class="q-opt" data-rating="${escAttr(r.id)}">${esc(r.label)}</button>`).join('')}
@@ -7741,9 +7742,9 @@ function renderLessonSpeak(p){
   stage.innerHTML = `
     <div class="center"><div class="eyebrow">Read &amp; say · ${p.speakIdx+1} of ${words.length}</div><h2>Read it aloud</h2></div>
     <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
-    <div class="sub" style="text-align:center">Use the script, not the English meaning. Then reveal device voice support and compare. No score needed.</div>
+    <div class="sub" style="text-align:center">Use the script, not the English meaning. Then listen and compare.</div>
     <div id="speak-reveal" class="stage-actions">
-      <button class="btn full" id="speak-show">I read it · show device voice →</button>
+      <button class="btn full" id="speak-show">I read it · show audio →</button>
       <button class="btn full ghost" id="speak-skip" style="margin-top:8px">Skip this one</button>
     </div>`;
   el('speak-show').onclick = ()=>{
@@ -7753,11 +7754,11 @@ function renderLessonSpeak(p){
         <div class="echo-word" style="margin:0">${classColourThaiHtml(w.thai)}</div>
         <div class="fc-tr" style="text-align:center">${w.tr}</div>
         <div class="compare-audio">
-          <span class="sub">Device voice</span>${speakBtn(w.thai, 'Hear rough model: '+w.thai)}
+          <span class="sub">Audio</span>${speakBtn(w.thai, 'Hear Thai: '+w.thai)}
           <button class="btn small ghost record-btn" id="rec-start">● Record yourself</button>
         </div>
         <audio class="own-audio" id="own-audio" controls style="display:none"></audio>
-        <div class="sub" style="font-size:11px;margin-top:8px">Your recording stays on this device and is discarded when you leave. Compare, but do not treat this as a native-speaker recording.</div>
+        <div class="sub" style="font-size:11px;margin-top:8px">Your recording stays on this device and is discarded when you leave.</div>
       </div>
       <button class="btn full" id="speak-next" style="margin-top:12px">${p.speakIdx+1===words.length?'Start the quiz →':'Next word →'}</button>`;
     const rb = el('rec-start'), au = el('own-audio');
@@ -7792,7 +7793,7 @@ function renderLessonPayoff(p){
         <div class="payoff-word">${classColourThaiHtml(payoff.thai)}</div>
         <div class="fc-tr" style="text-align:center">${esc(payoff.tr)}</div>
         <div class="payoff-context"><b>Meaning:</b> ${esc(payoff.meaning)}<br>${esc(payoff.context)}</div>
-        <div class="row" style="justify-content:center;gap:10px;margin:14px 0">${speakBtn(payoff.thai, 'Hear rough model: '+payoff.thai)}</div>
+        <div class="row" style="justify-content:center;gap:10px;margin:14px 0">${speakBtn(payoff.thai, 'Hear Thai: '+payoff.thai)}</div>
         <div class="compare-box">
           <div class="q-feedback" style="margin-bottom:8px">Say it once from Thai script. Record only if you want to compare.</div>
           <button class="btn full ghost record-btn" id="payoff-record">Record yourself</button>
@@ -7917,7 +7918,7 @@ function renderLessonStep(){
   // words page
   else if(p.i === wordsIndex){
     stage.innerHTML = `
-      <div class="center"><h2>Now read these</h2><p class="sub">Sound each word out first. Then reveal the reading, device voice support and meaning.</p></div>
+      <div class="center"><h2>Now read these</h2><p class="sub">Sound each word out first. Then reveal the reading, audio and meaning.</p></div>
       ${L.words.map((w,wi)=>`
         <div class="word-line">
           <div class="w-thai">${classColourThaiHtml(w.thai)}${wordRole(w)==='decode'?'<div style="font-size:10px;color:var(--muted);letter-spacing:.08em">DECODE ONLY</div>':wordRole(w)==='recognition'?'<div style="font-size:10px;color:var(--blue);letter-spacing:.08em">RECOGNISE</div>':''}</div>
@@ -8698,7 +8699,7 @@ el('twins-btn').addEventListener('click', ()=>{
 /* echo chamber - shadow, record and compare locally; no honesty-based pronunciation score */
 el('echo-btn').addEventListener('click', ()=>{
   const pool = readableEchoItems();
-  if(pool.length < 4){ toast('Finish a lesson first. Echo uses covered words only.'); return; }
+  if(pool.length < 4){ toast('Finish a lesson first. Read-aloud practice uses covered words only.'); return; }
   player = {type:'echo', rounds:sample(pool, 8), i:0};
   openOverlay(); renderEcho();
 });
@@ -8711,8 +8712,8 @@ function renderEcho(){
     const d = ensureDay(); d.d++; saveState(); bumpStreak(); award(2); questCheck();
     el('stage').innerHTML = `
       <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">${p.rounds.length} words shadowed and compared · +2💎</div>
-      <div class="result-sub" style="font-size:12px">Device voices are approximate. Use this as rough support, then trust the written rule.</div>
+      <div class="result-sub">${p.rounds.length} words read aloud and compared · +2💎</div>
+      <div class="result-sub" style="font-size:12px">Good. Keep the written rule in mind for tones.</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
     return;
@@ -8727,10 +8728,10 @@ function renderEcho(){
       <button class="btn small ghost" id="echo-slow">🐢 slow</button>
     </div>
     <div class="compare-box">
-      <div class="q-feedback" style="margin-bottom:8px">Shadow it, record, then play yourself back beside the device voice.</div>
+      <div class="q-feedback" style="margin-bottom:8px">Read it aloud, record, then play yourself back beside the audio.</div>
       <button class="btn full ghost record-btn" id="echo-record">● Record yourself</button>
       <audio class="own-audio" id="echo-own" controls style="display:none"></audio>
-      <div class="sub" style="font-size:11px;margin-top:8px">No fake score: listen for vowel length, aspiration and pitch movement. Recording stays on this device.</div>
+      <div class="sub" style="font-size:11px;margin-top:8px">Listen for vowel length, aspiration and pitch movement. Recording stays on this device.</div>
     </div>
     <div class="stage-actions"><button class="btn full" id="echo-next">I said it · next →</button></div>`;
   setTimeout(()=>speak(r.t), 350);
@@ -8805,7 +8806,7 @@ function renderPack(){
     if(!p) return '';
     const used = w.used[t];
     return `<div class="quest-line ${used?'done':''}" style="text-decoration:none">
-      <button class="btn small ${used?'ghost':''}" data-used="${t}" style="flex:none">${used?'✓':'rehearse'}</button>
+      <button class="btn small ${used?'ghost':''}" data-used="${t}" style="flex:none">${used?'✓':'practise'}</button>
       <span style="flex:1"><span class="thai" style="font-family:var(--font-display);font-size:17px">${t}</span> <span class="sub" style="font-size:12px">${p.tr}</span></span>
       ${speakBtn(t)}
     </div>`;
@@ -8836,7 +8837,7 @@ function renderPhrases(){
       <div class="card" style="text-align:center;padding:28px 18px">
         <div style="font-size:34px;margin-bottom:8px">🔒</div>
         <h2>Street slang pack</h2>
-        <p class="sub" style="margin:8px 0 16px">10 words that make taxi drivers grin. Earned, not given.</p>
+        <p class="sub" style="margin:8px 0 16px">10 optional words. Funny, not rude. Not required for Phase 1.</p>
         <button class="btn" id="buy-slang">Unlock for 50💎 (you have ${state.baht||0}💎)</button>
       </div>`;
     el('buy-slang').addEventListener('click', ()=>{
@@ -8870,7 +8871,7 @@ function renderPhrases(){
       if(!items.length) return '';
       return `<div class="lvl-head">
           <span class="eyebrow" style="margin:0">${LVL[lv]}</span>
-          <button class="btn small ghost" data-drill="${escAttr(lv)}">🔁 Drill</button>
+          <button class="btn small ghost" data-drill="${escAttr(lv)}">Practise</button>
         </div>${items.map(card).join('')}`;
     }).join('');
   } else {
@@ -8912,7 +8913,7 @@ function renderReviewTab(){
   const active = activeDepthTask();
   el('flash-sub').textContent = due ? due + ' card' + (due>1?'s':'') + ' due' : 'Nothing due. Add phrases or finish lessons.';
   if(el('read-sub')) el('read-sub').textContent = unreadStory ? 'Story ready: ' + unreadStory.title : 'Micro-stories from letters you know';
-  if(el('fluency-sub')) el('fluency-sub').textContent = nextRead ? 'Available: ' + nextRead.title : FLUENCY_READS.filter(read=>fluencyReadDone(read)).length + '/' + FLUENCY_READS.length + ' reads banked';
+  if(el('fluency-sub')) el('fluency-sub').textContent = nextRead ? 'Available: ' + nextRead.title : FLUENCY_READS.filter(read=>fluencyReadDone(read)).length + '/' + FLUENCY_READS.length + ' reads complete';
   const leechSub = el('leech-sub');
   if(leechSub) leechSub.textContent = leeches ? leeches + ' hard card' + (leeches>1?'s':'') + ' waiting' : 'No hard cards waiting';
   setActionCardState('cta-flash', due ? 'recommended' : 'done');
@@ -8937,7 +8938,7 @@ el('cta-flash').addEventListener('click', ()=>{
   const due = srsDue();
   if(!due.length){
     const leeches = srsLeechesDue().length;
-    toast(leeches ? 'Normal deck is clear. Leech clinic has ' + leeches + ' hard card' + (leeches>1?'s':'') + '.' : 'No cards due right now');
+    toast(leeches ? 'Normal deck is clear. There are ' + leeches + ' hard card' + (leeches>1?'s':'') + '.' : 'No cards due right now');
     return;
   }
   const session = buildBalancedReviewSession(due, REVIEW_MANUAL_CAP);
@@ -8947,7 +8948,7 @@ el('cta-flash').addEventListener('click', ()=>{
 el('cta-leech').addEventListener('click', ()=>{
   if(foundationRefreshRequired()){ startFoundationRefresh(); return; }
   const due = srsLeechesDue();
-  if(!due.length){ toast('No leech cards waiting'); return; }
+  if(!due.length){ toast('No hard cards waiting'); return; }
   const session = buildBalancedReviewSession(due, 12);
   startFlashcards(session, {leechClinic:true});
 });
@@ -8981,8 +8982,8 @@ function renderAxisSpeakFlash(id, advance, counterLabel){
     <div class="center"><div class="eyebrow">${esc(counterLabel||'')}</div><h2>Read aloud from Thai</h2></div>
     <div class="axis-tag">read-aloud card</div>
     <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
-    <div class="sub" style="text-align:center">No English cue. Read it once, then reveal device voice support and compare.</div>
-    <div class="stage-actions"><button class="btn full" id="axis-say-show">I read it. Show device voice</button></div>`;
+    <div class="sub" style="text-align:center">No English cue. Read it once, then listen and compare.</div>
+    <div class="stage-actions"><button class="btn full" id="axis-say-show">I read it. Show audio</button></div>`;
   el('axis-say-show').onclick = ()=>{
     logSpeakAttempt();
     el('stage').innerHTML = `
@@ -8991,7 +8992,7 @@ function renderAxisSpeakFlash(id, advance, counterLabel){
         <div class="echo-word" style="margin:0">${classColourThaiHtml(w.thai)}</div>
         <div class="fc-tr" style="text-align:center">${esc(w.tr)}</div>
         <div class="compare-audio">
-          <span class="sub">Device voice</span>${speakBtn(w.thai, 'Hear rough model: '+w.thai)}
+          <span class="sub">Audio</span>${speakBtn(w.thai, 'Hear Thai: '+w.thai)}
           <button class="btn small ghost record-btn" id="axis-rec">● Record yourself</button>
         </div>
         <audio class="own-audio" id="axis-own" controls style="display:none"></audio>
@@ -9050,16 +9051,16 @@ function renderFlash(){
       state.lap.last = lap; state.lap.lastDate = todayStr();
       if(lap > (state.lap.best||0)){
         state.lap.best = lap; award(3); p.net += 3;
-        lapLine = `<div class="result-sub" style="color:var(--gold)">🏁 New personal best lap: ${lap}% clean · +3💎</div>`;
+        lapLine = `<div class="result-sub" style="color:var(--gold)">New first-try best: ${lap}% · +3💎</div>`;
       } else {
-        lapLine = `<div class="result-sub">clean run this lap: ${lap}% · best ${state.lap.best}%</div>`;
+        lapLine = `<div class="result-sub">First-try score: ${lap}% · best ${state.lap.best}%</div>`;
       }
     }
     saveState();
     bumpStreak(); questCheck();
     el('stage').innerHTML = `
-      <div class="result-big">เก่งมาก</div>
-      <div class="result-sub">gèng mâak · ${p.reviewed} ${p.opts && p.opts.leechClinic ? 'hard cards reviewed' : 'cards reviewed'}</div>
+      <div class="result-big">Review complete</div>
+      <div class="result-sub">${p.reviewed} ${p.opts && p.opts.leechClinic ? 'hard cards reviewed' : 'cards reviewed'}</div>
       ${lapLine}
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderReviewTab(); renderHome(); };
@@ -9225,10 +9226,10 @@ function renderContrastBlock(){
           <button class="btn small ghost" id="contrast-slow">slow</button>
         </div>
         <div class="compare-box">
-          <div class="q-feedback" style="margin-bottom:8px">Read from Thai, record, then play yourself back beside the device voice.</div>
+          <div class="q-feedback" style="margin-bottom:8px">Read from Thai, record, then play yourself back beside the audio.</div>
           <button class="btn full ghost record-btn" id="contrast-record">Record yourself</button>
           <audio class="own-audio" id="contrast-own" controls style="display:none"></audio>
-          <div class="sub" style="font-size:11px;margin-top:8px">No pronunciation score. Check the specific contrast: ${esc(block.contrast)}.</div>
+          <div class="sub" style="font-size:11px;margin-top:8px">Check the specific contrast: ${esc(block.contrast)}.</div>
         </div>
         <div class="contrast-rubric">
           <button class="btn ghost" id="contrast-shaky">Needs another pass</button>
@@ -9245,8 +9246,8 @@ function renderContrastBlock(){
   el('stage').innerHTML = `
     <div class="q-prompt">
       <div class="eyebrow">Contrast block · ${p.i+1} of ${p.rounds.length}</div>
-      <div class="q-text">Listen to the device voice. Which Thai did you hear?</div>
-      <div class="audio-inline">${speakBtn(target.thai, 'Hear rough model')}</div>
+      <div class="q-text">Listen. Which Thai did you hear?</div>
+      <div class="audio-inline">${speakBtn(target.thai, 'Hear Thai')}</div>
     </div>
     <div class="q-options">
       ${round.options.map(opt=>`<button class="q-opt thai-opt" data-opt="${escAttr(opt)}">${classColourThaiHtml(opt)}</button>`).join('')}
@@ -9282,7 +9283,7 @@ function markBangkokMissionDone(mission){
   saveState(); bumpStreak();
   if(first) award(2);
   questCheck();
-  toast(first ? 'Mission done · +2💎' : 'Mission done');
+  toast(first ? 'Outside-app task done · +2💎' : 'Outside-app task done');
 }
 function showBangkokMissions(focusId){
   const items = bangkokMissions();
@@ -9290,13 +9291,13 @@ function showBangkokMissions(focusId){
   openOverlay();
   setProg(0);
   if(!items.length){
-    el('stage').innerHTML = `<div class="center"><h2>Bangkok mission</h2><p class="sub">Missions open once Lesson 3 gives you enough Thai to spot outside the app.</p></div>`;
+    el('stage').innerHTML = `<div class="center"><h2>Bangkok mission</h2><p class="sub">This opens once Lesson 3 gives you enough Thai to notice outside the app.</p></div>`;
     return;
   }
   const done = ensureMissions().done || {};
   const focus = focusId || (nextBangkokMission() || items[0]).id;
   el('stage').innerHTML = `
-    <div class="center"><h2>Bangkok mission</h2><p class="sub">No camera, upload, location or web access. Tick only what you notice or rehearse outside the app.</p></div>
+    <div class="center"><h2>Bangkok mission</h2><p class="sub">No camera, upload, location or web access. Tick only what you notice or practise outside the app.</p></div>
     <div class="sign-list">
       ${items.map(item=>{
         const seen = done[item.id];
@@ -9391,8 +9392,8 @@ function nextFluencyRead(doneIds){
 function fluencyReadStatus(read){
   if(!fluencyReadUnlocked(read)) return 'finish Lesson ' + read.gate.slice(1);
   const rec = fluencyReadRecord(read);
-  if(rec) return rec.migrated ? 'completed-course default' : (rec.rating || 'done') + ' · ' + rec.completed;
-  return read.realWorld ? 'real-world read ready' : 'controlled read ready';
+  if(rec) return rec.migrated ? 'completed by course update' : (rec.rating || 'done') + ' · ' + rec.completed;
+  return read.realWorld ? 'sign-style read ready' : 'controlled read ready';
 }
 function showFluencyReadList(focusId){
   player = {type:'fluency-list'};
@@ -9400,7 +9401,7 @@ function showFluencyReadList(focusId){
   setProg(0);
   const focus = focusId || (nextFluencyRead() || fluencyReadsAvailable().slice(-1)[0] || {}).id;
   el('stage').innerHTML = `
-    <div class="center"><h2>Fluency reads</h2><p class="sub">You are building reading fluency from taught patterns. These are controlled reads, not conversation practice.</p></div>
+    <div class="center"><h2>Fluency reads</h2><p class="sub">Read Thai built from taught patterns.</p></div>
     <div class="sign-list">
       ${FLUENCY_READS.map(read=>{
         const open = fluencyReadUnlocked(read) && !fluencyReadPrereqIssues(read).length;
@@ -9408,7 +9409,7 @@ function showFluencyReadList(focusId){
         const today = read.id === focus && open && !done;
         return `<button class="card story-card lesson-card ${open?'':'locked'} ${today?'boss-card':''}" data-fluency="${escAttr(read.id)}" ${open?'':'disabled'}>
           <div class="meta"><div class="t">${esc(read.title)}</div>
-          <div class="d">${read.realWorld ? 'Real-world read: useful Thai built from what you have learned.' : esc(read.intro)} · ${esc(fluencyReadStatus(read))}</div></div>
+          <div class="d">${read.realWorld ? 'Sign-style read from taught Thai.' : esc(read.intro)} · ${esc(fluencyReadStatus(read))}</div></div>
           <div class="state">${open ? (done ? '↻' : 'read →') : '🔒'}</div>
         </button>`;
       }).join('')}
@@ -9453,7 +9454,7 @@ function renderFluencyRead(){
   setProg([12,42,70,88][p.i] || 100);
   if(p.i === 0){
     el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">${read.realWorld ? 'Real-world read' : 'Cumulative read'}</div><h2>${esc(read.title)}</h2><p class="sub">Read this slowly first.</p></div>
+      <div class="center"><div class="eyebrow">${read.realWorld ? 'Sign-style read' : 'Cumulative read'}</div><h2>${esc(read.title)}</h2><p class="sub">Read this slowly first.</p></div>
       ${fluencyReadHtml(read)}
       <div class="notebox" style="margin-top:14px">You are building reading fluency from taught patterns.</div>
       <div class="stage-actions"><button class="btn full" id="fluency-next">I read it slowly →</button></div>`;
@@ -9462,11 +9463,11 @@ function renderFluencyRead(){
   }
   if(p.i === 1){
     el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">${esc(read.title)}</div><h2>Now try a smoother second pass</h2><p class="sub">Device voice support is optional and rough. The proof is your reading route.</p></div>
+      <div class="center"><div class="eyebrow">${esc(read.title)}</div><h2>Now try a smoother second pass</h2><p class="sub">Try the reading route first. Audio is optional.</p></div>
       ${fluencyReadHtml(read)}
       <div class="compare-box">
-        <div class="row" style="justify-content:center;gap:10px">${speakBtn(fluencyReadText(read), 'Hear rough model')}</div>
-        <div class="sub" style="font-size:12px;text-align:center;margin-top:8px">This checks controlled reading, not full speaking ability.</div>
+        <div class="row" style="justify-content:center;gap:10px">${speakBtn(fluencyReadText(read), 'Hear Thai')}</div>
+        <div class="sub" style="font-size:12px;text-align:center;margin-top:8px">Use the Thai text for this read.</div>
       </div>
       <div class="stage-actions"><button class="btn full" id="fluency-next">Second pass done →</button></div>`;
     el('fluency-next').onclick = ()=>{ p.i = 2; renderFluencyRead(); };
@@ -9483,7 +9484,7 @@ function renderFluencyRead(){
   }
   if(p.i === 3){
     el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">${esc(read.title)}</div><h2>How did the second pass feel?</h2><p class="sub">Pick the honest reading rating. No speech score and no microphone needed.</p></div>
+      <div class="center"><div class="eyebrow">${esc(read.title)}</div><h2>How did the second pass feel?</h2><p class="sub">Pick the reading rating. No microphone needed.</p></div>
       ${fluencyReadHtml(read)}
       ${fluencySupportHtml(read)}
       <div class="q-options mt-10">
@@ -9494,9 +9495,9 @@ function renderFluencyRead(){
         const result = markFluencyReadDone(read, b.dataset.rating, p.opts);
         setProg(100);
         el('stage').innerHTML = `
-          <div class="result-big">${result.rating.pass ? 'Read banked' : 'Review banked'}</div>
+          <div class="result-big">${result.rating.pass ? 'Read complete' : 'Review saved'}</div>
           <div class="result-sub">${esc(read.title)} · ${esc(result.rating.label)}${result.first ? ' · +2💎' : ''}</div>
-          <div class="result-sub meta-mini">Controlled reading only. This does not claim full speaking ability or free conversation.</div>
+          <div class="result-sub meta-mini">Reading practice saved.</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
         triggerRewardBurst(result.first ? 'reading' : 'review');
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
@@ -9608,7 +9609,7 @@ function showSignSafari(){
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('stage').querySelectorAll('[data-sign]').forEach(b=>{
     b.addEventListener('click', ()=>{
-      if(markSignSeen(b.dataset.sign)) toast('Seen in the wild · +3💎');
+      if(markSignSeen(b.dataset.sign)) toast('Sign saved · +3💎');
       showSignSafari();
     });
   });
@@ -9668,16 +9669,16 @@ function showReadinessReport(){
   const finalPassed = phase1CompletionPassed();
   const complete = lessonCount >= LESSONS.length && lettersBoss;
   el('stage').innerHTML = `
-    <div class="center"><h2>Phase 1 readiness</h2><p class="sub">${complete ? 'Phase 1 evidence from your real progress.' : 'Finish Lesson 24 and the Letters boss for the full report.'}</p></div>
+    <div class="center"><h2>Phase 1 readiness</h2><p class="sub">${complete ? 'Phase 1 report from your real progress.' : 'Finish Lesson 24 and the Letters boss for the full report.'}</p></div>
     <div class="readiness-grid">
       ${readinessMetric('Lessons', lessonCount + '/' + LESSONS.length, complete ? 'course complete' : 'still in progress')}
       ${readinessMetric('Mastery gates', checkpointPassedN + '/' + checkpointTotal, lettersBoss ? 'Letters boss passed' : 'Letters boss not passed')}
-      ${readinessMetric('Listening checks', listen.pct == null ? 'no data' : listen.pct + '%', 'n=' + listen.n)}
-      ${readinessMetric('Tone practice data', (toneListen.pct==null?'-':toneListen.pct+'%') + ' / ' + (toneRule.pct==null?'-':toneRule.pct+'%'), 'device voice / written rules')}
-      ${readinessMetric('Fluency reads', fluencyDone + '/' + FLUENCY_READS.length, allFluencyReadsComplete() ? 'controlled reads banked' : 'still in progress')}
-      ${readinessMetric('Completion checkpoint', finalPassed ? 'passed' : 'not passed', finalPassed ? 'controlled reading evidence' : 'quiz plus final read')}
+      ${readinessMetric('Device-voice checks', listen.pct == null ? 'no data' : listen.pct + '%', 'n=' + listen.n)}
+      ${readinessMetric('Tone practice data', (toneListen.pct==null?'-':toneListen.pct+'%') + ' / ' + (toneRule.pct==null?'-':toneRule.pct+'%'), 'device voice / rules')}
+      ${readinessMetric('Fluency reads', fluencyDone + '/' + FLUENCY_READS.length, allFluencyReadsComplete() ? 'controlled reads complete' : 'still in progress')}
+      ${readinessMetric('Completion checkpoint', finalPassed ? 'passed' : 'not passed', finalPassed ? 'final read complete' : 'quiz plus final read')}
       ${readinessMetric('Read-aloud practice', String(speak.attempts||0), 'comparisons logged')}
-      ${readinessMetric('Transfer', storiesRead + ' stories · ' + signSeen + ' signs', 'optional evidence')}
+      ${readinessMetric('Transfer', storiesRead + ' stories · ' + signSeen + ' signs', 'optional practice')}
     </div>
     <div class="notebox" style="margin-top:14px;text-align:left">
       <b>Can do now</b><br>
@@ -9686,9 +9687,9 @@ function showReadinessReport(){
       • Recognise live/dead syllables and final consonant jobs.<br>
       • Read controlled cumulative items chunk by chunk.<br>
       • ${finalPassed ? 'Passed the final controlled-reading checkpoint.' : 'Final controlled-reading checkpoint still pending.'}<br><br>
-      <b>Not claimed yet</b><br>
-      • Real-world listening or speaking mastery.<br>
-      • Device-voice proof of tone, vowel length, aspiration or final-stop mastery.
+      <b>Keep practising</b><br>
+      • Real-world listening.<br>
+      • Speaking naturally in open conversation.
     </div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
@@ -9787,9 +9788,9 @@ function nextGenericQ(){
 	    else saveState();
     bumpStreak();
     const pct = Math.round(100*p.correct/p.qs.length);
-    let subline = pct>=80 ? 'Strong.' : 'Worth another pass. The deck remembers what you miss.';
+    let subline = pct>=80 ? 'Strong.' : 'Review the missed items.';
     if(p.opts.classSprint && pct >= 85){
-      award(3); subline = 'Sharp class calls · +3💎';
+      award(3); subline = 'Class sprint passed · +3💎';
     }
     if(p.opts.boss){
       const u = p.opts.boss;
@@ -9799,7 +9800,7 @@ function nextGenericQ(){
         if(!state.boss[u].passed){ state.boss[u].passed = true; award(20); subline = 'Unit ' + u + ' cleared · +20💎'; }
         else subline = 'Unit ' + u + ' cleared (again).';
       } else {
-        subline = 'Boss holds the gate. Try again tomorrow.';
+        subline = 'Boss not passed yet. Try again tomorrow.';
       }
       saveState();
     }
@@ -9817,7 +9818,7 @@ function nextGenericQ(){
 		        saveState();
 	        el('stage').innerHTML = `
 	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">🏆 You know the class of all 42. ${rematch ? 'Boss rematch complete. Still sharp.' : first ? 'Phase 1 script complete · +30💎 + the title นักอ่าน (the reader)' : 'Still sharp.'}</div>
+          <div class="result-sub">You know the class of all 42. ${rematch ? 'Boss rematch complete.' : first ? 'Phase 1 script complete · +30💎 + the title นักอ่าน (the reader)' : 'Boss passed again.'}</div>
 	          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
 	        triggerRewardBurst(first && !rematch ? 'boss' : 'checkpoint');
 	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
@@ -9825,13 +9826,13 @@ function nextGenericQ(){
 	        const missed = (p.missed||[]).slice();
 	        el('stage').innerHTML = `
 	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-	          <div class="result-sub">${rematch ? 'Rematch score: ' : 'The boss needs 90%. '}You are at ${pct}%. Drill the misses and come back.</div>
+          <div class="result-sub">${rematch ? 'Boss rematch score: ' : 'The boss needs 90%. '}You are at ${pct}%. Drill the misses and come back.</div>
 	          <div class="stage-actions">
-	            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
-	            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
+            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the boss →</button>
 	            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
 	          </div>`;
-	        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
+        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
 	        el('ck-retake').onclick = ()=>startLettersBoss(rematch);
 	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 	      }
@@ -9845,9 +9846,9 @@ function nextGenericQ(){
       const speaking = (stats.speak.attempts||0) + ' read-aloud comparisons logged';
       el('stage').innerHTML = `
         <div class="result-big">${pct}%</div>
-        <div class="result-sub">Foundations device-voice baseline · ${p.correct}/${p.qs.length}</div>
+        <div class="result-sub">Foundations listening check (device voice) · ${p.correct}/${p.qs.length}</div>
         <div class="notebox" style="margin-top:14px">${reading}<br>Device-voice recognition: ${pct}% on familiar words<br>Speaking: ${speaking}</div>
-        <div class="result-sub" style="font-size:12px">Diagnostic only: this identifies the next practice need. It does not unlock or block script lessons.</div>
+        <div class="result-sub" style="font-size:12px">Practice check only. Device voice is not native-speaker listening proof.</div>
         <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
       el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       return;
@@ -9867,7 +9868,7 @@ function nextGenericQ(){
         saveState(); questCheck();
         el('stage').innerHTML = `
           <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">${esc(retentionStageLabel(item.stage))} passed. ${L ? esc(L.title) : 'Lesson'} held up after a gap.</div>
+          <div class="result-sub">${esc(retentionStageLabel(item.stage))} passed. ${L ? esc(L.title) : 'Lesson'} remembered after a gap.</div>
           <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
         triggerRewardBurst('retention');
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
@@ -9902,7 +9903,7 @@ function nextGenericQ(){
             <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the checkpoint →</button>
             <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
           </div>`;
-        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Review the misses', {});
+        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
         el('ck-retake').onclick = ()=>startPhase1CompletionCheckpoint(rematch);
         el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       }
@@ -9919,7 +9920,7 @@ function nextGenericQ(){
 		        state.checks[checkpointId(i)] = true; if(!rematch) d.m = (d.m||0) + 1; saveState();
 	        el('stage').innerHTML = `
 	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-          <div class="result-sub">👑 ${rematch ? 'Boss rematch complete. Still sharp.' : first ? 'Script check passed. Next lessons unlocked · +15💎' : 'Still sharp. Unlocked.'}</div>
+          <div class="result-sub">${rematch ? 'Boss rematch complete.' : first ? 'Script check passed. Next lessons unlocked · +15💎' : 'Check passed again. Lessons unlocked.'}</div>
 	          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
 	        if(first && !rematch) award(15);
 	        triggerRewardBurst(first && !rematch ? 'checkpoint' : 'rematch');
@@ -9928,13 +9929,13 @@ function nextGenericQ(){
 	        const missed = (p.missed||[]).slice();
 	        el('stage').innerHTML = `
 	          <div class="result-big">${p.correct} / ${p.qs.length}</div>
-	          <div class="result-sub">${rematch ? 'Rematch score under 80%.' : 'Not quite. You need 80%.'} Review the misses, then retake.</div>
+	          <div class="result-sub">${rematch ? 'Rematch score under 80%.' : 'Not quite. You need 80%.'} Drill the misses, then retake.</div>
 	          <div class="stage-actions">
-	            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
+            ${missed.length ? `<button class="btn full" id="ck-review">Drill the ${missed.length} you missed →</button>` : ''}
 	            <button class="btn full ghost" id="ck-retake" style="margin-top:8px">Retake the check →</button>
 	            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
 	          </div>`;
-	        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Review the misses', {});
+	        if(missed.length) el('ck-review').onclick = ()=>startGenericQuiz(shuffle(missed), 'Drill the misses', {});
 	        el('ck-retake').onclick = ()=>rematch ? startCheckpointRematch(i) : startCheckpoint(i);
 	        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); };
 	      }
@@ -10125,7 +10126,7 @@ function ghostPool(){
 }
 el('cta-ghost').addEventListener('click', ()=>{
   const pool = ghostPool();
-  if(pool.length < 4){ toast('Master a few more words first. Glyph Ghost needs them.'); return; }
+  if(pool.length < 4){ toast('Learn a few more words first. Glyph Ghost needs them.'); return; }
   if(!state.confs) state.confs = {};
   const wgt = it => 1 + (state.confs[(SET_OF[it.gs[it.idx][0]]||[]).join('')] || 0) * 2;
   const rounds = [], bag = pool.slice(), n = Math.min(12, Math.max(6, pool.length));
@@ -10149,7 +10150,7 @@ function renderGhost(){
     questCheck();
     el('stage').innerHTML = `
       <div class="result-big">${p.correct} / ${p.rounds.length}</div>
-      <div class="result-sub">${p.fast} read before the blur lifted · +${p.fast}💎</div>
+      <div class="result-sub">${p.fast} answered before the letter was clear · +${p.fast}💎</div>
       <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
     el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
     return;
@@ -10159,7 +10160,7 @@ function renderGhost(){
   let opts = set.filter(met); if(!opts.includes(base)) opts.push(base); if(opts.length < 2) opts = set.slice();
   const word = it.gs.map((gph,i)=> i===it.idx ? `<span class="ghost-target">${esc(gph)}</span>` : esc(gph)).join('');
   el('stage').innerHTML = `
-    <div class="q-feedback">Which letter is hidden? Tap before it sharpens · ${p.i+1} of ${p.rounds.length}</div>
+    <div class="q-feedback">Which letter is hidden? Answer before it becomes clear · ${p.i+1} of ${p.rounds.length}</div>
     <div class="ghost-word">${word}</div>
     <div class="fc-tr" style="text-align:center;color:var(--muted)">${it.tr}</div>
     <div class="ghost-opts" id="ghost-opts"></div>`;
