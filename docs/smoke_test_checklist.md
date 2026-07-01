@@ -12,7 +12,8 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
 - Confirm footer version `v6.0.0`, cache `aan-thai-v6-0-0`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
 - Confirm the bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
-- Confirm Today shows a route summary above the task list and End today uses specific states such as Review first, Main task first, Practice first or Ready.
+- Confirm Today shows the route hero above the task list, with a display-only progress ring/bar, clear primary action and End today states such as Review first, Main task first, Practice first or Ready.
+- Confirm the app uses the v6 dark/glass visual system: aurora background, tactile cards, semantic glows and no generic reuse of Thai class colours for nav/progress/rewards.
 
 ## Service-Worker Update After Deploy
 
@@ -70,8 +71,12 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Start Lesson 4 and confirm อ่าน is taught as the app-name/course-goal item without claiming active vocabulary production.
 - Start Lesson 21 and confirm rare letters are class-recognition work before the Letters boss, not ordinary vocabulary.
 - Open Read and confirm controlled reading appears before the bonus phrasebook, and phrase cards are optional and only enter review when added.
-- Open Tones and confirm the written Tone route and class reference appear there.
-- Open Progress and confirm the letter wall, skill profile, streak heatmap, progress tools, optional extras and reset danger zone are separated.
+- Open Practice and confirm Due review, Script and reading, Tone/hearing/recall and Transfer practice have distinct semantic accents and all existing launch buttons still work.
+- Open Tones and confirm the written Tone route appears as a six-step tone lab and the class reference appears there with true class colours only.
+- Open Read and confirm Reading room / Fluency reads / Seen in the wild / Readiness report are visually first, while bonus phrases and packs remain optional/secondary.
+- Open Progress and confirm trophy KPI chips, letter wall, skill profile, streak heatmap, progress tools, optional extras and reset danger zone are separated and visually distinct.
+- Start a review/quiz and confirm correct/wrong/weak feedback states are visible; completion bursts appear for major completions only, not every answer.
+- With reduced motion enabled in the OS/browser, confirm animations are suppressed or reduced.
 
 ## Debug Validators
 
