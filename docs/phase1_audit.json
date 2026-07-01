@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-01T16:12:01.458Z",
-  "appVersion": "v6.0.0",
+  "generatedAt": "2026-07-01T22:39:54.582Z",
+  "appVersion": "v6.0.3",
   "lessonCount": 24,
   "validators": [
     {
@@ -150,6 +150,21 @@
     },
     {
       "name": "v544AdaptiveCorrectDwell",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v601FirstRun",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v602AnswerFeedback",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v603ProgressInteraction",
       "ok": true,
       "issues": []
     },

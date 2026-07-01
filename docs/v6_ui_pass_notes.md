@@ -54,6 +54,23 @@
 - Bottom navigation gained active pills, icon glow, press state, safe-area glass and display-only due badges from existing due-count helpers.
 - Overlay/review stage gained dark glass treatment, stronger progress bar, clearer correct/wrong/weak feedback and brief reward bursts for major completions only.
 
+## v6.0.2 Answer-Feedback Refinement
+
+- Wrong objective quiz/review answers now pause on a rose feedback panel until the learner taps Continue; correct-answer dwell timing remains unchanged.
+- Class-question misses now show structured class feedback: answer line, mid/high class tiles, low-class default reminder and separated mid-class chant words.
+- Quiz stages top-align the prompt/options cluster, simple 2- or 3-option text choices stack full-width, and 4-option Thai/component-grid choices keep their grid.
+- Neutral class prompts gain their class colour only after answer settle, preserving the no-colour-giveaway rule.
+
+## v6.0.3 Progress Honesty and Interaction Weight
+
+- Today route progress now uses actual step pips instead of the fixed 0/34/67/100 percent ring; the small bar mirrors the same completed-step fraction.
+- The route hero foregrounds review when 25+ due cards are waiting before the first review slice, while keeping v5.2.5 lesson-blocking rules unchanged.
+- Takeable mastery checks now show one concrete ready state across hero and route card, naming the lesson the check unlocks.
+- Practice owns the display-only due badge; ordinary due cards use the review accent and danger red is reserved for the 45+ overload state.
+- The letter wall counter now reports started and known counts from the same `learning` / `growing` / `mastered` tile states it renders.
+- Lesson stages top-align, Back is visually quiet, disabled CTAs are flat/inert, Quick decode model strings render as numbered steps, and transliteration uses a muted-warm non-link colour.
+- Progress-tab polish: `Test notes` became `Notes`, Freeze moved out of the heatmap header, and the Progress summary row uses a chevron affordance instead of the word `Open`.
+
 ### Motion and rewards
 
 - Added controlled keyframes for card entry, soft pop, glow pulse, shimmer, check pulse, wrong nudge, token glint and short completion bursts.
@@ -79,7 +96,7 @@
 - Installed iPhone PWA safe-area top/bottom chrome.
 - Narrow iPhone bottom-tab label fit.
 - Today route card and End today redirect behaviour with fresh, review-due, recovery and foundation-refresh states.
-- Service-worker update flow after the `aan-thai-v6-0-0` cache lands.
+- Service-worker update flow after the `aan-thai-v6-0-3` cache lands.
 
 ## Scope confirmation
 

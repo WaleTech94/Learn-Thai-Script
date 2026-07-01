@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-01T16:12:01.458Z
-App version: v6.0.0
+Generated: 2026-07-01T22:39:54.582Z
+App version: v6.0.3
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -37,6 +37,9 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 - PASS v542StreamlinedCopy
 - PASS v543CorrectDwell
 - PASS v544AdaptiveCorrectDwell
+- PASS v601FirstRun
+- PASS v602AnswerFeedback
+- PASS v603ProgressInteraction
 - PASS v525RouteSimplification
 - PASS v526ToneSignReview
 - PASS v53ReviewGovernor
@@ -54,7 +57,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 
 Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.
 
-v6.0.0 is a UI hierarchy/accessibility pass over the v5.4.6 curriculum and review model. v5.4.6 keeps the v5.4.4 learner-facing review behaviour and the v5.4.5 source-hygiene hardening while tightening Phase 1 pedagogy: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
+v6.0.3 is a progress-honesty and interaction-weight pass over the v6.0.2 answer-feedback work, the v6.0.1 first-run fix and the v6.0.0 UI hierarchy/accessibility pass. Today route progress now uses actual step pips and a matching step-fraction bar, mastery-check route copy names the lesson it unlocks, Practice owns the due badge with danger red reserved for 45+ overload, the letter wall counter matches started/known tile states, lesson stages top-align, Back is quiet, disabled CTAs are flat, Quick decode examples render as numbered steps, teaching-card chants are structured, and transliteration uses a muted-warm token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
 
 - Today review default max: 30 cards
 - Manual Review catch-up cap: 40 cards

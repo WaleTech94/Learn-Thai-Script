@@ -2,6 +2,32 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.0.3 - 2026-07-01
+
+- Replaced the Today route hero's hardcoded percent ring with actual step pips and a matching step-fraction bar for review/main/practice or the single Endings Refresh step.
+- Made route progress and mastery-check copy honest: 25+ due cards highlight review before main work, and takeable mastery checks show a ready state with copy such as `Pass it to unlock Lesson 7.` instead of `LOCKED · Check needed.`
+- Moved the display-only due badge to Practice only, using the review accent for ordinary due cards and reserving danger red for the 45+ overload state.
+- Changed the letter wall counter to count started/known letters from the same tile states the wall renders.
+- Reduced lesson-player interaction weight: shared stages top-align, Back is a quiet ghost control, Next remains the full-width CTA, and disabled CTAs render flat/inert app-wide.
+- Rendered Quick decode worked examples as compact numbered steps without editing lesson data, and reused the structured mid-class chant helper on teaching cards.
+- Added a muted-warm transliteration token so reading hints no longer use link-blue, and cleaned up `Notes`, Freeze and Progress row affordance placement.
+- Added `validateV603ProgressInteractionContracts()` and updated the app footer version to `v6.0.3` with service-worker cache `aan-thai-v6-0-3`.
+
+## v6.0.2 - 2026-07-01
+
+- Upgraded generic quiz/review answer feedback from a small muted line into high-contrast feedback panels with stronger correct and wrong visual states.
+- Changed wrong objective answers to pause on the feedback panel until the learner taps `Continue →`; grading, requeue, lapse and leech behaviour remain unchanged.
+- Added structured class-question wrong feedback: answer line, mid/high class tiles, low-class default reminder, and a separated mid-class chant with class-coloured initials.
+- Top-aligned quiz stages, stacked simple 2- or 3-option text choices full-width, kept 4-option/Thai/component grids intact, and coloured class prompts only after answer settle.
+- Added `validateV602AnswerFeedbackContracts()` and updated the app footer version to `v6.0.2` with service-worker cache `aan-thai-v6-0-2`.
+
+## v6.0.1 - 2026-07-01
+
+- Fixed the first-run v6 regression where `.is-hidden` lost to newer task/card display rules, causing the required Endings Refresh card and Morning warm-up card to appear even when JavaScript had correctly hidden them.
+- Suppressed the legacy Phase 1 progress-kept modal for blank first-ever states, while still showing it once for existing learners with completed lesson progress during migration.
+- Added `validateV601FirstRunContracts()` to guard fresh-state notice logic and the `.is-hidden` cascade collision in browser startup validation.
+- Updated the app footer version to `v6.0.1` and the service-worker cache to `aan-thai-v6-0-1`.
+
 ## v6.0.0 - 2026-07-01
 
 - Shipped a UI hierarchy, accessibility, mobile ergonomics and scope-separation pass without changing curriculum sequencing, SRS/review scheduling, state schema, migration semantics, lesson gates, vocabulary roles or Phase 1 pedagogy.

@@ -58,6 +58,7 @@
   --ui-success:var(--ui-green);
   --ui-danger:var(--ui-rose);
   --ui-reward:var(--ui-orange);
+  --ui-translit:#C9A86A;
   --ui-progress-soft:rgba(245,158,11,.16);
   --ui-progress-mid:rgba(245,158,11,.48);
   --ui-info-soft:rgba(34,211,238,.11);
@@ -162,7 +163,11 @@ h2{font-size:20px;margin-bottom:4px}
 .btn:active{transform:translateY(1px) scale(.99);box-shadow:var(--shadow-press)}
 .btn.ghost{background:rgba(255,255,255,.055);color:var(--text);border:1px solid var(--line-bright);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 .btn.small{padding:11px 16px;font-size:13px;border-radius:12px;min-height:42px}
-.btn:disabled{opacity:.4;pointer-events:none}
+.btn:disabled,.btn[disabled]{
+  opacity:.72;pointer-events:none;cursor:not-allowed;
+  background:rgba(255,255,255,.035)!important;color:var(--muted)!important;border-color:var(--line-soft)!important;box-shadow:none!important;
+  filter:grayscale(.35);
+}
 .btn.full{width:100%}
 .primary-cta{background:linear-gradient(135deg,var(--ui-primary),var(--ui-primary-2));box-shadow:var(--glow-primary),var(--shadow-card)}
 .secondary-cta{background:rgba(255,255,255,.065);color:var(--text)}
@@ -226,7 +231,7 @@ h2{font-size:20px;margin-bottom:4px}
 .danger-zone{border-color:rgba(255,107,107,.48);background:linear-gradient(160deg,var(--surface),var(--ui-danger-soft))}
 .compact-meta{color:var(--muted);font-size:12px;line-height:1.35}
 .brand-tagline{font-weight:400;font-size:14px;color:var(--muted)}
-.is-hidden{display:none}
+.is-hidden{display:none!important}
 .meta-mini{font-size:12px}
 .meta-tiny{font-size:11px}
 .meta-top{margin-top:8px}
@@ -365,15 +370,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.route-value{font-family:var(--font-display);font-size:21px;font-weight:650;line-height:1.2}
 	.route-reason{font-size:13px;color:var(--muted);line-height:1.45}
 	.route-summary .btn{min-width:112px}
-	.route-progress-ring{
-	  width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none;
-	  background:conic-gradient(var(--route-accent) calc(var(--route-progress,0) * 1%), rgba(255,255,255,.09) 0);
-	  box-shadow:0 0 24px rgba(34,211,238,.16), inset 0 0 0 1px rgba(255,255,255,.1);
-	}
-	.route-progress-ring span{
-	  width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:rgba(7,9,22,.86);
-	  font-family:var(--font-display);font-size:12px;font-weight:600;color:var(--text);
-	}
+		.route-step-pips{display:flex;align-items:center;gap:7px;min-width:72px}
+		.route-step-pip{
+		  width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.25);
+		  background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+		}
+		.route-step-pip.done{background:var(--route-accent);border-color:var(--route-accent);box-shadow:0 0 14px var(--route-accent)}
+		.route-step-pip.current{border-color:var(--route-accent);box-shadow:0 0 0 3px rgba(255,255,255,.06),0 0 16px var(--route-accent)}
 	.route-progress-bar{height:9px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.08)}
 	.route-progress-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--route-accent),var(--ui-primary-2));border-radius:999px;box-shadow:0 0 14px var(--route-accent);transition:width .35s ease}
 	.route-optional{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;line-height:1.35}
@@ -496,7 +499,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	}
 	.class-tile.mid{color:var(--mid);border-color:rgba(47,212,181,.5)}
 	.class-tile.high{color:var(--high);border-color:rgba(255,92,158,.5)}
-	.streak-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+	.class-tile.low{color:var(--low);border-color:rgba(255,178,62,.5)}
+	.streak-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
 	.kpi-chip{justify-content:center;min-height:74px;border-radius:16px;flex-direction:column;gap:3px}
 	.kpi-chip > span:not(.kpi-label){font-family:var(--font-display);font-size:24px;line-height:1}
 	.kpi-label{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
@@ -530,6 +534,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.kpi-chip .kpi-label{display:block;margin-left:4px}
 	.kpi-chip#token-chip{position:relative;overflow:hidden;border-color:rgba(251,146,60,.34)}
 	.kpi-chip#token-chip::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0 34%,rgba(255,255,255,.18),transparent 66%);background-size:180% 100%;animation:tokenGlint 4s ease-in-out infinite}
+	.freeze-buy-chip{border-color:rgba(245,158,11,.36);color:var(--text)}
 	.constel-card{background:radial-gradient(circle at 50% 10%, rgba(139,92,246,.16), transparent 13rem),linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),var(--surface-glass)}
 	.progress-tools-card,.extras-card{background:linear-gradient(160deg,rgba(34,211,238,.06),rgba(255,255,255,.025)),var(--surface-glass)}
 	.extras-card .sub::after{content:" No lesson shortcuts.";color:var(--ui-reward)}
@@ -544,8 +549,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	  .task-button{grid-template-columns:1fr}
 	  .task-kicker{grid-row:auto;min-height:30px;justify-content:flex-start}
 	  .route-summary-main{grid-template-columns:1fr;align-items:stretch}
-	  .route-progress-ring{width:54px;height:54px}
-	  .route-progress-ring span{width:40px;height:40px}
+	  .route-step-pips{min-width:0}
 	  .tone-stepper{grid-template-columns:repeat(3,1fr)}
 	  .stage-actions{flex-direction:column}
 	  .q-options{grid-template-columns:1fr}
@@ -584,7 +588,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .progressbar{flex:1;height:10px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 2px rgba(0,0,0,.22)}
 .progressbar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--ui-primary),var(--ui-primary-2));border-radius:99px;box-shadow:0 0 16px rgba(34,211,238,.34);transition:width .25s ease}
 .stage{
-  flex:1;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;gap:18px;padding:18px;min-height:0;
+  flex:1;display:flex;flex-direction:column;justify-content:flex-start;justify-content:safe flex-start;gap:18px;padding:20px 18px;min-height:0;
   background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),var(--surface-glass);
   border:1px solid var(--line-soft);border-top-color:var(--line-bright);border-radius:24px;
   box-shadow:var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(16px);
@@ -607,7 +611,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.class-banner.neutral{color:var(--blue)}
 	.stage .center{text-align:center}
 .stage .name-thai{font-size:22px;font-family:var(--font-display)}
-.stage .translit{font-size:17px;color:var(--blue);font-weight:400}
+.stage .translit{font-size:17px;color:var(--ui-translit);font-weight:400}
 .stage .gloss{color:var(--muted);font-size:14px}
 .glyph-audio{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 .audio-labelled{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px 6px 7px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
@@ -628,19 +632,27 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .word-line{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .word-line .w-thai{font-family:var(--font-display);font-size:30px;flex:none}
 .word-line .w-meta{flex:1}
-.word-line .w-tr{color:var(--blue);font-size:15px}
+.word-line .w-tr{color:var(--ui-translit);font-size:15px}
 .word-line .w-en{color:var(--muted);font-size:13px}
 .word-line .w-frame{margin-top:6px;color:var(--text);font-size:12px;line-height:1.45;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
 .final-job{margin-top:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.45;color:var(--muted)}
 .final-job b{color:var(--text);font-weight:500}
 .w-reveal{display:block;text-align:left;color:var(--blue);font-size:13px;padding:4px 0;text-decoration:underline dotted}
 .speak:disabled{opacity:.42;filter:grayscale(1);cursor:not-allowed}
-.stage-actions{display:flex;gap:10px;margin-top:6px}
+.stage-actions{display:flex;gap:10px;margin-top:auto;padding-top:6px}
 .stage-actions .btn{flex:1}
+.stage-actions:has(#st-back){display:grid;grid-template-columns:1fr;align-items:stretch}
+.stage-actions:has(#st-back) #st-back{
+  justify-self:start;width:auto;min-height:40px;padding:8px 2px;flex:0 0 auto;
+  background:transparent;color:var(--muted);border-color:transparent;box-shadow:none;
+}
 
 /* ---------- quiz ---------- */
 .q-prompt{text-align:center;margin-bottom:6px}
 .q-prompt .q-big{font-family:var(--font-display);font-size:84px;line-height:1.15}
+.q-prompt .q-big.class-revealed.mid{color:var(--mid)}
+.q-prompt .q-big.class-revealed.high{color:var(--high)}
+.q-prompt .q-big.class-revealed.low{color:var(--low)}
 .q-prompt .q-text{font-size:19px;font-family:var(--font-display);font-weight:500}
 .type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:var(--font-display);margin:4px 0 2px;outline:none}
 .type-in:focus{border-color:var(--blue)}
@@ -652,20 +664,42 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .note-item .note-text{font-size:14px;white-space:pre-wrap;word-break:break-word}
 .note-del{flex:none;background:none;border:none;color:var(--muted);font-size:15px;padding:2px 5px;cursor:pointer}
 .q-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-options.single-col{grid-template-columns:1fr}
 .q-opt{
   background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.024));border:1px solid var(--line-soft);border-top-color:var(--line-bright);border-radius:14px;
-  padding:16px 10px;text-align:center;font-size:17px;font-weight:400;
+  min-height:54px;padding:16px 10px;text-align:center;font-size:17px;font-weight:400;
   font-family:var(--font-display);box-shadow:0 10px 22px rgba(0,0,0,.18);transition:border-color .12s ease, transform .1s ease, box-shadow .12s ease, background .12s ease;
 }
-.q-opt.thai-opt{font-size:26px}
+.q-opt.thai-opt{font-size:26px;line-height:1.25}
 .q-opt:active{transform:translateY(1px) scale(.99)}
 .q-opt.correct{border-color:var(--ui-success);color:var(--ui-success);background:linear-gradient(145deg,rgba(52,211,153,.15),rgba(255,255,255,.026));box-shadow:var(--glow-success)}
 .q-opt.wrong{border-color:var(--ui-danger);color:var(--ui-danger);background:linear-gradient(145deg,rgba(251,113,133,.14),rgba(255,255,255,.026));animation:wrongNudge .28s ease}
 .q-opt:disabled{pointer-events:none}
-.q-feedback{min-height:28px;text-align:center;font-size:14px;color:var(--muted);border-radius:12px;padding:3px 8px}
-.q-feedback.ok,.q-feedback.answer-correct{color:var(--ui-success);background:rgba(52,211,153,.08);animation:softPop .22s ease}
-.q-feedback.no,.q-feedback.answer-wrong{color:var(--ui-danger);background:rgba(251,113,133,.08);animation:wrongNudge .28s ease}
-.q-feedback.answer-weak{color:var(--ui-warning);background:rgba(245,158,11,.1)}
+.q-feedback{
+  min-height:98px;text-align:center;font-size:17px;line-height:1.45;color:var(--text);border-radius:16px;padding:14px 16px;
+  display:flex;flex-direction:column;justify-content:center;gap:8px;border:1px solid transparent;background:rgba(255,255,255,.025);
+}
+.q-feedback.ok,.q-feedback.answer-correct{
+  color:var(--text);border-color:rgba(52,211,153,.42);background:linear-gradient(160deg,rgba(52,211,153,.16),rgba(255,255,255,.028));
+  box-shadow:var(--glow-success);animation:checkPulse .38s ease;
+}
+.q-feedback.no,.q-feedback.answer-wrong{
+  color:var(--text);border-color:rgba(251,113,133,.46);background:linear-gradient(160deg,rgba(251,113,133,.15),rgba(255,255,255,.026));
+  animation:wrongNudge .28s ease;
+}
+.q-feedback.answer-weak{border-color:rgba(245,158,11,.45);background:linear-gradient(160deg,rgba(245,158,11,.13),rgba(255,255,255,.026))}
+.q-feedback-answer{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text)}
+.q-feedback.answer-correct .q-feedback-answer{font-size:23px;color:var(--ui-success)}
+.q-feedback.answer-weak .q-feedback-answer{color:var(--ui-warning)}
+.q-feedback-hint{font-size:15px;color:var(--text);line-height:1.5}
+.q-feedback .thai-feedback,.q-feedback .class-tile,.class-chant-word{font-size:20px;word-break:keep-all;overflow-wrap:normal;white-space:nowrap}
+.q-feedback .class-tiles{justify-content:center;margin-top:2px}
+.q-feedback .class-tile{width:40px;height:40px}
+.class-feedback-low{font-size:16px;color:var(--text)}
+.class-chant{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;font-family:var(--font-display);line-height:1.6}
+.class-chant-word{display:inline-flex;white-space:nowrap;font-size:16px}
+.class-chant-dot{color:var(--muted)}
+.q-continue{width:100%;min-height:44px;margin-top:4px}
 .answer-revealed{animation:softPop .24s ease}
 .stage-complete{animation:softPop .34s ease}
 .reward-burst{position:fixed;left:50%;top:50%;z-index:120;pointer-events:none}
@@ -687,7 +721,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tone-row .t-name{font-family:var(--font-display);font-weight:500;font-size:15px;width:64px;flex:none}
 .tone-row .t-word{font-family:var(--font-display);font-size:24px;flex:none;width:56px;text-align:center}
 .tone-row .t-meta{flex:1;min-width:0}
-.tone-row .t-tr{color:var(--blue);font-size:14px}
+.tone-row .t-tr{color:var(--ui-translit);font-size:14px}
 .tone-row .t-en{color:var(--muted);font-size:12px}
 .section-gap{margin-top:22px}
 
@@ -704,7 +738,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .phrase{display:flex;align-items:center;gap:12px;padding:14px 16px}
 .phrase .p-meta{flex:1;min-width:0}
 .phrase .p-thai{font-family:var(--font-display);font-size:21px;line-height:1.4}
-.phrase .p-tr{color:var(--blue);font-size:14px}
+.phrase .p-tr{color:var(--ui-translit);font-size:14px}
 .phrase .p-en{color:var(--muted);font-size:13px}
 .phrase .p-note{color:var(--ui-warning);font-size:12px;margin-top:2px}
 .lvl-head{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
@@ -727,7 +761,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .fc-face.back{transform:rotateY(180deg)}
 .fc-face .fc-big{font-family:var(--font-display);font-size:72px;line-height:1.15;text-align:center}
 .fc-face .fc-mid{font-family:var(--font-display);font-size:30px;text-align:center}
-.fc-face .fc-tr{color:var(--blue);font-size:18px}
+.fc-face .fc-tr{color:var(--ui-translit);font-size:18px}
 .fc-face .fc-en{color:var(--muted);font-size:15px;text-align:center}
 .fc-hint{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
 .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -787,9 +821,10 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tab.recommended .tab-glyph{filter:drop-shadow(0 0 5px var(--tab-accent))}
 .tab-due-badge{
   position:absolute;right:12px;top:7px;min-width:17px;height:17px;border-radius:99px;padding:0 5px;
-  display:none;align-items:center;justify-content:center;background:var(--ui-danger);color:#fff;font-size:10px;font-weight:700;
-  box-shadow:0 0 12px rgba(251,113,133,.42);z-index:1;
+  display:none;align-items:center;justify-content:center;background:var(--ui-review);color:#07111f;font-size:10px;font-weight:700;
+  box-shadow:0 0 12px rgba(96,165,250,.34);z-index:1;
 }
+.tab.due-overload .tab-due-badge{background:var(--ui-danger);color:#fff;box-shadow:0 0 12px rgba(251,113,133,.42)}
 .tab.has-due .tab-due-badge{display:flex}
 .tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible,.action-card:focus-visible,.practice-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
@@ -804,7 +839,7 @@ body[data-theme="day"]{
   --surface-glass:rgba(255,255,255,.84); --surface-glass-strong:rgba(255,255,255,.94); --surface-raised:rgba(236,232,220,.96);
   --line-soft:rgba(34,37,47,.12); --line-bright:rgba(34,37,47,.2); --line:#DCD6C6; --statusbar-bg:rgba(244,241,232,.96);
   --surface:#FFFFFF; --surface2:#ECE8DC;
-  --text:#23252F; --muted:#6E7280;
+  --text:#23252F; --muted:#6E7280; --ui-translit:#8B6B38;
   --mid:#0E9E84; --high:#D63B79; --low:#C77F12; --blue:#3D6FD6;
 }
 body[data-theme="bts"]{
@@ -1000,7 +1035,24 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .path-node2.now .pn-ic{background:var(--gold);color:var(--bg)}
 .path-node2.locked{opacity:.45}
 .progress-divider{font-size:12px;color:var(--muted);margin:8px 2px 12px;letter-spacing:.04em}
-</style>
+.quick-steps{display:grid;gap:8px}
+.quick-step{
+  display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;
+  padding:10px 11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid var(--line-soft);
+}
+.quick-step-num{
+  width:24px;height:24px;border-radius:9px;display:grid;place-items:center;
+  background:var(--surface2);color:var(--ui-cyan);font-family:var(--font-display);font-size:12px;font-weight:600;
+}
+.quick-step-text{font-size:14px;line-height:1.55;color:var(--text)}
+.quick-final{
+  border-color:rgba(34,211,238,.32);background:linear-gradient(150deg,rgba(34,211,238,.1),rgba(255,255,255,.026));
+}
+.quick-final .quick-step-text{font-family:var(--font-display);font-size:17px;font-weight:600}
+.quick-final-meaning{display:block;margin-top:2px;color:var(--muted);font-family:var(--font-ui);font-size:12px;font-weight:400}
+.drawer-chevron{font-family:var(--font-display);font-size:24px;line-height:1;color:var(--muted);transition:transform .16s ease}
+details[open] .drawer-chevron{transform:rotate(90deg)}
+	</style>
 </head>
 <body>
 <div id="statusbar-scrim"></div>
@@ -1014,7 +1066,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.0.0</span>
+      <span class="version-pill">v6.0.3</span>
     </header>
 
     <section class="today-focus">
@@ -1024,7 +1076,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       <div class="section-card route-summary hero-card route-hero route-course" id="today-route-summary">
         <div class="route-summary-grid">
           <div class="route-summary-main">
-            <div class="route-progress-ring" id="route-progress-ring" style="--route-progress:0"><span id="route-progress-text">0%</span></div>
+	            <div class="route-step-pips" id="route-step-pips" aria-label="Today route progress"></div>
             <div>
               <div class="route-label" id="route-day-type">Course day</div>
               <div class="route-value">Next: <span id="route-next-action">Review</span></div>
@@ -1128,7 +1180,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.0.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.0.3 (PWA)</div>
     </div>
   </section>
 
@@ -1142,6 +1194,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <div class="streak-kpis trophy-shelf">
       <button class="streak kpi-chip reward-glint" id="token-chip">💎<span id="baht-num">0</span><span class="kpi-label">tokens</span></button>
       <button class="streak kpi-chip" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span><span class="kpi-label">days</span></button>
+      <button class="streak kpi-chip freeze-buy-chip" id="buy-freeze">Freeze 30💎<span class="kpi-label">streak save</span></button>
       <div class="streak kpi-chip"><span id="freeze-n">0</span><span class="kpi-label">freezes</span></div>
     </div>
     <div class="section-card">
@@ -1166,7 +1219,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
     <details class="review-drawer mb-12">
       <summary>
         <div><b>Progress</b><span class="sub">Practice ladder, skill checks and clean-run lap</span></div>
-        <span class="sub">Open</span>
+	        <span class="drawer-chevron" aria-hidden="true">›</span>
       </summary>
       <div class="review-drawer-body">
         <div class="review-panel reference">
@@ -1191,16 +1244,15 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
         </div>
       </div>
     </details>
-    <div class="section-card">
-      <div class="spread">
-        <div class="eyebrow">Last 16 weeks</div>
-        <button class="btn small ghost" id="buy-freeze">Freeze 30💎</button>
-      </div>
+	    <div class="section-card">
+	      <div class="spread">
+	        <div class="eyebrow">Last 16 weeks</div>
+	      </div>
       <div class="heatmap" id="heatmap"></div>
     </div>
     <div class="section-card progress-tools-card">
       <div class="eyebrow">Progress tools</div>
-      <button class="btn full ghost mb-12" id="notes-btn">Test notes</button>
+      <button class="btn full ghost mb-12" id="notes-btn">Notes</button>
       <div class="row inline-tools">
         <button class="btn small ghost" id="export-btn">Export progress</button>
         <button class="btn small ghost" id="import-btn">Import progress</button>
@@ -1475,7 +1527,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 
 <nav id="tabbar">
 	<div class="tabbar-inner">
-		    <button class="tab active" data-view="home" aria-label="Today" aria-current="page"><span class="tab-glyph">ทาง</span><span class="tab-due-badge" id="tab-due-home"></span>Today</button>
+		    <button class="tab active" data-view="home" aria-label="Today" aria-current="page"><span class="tab-glyph">ทาง</span>Today</button>
 		    <button class="tab" data-view="practice" aria-label="Practice"><span class="tab-glyph">ซ้ำ</span><span class="tab-due-badge" id="tab-due-practice"></span>Practice</button>
 		    <button class="tab" data-view="tones" aria-label="Tones"><span class="tab-glyph">เสียง</span>Tones</button>
 		    <button class="tab" data-view="phrases" aria-label="Read"><span class="tab-glyph">อ่าน</span>Read</button>
@@ -2296,6 +2348,7 @@ const FLUENCY_READS = [
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
 const MID_CLASS_SET = ['ก','จ','ฎ','ฏ','ด','ต','บ','ป','อ'];
 const HIGH_CLASS_SET = ['ข','ฃ','ฉ','ฐ','ถ','ผ','ฝ','ศ','ษ','ส','ห'];
+const MID_CLASS_CHANT = ['ไก่','จิก','เด็ก','ตาย','บน','ปาก','โอ่ง'];
 const CHUNK_ITEMS = [
   {gate:'l20', thai:'ภาษา', tr:'phaa-sǎa', chunks:['ภา','ษา'], note:'Two written chunks; the second starts with high-class ษ.'},
   {gate:'l20', thai:'ผู้หญิง', tr:'phûu-yǐng', chunks:['ผู้','หญิง'], note:'Read ผู้, then หญิง. ห leads ญ for the second chunk.'},
@@ -2467,7 +2520,7 @@ const AUTO_CONFIDENCE_TIMING = {
   minReliableMs:400
 };
 function classTilesHtml(xs, cls){
-  return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${cls}">${ch}</span>`).join('')}</div>`;
+  return `<div class="class-tiles">${xs.map(ch=>`<span class="class-tile ${escAttr(cls)}">${esc(ch)}</span>`).join('')}</div>`;
 }
 const TONE_NAMES = ["Mid","Low","Falling","High","Rising"];
 
@@ -2766,7 +2819,7 @@ function getLessonBlocker(lessonId, target){
 function lessonAvailabilityMessage(L){
   if(!L) return '';
   const blocker = getLessonBlocker(L.id);
-  if(blocker) return shortBlockerDetail(blocker);
+  if(blocker) return shortBlockerDetail(blocker, L);
   const due = srsDue().length;
   if(reviewLoadBand(due) === 'recommend') return 'Review first.';
   const retention = nextRetentionCheck();
@@ -2796,13 +2849,13 @@ function shortBlockerTitle(blocker){
   if(blocker.code === 'mastery-check') return 'Mastery check';
   return blocker.title || 'Locked';
 }
-function shortBlockerDetail(blocker){
+function shortBlockerDetail(blocker, next){
   if(!blocker) return 'Locked.';
   if(blocker.code === 'review-overload') return 'Deck high.';
   if(blocker.code === 'foundation-refresh') return 'Endings first.';
   if(blocker.code === 'missing-prerequisite') return 'Lesson needed.';
   if(blocker.code === 'invalid-state') return 'Reload app.';
-  if(blocker.code === 'mastery-check') return 'Check needed.';
+  if(blocker.code === 'mastery-check') return next ? 'Pass it to unlock Lesson ' + lessonNum(next.id) + '.' : 'Pass the mastery check.';
   return 'Locked.';
 }
 function ensureDay(){
@@ -3206,11 +3259,73 @@ function dailyMissingStep(){
   if(foundationRefreshRequired()) return 'foundations';
   if(reviewLoadBand(srsDue().length) === 'hard') return 'review';
   if(recoveryReviewStillDue()) return 'review';
-  const mainDone = d.type === 'C' ? (d.d > 0 || (d.m||0) > 0 || (d.ret||0) > 0) : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
+  const mainDone = dailyMainStepDone(d);
   if(!mainDone) return 'main';
   const depthDone = dailyDepthComplete(d);
   if(!depthDone) return 'depth';
   return '';
+}
+function dailyMainStepDone(d){
+  return d && d.type === 'C'
+    ? (d.d > 0 || (d.m||0) > 0 || (d.ret||0) > 0)
+    : !!(d && (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0));
+}
+function routeReviewStepCurrent(d, due, missing){
+  const band = reviewLoadBand(due);
+  if(missing === 'review') return true;
+  if(!due) return false;
+  if(band === 'hard') return true;
+  if(recoveryReviewStillDue()) return true;
+  return band === 'recommend' && !((d && d.r) || 0);
+}
+function todayRouteStepKey(missing){
+  const step = missing == null ? dailyMissingStep() : missing;
+  if(step === 'foundations' || step === 'review') return step;
+  const d = ensureDay();
+  if(routeReviewStepCurrent(d, srsDue().length, step)) return 'review';
+  return step;
+}
+function dailyRouteSteps(missing){
+  const d = ensureDay();
+  const step = todayRouteStepKey(missing);
+  if(foundationRefreshRequired()){
+    return [{id:'foundations', label:'Refresh', done:step !== 'foundations', current:step === 'foundations'}];
+  }
+  const due = srsDue().length;
+  const includeReview = due > 0 || ((d && d.r) || 0) > 0 || step === 'review';
+  const mainDone = dailyMainStepDone(d);
+  const depthDone = dailyDepthComplete(d);
+  const steps = [];
+  if(includeReview) steps.push({id:'review', label:'Review', done:step !== 'review', current:step === 'review'});
+  steps.push({id:'main', label:'Main', done:mainDone, current:step === 'main'});
+  steps.push({id:'depth', label:'Practice', done:depthDone, current:step === 'depth'});
+  if(!step) steps.forEach(s=>{ s.done = true; s.current = false; });
+  return steps;
+}
+function routeStepProgress(steps){
+  const xs = steps && steps.length ? steps : [];
+  if(!xs.length) return 0;
+  return Math.round(100 * xs.filter(s=>s.done).length / xs.length);
+}
+function routeStepsHtml(steps){
+  return (steps||[]).map(s=>`<span class="route-step-pip ${s.done?'done':''} ${s.current?'current':''}" title="${escAttr(s.label)}"></span>`).join('');
+}
+function concreteBlockerDetail(blocker, next){
+  return shortBlockerDetail(blocker, next);
+}
+function taskStateForBlocker(blocker, next, currentStep){
+  if(blocker && blocker.code === 'mastery-check'){
+    return {
+      state: currentStep === 'main' ? 'Up next' : 'Ready',
+      detail: concreteBlockerDetail(blocker, next),
+      kind: currentStep === 'main' ? 'primary' : ''
+    };
+  }
+  return {
+    state:'Locked',
+    detail:shortBlockerDetail(blocker),
+    kind:'locked'
+  };
 }
 function dailyWinSummary(d){
   if(!d) return '';
@@ -3243,13 +3358,6 @@ function triggerRewardBurst(kind = 'default'){
   document.body.appendChild(host);
   window.setTimeout(()=>host.remove(), 1200);
 }
-function routeProgressPercent(missing){
-  if(missing === 'foundations') return 0;
-  if(missing === 'review') return 0;
-  if(missing === 'main') return 34;
-  if(missing === 'depth') return 67;
-  return 100;
-}
 function routeVisualClass(summary, missing){
   if(!missing) return 'route-complete';
   if(missing === 'foundations') return 'route-foundation';
@@ -3270,12 +3378,13 @@ function routeOptionalHint(missing, summary){
 function syncNavBadges(){
   const due = srsDue().length;
   const label = due > 99 ? '99+' : due ? String(due) : '';
-  ['home','practice'].forEach(name=>{
-    const tab = document.querySelector('.tab[data-view="' + name + '"]');
-    const badge = el('tab-due-' + name);
-    if(tab) tab.classList.toggle('has-due', !!due);
-    if(badge) badge.textContent = label;
-  });
+  const tab = document.querySelector('.tab[data-view="practice"]');
+  const badge = el('tab-due-practice');
+  if(tab){
+    tab.classList.toggle('has-due', !!due);
+    tab.classList.toggle('due-overload', due >= REVIEW_HARD_CAP);
+  }
+  if(badge) badge.textContent = label;
 }
 function renderDailyWinCard(){
   const card = el('daily-win-card');
@@ -3335,19 +3444,20 @@ function todayRouteSummary(){
   const d = ensureDay();
   const due = srsDue().length;
   const band = reviewLoadBand(due);
-  const shape = todayReviewShape();
-  const recovery = shape.recovery;
-  const missing = dailyMissingStep();
-  const early = earlyFoundationWindow();
-  const main = mainTaskNode();
-  const next = nextLesson();
+	  const shape = todayReviewShape();
+	  const recovery = shape.recovery;
+	  const missing = dailyMissingStep();
+	  const currentStep = todayRouteStepKey(missing);
+	  const early = earlyFoundationWindow();
+	  const main = mainTaskNode();
+	  const next = nextLesson();
   const blocker = next && getLessonBlocker(next.id);
   const dayType = foundationRefreshRequired() ? 'Updated foundations'
     : recovery ? 'Recovery day'
     : d.type === 'C' ? 'Consolidation day'
     : early ? 'Foundation day'
     : 'Course day';
-  if(missing === 'foundations'){
+	  if(currentStep === 'foundations'){
     return {
       dayType,
       next:'Endings refresh',
@@ -3356,10 +3466,10 @@ function todayRouteSummary(){
       action:()=>routeToDailyStep('foundations')
     };
   }
-  if(missing === 'review'){
-    const reason = recovery ? 'Start with a smaller return-after-gap review.'
-      : band === 'hard' ? 'Review due cards before adding more.'
-      : 'Clear due cards before new work.';
+	  if(currentStep === 'review'){
+	    const reason = recovery ? 'Start with a smaller return-after-gap review.'
+	      : band === 'hard' ? 'Review due cards before adding more.'
+	      : 'Start with today\'s review slice.';
     return {
       dayType,
       next:recovery ? 'Recovery review' : 'Review',
@@ -3368,16 +3478,16 @@ function todayRouteSummary(){
       action:()=>routeToDailyStep('review')
     };
   }
-  if(missing === 'main'){
-    return {
-      dayType,
-      next:blocker ? shortBlockerTitle(blocker) : main && main.label ? main.label : 'Main task',
-      reason:blocker ? shortBlockerDetail(blocker) : d.type === 'C' ? 'Review today before new lessons.' : 'Start the next lesson.',
-      actionLabel:'Start',
-      action:()=>routeToDailyStep('main')
-    };
-  }
-  if(missing === 'depth'){
+	  if(currentStep === 'main'){
+	    return {
+	      dayType,
+	      next:blocker ? shortBlockerTitle(blocker) : main && main.label ? main.label : 'Main task',
+	      reason:blocker ? concreteBlockerDetail(blocker, next) : d.type === 'C' ? 'Review today before new lessons.' : 'Start the next lesson.',
+	      actionLabel:'Start',
+	      action:()=>routeToDailyStep('main')
+	    };
+	  }
+	  if(currentStep === 'depth'){
     const task = activeDepthTask() || todayDepthTask();
     return {
       dayType,
@@ -3397,19 +3507,20 @@ function todayRouteSummary(){
 }
 function renderTodayRouteSummary(){
   const card = el('today-route-summary');
-  if(!card) return;
-  const summary = todayRouteSummary();
-  const missing = dailyMissingStep();
-  const progress = routeProgressPercent(missing);
-  card.className = 'section-card route-summary hero-card route-hero ' + routeVisualClass(summary, missing);
-  el('route-day-type').textContent = summary.dayType;
-  el('route-next-action').textContent = summary.next;
-  el('route-reason').textContent = summary.reason;
-  const ring = el('route-progress-ring'), progressText = el('route-progress-text'), progressBar = el('route-progress-bar'), hint = el('route-optional-hint');
-  if(ring) ring.style.setProperty('--route-progress', String(progress));
-  if(progressText) progressText.textContent = progress + '%';
-  if(progressBar) progressBar.style.width = progress + '%';
-  if(hint) hint.textContent = routeOptionalHint(missing, summary);
+	  if(!card) return;
+	  const summary = todayRouteSummary();
+	  const missing = dailyMissingStep();
+	  const currentStep = todayRouteStepKey(missing);
+	  const steps = dailyRouteSteps(missing);
+	  const progress = routeStepProgress(steps);
+	  card.className = 'section-card route-summary hero-card route-hero ' + routeVisualClass(summary, currentStep);
+	  el('route-day-type').textContent = summary.dayType;
+	  el('route-next-action').textContent = summary.next;
+	  el('route-reason').textContent = summary.reason;
+	  const pips = el('route-step-pips'), progressBar = el('route-progress-bar'), hint = el('route-optional-hint');
+	  if(pips) pips.innerHTML = routeStepsHtml(steps);
+	  if(progressBar) progressBar.style.width = progress + '%';
+	  if(hint) hint.textContent = routeOptionalHint(currentStep, summary);
   const btn = el('route-summary-action');
   if(btn){
     btn.className = 'btn small ' + (!missing ? 'secondary-cta' : 'primary-cta');
@@ -3446,9 +3557,18 @@ function handleEndDay(){
   questCheck();
   showEndDayModal();
 }
-function showV5NoticeIfNeeded(){
+function learnerHadProgressBeforeMigration(target){
+  const s = target || state;
+  return !!(Array.isArray(s.done) && s.done.length > 0);
+}
+function showV5NoticeIfNeeded(hadProgressBeforeRepair){
   if(!state.notices) state.notices = {};
   if(state.notices.v5Phase1Repair) return;
+  if(!hadProgressBeforeRepair){
+    state.notices.v5Phase1Repair = 'not-applicable';
+    saveState();
+    return;
+  }
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card">
@@ -3484,10 +3604,11 @@ function renderTodayActions(){
   const recovery = shape.recovery;
   const recoveryStillDue = recoveryReviewStillDue();
   const refreshRequired = foundationRefreshRequired();
-  const reviewDone = due === 0;
-  const mainDone = d.type === 'C' ? (d.d > 0 || (d.m||0) > 0 || (d.ret||0) > 0) : (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
-  const depthDone = dailyDepthComplete(d);
-  const missing = dailyMissingStep();
+	  const reviewDone = due === 0;
+	  const mainDone = dailyMainStepDone(d);
+	  const depthDone = dailyDepthComplete(d);
+	  const missing = dailyMissingStep();
+	  const currentStep = todayRouteStepKey(missing);
   const early = earlyFoundationWindow();
   const main = mainTaskNode();
   const next = nextLesson();
@@ -3530,15 +3651,15 @@ function renderTodayActions(){
   if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
   el('today-brief').textContent = 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
-  setTaskButton('today-review-btn', {
-    state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
-    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
-    detail: reviewDone ? 'Clear.'
-      : recoveryStillDue ? shape.target + ' now.'
-      : recovery ? due + ' left.'
-      : due + ' due.',
-    kind: !reviewDone && (band === 'hard' || recoveryStillDue) ? 'primary' : reviewDone ? 'done' : band === 'recommend' ? '' : ''
-  });
+	  setTaskButton('today-review-btn', {
+	    state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
+	    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
+	    detail: reviewDone ? 'Clear.'
+	      : recoveryStillDue ? shape.target + ' now.'
+	      : recovery ? due + ' left.'
+	      : due + ' due.',
+	    kind: !reviewDone && currentStep === 'review' ? 'primary' : reviewDone ? 'done' : band === 'recommend' ? '' : ''
+	  });
   let mainTitle = d.type === 'C' ? 'Consolidate' : 'Main task';
   let mainDetail = d.type === 'C' ? 'Current work.' : 'Lesson/check.';
   if(main){
@@ -3556,18 +3677,19 @@ function renderTodayActions(){
       mainDetail = lessonAvailabilityMessage(next);
     }
   }
-  setTaskButton('today-main-btn', {
-    state: mainDone ? 'Done' : lessonBlocker ? 'Locked' : recovery && main && main.lesson ? 'Optional' : 'Next',
-    title: mainDone ? (d.ret ? 'Check done' : d.type === 'C' ? 'Started' : 'Main done') : mainTitle,
-    detail: mainDone ? 'Done.' : mainDetail,
-    kind: !mainDone && missing === 'main' && !lessonBlocker && !(recovery && main && main.lesson) ? 'primary' : mainDone ? 'done' : lessonBlocker ? 'locked' : ''
-  });
+	  const blockerState = lessonBlocker ? taskStateForBlocker(lessonBlocker, next, currentStep) : null;
+	  setTaskButton('today-main-btn', {
+	    state: mainDone ? 'Done' : blockerState ? blockerState.state : recovery && main && main.lesson ? 'Optional' : 'Next',
+	    title: mainDone ? (d.ret ? 'Check done' : d.type === 'C' ? 'Started' : 'Main done') : mainTitle,
+	    detail: mainDone ? 'Done.' : blockerState ? blockerState.detail : mainDetail,
+	    kind: !mainDone && currentStep === 'main' && !lessonBlocker && !(recovery && main && main.lesson) ? 'primary' : mainDone ? 'done' : blockerState ? blockerState.kind : ''
+	  });
   const depthTask = todayDepthTask();
   setTaskButton('today-depth-btn', {
     state: depthDone ? 'Done' : (!mainDone || band === 'hard') ? 'Locked' : 'Next',
     title: depthDone ? 'Practice done' : (depthTask ? depthTask.title : 'Practice'),
     detail: depthDone ? (d.lite ? 'Tomorrow.' : 'Done.') : (depthTask ? 'Practice.' : 'Available.'),
-    kind: !depthDone && missing === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || band === 'hard') ? 'locked' : ''
+	    kind: !depthDone && currentStep === 'depth' ? 'primary' : depthDone ? 'done' : (!mainDone || band === 'hard') ? 'locked' : ''
   });
   const end = el('end-day-btn');
 	  if(end){
@@ -4714,6 +4836,28 @@ function glyphDisplayHtml(ch){
   const g = GLYPHS[ch], disp = g ? (g.disp || ch) : ch;
   return g && g.type === 'c' ? classLetterHtml(ch, disp) : esc(disp);
 }
+function quickStepTextHtml(text){
+  return classColourThaiHtml(text);
+}
+function quickFinalStepHtml(text, n){
+  const raw = String(text||'').trim();
+  const parts = raw.split(/\s=\s/);
+  const read = parts.shift() || raw;
+  const meaning = parts.length ? parts.join(' = ') : '';
+  return `<div class="quick-step quick-final">
+    <span class="quick-step-num">${n}</span>
+    <div class="quick-step-text">${quickStepTextHtml(read)}${meaning ? `<span class="quick-final-meaning">${esc(meaning)}</span>` : ''}</div>
+  </div>`;
+}
+function quickDecodeStepsHtml(text){
+  const parts = String(text||'').split('→').map(part=>part.trim()).filter(Boolean);
+  if(parts.length < 2) return `<div class="notebox" style="font-size:15px;line-height:1.8">${quickStepTextHtml(text)}</div>`;
+  const final = parts.pop();
+  return `<div class="quick-steps">
+    ${parts.map((part,i)=>`<div class="quick-step"><span class="quick-step-num">${i+1}</span><div class="quick-step-text">${quickStepTextHtml(part)}</div></div>`).join('')}
+    ${quickFinalStepHtml(final, parts.length + 1)}
+  </div>`;
+}
 function lessonGlyphPreviewHtml(L){
   return L.glyphs.length ? L.glyphs.slice(0,3).map(glyphDisplayHtml).join(' ') : '💡';
 }
@@ -4728,6 +4872,15 @@ function classColourPromptHtml(q){
 function quizOptionHtml(q, option){
   if(q.fontShock) return `<span class="font-sample ${fontShockClass(option)}">${classColourThaiHtml(option)}</span>`;
   return q.colourThaiOpts ? classColourThaiHtml(option) : esc(option);
+}
+function hasThaiScript(value){ return /[\u0E00-\u0E7F]/.test(String(value||'')); }
+function quizOptionClass(q, option){
+  return 'q-opt' + (q.thaiOpts || hasThaiScript(option) ? ' thai-opt' : '');
+}
+function useSingleColumnQuizOptions(q){
+  const opts = q && Array.isArray(q.options) ? q.options : [];
+  return opts.length <= 3 && !q.thaiOpts && !q.colourThaiOpts && !q.fontShock &&
+    opts.every(o=>!hasThaiScript(o) && !/<[^>]+>/.test(String(o)));
 }
 function ensureSkillStats(){
   if(!state.skillStats) state.skillStats = {listen:[], speak:{attempts:0,last:null}, foundationEar:null};
@@ -6115,6 +6268,103 @@ function validateV544AdaptiveCorrectDwellContracts(){
   if(errors.length) throw new Error('V5.4.4 adaptive correct-dwell contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateV601FirstRunContracts(){
+  const errors = [];
+  if(learnerHadProgressBeforeMigration({done:[], srs:{}})) errors.push('fresh blank states must not be treated as migrated progress');
+  if(!learnerHadProgressBeforeMigration({done:['l1'], srs:{}})) errors.push('completed lesson progress should still receive the migration notice when upgrading');
+  if(typeof document !== 'undefined' && document.body && typeof getComputedStyle === 'function'){
+    [
+      {tag:'button', classes:'task-button primary is-hidden'},
+      {tag:'button', classes:'card cta-card action-card recommended is-hidden'}
+    ].forEach(c=>{
+      const node = document.createElement(c.tag);
+      node.className = c.classes;
+      document.body.appendChild(node);
+      const display = getComputedStyle(node).display;
+      if(node.parentNode) node.parentNode.removeChild(node);
+      if(display !== 'none') errors.push('.is-hidden lost against .' + c.classes.replace(/\s+/g, '.'));
+    });
+  }
+  if(errors.length) throw new Error('V6.0.1 first-run contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV602AnswerFeedbackContracts(){
+  const errors = [];
+  const quizSource = String(renderQuizQ);
+  if(/1700/.test(quizSource)) errors.push('wrong answers must not auto-advance on a fixed 1700ms timer');
+  if(!quizSource.includes('q-continue') || !quizSource.includes('onDone(false)')) errors.push('wrong answers should wait for a Continue button');
+  if(reviewCorrectAdvanceDelayMs({autoConfidence:{reviewId:'g:ก'}}, 'Correct ก') !== AUTO_CONFIDENCE_TIMING.correctDwellMinMs) errors.push('routine correct dwell timing changed');
+  if(reviewCorrectAdvanceDelayMs({}, 'Correct') !== 700) errors.push('non-review correct dwell timing changed');
+  const midFeedback = classWrongFeedbackHtml({answer:'Mid class', options:Object.values(CLS_LABEL)});
+  if(!midFeedback.includes('class-tile mid') || !midFeedback.includes('class-chant-word')) errors.push('mid-class wrong feedback should include tiles and separated chant words');
+  if(midFeedback.includes('ไก่จิกเด็ก')) errors.push('mid-class chant should not render as one unspaced Thai run');
+  const highFeedback = classWrongFeedbackHtml({answer:'High class', options:Object.values(CLS_LABEL)});
+  if(!highFeedback.includes('class-tile high')) errors.push('high-class wrong feedback should include high-class tiles');
+  const lowFeedback = classWrongFeedbackHtml({answer:'Low class', options:Object.values(CLS_LABEL)});
+  if(/class-tile low/.test(lowFeedback)) errors.push('low-class wrong feedback should use the short default sentence, not a 24-tile dump');
+  if(!useSingleColumnQuizOptions({options:Object.values(CLS_LABEL)})) errors.push('three plain class options should stack in one column');
+  if(useSingleColumnQuizOptions({options:['ก','ข','ค'], thaiOpts:true})) errors.push('Thai tile options should keep their existing grid layout');
+  if(errors.length) throw new Error('V6.0.2 answer-feedback contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV603ProgressInteractionContracts(){
+  const errors = [];
+  const routeSource = String(renderTodayRouteSummary) + String(dailyRouteSteps) + String(routeStepsHtml);
+  ['routeProgressPercent','route-progress-ring','route-progress-text','34','67'].forEach(term=>{
+    if(routeSource.includes(term)) errors.push('route hero should use step pips, not fake percent term: ' + term);
+  });
+  const dueCard = n=>['test-due-' + n, {iv:0, due:todayStr(), lapses:0, sameDayMisses:0}];
+  const withDue = count=>{
+    const s = {done:['l1'], checks:{}, srs:{}, days:{[todayStr()]:{r:0,l:0,d:0,m:0,ret:0,due:count,paid:false,type:'L',bridge:{}}}, retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}};
+    for(let i=0;i<count;i++){ const [id, card] = dueCard(i); s.srs[id] = card; }
+    return s;
+  };
+  withTemporaryState(withDue(35), ()=>{
+    const missing = dailyMissingStep();
+    const step = todayRouteStepKey(missing);
+    const steps = dailyRouteSteps(missing);
+    if(step !== 'review') errors.push('35 due cards before review should highlight the review pip');
+    if(routeStepProgress(steps) !== 0) errors.push('35 due cards before work should show 0 completed route steps');
+    const review = steps.find(s=>s.id === 'review');
+    if(!review || !review.current || review.done) errors.push('review pip should be current and unfilled before the review slice');
+  });
+  const afterReview = withDue(35);
+  afterReview.days[todayStr()].r = 30;
+  withTemporaryState(afterReview, ()=>{
+    if(todayRouteStepKey(dailyMissingStep()) !== 'main') errors.push('recommended review should stop owning the route after one Today review slice');
+  });
+  const masteryState = {
+    done:LESSONS.slice(0,6).map(L=>L.id),
+    checks:{[checkpointId(2)]:true},
+    srs:{},
+    days:{[todayStr()]:{r:0,l:0,d:0,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}}},
+    retention:{},
+    foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}
+  };
+  withTemporaryState(masteryState, ()=>{
+    const next = nextLesson();
+    const blocker = getLessonBlocker(next && next.id);
+    const summary = todayRouteSummary();
+    const task = taskStateForBlocker(blocker, next, 'main');
+    if(!blocker || blocker.code !== 'mastery-check') errors.push('test setup should produce a mastery-check blocker');
+    if(summary.reason !== 'Pass it to unlock Lesson 7.') errors.push('mastery hero should name the unlock lesson');
+    if(task.state !== 'Up next' || task.kind !== 'primary' || /Locked|Check needed/i.test(task.state + ' ' + task.detail)) errors.push('takeable mastery check should not render as locked or vague');
+  });
+  const quick = quickDecodeStepsHtml('มา → ม + า aa → live syllable, no mark → MID tone preview → maa = to come');
+  if(!quick.includes('quick-step') || !quick.includes('quick-final') || quick.includes('→')) errors.push('Quick decode should render numbered steps without arrow chains');
+  if(!quick.includes('quick-final-meaning')) errors.push('Quick decode final read should separate the meaning');
+  const chant = classReasonHtml('mid');
+  if(!chant.includes('class-chant-word') || chant.includes('ไก่จิกเด็ก')) errors.push('teaching-card mid chant should use separated word spans');
+  const navSource = String(syncNavBadges);
+  if(navSource.includes('home') || navSource.includes('tab-due-home')) errors.push('due badge should be wired only to Practice');
+  if(!navSource.includes('due-overload')) errors.push('45+ overload should have its own badge state');
+  const renderWallSource = String(renderWall);
+  if(!renderWallSource.includes('started') || !renderWallSource.includes('known')) errors.push('letter wall counter should show started and known counts');
+  if(String(renderNotes).includes('Test notes') || String(showResetFlow).includes('Test notes')) errors.push('notes copy should no longer say Test notes');
+  if(String(shortBlockerDetail).includes('Check needed')) errors.push('mastery blocker fallback should not say Check needed');
+  if(errors.length) throw new Error('V6.0.3 progress interaction contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV542StreamlinedCopyContracts(){
   const errors = [];
   const visibleTodayFns = [
@@ -7118,7 +7368,7 @@ function renderEarnBoard(){
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
 
-/* test-notes pad (v2.26) - jot issues while testing; persists in state (so Export captures them) */
+/* notes pad (v2.26) - jot issues while testing; persists in state (so Export captures them) */
 function noteDate(ms){
   const d = new Date(ms), p = n => String(n).padStart(2,'0');
   const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
@@ -7133,7 +7383,7 @@ function renderNotes(){
       </div>`).reverse().join('')
     : '<div class="sub" style="text-align:center;padding:16px">No notes yet. Jot anything odd, confusing, or broken as you test.</div>';
   el('stage').innerHTML = `
-    <div class="center"><h2>📝 Test notes</h2><p class="sub">Quick jots while you test. They save here and ride along in your Export.</p></div>
+    <div class="center"><h2>📝 Notes</h2><p class="sub">Quick notes. They save here and ride along in your Export.</p></div>
     <textarea class="notes-ta" id="note-in" rows="3" placeholder="What happened? (a bug, a confusing bit, an idea…)"></textarea>
     <button class="btn full" id="note-add">Add note</button>
     <div class="spread" style="margin:16px 0 8px">
@@ -7282,13 +7532,14 @@ function renderProgressWall(){
 }
 function renderWall(){
   const cons = Object.keys(GLYPHS).filter(k=>GLYPHS[k].type==='c');
-  let mastered = 0;
+  const counts = {learning:0, growing:0, mastered:0};
   el('wall').innerHTML = cons.map(ch=>{
     const g = GLYPHS[ch], m = masteryOf('g:'+ch);
-    if(m==='mastered') mastered++;
+    if(counts[m] != null) counts[m]++;
     return `<button class="tile ${escAttr(m!=='locked'?m+' '+g.cls:'')}" data-tile="${escAttr(ch)}">${esc(ch)}</button>`;
   }).join('');
-  el('wall-count').textContent = mastered + ' / ' + cons.length;
+  const started = counts.learning + counts.growing + counts.mastered;
+  el('wall-count').textContent = started + ' / ' + cons.length + ' started · ' + counts.mastered + ' known';
   el('wall').querySelectorAll('[data-tile]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const g = GLYPHS[b.dataset.tile];
@@ -7335,7 +7586,7 @@ async function resetProgressNow(){
 }
 function showResetFlow(){
   const steps = [
-    {h:'Reset all progress?', b:'This clears completed lessons, review cards, streak, tokens, mastery checks, unlocks and today plans. Test notes are kept.'},
+    {h:'Reset all progress?', b:'This clears completed lessons, review cards, streak, tokens, mastery checks, unlocks and today plans. Notes are kept.'},
     {h:'This cannot be undone.', b:'Export first if you might want this progress later. The installed PWA will restart as a fresh learner.'},
     {h:'Final safety check.', b:'This does not reset just today. It erases the whole course state on this device.'},
     {h:'Type I Understand', b:'The erase button only unlocks after the exact phrase is typed.'}
@@ -7854,7 +8105,7 @@ function renderLessonStep(){
 	      `<div class="class-banner neutral">${g.type==='v'?'VOWEL':'TONE MARK'}</div>`;
 	    const clsHtml = g.type==='c' ? `<span class="classchip ${escAttr(g.cls)}">${esc(CLS_LABEL[g.cls])}</span>` :
 	      `<span class="classchip" style="color:var(--blue);border-color:var(--blue)">${g.type==='v'?'Vowel':'Tone mark'}</span>`;
-	    const clsTeach = g.type==='c' ? `<div class="sub" style="font-size:12px;margin-top:8px">${esc(classReason(g.cls))}</div>` : '';
+		    const clsTeach = g.type==='c' ? `<div class="sub" style="font-size:12px;margin-top:8px">${classReasonHtml(g.cls)}</div>` : '';
 	    const finalTeach = finalJobHtml(ch, L.id);
 	    stage.innerHTML = `
 	      ${banner}
@@ -7883,13 +8134,12 @@ function renderLessonStep(){
     const askTone = L.we.ask === 'tone';
     const toneQ = askTone ? toneQuestion(tw, lessonNum(L.id)) : null;
     const answer = askTone ? toneOf(tw.tr) : tw.tr;
-    const model = L.we.m.split(' = ')[0];
-    const opts = askTone
+	    const opts = askTone
       ? shuffle(TONE_NAMES.slice())
       : shuffle([tw.tr, ...wordReadingDistractors(tw, coveredWordsForLesson(L), 3)]);
     stage.innerHTML = `
-      <div class="center"><div class="eyebrow">Class check</div><h2>Quick decode</h2></div>
-      <div class="notebox" style="font-size:15px;line-height:1.8">${classColourThaiHtml(model)}</div>
+	      <div class="center"><div class="eyebrow">Class check</div><h2>Quick decode</h2></div>
+	      ${quickDecodeStepsHtml(L.we.m)}
       <div class="q-prompt" style="margin-top:6px">
         <div class="eyebrow">You do</div>
         <div class="q-big" style="font-size:56px">${classColourThaiHtml(tw.thai)}</div>
@@ -8547,6 +8797,68 @@ function targetedWrongFeedback(q){
   if(TONE_NAMES.includes(q.answer)) return 'Use consonant class, live/dead and any Thai tone mark.';
   return '';
 }
+function classKeyFromLabel(label){
+  const value = String(label||'');
+  return Object.keys(CLS_LABEL).find(k=>CLS_LABEL[k] === value) || null;
+}
+function isClassFeedbackQuestion(q){
+  if(!q) return false;
+  if(q.axis === 'class' || q.axis === 'rare-class') return true;
+  const labels = Object.values(CLS_LABEL);
+  const opts = (q.options || []).map(String);
+  return !!classKeyFromLabel(q.answer) && labels.every(label=>opts.includes(label));
+}
+function classChantWordHtml(word){
+  const chars = [...String(word||'')];
+  for(let i=0;i<chars.length;i++){
+    const ch = chars[i], g = GLYPHS[ch];
+    if(g && g.type === 'c'){
+      const before = chars.slice(0, i).join('');
+      let cluster = ch;
+      while(i + 1 < chars.length && THAI_COMBINING_RE.test(chars[i+1])) cluster += chars[++i];
+      const after = chars.slice(i + 1).join('');
+      return '<span class="class-chant-word thai-feedback">' + esc(before) + classLetterHtml(ch, cluster) + esc(after) + '</span>';
+    }
+  }
+  return '<span class="class-chant-word thai-feedback">' + esc(word) + '</span>';
+}
+function classChantHtml(){
+  return '<div class="class-chant">' + MID_CLASS_CHANT.map(classChantWordHtml).join('<span class="class-chant-dot" aria-hidden="true">·</span>') + '</div>';
+}
+function classReasonHtml(cls){
+  if(cls === 'mid') return '<div>One of the mid 9.</div>' + classChantHtml();
+  return esc(classReason(cls));
+}
+function classMembershipFeedbackHtml(cls){
+  if(cls === 'mid') return classTilesHtml(MID_CLASS_SET, 'mid');
+  if(cls === 'high') return classTilesHtml(HIGH_CLASS_SET, 'high');
+  return '<div class="class-feedback-low">Not mid or high → low by default.</div>';
+}
+function classWrongFeedbackHtml(q){
+  const cls = classKeyFromLabel(q && q.answer);
+  if(!cls) return '';
+  const chant = cls === 'mid' ? classChantHtml() : '';
+  return '<div class="q-feedback-answer">Answer: ' + esc(CLS_LABEL[cls]) + '</div>' +
+    classMembershipFeedbackHtml(cls) + chant;
+}
+function feedbackInlineHtml(value){
+  return String(value ?? '').split(/(\s+)/).map(part=>
+    hasThaiScript(part) ? '<span class="thai-feedback">' + esc(part) + '</span>' : esc(part)
+  ).join('');
+}
+function quizWrongFeedbackHtml(q, timedOut, hint){
+  if(isClassFeedbackQuestion(q)){
+    return classWrongFeedbackHtml(q) + (timedOut ? '<div class="q-feedback-hint">Time. Read the answer, then continue.</div>' : '');
+  }
+  const answer = feedbackInlineHtml(q ? q.answer : '');
+  return '<div class="q-feedback-answer">' + (timedOut ? 'Time. ' : '') + 'Answer: ' + answer + '</div>' +
+    (hint ? '<div class="q-feedback-hint">' + feedbackInlineHtml(hint) + '</div>' : '');
+}
+function revealClassPrompt(q, stage){
+  const cls = isClassFeedbackQuestion(q) ? classKeyFromLabel(q.answer) : null;
+  const big = cls && stage ? stage.querySelector('.q-big') : null;
+  if(big) big.classList.add('class-revealed', cls);
+}
 function renderQuizQ(q, onDone, counterLabel, timedSecs){
   const stage = el('stage');
   stage.innerHTML = `
@@ -8557,8 +8869,8 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
       <div class="q-text">${q.text}</div>
       ${q.say ? `<div class="audio-inline">${speakBtn(q.say, q.sayLabel || ('Hear: ' + q.say))}${q.sayLabel?`<span class="audio-caption">${esc(q.sayLabel)}</span>`:''}</div>` : ''}
     </div>
-    <div class="q-options">
-      ${q.options.map(o=>`<button class="q-opt ${q.thaiOpts?'thai-opt':''}">${quizOptionHtml(q, String(o))}</button>`).join('')}
+    <div class="q-options${useSingleColumnQuizOptions(q) ? ' single-col' : ''}">
+      ${q.options.map(o=>`<button class="${quizOptionClass(q, String(o))}">${quizOptionHtml(q, String(o))}</button>`).join('')}
     </div>
     <div class="q-feedback" id="q-fb"></div>`;
   if(q.autoplay && q.say) setTimeout(()=>speak(q.say), 350);
@@ -8582,14 +8894,29 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     }
     opts.forEach(x=>{ x.disabled = true; if(x.textContent===String(q.answer)) x.classList.add('correct'); });
     if(pickedBtn && !ok) pickedBtn.classList.add('wrong');
+    revealClassPrompt(q, stage);
     const fb = el('q-fb');
     const hint = q.wrongExplain || q.explain || targetedWrongFeedback(q);
     const weakCorrect = !!(ok && confidenceMeta && confidenceMeta.weakCorrect);
     fb.className = 'q-feedback ' + (ok ? 'ok answer-correct' + (weakCorrect ? ' answer-weak' : '') : 'no answer-wrong');
-    fb.textContent = ok ? 'Correct' : (timedOut ? 'Time! ' : '') + 'Answer: ' + q.answer + (hint ? '. ' + hint : '');
+    fb.innerHTML = ok
+      ? '<div class="q-feedback-answer">Correct</div>'
+      : quizWrongFeedbackHtml(q, timedOut, hint);
     const meta = ok && confidenceMeta ? {weakCorrect, confidence:confidenceMeta.confidence, confidenceReason:confidenceMeta.reason} : undefined;
-    const visibleCorrectText = ok ? [fb.textContent, q.answer].filter(Boolean).join(' ') : '';
-    setTimeout(()=>onDone(ok, meta), ok ? reviewCorrectAdvanceDelayMs(q, visibleCorrectText) : 1700);
+    const visibleCorrectText = ok ? ['Correct', q.answer].filter(Boolean).join(' ') : '';
+    if(ok){
+      setTimeout(()=>onDone(ok, meta), reviewCorrectAdvanceDelayMs(q, visibleCorrectText));
+    } else {
+      const continueBtn = document.createElement('button');
+      continueBtn.className = 'btn full q-continue';
+      continueBtn.type = 'button';
+      continueBtn.textContent = 'Continue →';
+      continueBtn.addEventListener('click', ()=>{
+        continueBtn.disabled = true;
+        onDone(false);
+      });
+      fb.appendChild(continueBtn);
+    }
   }
   if(timedSecs){
     const bar = el('qtimer'), t0 = Date.now(), ms = timedSecs*1000;
@@ -10290,6 +10617,7 @@ function debugValidatorsEnabled(){
 function runCriticalStartupValidators(){
   validateAudioContracts();
   validateVocabularyContracts();
+  validateV601FirstRunContracts();
 }
 function runFullStartupValidators(){
   [
@@ -10313,8 +10641,11 @@ function runFullStartupValidators(){
     validateV541AutoConfidenceContracts,
     validateV542StreamlinedCopyContracts,
     validateV543CorrectDwellContracts,
-    validateV544AdaptiveCorrectDwellContracts,
-    validateV525RouteSimplificationContracts,
+	    validateV544AdaptiveCorrectDwellContracts,
+	    validateV601FirstRunContracts,
+	    validateV602AnswerFeedbackContracts,
+	    validateV603ProgressInteractionContracts,
+	    validateV525RouteSimplificationContracts,
     validateV526ToneSignReviewContracts,
     validateV53ReviewGovernorContracts,
     validateV531TtsSafetyContracts,
@@ -10334,13 +10665,14 @@ function runStartupValidators(){
 (async function init(){
   runStartupValidators();
   await loadState();
+  const hadProgressBeforeRepair = learnerHadProgressBeforeMigration(state);
   const migrated = repairStateForV5(state);
   const migrated501 = repairStateForV501(state);
   const migrated54 = repairStateForV54(state);
   if(migrated.changed || migrated501.changed || migrated54.changed) saveState();
   applyTheme(); renderTitle();
   renderHome(); renderLearn(); renderReviewTab();
-  showV5NoticeIfNeeded();
+  showV5NoticeIfNeeded(hadProgressBeforeRepair);
 })();
 </script>
 </body>

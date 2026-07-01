@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-01
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.0.0`
+Current app version: `v6.0.3`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -52,6 +52,29 @@ v6.0.0 is a UI hierarchy, accessibility and scope-separation pass:
 - Bottom tabs now read Today / Practice / Tones / Read / Progress and manage active `aria-current`.
 - No curriculum, SRS/review scheduling, state key, migration semantics, lesson gates, vocabulary roles or Phase 1 pedagogy changed.
 
+v6.0.1 is a first-run fix over v6.0.0:
+
+- `.is-hidden` now wins over newer task/card display rules, so fresh Today does not show hidden Endings Refresh or Morning warm-up cards.
+- Blank first-ever states do not show the legacy Phase 1 progress-kept modal; existing learners with completed lessons still see it once.
+- `validateV601FirstRunContracts()` guards the fresh-state notice logic and hidden-card cascade.
+
+v6.0.2 is an answer-feedback and quiz-stage pass over v6.0.1:
+
+- Wrong objective quiz/review answers pause on a feedback panel until the learner taps Continue; grading, requeue, lapse and leech handling are unchanged.
+- Correct objective answers keep the v5.4.3/v5.4.4 dwell timing.
+- Class-question misses show answer text, mid/high class tiles, the low-class default reminder and a separated mid-class chant.
+- Simple 2- or 3-option text questions stack full-width; 4-option, Thai and balanced-component grids keep their layout.
+- `validateV602AnswerFeedbackContracts()` guards the pass.
+
+v6.0.3 is a progress-honesty and interaction-weight pass over v6.0.2:
+
+- Today route progress uses actual step pips and a matching step-fraction bar instead of hardcoded percent states.
+- Route hero/card mastery-check copy shares one ready state and names the lesson the check unlocks.
+- Practice is the only bottom-tab due-badge location; ordinary due uses the review accent and 45+ overload keeps danger red.
+- The letter wall counter reports started and known counts from the same tile-state source as the wall.
+- Lesson stages top-align, Back is quieter, disabled CTAs look inert, Quick decode examples render as numbered steps, teaching-card chants reuse the structured chant helper, and transliteration uses a muted-warm non-link token.
+- `validateV603ProgressInteractionContracts()` guards the pass.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -84,9 +107,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.0.0`
+- app version `v6.0.3`
 - 24 lessons
-- 36 validators passing
+- 39 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -100,12 +123,14 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-0-0`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-0-3`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
 - content-pedagogy hardening boundaries: rare-letter class-only prep, optional phrasebook scope, no speaking-fluency overclaims
 - v6 UI separation: Tones owns class/tone reference, Read prioritises controlled reading, Progress owns settings/diagnostics and class colours stay reserved for pedagogy
+- answer-feedback moment: wrong answers require Continue, class feedback is tile/chant structured, and class prompt colours appear only after settle
+- progress-honesty/interaction polish: route pips match real steps, mastery checks are not shown as locked when takeable, due badge colour stays calm below overload, and lesson-player Back/Next weight is clear
 
 Out of scope for this release:
 

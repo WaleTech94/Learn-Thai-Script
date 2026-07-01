@@ -1,18 +1,21 @@
-# v6.0.0 Smoke-Test Checklist
+# v6.0.3 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep imported/exported progress JSON private.
 
 ## Fresh Load
 
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.0.0`.
-- Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, and no validator alert/error appears.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.0.3`.
+- Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, no Morning warm-up appears, no Phase 1 progress-kept modal appears, and no validator alert/error appears.
 
 ## Installed iPhone/iOS PWA Launch
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v6.0.0`, cache `aan-thai-v6-0-0`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
+- Confirm footer version `v6.0.3`, cache `aan-thai-v6-0-3`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
 - Confirm the bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
-- Confirm Today shows the route hero above the task list, with a display-only progress ring/bar, clear primary action and End today states such as Review first, Main task first, Practice first or Ready.
+- Confirm Today shows the route hero above the task list, with step pips plus matching bar, clear primary action and End today states such as Review first, Main task first, Practice first or Ready.
+- With 25+ due cards before review, confirm the route pips highlight Review rather than showing partial progress toward Main; after one Today review slice, confirm the route can move on without changing the 45+ overload blocker rule.
+- With a takeable mastery check, confirm hero and route card both show a ready/up-next state and a concrete line such as `Pass it to unlock Lesson 7.`
+- Confirm only Practice shows the due badge; ordinary due counts use the review accent, while 45+ overload uses danger red.
 - Confirm the app uses the v6 dark/glass visual system: aurora background, tactile cards, semantic glows and no generic reuse of Thai class colours for nav/progress/rewards.
 
 ## Service-Worker Update After Deploy
@@ -45,6 +48,14 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Start routine objective review with due `g:` or `f:` cards and answer correctly.
 - Pass: short green feedback advances quickly, longer green feedback stays readable, and no `Felt shaky` / `Solid`, visible timer or slow-answer message appears.
 
+## Review Wrong-Answer Feedback
+
+- Start routine objective review or a lesson quiz, answer a card incorrectly, and confirm it does not auto-advance.
+- Pass: a rose feedback panel stays on screen with a full-width `Continue →` button; tapping Continue advances and the card still grades as Again.
+- On a `Which class?` miss, confirm the answer line is readable, mid/high answers show class tiles, low answers show the short default reminder, and the mid-class chant is split into separate Thai words.
+- Confirm class prompts remain neutral before answering and gain the correct class colour only after settle.
+- Confirm simple 2- or 3-option text questions stack full-width, while 4-option Thai/component-grid questions still use the existing grid.
+
 ## Delayed Checks
 
 - Use a state with +1/+7 delayed checks due.
@@ -75,7 +86,9 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Open Tones and confirm the written Tone route appears as a six-step tone lab and the class reference appears there with true class colours only.
 - Open Read and confirm Reading room / Fluency reads / Seen in the wild / Readiness report are visually first, while bonus phrases and packs remain optional/secondary.
 - Open Progress and confirm trophy KPI chips, letter wall, skill profile, streak heatmap, progress tools, optional extras and reset danger zone are separated and visually distinct.
+- In Progress, confirm the letter wall count uses started/known wording, Freeze is not in the heatmap header, `Notes` opens the notes modal, and the Progress summary row uses a chevron affordance.
 - Start a review/quiz and confirm correct/wrong/weak feedback states are visible; completion bursts appear for major completions only, not every answer.
+- Start a lesson and confirm concept/Quick decode/quiz stages top-align, Back is quiet, disabled Next looks flat/inert, Quick decode examples are numbered steps, the glyph-card mid-class chant is split into words, and transliteration is not link-blue.
 - With reduced motion enabled in the OS/browser, confirm animations are suppressed or reduced.
 
 ## Debug Validators
