@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.5.0 - 2026-07-02
+
+- Added synthesized Web Audio feedback sounds for objective correct answers, wrong answers, combo milestones and completed objective sessions; no audio assets or network calls were added.
+- Added an in-session combo chip for objective MCQ/typed answers only. Self-checked drills and read-aloud/transfer cards stay neutral and do not increment or reset the combo.
+- Added session-complete feedback for objective sessions: best run lines where relevant, streak-extension moments, and a small completion sound. Existing token awards and pass/fail rules are unchanged.
+- Added a dim/lit Today streak flame that opens the existing streak details popover, plus a `Sounds: on/off` mute in Progress tools.
+- Added optional `state.sfx` import support; absent means sounds on. Combo and celebration data stay session-local on `player`.
+- Added `validateV65FeedbackContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.5.0` and 44 validators passing.
+- Updated the app footer version to `v6.5.0`. `sw.js` cache was not bumped because no cached asset filenames changed.
+
 ## v6.4.1 - 2026-07-02
 
 - Fixed Write it giving no feedback on correct answers: a correct typed letter now shows the revealed glyph with a green `Correct` panel, then auto-advances after 1 second.

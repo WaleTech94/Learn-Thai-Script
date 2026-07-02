@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-02T09:47:36.267Z
-App version: v6.4.1
+Generated: 2026-07-02T11:08:31.134Z
+App version: v6.5.0
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -50,6 +50,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 - PASS productionPass
 - PASS automaticity
 - PASS captureLoop
+- PASS v65Feedback
 
 ## Prerequisite Audit
 - Lesson prerequisite issues: 0

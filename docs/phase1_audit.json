@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T09:47:36.267Z",
-  "appVersion": "v6.4.1",
+  "generatedAt": "2026-07-02T11:08:31.134Z",
+  "appVersion": "v6.5.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -215,6 +215,11 @@
     },
     {
       "name": "captureLoop",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v65Feedback",
       "ok": true,
       "issues": []
     }

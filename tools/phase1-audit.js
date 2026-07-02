@@ -683,7 +683,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('weaknessTargeting', validateWeaknessTargetingContracts),
     validatorResult('productionPass', validateProductionPassContracts),
     validatorResult('automaticity', validateAutomaticityContracts),
-    validatorResult('captureLoop', validateCaptureLoopContracts)
+    validatorResult('captureLoop', validateCaptureLoopContracts),
+    validatorResult('v65Feedback', validateV65FeedbackContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
