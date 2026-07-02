@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.4.1 - 2026-07-02
+
+- Fixed Write it giving no feedback on correct answers: a correct typed letter now shows the revealed glyph with a green `Correct` panel, then auto-advances after 1 second.
+- Added Enter-key submission to the Write it and Capture Thai text inputs so the iPhone Thai keyboard's return key works.
+- Replaced the Decode Gym corpus: all 60 entries are now new common monosyllables that are not lesson words, restoring the feature's reading-mileage purpose. Every entry is tone-verified against the class/live-dead/length route grid and listed in `docs/phase1_audit.md`.
+- Added gym-only early entries to `EARLY_TONE_GATES` (l4-l12), each following a tone pattern already taught by its gate, so Decode Gym opens before Unit C again.
+- Removed the previous batch's or-scheme inconsistencies (`mue`, `lúk`, `ther`) along with the duplicate words.
+- Hardened `validateAutomaticityContracts()`: Decode Gym entries must not duplicate lesson words.
+- Updated the app footer version to `v6.4.1` and the service-worker cache to `aan-thai-v6-4-1`.
+
 ## v6.4.0 - 2026-07-02
 
 - Added Capture Thai to Read and as a secondary Bangkok Mission action: typed Thai-only local input, optional where-seen note, immediate class-coloured preview and no camera/upload/location/network path.

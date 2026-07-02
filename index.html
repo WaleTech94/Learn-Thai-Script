@@ -1078,7 +1078,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.4.0</span>
+      <span class="version-pill">v6.4.1</span>
     </header>
 
     <section class="today-focus">
@@ -1192,7 +1192,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.4.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.4.1 (PWA)</div>
     </div>
   </section>
 
@@ -2374,27 +2374,30 @@ const FLUENCY_READS = [
    check:{text:'Which word has the เ◌ิ pattern?', answer:'เปิด', options:['เปิด','ปิด','อาหาร','ภาษา'], explain:'เปิด uses เ before the consonant plus ิ over it.'}}
 ];
 
+/* v6.4.1: pure reading-mileage corpus - 60 common monosyllables that are NOT lesson words.
+   Every entry is tone-verified against the class/live-dead/length grid by
+   validateAutomaticityContracts() and listed in docs/phase1_audit.md for review. */
 const DECODE_GYM = [
-  {gate:'l4', thai:'ไม่', tr:'mâi'}, {gate:'l4', thai:'บ้าน', tr:'bâan'}, {gate:'l4', thai:'ห้า', tr:'hâa'},
-  {gate:'l5', thai:'รอ', tr:'ror'}, {gate:'l5', thai:'เรา', tr:'rao'}, {gate:'l5', thai:'ยาว', tr:'yaao'},
-  {gate:'l6', thai:'ขอ', tr:'khǒr'}, {gate:'l6', thai:'ขาว', tr:'khǎao'}, {gate:'l6', thai:'สาม', tr:'sǎam'},
-  {gate:'l7', thai:'งาน', tr:'ngaan'}, {gate:'l7', thai:'ช้าง', tr:'cháang'}, {gate:'l7', thai:'จาน', tr:'jaan'},
-  {gate:'l8', thai:'ตา', tr:'dtaa'}, {gate:'l8', thai:'ถูก', tr:'thùuk'}, {gate:'l8', thai:'ฟัน', tr:'fan'},
-  {gate:'l9', thai:'คน', tr:'khon'}, {gate:'l9', thai:'ผม', tr:'phǒm'}, {gate:'l9', thai:'ฝน', tr:'fǒn'},
-  {gate:'l10', thai:'แม่', tr:'mâae'}, {gate:'l10', thai:'มือ', tr:'mue'}, {gate:'l11', thai:'ลึก', tr:'lúk'},
-  {gate:'l11', thai:'จะ', tr:'jà'}, {gate:'l11', thai:'รถ', tr:'rót'}, {gate:'l11', thai:'ทุก', tr:'thúk'},
-  {gate:'l12', thai:'เขา', tr:'khǎo'}, {gate:'l12', thai:'น้ำ', tr:'náam'}, {gate:'l12', thai:'ใช่', tr:'châi'},
-  {gate:'l13', thai:'จาก', tr:'jàak'}, {gate:'l13', thai:'พูด', tr:'phûut'}, {gate:'l13', thai:'รัก', tr:'rák'},
-  {gate:'l14', thai:'เก่า', tr:'gào'}, {gate:'l14', thai:'ได้', tr:'dâi'}, {gate:'l14', thai:'ต้อง', tr:'dtôrng'},
-  {gate:'l15', thai:'ข้าว', tr:'khâao'}, {gate:'l15', thai:'ห้อง', tr:'hôrng'}, {gate:'l15', thai:'ถาม', tr:'thǎam'},
-  {gate:'l16', thai:'น้อง', tr:'nórng'}, {gate:'l16', thai:'พี่', tr:'phîi'}, {gate:'l16', thai:'เล็ก', tr:'lék'},
-  {gate:'l17', thai:'หมา', tr:'mǎa'}, {gate:'l17', thai:'ไหน', tr:'nǎi'}, {gate:'l17', thai:'อยู่', tr:'yùu'}, {gate:'l17', thai:'อยาก', tr:'yàak'}, {gate:'l17', thai:'ไหม', tr:'mǎi'},
-  {gate:'l18', thai:'ครับ', tr:'khráp'}, {gate:'l18', thai:'ปลา', tr:'bplaa'}, {gate:'l18', thai:'ครู', tr:'khruu'}, {gate:'l18', thai:'ใกล้', tr:'glâi'},
-  {gate:'l19', thai:'จริง', tr:'jing'}, {gate:'l19', thai:'ทราบ', tr:'sâap'}, {gate:'l19', thai:'สร้าง', tr:'sâang'},
-  {gate:'l20', thai:'เธอ', tr:'ther'}, {gate:'l20', thai:'ศูนย์', tr:'sǔun'},
-  {gate:'l21', thai:'ฉัน', tr:'chǎn'},
-  {gate:'l22', thai:'เรียน', tr:'rian'}, {gate:'l22', thai:'เพื่อน', tr:'phûean'}, {gate:'l22', thai:'ตัว', tr:'dtua'}, {gate:'l22', thai:'เสื้อ', tr:'sûea'},
-  {gate:'l24', thai:'เปิด', tr:'bpèrt'}, {gate:'l24', thai:'ปิด', tr:'bpìt'}
+  {gate:'l4', thai:'ปาก', tr:'bpàak'}, {gate:'l4', thai:'อีก', tr:'ìik'}, {gate:'l4', thai:'อาบ', tr:'àap'},
+  {gate:'l5', thai:'ยา', tr:'yaa'},
+  {gate:'l6', thai:'ขา', tr:'khǎa'},
+  {gate:'l7', thai:'ไม้', tr:'máai'},
+  {gate:'l8', thai:'ฟ้า', tr:'fáa'}, {gate:'l8', thai:'ไฟ', tr:'fai'},
+  {gate:'l9', thai:'ผี', tr:'phǐi'}, {gate:'l9', thai:'ฝัน', tr:'fǎn'}, {gate:'l9', thai:'ลม', tr:'lom'}, {gate:'l9', thai:'นม', tr:'nom'}, {gate:'l9', thai:'ค่า', tr:'khâa'},
+  {gate:'l10', thai:'แดง', tr:'daaeng'}, {gate:'l10', thai:'แขน', tr:'khǎaen'},
+  {gate:'l11', thai:'ลุง', tr:'lung'},
+  {gate:'l12', thai:'ดำ', tr:'dam'}, {gate:'l12', thai:'ใจ', tr:'jai'}, {gate:'l12', thai:'ขำ', tr:'khǎm'},
+  {gate:'l13', thai:'ร้อน', tr:'rórn'}, {gate:'l13', thai:'หก', tr:'hòk'}, {gate:'l13', thai:'เก้า', tr:'gâo'},
+  {gate:'l14', thai:'สิบ', tr:'sìp'}, {gate:'l14', thai:'แปด', tr:'bpàaet'},
+  {gate:'l15', thai:'พัน', tr:'phan'}, {gate:'l15', thai:'ร้อย', tr:'rói'},
+  {gate:'l16', thai:'เย็น', tr:'yen'}, {gate:'l16', thai:'เจ็ด', tr:'jèt'}, {gate:'l16', thai:'เค็ม', tr:'khem'}, {gate:'l16', thai:'เผ็ด', tr:'phèt'},
+  {gate:'l17', thai:'หมอ', tr:'mǒr'}, {gate:'l17', thai:'หมู', tr:'mǔu'}, {gate:'l17', thai:'หนู', tr:'nǔu'}, {gate:'l17', thai:'หวาน', tr:'wǎan'}, {gate:'l17', thai:'หลัง', tr:'lǎng'}, {gate:'l17', thai:'หลับ', tr:'làp'},
+  {gate:'l18', thai:'หมด', tr:'mòt'}, {gate:'l18', thai:'หยุด', tr:'yùt'}, {gate:'l18', thai:'ซื้อ', tr:'súue'}, {gate:'l18', thai:'ขาย', tr:'khǎai'},
+  {gate:'l19', thai:'ร้าน', tr:'ráan'}, {gate:'l19', thai:'ถุง', tr:'thǔng'},
+  {gate:'l20', thai:'ตรง', tr:'dtrong'}, {gate:'l20', thai:'ยาก', tr:'yâak'},
+  {gate:'l21', thai:'ง่าย', tr:'ngâai'}, {gate:'l21', thai:'ของ', tr:'khǒrng'},
+  {gate:'l22', thai:'เขียน', tr:'khǐan'}, {gate:'l22', thai:'เสียง', tr:'sǐang'}, {gate:'l22', thai:'เมื่อ', tr:'mûea'}, {gate:'l22', thai:'เมือง', tr:'mueang'}, {gate:'l22', thai:'เนื้อ', tr:'núea'}, {gate:'l22', thai:'เดือน', tr:'duean'}, {gate:'l22', thai:'วัว', tr:'wua'}, {gate:'l22', thai:'หัว', tr:'hǔa'}, {gate:'l22', thai:'กลัว', tr:'glua'}, {gate:'l22', thai:'ครัว', tr:'khrua'},
+  {gate:'l24', thai:'เดิน', tr:'dern'}, {gate:'l24', thai:'เกิด', tr:'gèrt'}, {gate:'l24', thai:'เงิน', tr:'ngern'}, {gate:'l24', thai:'เพิ่ม', tr:'phêrm'}
 ];
 
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
@@ -5308,7 +5311,13 @@ const EARLY_TONE_GATES = {
   "คน":9, "ผม":9, "ฝน":9, "ซ้าย":9,
   "แม่":10, "แพง":10, "มือ":10,
   "จะ":11, "รถ":11, "ทุก":11, "ลึก":11, "กุ้ง":11,
-  "เขา":12, "น้ำ":12, "ทำ":12, "ใช่":12
+  "เขา":12, "น้ำ":12, "ทำ":12, "ใช่":12,
+  /* v6.4.1 Decode Gym early words - each follows a tone pattern already taught by its gate:
+     mid/dead low (ไป/บาท l3 precedent), unmarked live mid (รอ/เรา l5), high live rising (ขอ l6),
+     mark-on-low (นี่ l4, ช้าง l7), hidden-o live (คน l9). Not lesson words; no quiz surface reads
+     this map for non-lesson words - it feeds decodeGymRoute() derivation gates only. */
+  "ปาก":4, "อีก":4, "อาบ":4, "ยา":5, "ขา":6, "ไม้":7, "ฟ้า":8, "ไฟ":8,
+  "ผี":9, "ฝัน":9, "ลม":9, "นม":9, "ค่า":9, "แดง":10, "แขน":10, "ลุง":11, "ดำ":12, "ใจ":12, "ขำ":12
 };
 function toneGate(w){ return EARLY_TONE_GATES[w.thai] || 13; }
 function toneTaughtBy(w, upToLessonNum){ return monoSyllable(w) && toneGate(w) <= upToLessonNum; }
@@ -6777,10 +6786,12 @@ function validateAutomaticityContracts(){
   const errors = [];
   if(DECODE_GYM.length !== 60) errors.push('Decode Gym seed batch should contain exactly 60 words');
   const seen = new Set();
+  const lessonThai = new Set(LESSONS.flatMap(L=>L.words||[]).map(w=>w.thai));
   DECODE_GYM.forEach(item=>{
     const key = item.thai;
     if(seen.has(key)) errors.push('Decode Gym duplicate word: ' + key);
     seen.add(key);
+    if(lessonThai.has(key)) errors.push('Decode Gym must add new reading mileage, not lesson words: ' + key);
     if(!/^l\d+$/.test(item.gate || '') || !lessonById(item.gate)) errors.push('Decode Gym invalid gate for ' + key);
     if(/[฿]/.test(key)) errors.push('Decode Gym must not use baht symbols: ' + key);
     if(String(key).normalize('NFC') !== key || String(item.tr).normalize('NFC') !== item.tr) errors.push('Decode Gym entry must be NFC-normalized: ' + key);
@@ -9888,6 +9899,13 @@ function renderWriteItReveal(card, attempt){
     <div class="stage-actions"><button class="btn full" id="write-next">Continue →</button></div>`;
   el('write-next').onclick = ()=>{ player.i++; renderWriteIt(); };
 }
+function renderWriteItCorrect(card){
+  el('stage').innerHTML = `
+    ${writeItCueHtml(card)}
+    ${writeItRevealHtml(card)}
+    <div class="q-feedback ok answer-correct"><div class="q-feedback-answer">Correct</div></div>`;
+  setTimeout(()=>{ player.i++; renderWriteIt(); }, 1000);
+}
 function renderWriteIt(){
   const p = player;
   setProg(Math.round(100*p.i/p.rounds.length));
@@ -9916,19 +9934,20 @@ function renderWriteIt(){
     </div>`;
   const input = el('write-input');
   if(input) input.focus();
-  el('write-check').onclick = ()=>{
+  const check = ()=>{
     const attempt = writeItAttemptValue();
     if(!attempt){ toast('Type it with the Thai keyboard first'); return; }
     if(attempt === card.ch){
       p.got++;
-      p.i++;
-      renderWriteIt();
+      renderWriteItCorrect(card);
     } else {
       markWriteItMiss(card);
       saveState();
       renderWriteItReveal(card, attempt);
     }
   };
+  el('write-check').onclick = check;
+  if(input) input.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); check(); } });
   el('write-skip').onclick = ()=>{
     markWriteItMiss(card);
     saveState();
@@ -10576,13 +10595,15 @@ function renderCaptureLoop(saved){
     <div class="stage-actions"><button class="btn full ghost" id="st-done">Done</button></div>`;
   const input = el('capture-thai');
   if(input && !saved) input.focus();
-  el('capture-save').onclick = ()=>{
+  const save = ()=>{
     const clean = sanitizeCaptureThai(el('capture-thai').value);
     if(!clean){ toast('Type Thai first'); return; }
     const capture = saveCapture(clean, el('capture-note').value);
     if(!capture){ toast('Thai text only'); return; }
     renderCaptureLoop(capture);
   };
+  el('capture-save').onclick = save;
+  if(input) input.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); save(); } });
   el('capture-wild').onclick = startWildDeck;
   el('st-done').onclick = ()=>{ closeOverlay(); renderCats(); renderPhrases(); renderHome(); };
 }

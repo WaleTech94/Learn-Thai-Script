@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-02T00:34:00.623Z
-App version: v6.4.0
+Generated: 2026-07-02T09:47:36.267Z
+App version: v6.4.1
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -112,66 +112,66 @@ Seeded word-reading reps. Eligibility is gate-checked through the same prerequis
 
 | Gate | Thai | Reading | Tone | Verified |
 | --- | --- | --- | --- | --- |
-| l4 | ไม่ | mâi | Falling | yes |
-| l4 | บ้าน | bâan | Falling | yes |
-| l4 | ห้า | hâa | Falling | yes |
-| l5 | รอ | ror | Mid | yes |
-| l5 | เรา | rao | Mid | yes |
-| l5 | ยาว | yaao | Mid | yes |
-| l6 | ขอ | khǒr | Rising | yes |
-| l6 | ขาว | khǎao | Rising | yes |
-| l6 | สาม | sǎam | Rising | yes |
-| l7 | งาน | ngaan | Mid | yes |
-| l7 | ช้าง | cháang | High | yes |
-| l7 | จาน | jaan | Mid | yes |
-| l8 | ตา | dtaa | Mid | yes |
-| l8 | ถูก | thùuk | Low | yes |
-| l8 | ฟัน | fan | Mid | yes |
-| l9 | คน | khon | Mid | yes |
-| l9 | ผม | phǒm | Rising | yes |
-| l9 | ฝน | fǒn | Rising | yes |
-| l10 | แม่ | mâae | Falling | yes |
-| l10 | มือ | mue | Mid | yes |
-| l11 | ลึก | lúk | High | yes |
-| l11 | จะ | jà | Low | yes |
-| l11 | รถ | rót | High | yes |
-| l11 | ทุก | thúk | High | yes |
-| l12 | เขา | khǎo | Rising | yes |
-| l12 | น้ำ | náam | High | yes |
-| l12 | ใช่ | châi | Falling | yes |
-| l13 | จาก | jàak | Low | yes |
-| l13 | พูด | phûut | Falling | yes |
-| l13 | รัก | rák | High | yes |
-| l14 | เก่า | gào | Low | yes |
-| l14 | ได้ | dâi | Falling | yes |
-| l14 | ต้อง | dtôrng | Falling | yes |
-| l15 | ข้าว | khâao | Falling | yes |
-| l15 | ห้อง | hôrng | Falling | yes |
-| l15 | ถาม | thǎam | Rising | yes |
-| l16 | น้อง | nórng | High | yes |
-| l16 | พี่ | phîi | Falling | yes |
-| l16 | เล็ก | lék | High | yes |
-| l17 | หมา | mǎa | Rising | yes |
-| l17 | ไหน | nǎi | Rising | yes |
-| l17 | อยู่ | yùu | Low | yes |
-| l17 | อยาก | yàak | Low | yes |
-| l17 | ไหม | mǎi | Rising | yes |
-| l18 | ครับ | khráp | High | yes |
-| l18 | ปลา | bplaa | Mid | yes |
-| l18 | ครู | khruu | Mid | yes |
-| l18 | ใกล้ | glâi | Falling | yes |
-| l19 | จริง | jing | Mid | yes |
-| l19 | ทราบ | sâap | Falling | yes |
-| l19 | สร้าง | sâang | Falling | yes |
-| l20 | เธอ | ther | Mid | yes |
-| l20 | ศูนย์ | sǔun | Rising | yes |
-| l21 | ฉัน | chǎn | Rising | yes |
-| l22 | เรียน | rian | Mid | yes |
-| l22 | เพื่อน | phûean | Falling | yes |
-| l22 | ตัว | dtua | Mid | yes |
-| l22 | เสื้อ | sûea | Falling | yes |
-| l24 | เปิด | bpèrt | Low | yes |
-| l24 | ปิด | bpìt | Low | yes |
+| l4 | ปาก | bpàak | Low | yes |
+| l4 | อีก | ìik | Low | yes |
+| l4 | อาบ | àap | Low | yes |
+| l5 | ยา | yaa | Mid | yes |
+| l6 | ขา | khǎa | Rising | yes |
+| l7 | ไม้ | máai | High | yes |
+| l8 | ฟ้า | fáa | High | yes |
+| l8 | ไฟ | fai | Mid | yes |
+| l9 | ผี | phǐi | Rising | yes |
+| l9 | ฝัน | fǎn | Rising | yes |
+| l9 | ลม | lom | Mid | yes |
+| l9 | นม | nom | Mid | yes |
+| l9 | ค่า | khâa | Falling | yes |
+| l10 | แดง | daaeng | Mid | yes |
+| l10 | แขน | khǎaen | Rising | yes |
+| l11 | ลุง | lung | Mid | yes |
+| l12 | ดำ | dam | Mid | yes |
+| l12 | ใจ | jai | Mid | yes |
+| l12 | ขำ | khǎm | Rising | yes |
+| l13 | ร้อน | rórn | High | yes |
+| l13 | หก | hòk | Low | yes |
+| l13 | เก้า | gâo | Falling | yes |
+| l14 | สิบ | sìp | Low | yes |
+| l14 | แปด | bpàaet | Low | yes |
+| l15 | พัน | phan | Mid | yes |
+| l15 | ร้อย | rói | High | yes |
+| l16 | เย็น | yen | Mid | yes |
+| l16 | เจ็ด | jèt | Low | yes |
+| l16 | เค็ม | khem | Mid | yes |
+| l16 | เผ็ด | phèt | Low | yes |
+| l17 | หมอ | mǒr | Rising | yes |
+| l17 | หมู | mǔu | Rising | yes |
+| l17 | หนู | nǔu | Rising | yes |
+| l17 | หวาน | wǎan | Rising | yes |
+| l17 | หลัง | lǎng | Rising | yes |
+| l17 | หลับ | làp | Low | yes |
+| l18 | หมด | mòt | Low | yes |
+| l18 | หยุด | yùt | Low | yes |
+| l18 | ซื้อ | súue | High | yes |
+| l18 | ขาย | khǎai | Rising | yes |
+| l19 | ร้าน | ráan | High | yes |
+| l19 | ถุง | thǔng | Rising | yes |
+| l20 | ตรง | dtrong | Mid | yes |
+| l20 | ยาก | yâak | Falling | yes |
+| l21 | ง่าย | ngâai | Falling | yes |
+| l21 | ของ | khǒrng | Rising | yes |
+| l22 | เขียน | khǐan | Rising | yes |
+| l22 | เสียง | sǐang | Rising | yes |
+| l22 | เมื่อ | mûea | Falling | yes |
+| l22 | เมือง | mueang | Mid | yes |
+| l22 | เนื้อ | núea | High | yes |
+| l22 | เดือน | duean | Mid | yes |
+| l22 | วัว | wua | Mid | yes |
+| l22 | หัว | hǔa | Rising | yes |
+| l22 | กลัว | glua | Mid | yes |
+| l22 | ครัว | khrua | Mid | yes |
+| l24 | เดิน | dern | Mid | yes |
+| l24 | เกิด | gèrt | Low | yes |
+| l24 | เงิน | ngern | Mid | yes |
+| l24 | เพิ่ม | phêrm | Falling | yes |
 
 ## v6.4 Capture Loop
 
