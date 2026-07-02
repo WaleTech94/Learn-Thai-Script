@@ -653,6 +653,12 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .q-prompt .q-big.class-revealed.mid{color:var(--mid)}
 .q-prompt .q-big.class-revealed.high{color:var(--high)}
 .q-prompt .q-big.class-revealed.low{color:var(--low)}
+.write-reveal-glyph{font-family:var(--font-display);font-size:84px;line-height:1.1;text-align:center;margin:8px 0}
+.route-talk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.route-talk-step{min-height:68px;border:1px solid var(--line-soft);border-radius:14px;background:rgba(255,255,255,.055);padding:8px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.route-talk-step b{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.route-talk-step span{font-weight:750}
+@media(max-width:430px){.route-talk-steps{grid-template-columns:repeat(2,1fr)}}
 .q-prompt .q-text{font-size:19px;font-family:var(--font-display);font-weight:500}
 .type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:var(--font-display);margin:4px 0 2px;outline:none}
 .type-in:focus{border-color:var(--blue)}
@@ -1066,7 +1072,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.1.0</span>
+      <span class="version-pill">v6.2.0</span>
     </header>
 
     <section class="today-focus">
@@ -1180,7 +1186,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.1.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.2.0 (PWA)</div>
     </div>
   </section>
 
@@ -1365,6 +1371,10 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
             <div><div class="t">Fluency reads</div><div class="d" id="fluency-sub">Controlled Thai from taught patterns</div></div>
             <span class="icon-right">→</span>
           </button>
+          <button class="action-card" id="cta-write-it">
+            <div><div class="t">Write it</div><div class="d">Type letters with your Thai keyboard</div></div>
+            <span class="icon-right">→</span>
+          </button>
           <button class="action-card" id="cta-chunk">
             <div><div class="t">Chunk this word</div><div class="d">Break longer Thai into readable pieces</div></div>
             <span class="icon-right">→</span>
@@ -1460,6 +1470,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
 	      <div class="tone-button-grid">
         <button class="btn" id="tone-drill-btn">Tone ear practice</button>
         <button class="btn ghost" id="tone-rule-btn">Tone rules</button>
+        <button class="btn ghost" id="route-talk-btn">Route talk</button>
         <button class="btn ghost" id="class-sprint-btn">Class sprint</button>
         <button class="btn ghost" id="twins-btn">Sound twins</button>
         <button class="btn ghost" id="echo-btn">Echo chamber</button>
@@ -2548,6 +2559,7 @@ let state = {
   missions:{done:{}},
   contrastLog:{},
   fluencyReads:{},
+  writeLog:[],
   phase1Completion:null
 };
 const SKEY = 'thai_state_v1';
@@ -2597,7 +2609,7 @@ function validateImportedStateShape(s){
   assertPlainObject(s.srs, 'progress.srs');
   assertPlainObject(s.streak, 'progress.streak');
   assertStringArray(s.done, 'progress.done');
-  ['notes','packs','titles','themes','postcards'].forEach(k=>{
+  ['notes','packs','titles','themes','postcards','writeLog'].forEach(k=>{
     if(s[k] != null && !Array.isArray(s[k])) throw new Error('progress.' + k + ' must be an array');
   });
   ['baht','freeze','pace','paceN'].forEach(k=>assertNumberField(s, k, 'progress'));
@@ -5208,6 +5220,58 @@ function toneQuestion(w, upToLessonNum){
     options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w),
     _err:{kind:'tone', key:ruleCellKey(w)}};
 }
+function toneMarkName(mark){
+  return {'่':'mai ek ่','้':'mai tho ้','๊':'mai tri ๊','๋':'mai chattawa ๋'}[mark] || 'no mark';
+}
+function expectedToneFromRoute(cls, mark, liveDead, length){
+  if(!cls) return null;
+  if(mark){
+    const marked = {
+      mid:{'่':'Low','้':'Falling','๊':'High','๋':'Rising'},
+      high:{'่':'Low','้':'Falling'},
+      low:{'่':'Falling','้':'High'}
+    };
+    return marked[cls] && marked[cls][mark] || null;
+  }
+  if(liveDead === 'Live'){
+    return cls === 'high' ? 'Rising' : 'Mid';
+  }
+  if(liveDead === 'Dead'){
+    if(cls === 'low') return length === 'Short' ? 'High' : length === 'Long' ? 'Falling' : null;
+    return 'Low';
+  }
+  return null;
+}
+function toneRouteForWord(w, doneIds){
+  if(!w || !monoSyllable(w)) return null;
+  const ids = doneIds || state.done || [];
+  const upToLessonNum = ids.length ? Math.max(...ids.map(lessonNum)) : 0;
+  if(!toneTaughtBy(w, upToLessonNum)) return null;
+  const f = wordFrame(w);
+  const cls = firstConsonantClass(w.thai);
+  const initial = firstConsonantChar(w.thai);
+  const mark = (w.thai.match(/[่้๊๋]/) || [''])[0];
+  const liveDead = liveDeadFromFrame(f);
+  const needsLength = !mark && cls === 'low' && liveDead === 'Dead';
+  const length = f && f.vowelLength ? f.vowelLength : needsLength ? null : 'not needed';
+  const tone = toneOf(w.tr);
+  const expected = expectedToneFromRoute(cls, mark, liveDead, length);
+  if(!initial || !cls || !liveDead || !expected || expected !== tone) return null;
+  return {word:w, initial, cls, mark, liveDead, length, tone};
+}
+function toneRouteStepsHtml(route){
+  const steps = [
+    ['Initial', route.initial],
+    ['Class', CLS_LABEL[route.cls]],
+    ['Mark', toneMarkName(route.mark)],
+    ['Live/dead', route.liveDead],
+    ['Length', route.length],
+    ['Tone', route.tone]
+  ];
+  return `<div class="route-talk-steps">${steps.map(([label,value])=>`
+    <div class="route-talk-step"><b>${esc(label)}</b><span>${esc(value)}</span></div>
+  `).join('')}</div>`;
+}
 
 /* =====================================================
    NAV
@@ -5600,7 +5664,7 @@ function ensureStateCollections(target){
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
     notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, retention:{}, signSafari:{seen:{}},
-    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, phase1Completion:null, errorProfile:{}
+    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, writeLog:[], phase1Completion:null, errorProfile:{}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
@@ -5615,6 +5679,7 @@ function ensureStateCollections(target){
   if(!target.contrastLog) target.contrastLog = {};
   if(!target.signSafari.seen) target.signSafari.seen = {};
   if(!target.fluencyReads) target.fluencyReads = {};
+  if(!Array.isArray(target.writeLog)) target.writeLog = [];
   if(!target.errorProfile || typeof target.errorProfile !== 'object' || Array.isArray(target.errorProfile)) target.errorProfile = {};
   Object.keys(target.srs || {}).forEach(id=>{
     const c = target.srs[id] || {};
@@ -6529,6 +6594,49 @@ function validateWeaknessTargetingContracts(){
   });
   if(/errorProfile|weaknessScore|weightedWeakSample|weaknessFocus/.test(String(getLessonBlocker))) errors.push('weakness targeting must not enter lesson blocking');
   if(errors.length) throw new Error('Weakness targeting contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateProductionPassContracts(){
+  const errors = [];
+  const fake = {done:['l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','l11','l12','l13','l14'], srs:{}, days:{}, retention:{}};
+  ['ก','น','ม','ข','ค'].forEach(ch=>{ fake.srs['g:'+ch] = {iv:4,due:todayStr(),lapses:0}; });
+  ['น','ม','ก'].forEach(ch=>{ fake.srs['f:'+ch] = {iv:4,due:todayStr(),lapses:0}; });
+  withTemporaryState(fake, ()=>{
+    const pool = writeItPool();
+    if(pool.length < 6) errors.push('Write it should draw learned g:/f: prompts');
+    pool.forEach(card=>{
+      const cue = writeItCueHtml(card);
+      if(cue.includes(card.ch)) errors.push('Write it cue must not display target glyph before reveal: ' + card.id);
+      if(!/Thai keyboard recall/.test(cue) || !/type the Thai letter/.test(cue)) errors.push('Write it cue must require Thai-keyboard recall: ' + card.id);
+      if(/chicken|plate|child|egg|horse|mouse|meaning|definition/i.test(cue)) errors.push('Write it cue must stay definition-free: ' + card.id);
+      const reveal = writeItRevealHtml(card);
+      if(!reveal.includes(card.ch)) errors.push('Write it reveal must show target glyph: ' + card.id);
+    });
+    const before = Object.keys(state.srs).sort().join('|');
+    const picked = weightedWeakSample(pool, Math.min(8, pool.length), writeItScore);
+    if(!picked.every(card=>pool.includes(card))) errors.push('Write it must stay inside learned pool');
+    if(Object.keys(state.srs).sort().join('|') !== before) errors.push('Write it pool selection must not mutate SRS');
+  });
+  const routeFake = {done:LESSONS.slice(0,17).map(L=>L.id), srs:{}, days:{}, retention:{}};
+  withTemporaryState(routeFake, ()=>{
+    const routes = routeTalkPool();
+    if(routes.length < 5) errors.push('Route talk should have covered tone-route words by Unit C');
+    routes.forEach(item=>{
+      const w = item.word, route = item.route;
+      if(!thaiTextReadable(w.thai, taughtGlyphSet(state.done))) errors.push('Route talk word must be readable: ' + w.thai);
+      if(!thaiItemPrereqsMet(w.thai, state.done, wordFrame(w))) errors.push('Route talk word must pass prerequisites: ' + w.thai);
+      if(!route || expectedToneFromRoute(route.cls, route.mark, route.liveDead, route.length) !== route.tone) errors.push('Route talk must derive tone from route grid: ' + w.thai);
+      const rendered = toneRouteStepsHtml(route);
+      if(/meaning|definition|very|teacher|fish|come|rice|water/i.test(rendered)) errors.push('Route talk reveal must stay definition-free: ' + w.thai);
+    });
+  });
+  const source = [startWriteIt, renderWriteIt, startRouteTalk, renderRouteTalk].map(fn=>String(fn)).join('\n');
+  if(/srsAdd|state\.srs\s*\[[^\]]+\]\s*=/.test(source)) errors.push('Production drills must not create SRS cards');
+  if(/writeLog|routeTalk|startWriteIt|startRouteTalk/.test(String(getLessonBlocker))) errors.push('Production drills must not enter lesson blockers');
+  if(/on paper|paper from memory/i.test(source)) errors.push('Write it must use the Thai keyboard, not paper handwriting');
+  if(!/write-input/.test(String(renderWriteIt)) || !/Thai keyboard/.test(String(renderWriteIt))) errors.push('Write it must use a Thai-keyboard input before reveal');
+  if(!/Got it/.test(String(renderRouteTalk)) || !/Missed it/.test(String(renderRouteTalk))) errors.push('Route talk must use self-check buttons');
+  if(errors.length) throw new Error('Production pass contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV542StreamlinedCopyContracts(){
@@ -9417,6 +9525,7 @@ function renderReviewTab(){
   setActionCardState('cta-leech', leeches ? 'recommended' : 'done');
   setActionCardState('cta-read', active && active.id === 'reading' ? 'recommended' : unreadStory ? '' : 'done');
   setActionCardState('cta-fluency', active && active.id === 'fluency' ? 'recommended' : nextRead ? '' : 'done');
+  setActionCardState('cta-write-it', writeItPool().length ? '' : 'locked');
   setActionCardState('cta-chunk', state.done.includes('l20') ? '' : 'locked');
   setActionCardState('cta-font-shock', state.done.includes('l23') ? '' : 'locked');
   setActionCardState('cta-hear-thai', state.done.includes('l1') ? '' : 'locked');
@@ -9466,6 +9575,185 @@ el('cta-chunk').addEventListener('click', startChunkDrill);
 el('cta-font-shock').addEventListener('click', startFontShock);
 el('cta-mouth').addEventListener('click', showMouthCoach);
 el('cta-mission').addEventListener('click', ()=>showBangkokMissions());
+
+function writeItPool(){
+  const seen = new Set();
+  const out = [];
+  Object.keys(state.srs || {}).forEach(id=>{
+    if(id.startsWith('g:')){
+      const ch = id.slice(2), g = GLYPHS[ch];
+      if(!g || g.type !== 'c' || seen.has(id)) return;
+      seen.add(id);
+      out.push({id, kind:'glyph', ch, cue:g.sound, cls:g.cls, name:g.name, nameTr:g.nameTr});
+    } else if(id.startsWith('f:')){
+      const ch = id.slice(2), g = GLYPHS[ch], job = finalJob(ch);
+      if(!g || !job || seen.has(id)) return;
+      seen.add(id);
+      out.push({id, kind:'final', ch, cue:job.sound, cls:g.cls, name:g.name, nameTr:g.nameTr, job});
+    }
+  });
+  return out;
+}
+function writeItScore(card){
+  if(!card) return 0;
+  return weaknessScore('write', card.id) +
+    (card.kind === 'final' ? weaknessScore('final', card.ch) : weaknessScore('class', card.ch) + weaknessScore('sound', card.ch));
+}
+function writeItCueHtml(card){
+  if(card.kind === 'final'){
+    return `
+      <div class="center">
+        <div class="eyebrow">Thai keyboard recall</div>
+        <h2>Ending sound: ${esc(card.cue)}</h2>
+        <p class="sub">${esc(finalJobLabel(card.job))} · type the Thai letter</p>
+      </div>`;
+  }
+  return `
+    <div class="center">
+      <div class="eyebrow">Thai keyboard recall</div>
+      <h2>${esc(card.cue)}</h2>
+      <p class="sub">${classBadgeHtml(card.cls)} <span class="tr">${esc(card.nameTr || '')}</span> · type the Thai letter</p>
+    </div>`;
+}
+function writeItRevealHtml(card){
+  const jobLine = card.kind === 'final' ? `<div class="sub">${esc(finalJobLabel(card.job))} · starts ${esc((GLYPHS[card.ch]||{}).sound || '')} · ends ${esc(card.job.sound)}</div>` : '';
+  return `
+    <div class="write-reveal-glyph">${classColourThaiHtml(card.ch)}</div>
+    <div class="center">
+      <div>${classBadgeHtml(card.cls)}</div>
+      <div class="sub">${esc(card.name || '')} · ${esc(card.nameTr || '')}</div>
+      ${jobLine}
+    </div>`;
+}
+function startWriteIt(){
+  const pool = writeItPool();
+  if(pool.length < 3){ toast('Finish a few letter lessons first'); return; }
+  player = {type:'write-it', rounds:weightedWeakSample(pool, Math.min(8, pool.length), writeItScore), i:0, got:0};
+  openOverlay();
+  renderWriteIt();
+}
+function writeItAttemptValue(){
+  const input = el('write-input');
+  return input ? String(input.value || '').normalize('NFC').trim() : '';
+}
+function markWriteItMiss(card){
+  recordProfileError('write', card.id);
+  if(card.kind === 'final') recordProfileError('final', card.ch);
+  else {
+    recordProfileError('sound', card.ch);
+    recordProfileError('class', card.ch);
+  }
+}
+function renderWriteItReveal(card, attempt){
+  el('stage').innerHTML = `
+    ${writeItCueHtml(card)}
+    ${writeItRevealHtml(card)}
+    ${attempt ? `<div class="sub" style="text-align:center">You typed: ${classColourThaiHtml(attempt)}</div>` : ''}
+    <div class="stage-actions"><button class="btn full" id="write-next">Continue →</button></div>`;
+  el('write-next').onclick = ()=>{ player.i++; renderWriteIt(); };
+}
+function renderWriteIt(){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    if(!Array.isArray(state.writeLog)) state.writeLog = [];
+    state.writeLog.push({date:todayStr(), n:p.rounds.length, got:p.got});
+    if(state.writeLog.length > 30) state.writeLog = state.writeLog.slice(-30);
+    markDailyDepth('practice');
+    bumpStreak();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.got} / ${p.rounds.length}</div>
+      <div class="result-sub">Write it complete.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+    return;
+  }
+  const card = p.rounds[p.i];
+  el('stage').innerHTML = `
+    ${writeItCueHtml(card)}
+    <div class="sub" style="text-align:center">Use your iPhone Thai keyboard. The target glyph is hidden.</div>
+    <input id="write-input" class="type-in" lang="th" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="3" inputmode="text" aria-label="Type the Thai letter">
+    <div class="stage-actions">
+      <button class="btn full ghost" id="write-skip">Reveal</button>
+      <button class="btn full" id="write-check">Check →</button>
+    </div>`;
+  const input = el('write-input');
+  if(input) input.focus();
+  el('write-check').onclick = ()=>{
+    const attempt = writeItAttemptValue();
+    if(!attempt){ toast('Type it with the Thai keyboard first'); return; }
+    if(attempt === card.ch){
+      p.got++;
+      p.i++;
+      renderWriteIt();
+    } else {
+      markWriteItMiss(card);
+      saveState();
+      renderWriteItReveal(card, attempt);
+    }
+  };
+  el('write-skip').onclick = ()=>{
+    markWriteItMiss(card);
+    saveState();
+    renderWriteItReveal(card, '');
+  };
+}
+function routeTalkPool(){
+  const ids = state.done || [];
+  const taught = taughtGlyphSet(ids);
+  return learnedWords(ids)
+    .filter(w=>thaiTextReadable(w.thai, taught) && thaiItemPrereqsMet(w.thai, ids, wordFrame(w)))
+    .map(w=>({word:w, route:toneRouteForWord(w, ids)}))
+    .filter(x=>x.route);
+}
+function startRouteTalk(){
+  const pool = routeTalkPool();
+  if(pool.length < 5){ toast('Route talk opens once enough tone-rule words are covered'); return; }
+  player = {type:'route-talk', rounds:weightedWeakSample(pool, Math.min(5, pool.length), x=>weaknessScore('tone', ruleCellKey(x.word))), i:0, got:0};
+  openOverlay();
+  renderRouteTalk(false);
+}
+function renderRouteTalk(revealed){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    markDailyDepth('practice');
+    bumpStreak();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.got} / ${p.rounds.length}</div>
+      <div class="result-sub">Route talk complete.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderTones(); };
+    return;
+  }
+  const item = p.rounds[p.i], w = item.word, route = item.route;
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Route talk · ${p.i+1} of ${p.rounds.length}</div><h2>Say the route out loud</h2></div>
+    <div class="speak-cue">${classColourThaiHtml(w.thai)}</div>
+    <div class="sub" style="text-align:center">Class, mark, live/dead, length, tone.</div>
+    ${revealed ? toneRouteStepsHtml(route) : ''}
+    <div class="stage-actions">
+      ${revealed ? `
+        <button class="btn full ghost" id="route-miss">Missed it</button>
+        <button class="btn full" id="route-got">Got it</button>
+      ` : `<button class="btn full" id="route-reveal">Reveal route →</button>`}
+    </div>`;
+  if(revealed){
+    el('route-miss').onclick = ()=>{
+      recordProfileError('tone', ruleCellKey(w));
+      p.i++;
+      saveState();
+      renderRouteTalk(false);
+    };
+    el('route-got').onclick = ()=>{ p.got++; p.i++; renderRouteTalk(false); };
+  } else {
+    el('route-reveal').onclick = ()=>renderRouteTalk(true);
+  }
+}
+el('cta-write-it').addEventListener('click', startWriteIt);
+el('route-talk-btn').addEventListener('click', startRouteTalk);
 
 function startFlashcards(queue, opts){
   player = {type:'flash', queue, i:0, total:queue.length, reviewed:0, net:0, cleanFirst:0, seen:{}, started:Date.now(), opts:opts||{}};
@@ -10824,7 +11112,8 @@ function runFullStartupValidators(){
     validateV531TtsSafetyContracts,
     validateV54FluencyContracts,
     validateContentPedagogyHardeningContracts,
-    validateWeaknessTargetingContracts
+    validateWeaknessTargetingContracts,
+    validateProductionPassContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

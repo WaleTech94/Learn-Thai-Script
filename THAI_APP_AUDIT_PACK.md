@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-02
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.1.0`
+Current app version: `v6.2.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -83,6 +83,14 @@ v6.1.0 is a weakness-first targeting pass over v6.0.3:
 - No lesson blocker, route type, SRS due deck, review governor, network feature or dependency changed.
 - `validateWeaknessTargetingContracts()` guards the pass.
 
+v6.2.0 is a production-practice pass over v6.1.0:
+
+- Write it lives in Practice and uses the iPhone Thai keyboard to type hidden learned letters/endings from sound, class and ending-job cues.
+- Route talk lives in Tones and asks for spoken self-explanation before revealing route tiles derived from the existing tone-grid logic.
+- Misses feed `errorProfile`; neither drill creates SRS cards or changes lesson blockers, route type, review governor load, network behaviour or dependencies.
+- `writeLog` stores bounded Write it session summaries; Route talk stores no separate state.
+- `validateProductionPassContracts()` guards the pass.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -115,9 +123,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.1.0`
+- app version `v6.2.0`
 - 24 lessons
-- 40 validators passing
+- 41 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -131,7 +139,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-1-0`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-2-0`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording

@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.2.0 - 2026-07-02
+
+- Added Write it to Practice as Thai-keyboard recall for learned `g:` letters and `f:` ending-job letters: the glyph stays hidden while the learner types it on the iPhone Thai keyboard, then wrong/skip paths reveal the answer and log the miss.
+- Added Route talk to Tones as a 5-word spoken self-explanation drill: the learner says class, mark, live/dead, length and tone, then reveals route tiles derived from the existing tone-grid logic.
+- Kept both production-practice surfaces optional and outside lesson blockers, mastery gates and the main SRS due deck; misses feed `errorProfile` for later weakness-first targeting.
+- Added bounded `writeLog` session summaries for Write it and no separate Route talk state.
+- Added `validateProductionPassContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.2.0` and 41 validators passing.
+- Updated the app footer version to `v6.2.0` with service-worker cache `aan-thai-v6-2-0`.
+
 ## v6.1.0 - 2026-07-02
 
 - Added a bounded `errorProfile` state bucket for wrong generated answers across glyph sound, class, final-job, tone-rule, listening and confusion-pair misses.
