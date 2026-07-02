@@ -1,16 +1,16 @@
-# v6.2.0 Smoke-Test Checklist
+# v6.3.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep imported/exported progress JSON private.
 
 ## Fresh Load
 
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.2.0`.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.3.0`.
 - Confirm Lesson 1 starts from the class primer path, no Endings Refresh appears, no Morning warm-up appears, no Phase 1 progress-kept modal appears, and no validator alert/error appears.
 
 ## Installed iPhone/iOS PWA Launch
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v6.2.0`, cache `aan-thai-v6-2-0`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
+- Confirm footer version `v6.3.0`, cache `aan-thai-v6-3-0`, 44pt taps, safe-area top/bottom chrome and Thai audio setup still behave normally.
 - Confirm the bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today shows the route hero above the task list, with step pips plus matching bar, clear primary action and End today states such as Review first, Main task first, Practice first or Ready.
 - With 25+ due cards before review, confirm the route pips highlight Review rather than showing partial progress toward Main; after one Today review slice, confirm the route can move on without changing the 45+ overload blocker rule.
@@ -19,7 +19,10 @@ Use this as the manual pass before external source review or live deploy. Keep i
 - Confirm the app uses the v6 dark/glass visual system: aurora background, tactile cards, semantic glows and no generic reuse of Thai class colours for nav/progress/rewards.
 - Miss one class or tone generated question, then confirm progress still moves normally and the next optional drill recommendation can point at the weakest matching practice without changing lesson availability.
 - In Practice, open Write it after learned letters exist. Confirm the cue hides the glyph, the Thai keyboard input appears, a correct typed Thai letter advances, and a wrong/Reveal path shows the answer without adding SRS cards.
+- In Practice, open Decode Gym after enough word patterns exist. Confirm each card shows Thai first, reveal shows the reading only, Missed/Got advances, and no meaning test or SRS card is created.
 - In Tones, open Route talk after Unit C material exists. Confirm the learner is prompted to say the route before reveal and the reveal shows class / mark / live-dead / length / tone tiles.
+- In Tones, complete Class sprint and confirm the result shows best/last pace only after the session, with no countdown pressure during questions.
+- In Read, complete one Reading room story or Fluency read and confirm a short read-time line appears; repeat with device voice or backgrounding and confirm no suspect timing sample is stored.
 
 ## Service-Worker Update After Deploy
 

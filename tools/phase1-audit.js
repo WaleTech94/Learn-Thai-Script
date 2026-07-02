@@ -681,7 +681,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v54Fluency', validateV54FluencyContracts),
     validatorResult('contentPedagogyHardening', validateContentPedagogyHardeningContracts),
     validatorResult('weaknessTargeting', validateWeaknessTargetingContracts),
-    validatorResult('productionPass', validateProductionPassContracts)
+    validatorResult('productionPass', validateProductionPassContracts),
+    validatorResult('automaticity', validateAutomaticityContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -710,6 +711,13 @@ globalThis.__phase1Audit = (function(){
       realWorld:!!read.realWorld,
       itemCount:fluencyReadItems(read).length,
       check:read.check && read.check.text
+    })),
+    decodeGym:DECODE_GYM.map(item=>({
+      gate:item.gate,
+      thai:item.thai,
+      tr:item.tr,
+      tone:toneOf(item.tr),
+      verified:decodeGymToneVerified(item)
     })),
     phase1Completion:{
       questionCount:buildPhase1CompletionQuiz().length,
@@ -755,7 +763,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v6.2.0 is a production-practice pass over the v6.1.0 weakness-targeting release. Practice now includes Write it, a Thai-keyboard recall drill for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it; Tones now includes Route talk, a spoken self-explanation drill whose class, mark, live/dead, length and tone tiles are derived from the existing tone-grid logic. Both surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v6.3.0 is an automaticity pass over v6.2.0: fluency reads and reading-room stories now log reliable cold-read time samples, Class sprint records best/last pace after the session, and Practice adds Decode Gym as 10 self-checked word-reading reps from a 60-item gate-checked corpus. v6.2.0 remains the production-practice pass: Write it uses Thai-keyboard recall for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it, and Tones includes Route talk from existing tone-grid derivation. These v6.1-v6.3 surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -779,6 +787,16 @@ function renderMarkdown(audit){
     lines.push(`- Lesson ${String(read.gate||'').replace('l','')}: ${safeCell(read.title)}${read.realWorld ? ' (controlled real-world)' : ' (cumulative)'} · ${read.itemCount} Thai items · check: ${safeCell(read.check||'')}`);
   });
   lines.push(`- Final checkpoint: ${audit.phase1Completion.questionCount} questions; ${audit.phase1Completion.pass}.`);
+  lines.push('');
+  lines.push('## v6.3 Decode Gym');
+  lines.push('');
+  lines.push('Seeded word-reading reps. Eligibility is gate-checked through the same prerequisite machinery as controlled reading surfaces; tone column is derived from the transliteration and verified against the route grid in the startup contract.');
+  lines.push('');
+  lines.push('| Gate | Thai | Reading | Tone | Verified |');
+  lines.push('| --- | --- | --- | --- | --- |');
+  (audit.decodeGym||[]).forEach(item=>{
+    lines.push(`| ${safeCell(item.gate)} | ${safeCell(item.thai)} | ${safeCell(item.tr)} | ${safeCell(item.tone)} | ${item.verified ? 'yes' : 'NO'} |`);
+  });
   lines.push('');
   lines.push('## Named Surface Audit');
   lines.push('');

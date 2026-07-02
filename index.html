@@ -659,6 +659,9 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .route-talk-step b{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .route-talk-step span{font-weight:750}
 @media(max-width:430px){.route-talk-steps{grid-template-columns:repeat(2,1fr)}}
+.read-time-line{font-size:12px;color:var(--muted);margin-top:4px}
+.decode-gym-word{font-family:var(--font-display);font-size:58px;line-height:1.25;text-align:center;margin:14px 0}
+.decode-gym-reading{text-align:center;color:var(--ui-translit);font-size:22px;margin-top:4px}
 .q-prompt .q-text{font-size:19px;font-family:var(--font-display);font-weight:500}
 .type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:var(--font-display);margin:4px 0 2px;outline:none}
 .type-in:focus{border-color:var(--blue)}
@@ -1072,7 +1075,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.2.0</span>
+      <span class="version-pill">v6.3.0</span>
     </header>
 
     <section class="today-focus">
@@ -1186,7 +1189,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.2.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.3.0 (PWA)</div>
     </div>
   </section>
 
@@ -1373,6 +1376,10 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
           </button>
           <button class="action-card" id="cta-write-it">
             <div><div class="t">Write it</div><div class="d">Type letters with your Thai keyboard</div></div>
+            <span class="icon-right">→</span>
+          </button>
+          <button class="action-card" id="cta-decode-gym">
+            <div><div class="t">Decode Gym</div><div class="d">10 word reps, no meanings</div></div>
             <span class="icon-right">→</span>
           </button>
           <button class="action-card" id="cta-chunk">
@@ -2356,6 +2363,29 @@ const FLUENCY_READS = [
    check:{text:'Which word has the เ◌ิ pattern?', answer:'เปิด', options:['เปิด','ปิด','อาหาร','ภาษา'], explain:'เปิด uses เ before the consonant plus ิ over it.'}}
 ];
 
+const DECODE_GYM = [
+  {gate:'l4', thai:'ไม่', tr:'mâi'}, {gate:'l4', thai:'บ้าน', tr:'bâan'}, {gate:'l4', thai:'ห้า', tr:'hâa'},
+  {gate:'l5', thai:'รอ', tr:'ror'}, {gate:'l5', thai:'เรา', tr:'rao'}, {gate:'l5', thai:'ยาว', tr:'yaao'},
+  {gate:'l6', thai:'ขอ', tr:'khǒr'}, {gate:'l6', thai:'ขาว', tr:'khǎao'}, {gate:'l6', thai:'สาม', tr:'sǎam'},
+  {gate:'l7', thai:'งาน', tr:'ngaan'}, {gate:'l7', thai:'ช้าง', tr:'cháang'}, {gate:'l7', thai:'จาน', tr:'jaan'},
+  {gate:'l8', thai:'ตา', tr:'dtaa'}, {gate:'l8', thai:'ถูก', tr:'thùuk'}, {gate:'l8', thai:'ฟัน', tr:'fan'},
+  {gate:'l9', thai:'คน', tr:'khon'}, {gate:'l9', thai:'ผม', tr:'phǒm'}, {gate:'l9', thai:'ฝน', tr:'fǒn'},
+  {gate:'l10', thai:'แม่', tr:'mâae'}, {gate:'l10', thai:'มือ', tr:'mue'}, {gate:'l11', thai:'ลึก', tr:'lúk'},
+  {gate:'l11', thai:'จะ', tr:'jà'}, {gate:'l11', thai:'รถ', tr:'rót'}, {gate:'l11', thai:'ทุก', tr:'thúk'},
+  {gate:'l12', thai:'เขา', tr:'khǎo'}, {gate:'l12', thai:'น้ำ', tr:'náam'}, {gate:'l12', thai:'ใช่', tr:'châi'},
+  {gate:'l13', thai:'จาก', tr:'jàak'}, {gate:'l13', thai:'พูด', tr:'phûut'}, {gate:'l13', thai:'รัก', tr:'rák'},
+  {gate:'l14', thai:'เก่า', tr:'gào'}, {gate:'l14', thai:'ได้', tr:'dâi'}, {gate:'l14', thai:'ต้อง', tr:'dtôrng'},
+  {gate:'l15', thai:'ข้าว', tr:'khâao'}, {gate:'l15', thai:'ห้อง', tr:'hôrng'}, {gate:'l15', thai:'ถาม', tr:'thǎam'},
+  {gate:'l16', thai:'น้อง', tr:'nórng'}, {gate:'l16', thai:'พี่', tr:'phîi'}, {gate:'l16', thai:'เล็ก', tr:'lék'},
+  {gate:'l17', thai:'หมา', tr:'mǎa'}, {gate:'l17', thai:'ไหน', tr:'nǎi'}, {gate:'l17', thai:'อยู่', tr:'yùu'}, {gate:'l17', thai:'อยาก', tr:'yàak'}, {gate:'l17', thai:'ไหม', tr:'mǎi'},
+  {gate:'l18', thai:'ครับ', tr:'khráp'}, {gate:'l18', thai:'ปลา', tr:'bplaa'}, {gate:'l18', thai:'ครู', tr:'khruu'}, {gate:'l18', thai:'ใกล้', tr:'glâi'},
+  {gate:'l19', thai:'จริง', tr:'jing'}, {gate:'l19', thai:'ทราบ', tr:'sâap'}, {gate:'l19', thai:'สร้าง', tr:'sâang'},
+  {gate:'l20', thai:'เธอ', tr:'ther'}, {gate:'l20', thai:'ศูนย์', tr:'sǔun'},
+  {gate:'l21', thai:'ฉัน', tr:'chǎn'},
+  {gate:'l22', thai:'เรียน', tr:'rian'}, {gate:'l22', thai:'เพื่อน', tr:'phûean'}, {gate:'l22', thai:'ตัว', tr:'dtua'}, {gate:'l22', thai:'เสื้อ', tr:'sûea'},
+  {gate:'l24', thai:'เปิด', tr:'bpèrt'}, {gate:'l24', thai:'ปิด', tr:'bpìt'}
+];
+
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
 const MID_CLASS_SET = ['ก','จ','ฎ','ฏ','ด','ต','บ','ป','อ'];
 const HIGH_CLASS_SET = ['ข','ฃ','ฉ','ฐ','ถ','ผ','ฝ','ศ','ษ','ส','ห'];
@@ -2559,6 +2589,7 @@ let state = {
   missions:{done:{}},
   contrastLog:{},
   fluencyReads:{},
+  readTimes:{},
   writeLog:[],
   phase1Completion:null
 };
@@ -2617,7 +2648,7 @@ function validateImportedStateShape(s){
   if(s.streak.last != null && typeof s.streak.last !== 'string') throw new Error('progress.streak.last must be a string or null');
   [
     'intro','days','calib','boss','checks','skillStats','notices','migrations','foundationRefresh',
-    'retention','signSafari','missions','contrastLog','fluencyReads','phase1Completion','pathDone','drillLog','stories','week',
+    'retention','signSafari','missions','contrastLog','fluencyReads','readTimes','phase1Completion','pathDone','drillLog','stories','week',
     'toneStats','toneLicence','gacha','constel','lap','confs','lastCapability'
   ].forEach(k=>{
     if(s[k] != null) assertPlainObject(s[k], 'progress.' + k);
@@ -3062,6 +3093,94 @@ function markDailyDepth(parts){
   });
   saveState();
 }
+function ensureDrillLogEntry(id){
+  if(!state.drillLog) state.drillLog = {};
+  const prev = state.drillLog[id] || {};
+  state.drillLog[id] = Object.assign({}, prev, {n:(prev.n||0)+1, last:todayStr()});
+  return state.drillLog[id];
+}
+function sprintPaceEntry(){
+  if(!state.drillLog) state.drillLog = {};
+  const entry = state.drillLog.sprint || {};
+  if(!Array.isArray(entry.pace)) entry.pace = [];
+  state.drillLog.sprint = entry;
+  return entry;
+}
+function formatSeconds(secs){
+  const n = Math.round(secs || 0);
+  return n >= 60 ? Math.floor(n/60) + 'm ' + String(n%60).padStart(2,'0') + 's' : n + 's';
+}
+function recordSprintPace(count, started){
+  if(!count || !started) return null;
+  const per = (Date.now() - started) / 1000 / count;
+  if(!Number.isFinite(per) || per < 0.5 || per > 60) return null;
+  const entry = sprintPaceEntry();
+  entry.pace.push({d:todayStr(), sec:+per.toFixed(2)});
+  if(entry.pace.length > 20) entry.pace = entry.pace.slice(-20);
+  const best = entry.pace.reduce((m,x)=>Math.min(m, x.sec), Infinity);
+  saveState();
+  return {last:per, best};
+}
+function sprintPaceText(pace){
+  if(!pace) return '';
+  return 'last ' + pace.last.toFixed(1) + 's/answer · best ' + pace.best.toFixed(1) + 's';
+}
+let activeReadTimer = null;
+function ensureReadTimes(target){
+  const s = target || state;
+  if(!s.readTimes || typeof s.readTimes !== 'object' || Array.isArray(s.readTimes)) s.readTimes = {};
+  return s.readTimes;
+}
+function readTimerKey(kind, id){ return kind + ':' + id; }
+function beginReadTimer(id){
+  activeReadTimer = {id, start:Date.now(), elapsed:0, reliable:true};
+}
+function pauseReadTimer(){
+  if(activeReadTimer && activeReadTimer.start){
+    activeReadTimer.elapsed += Date.now() - activeReadTimer.start;
+    activeReadTimer.start = null;
+  }
+}
+function markReadTimerUnreliable(){
+  if(activeReadTimer) activeReadTimer.reliable = false;
+}
+function clearReadTimer(){ activeReadTimer = null; }
+function readTimeSamples(id, target){
+  const rt = ensureReadTimes(target || state);
+  return Array.isArray(rt[id]) ? rt[id].filter(x=>x && Number.isFinite(x.secs)) : [];
+}
+function storeReadTimeSample(id, secs, reliable){
+  if(!reliable || !Number.isFinite(secs) || secs < 3 || secs > 600) return null;
+  const rt = ensureReadTimes();
+  const before = readTimeSamples(id);
+  const prevBest = before.reduce((m,x)=>Math.min(m, x.secs), Infinity);
+  const sample = {d:todayStr(), secs:Math.round(secs)};
+  rt[id] = before.concat([sample]).slice(-10);
+  saveState();
+  return {sample, fastest:sample.secs < prevBest};
+}
+function finishReadTimer(){
+  if(!activeReadTimer) return null;
+  pauseReadTimer();
+  const t = activeReadTimer;
+  clearReadTimer();
+  return storeReadTimeSample(t.id, t.elapsed/1000, t.reliable);
+}
+function readTimeSummaryText(id, target){
+  const samples = readTimeSamples(id, target);
+  if(!samples.length) return '';
+  const last = samples[samples.length - 1].secs;
+  const best = samples.reduce((m,x)=>Math.min(m, x.secs), Infinity);
+  return 'Last ' + formatSeconds(last) + ' · best ' + formatSeconds(best);
+}
+function readTimeSummaryHtml(id){
+  const text = readTimeSummaryText(id);
+  return text ? `<div class="read-time-line">${esc(text)}</div>` : '';
+}
+function readTimeResultText(result){
+  if(!result || !result.sample) return '';
+  return formatSeconds(result.sample.secs) + (result.fastest ? ' - your fastest yet.' : '.');
+}
 function dailyBridgeMissing(d){
   const day = d || ensureDay();
   const bridge = ensureDayBridge(day);
@@ -3179,8 +3298,7 @@ function launchDrill(id){
     return;
   }
 		  const d = DRILLS.find(x=>x.id===id); if(!d) return;
-  if(!state.drillLog) state.drillLog = {};
-  state.drillLog[id] = {n:((state.drillLog[id]||{}).n||0)+1, last:todayStr()};
+  ensureDrillLogEntry(id);
   markEquivalentPracticeNodeComplete(id, d.gate);
   saveState();
   d.go();
@@ -4709,6 +4827,7 @@ function speak(text, btn, rate){
   speakWithDeviceVoice(text, btn, rate);
 }
 function speakWithDeviceVoice(text, btn, rate){
+  markReadTimerUnreliable();
   if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text); return; }
   try{ speechSynthesis.resume(); }catch(e){}
   if(!thaiVoice) pickVoice();
@@ -5664,7 +5783,7 @@ function ensureStateCollections(target){
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
     notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, retention:{}, signSafari:{seen:{}},
-    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, writeLog:[], phase1Completion:null, errorProfile:{}
+    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, readTimes:{}, writeLog:[], phase1Completion:null, errorProfile:{}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
@@ -5679,6 +5798,7 @@ function ensureStateCollections(target){
   if(!target.contrastLog) target.contrastLog = {};
   if(!target.signSafari.seen) target.signSafari.seen = {};
   if(!target.fluencyReads) target.fluencyReads = {};
+  if(!target.readTimes || typeof target.readTimes !== 'object' || Array.isArray(target.readTimes)) target.readTimes = {};
   if(!Array.isArray(target.writeLog)) target.writeLog = [];
   if(!target.errorProfile || typeof target.errorProfile !== 'object' || Array.isArray(target.errorProfile)) target.errorProfile = {};
   Object.keys(target.srs || {}).forEach(id=>{
@@ -6637,6 +6757,52 @@ function validateProductionPassContracts(){
   if(!/write-input/.test(String(renderWriteIt)) || !/Thai keyboard/.test(String(renderWriteIt))) errors.push('Write it must use a Thai-keyboard input before reveal');
   if(!/Got it/.test(String(renderRouteTalk)) || !/Missed it/.test(String(renderRouteTalk))) errors.push('Route talk must use self-check buttons');
   if(errors.length) throw new Error('Production pass contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateAutomaticityContracts(){
+  const errors = [];
+  if(DECODE_GYM.length !== 60) errors.push('Decode Gym seed batch should contain exactly 60 words');
+  const seen = new Set();
+  DECODE_GYM.forEach(item=>{
+    const key = item.thai;
+    if(seen.has(key)) errors.push('Decode Gym duplicate word: ' + key);
+    seen.add(key);
+    if(!/^l\d+$/.test(item.gate || '') || !lessonById(item.gate)) errors.push('Decode Gym invalid gate for ' + key);
+    if(/[฿]/.test(key)) errors.push('Decode Gym must not use baht symbols: ' + key);
+    if(String(key).normalize('NFC') !== key || String(item.tr).normalize('NFC') !== item.tr) errors.push('Decode Gym entry must be NFC-normalized: ' + key);
+    const doneIds = lessonIdsThroughGate(item.gate);
+    const source = decodeGymSourceItem(item);
+    if(!decodeGymAvailable(item, doneIds)) errors.push('Decode Gym item not decodable at gate ' + item.gate + ': ' + key);
+    if(!decodeGymToneVerified(item)) errors.push('Decode Gym tone verification failed: ' + key + ' / ' + item.tr);
+    const route = toneRouteForWord(source, doneIds);
+    if(route && route.tone !== toneOf(item.tr)) errors.push('Decode Gym tr tone disagrees with grid: ' + key);
+  });
+  const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:{sprint:{pace:Array.from({length:25}, (_,i)=>({d:'2026-01-01', sec:i+1}))}}, days:{}, retention:{}};
+  ensureStateCollections(legacy);
+  if(!legacy.readTimes || typeof legacy.readTimes !== 'object' || Array.isArray(legacy.readTimes)) errors.push('readTimes migration should create an object');
+  withTemporaryState({done:['l1'], srs:{}, days:{}, retention:{}, readTimes:{}}, ()=>{
+    const bad = storeReadTimeSample('story:test', 21, false);
+    if(bad || (state.readTimes['story:test']||[]).length) errors.push('unreliable read timing samples must be discarded');
+    for(let i=0;i<12;i++) storeReadTimeSample('story:test', 10+i, true);
+    if((state.readTimes['story:test']||[]).length !== 10) errors.push('readTimes should cap each id at 10 samples');
+  });
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, retention:{}, drillLog:{}}, ()=>{
+    for(let i=0;i<24;i++){
+      const entry = sprintPaceEntry();
+      entry.pace.push({d:todayStr(), sec:i+1});
+      if(entry.pace.length > 20) entry.pace = entry.pace.slice(-20);
+    }
+    if(sprintPaceEntry().pace.length !== 20) errors.push('Class sprint pace should cap at 20 samples');
+    const pool = decodeGymPool();
+    if(pool.length !== DECODE_GYM.length) errors.push('all Decode Gym entries should be available after Phase 1');
+  });
+  const source = [startDecodeGym, renderDecodeGym].map(fn=>String(fn)).join('\n');
+  if(/srsAdd|state\.srs\s*\[[^\]]+\]\s*=/.test(source)) errors.push('Decode Gym must not create SRS cards');
+  if(/decodeGym|readTimes|sprintPace/.test(String(getLessonBlocker))) errors.push('Automaticity surfaces must not enter lesson blockers');
+  if(/meaning|definition|what does/i.test(source)) errors.push('Decode Gym must stay free of meaning tests');
+  if(!String(renderStory).includes('beginReadTimer') || !String(renderFluencyRead).includes('beginReadTimer')) errors.push('reading surfaces must start cold-read timers when text is visible');
+  if(!String(speakWithDeviceVoice).includes('markReadTimerUnreliable')) errors.push('device voice must mark active read timing unreliable');
+  if(errors.length) throw new Error('Automaticity contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV542StreamlinedCopyContracts(){
@@ -7980,9 +8146,10 @@ function renderLearn(){
       const doneRead = fluencyReadDone(read);
       const fc = document.createElement('button');
       fc.className = 'card lesson-card' + (doneRead ? ' done' : '') + (!open ? ' locked' : '');
+      const timeLine = readTimeSummaryText(readTimerKey('fluency', read.id));
       fc.innerHTML = `
         <div class="glyphs">${read.realWorld ? '🏙️' : '📜'}</div>
-        <div class="meta"><div class="t">${esc(read.title)}</div><div class="d">${read.realWorld ? 'Sign-style read' : 'Controlled read'} · ${esc(fluencyReadStatus(read))}</div></div>
+        <div class="meta"><div class="t">${esc(read.title)}</div><div class="d">${read.realWorld ? 'Sign-style read' : 'Controlled read'} · ${esc(fluencyReadStatus(read))}${timeLine ? ' · ' + esc(timeLine) : ''}</div></div>
         <div class="state">${open ? (doneRead ? 'read again' : 'read →') : '🔒'}</div>`;
       if(open) fc.addEventListener('click', ()=>startFluencyRead(read));
       list.appendChild(fc);
@@ -8240,7 +8407,7 @@ function renderPhase1CompletionRead(pct, rematch){
 ===================================================== */
 let player = null;
 function openOverlay(){ el('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); player=null; }
+function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer(); player=null; }
 el('overlay-close').addEventListener('click', closeOverlay);
 
 function setProg(pct){ el('overlay-prog').style.width = pct + '%'; }
@@ -8792,6 +8959,12 @@ function collectPrerequisiteIssues(){
     const gi = LESSONS.findIndex(L=>L.id === item.gate);
     const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
     prerequisiteIssuesForThai(item.thai, doneIds, 'chunk-drill', wordFrame(findWord(item.thai))).forEach(i=>poolIssues.push(Object.assign({lesson:item.gate}, i)));
+  });
+  DECODE_GYM.forEach(item=>{
+    const gi = LESSONS.findIndex(L=>L.id === item.gate);
+    const doneIds = LESSONS.slice(0, gi+1).map(L=>L.id);
+    const source = decodeGymSourceItem(item);
+    prerequisiteIssuesForThai(item.thai, doneIds, 'decode-gym', wordFrame(source)).forEach(i=>poolIssues.push(Object.assign({lesson:item.gate}, i)));
   });
   SIGN_SAFARI_ITEMS.forEach(item=>{
     const gi = LESSONS.findIndex(L=>L.id === item.gate);
@@ -9526,6 +9699,7 @@ function renderReviewTab(){
   setActionCardState('cta-read', active && active.id === 'reading' ? 'recommended' : unreadStory ? '' : 'done');
   setActionCardState('cta-fluency', active && active.id === 'fluency' ? 'recommended' : nextRead ? '' : 'done');
   setActionCardState('cta-write-it', writeItPool().length ? '' : 'locked');
+  setActionCardState('cta-decode-gym', decodeGymPool().length ? '' : 'locked');
   setActionCardState('cta-chunk', state.done.includes('l20') ? '' : 'locked');
   setActionCardState('cta-font-shock', state.done.includes('l23') ? '' : 'locked');
   setActionCardState('cta-hear-thai', state.done.includes('l1') ? '' : 'locked');
@@ -9752,7 +9926,112 @@ function renderRouteTalk(revealed){
     el('route-reveal').onclick = ()=>renderRouteTalk(true);
   }
 }
+function decodeGymSourceItem(item){
+  const source = findWord(item.thai) || {};
+  return Object.assign({}, source, item);
+}
+function decodeGymAvailable(item, doneIds){
+  const ids = doneIds || state.done || [];
+  const w = decodeGymSourceItem(item);
+  return lessonGateMet(item.gate, ids) &&
+    thaiTextReadable(item.thai, taughtGlyphSet(ids)) &&
+    thaiItemPrereqsMet(item.thai, ids, wordFrame(w));
+}
+function inferLiveDeadForDecode(thai, frame){
+  const framed = liveDeadFromFrame(frame);
+  if(framed) return framed;
+  const final = frame && frame.final;
+  if(final && finalJob(final)) return finalJob(final).group === 'stop' ? 'Dead' : 'Live';
+  const consonants = thaiChars(thai).filter(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c');
+  if(consonants.length >= 2){
+    const last = consonants[consonants.length - 1];
+    const job = finalJob(last);
+    if(job) return job.group === 'stop' ? 'Dead' : 'Live';
+  }
+  if(/[ะัิึุ็]/.test(thai) && !/[าอีืูไใเแโำ]/.test(thai)) return 'Dead';
+  return 'Live';
+}
+function decodeGymRoute(item, doneIds){
+  const ids = doneIds || lessonIdsThroughGate(item.gate);
+  const w = decodeGymSourceItem(item);
+  if(!w || !monoSyllable(w)) return null;
+  const upToLessonNum = ids.length ? Math.max(...ids.map(lessonNum)) : 0;
+  if(!toneTaughtBy(w, upToLessonNum)) return null;
+  const f = wordFrame(w);
+  const cls = firstConsonantClass(w.thai);
+  const initial = firstConsonantChar(w.thai);
+  const mark = (w.thai.match(/[่้๊๋]/) || [''])[0];
+  const liveDead = inferLiveDeadForDecode(w.thai, f);
+  const needsLength = !mark && cls === 'low' && liveDead === 'Dead';
+  const length = f && f.vowelLength ? f.vowelLength : needsLength ? (/[ะัิึุ็]/.test(w.thai) ? 'Short' : 'Long') : 'not needed';
+  const tone = toneOf(item.tr);
+  const expected = expectedToneFromRoute(cls, mark, liveDead, length);
+  if(!initial || !cls || !liveDead || !expected || expected !== tone) return null;
+  return {word:w, initial, cls, mark, liveDead, length, tone};
+}
+function decodeGymToneVerified(item){
+  const ids = lessonIdsThroughGate(item.gate);
+  const route = decodeGymRoute(item, ids);
+  return !!(route && route.tone === toneOf(item.tr) && expectedToneFromRoute(route.cls, route.mark, route.liveDead, route.length) === route.tone);
+}
+function decodeGymPool(doneIds){
+  const ids = doneIds || state.done || [];
+  return DECODE_GYM.map(decodeGymSourceItem).filter(item=>decodeGymAvailable(item, ids) && decodeGymToneVerified(item));
+}
+function decodeGymMiss(item){
+  String(item.thai || '').split('').forEach(ch=>{
+    if(GLYPHS[ch] && GLYPHS[ch].type === 'c'){
+      recordProfileError('sound', ch);
+      recordProfileError('class', ch);
+    }
+  });
+}
+function startDecodeGym(){
+  const pool = decodeGymPool();
+  if(pool.length < 6){ toast('Decode Gym opens once enough word patterns are covered'); return; }
+  player = {type:'decode-gym', rounds:weightedWeakSample(pool, Math.min(10, pool.length), item=>glyphWeaknessSum(item.thai)), i:0, got:0};
+  openOverlay();
+  renderDecodeGym(false);
+}
+function renderDecodeGym(revealed){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    markDailyDepth('practice');
+    bumpStreak();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.got} / ${p.rounds.length}</div>
+      <div class="result-sub">Decode Gym complete.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+    return;
+  }
+  const item = p.rounds[p.i];
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Decode Gym · ${p.i+1} of ${p.rounds.length}</div><h2>Decode the Thai first</h2></div>
+    <div class="decode-gym-word">${classColourThaiHtml(item.thai)}</div>
+    ${revealed ? `<div class="decode-gym-reading">${esc(item.tr)}</div>` : `<div class="sub" style="text-align:center">Say it aloud or in your head, then reveal the reading.</div>`}
+    <div class="stage-actions">
+      ${revealed ? `
+        <button class="btn full ghost" id="decode-miss">Missed it</button>
+        <button class="btn full" id="decode-got">Got it</button>
+      ` : `<button class="btn full" id="decode-reveal">Reveal reading →</button>`}
+    </div>`;
+  if(revealed){
+    el('decode-miss').onclick = ()=>{
+      decodeGymMiss(item);
+      saveState();
+      p.i++;
+      renderDecodeGym(false);
+    };
+    el('decode-got').onclick = ()=>{ p.got++; p.i++; renderDecodeGym(false); };
+  } else {
+    el('decode-reveal').onclick = ()=>renderDecodeGym(true);
+  }
+}
 el('cta-write-it').addEventListener('click', startWriteIt);
+el('cta-decode-gym').addEventListener('click', startDecodeGym);
 el('route-talk-btn').addEventListener('click', startRouteTalk);
 
 function startFlashcards(queue, opts){
@@ -10197,7 +10476,8 @@ function showFluencyReadList(focusId){
         const today = read.id === focus && open && !done;
         return `<button class="card story-card lesson-card ${open?'':'locked'} ${today?'boss-card':''}" data-fluency="${escAttr(read.id)}" ${open?'':'disabled'}>
           <div class="meta"><div class="t">${esc(read.title)}</div>
-          <div class="d">${read.realWorld ? 'Sign-style read from taught Thai.' : esc(read.intro)} · ${esc(fluencyReadStatus(read))}</div></div>
+          <div class="d">${read.realWorld ? 'Sign-style read from taught Thai.' : esc(read.intro)} · ${esc(fluencyReadStatus(read))}</div>
+          ${readTimeSummaryHtml(readTimerKey('fluency', read.id))}</div>
           <div class="state">${open ? (done ? '↻' : 'read →') : '🔒'}</div>
         </button>`;
       }).join('')}
@@ -10246,13 +10526,19 @@ function renderFluencyRead(){
       ${fluencyReadHtml(read)}
       <div class="notebox" style="margin-top:14px">You are building reading fluency from taught patterns.</div>
       <div class="stage-actions"><button class="btn full" id="fluency-next">I read it slowly →</button></div>`;
-    el('fluency-next').onclick = ()=>{ p.i = 1; renderFluencyRead(); };
+    beginReadTimer(readTimerKey('fluency', read.id));
+    el('fluency-next').onclick = ()=>{
+      p.readTimeLine = readTimeResultText(finishReadTimer());
+      p.i = 1;
+      renderFluencyRead();
+    };
     return;
   }
   if(p.i === 1){
     el('stage').innerHTML = `
       <div class="center"><div class="eyebrow">${esc(read.title)}</div><h2>Now try a smoother second pass</h2><p class="sub">Try the reading route first. Audio is optional.</p></div>
       ${fluencyReadHtml(read)}
+      ${p.readTimeLine ? `<div class="result-sub">${esc(p.readTimeLine)}</div>` : ''}
       <div class="compare-box">
         <div class="row" style="justify-content:center;gap:10px">${speakBtn(fluencyReadText(read), 'Hear Thai')}</div>
         <div class="sub" style="font-size:12px;text-align:center;margin-top:8px">Use the Thai text for this read.</div>
@@ -10563,7 +10849,7 @@ function renderFoundationRefreshStep(){
 
 function startGenericQuiz(qs, label, opts){
   assertDefinitionFreeQuiz(qs, label || 'quiz');
-  player = {type:'quiz', qs, i:0, correct:0, label, opts:opts||{}};
+  player = {type:'quiz', qs, i:0, correct:0, label, opts:opts||{}, started:Date.now()};
   openOverlay(); nextGenericQ();
 }
 function nextGenericQ(){
@@ -10577,8 +10863,13 @@ function nextGenericQ(){
     bumpStreak();
     const pct = Math.round(100*p.correct/p.qs.length);
     let subline = pct>=80 ? 'Strong.' : 'Review the missed items.';
+    let classSprintPaceLine = '';
+    if(p.opts.classSprint){
+      classSprintPaceLine = sprintPaceText(recordSprintPace(p.qs.length, p.started));
+      if(classSprintPaceLine) subline += ' · ' + classSprintPaceLine;
+    }
     if(p.opts.classSprint && pct >= 85){
-      award(3); subline = 'Class sprint passed · +3💎';
+      award(3); subline = 'Class sprint passed · +3💎' + (classSprintPaceLine ? ' · ' + classSprintPaceLine : '');
     }
     if(p.opts.boss){
       const u = p.opts.boss;
@@ -10991,7 +11282,8 @@ function renderStoryList(){
       const done = (state.stories||{})[s.id];
       return `<button class="card story-card lesson-card ${open?'':'locked'}" data-story="${escAttr(s.id)}">
         <div class="meta"><div class="t">${s.title}</div>
-        <div class="d">${open ? (done?'✓ read':'unlocks at lesson '+s.gate.slice(1)+' · ready') : 'finish lesson '+s.gate.slice(1)}</div></div>
+        <div class="d">${open ? (done?'✓ read':'unlocks at lesson '+s.gate.slice(1)+' · ready') : 'finish lesson '+s.gate.slice(1)}</div>
+        ${readTimeSummaryHtml(readTimerKey('story', s.id))}</div>
         <div class="state">${open?(done?'↻':'read →'):'🔒'}</div>
       </button>`;
     }).join('')}`;
@@ -11013,6 +11305,7 @@ function renderStory(s){
       <button class="btn" id="story-done">${(state.stories||{})[s.id] ? 'Read again ✓' : 'I read it · +3💎'}</button>
     </div>
     <div class="q-feedback" id="q-fb">Tap any word for its meaning</div>`;
+  beginReadTimer(readTimerKey('story', s.id));
   el('stage').querySelectorAll('.sw').forEach(sp=>{
     sp.addEventListener('click', ()=>{
       const w = s.lines[+sp.dataset.li][+sp.dataset.wi];
@@ -11025,6 +11318,7 @@ function renderStory(s){
     speak(full);
   };
   el('story-done').onclick = ()=>{
+    const timing = readTimeResultText(finishReadTimer());
     if(!state.stories) state.stories = {};
     const first = !state.stories[s.id];
     state.stories[s.id] = todayStr();
@@ -11032,7 +11326,7 @@ function renderStory(s){
     const d = ensureDay(); d.d++; saveState();
     if(first) award(3);
     bumpStreak(); questCheck();
-    toast(first ? 'Story read · +3💎' : 'Read again. เก่งมาก');
+    toast(timing || (first ? 'Story read · +3💎' : 'Read again'));
     renderStoryList();
   };
 }
@@ -11044,10 +11338,18 @@ function flushState(){
   try{ if(window.storage) window.storage.set(SKEY, JSON.stringify(state)); }catch(e){}
 }
 document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState === 'hidden') flushState();
+  if(document.visibilityState === 'hidden'){
+    markReadTimerUnreliable();
+    pauseReadTimer();
+    flushState();
+  }
   else if('speechSynthesis' in window) speechSynthesis.resume();
 });
-window.addEventListener('pagehide', flushState);
+window.addEventListener('pagehide', ()=>{
+  markReadTimerUnreliable();
+  pauseReadTimer();
+  flushState();
+});
 
 /* iOS requires a user gesture before speechSynthesis works - prime it once */
 let speechPrimed = false;
@@ -11113,7 +11415,8 @@ function runFullStartupValidators(){
     validateV54FluencyContracts,
     validateContentPedagogyHardeningContracts,
     validateWeaknessTargetingContracts,
-    validateProductionPassContracts
+    validateProductionPassContracts,
+    validateAutomaticityContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

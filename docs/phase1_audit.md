@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-02T00:04:29.425Z
-App version: v6.2.0
+Generated: 2026-07-02T00:22:58.935Z
+App version: v6.3.0
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -48,6 +48,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 - PASS contentPedagogyHardening
 - PASS weaknessTargeting
 - PASS productionPass
+- PASS automaticity
 
 ## Prerequisite Audit
 - Lesson prerequisite issues: 0
@@ -59,7 +60,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 
 Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.
 
-v6.2.0 is a production-practice pass over the v6.1.0 weakness-targeting release. Practice now includes Write it, a Thai-keyboard recall drill for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it; Tones now includes Route talk, a spoken self-explanation drill whose class, mark, live/dead, length and tone tiles are derived from the existing tone-grid logic. Both surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
+v6.3.0 is an automaticity pass over v6.2.0: fluency reads and reading-room stories now log reliable cold-read time samples, Class sprint records best/last pace after the session, and Practice adds Decode Gym as 10 self-checked word-reading reps from a 60-item gate-checked corpus. v6.2.0 remains the production-practice pass: Write it uses Thai-keyboard recall for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it, and Tones includes Route talk from existing tone-grid derivation. These v6.1-v6.3 surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
 
 - Today review default max: 30 cards
 - Manual Review catch-up cap: 40 cards
@@ -103,6 +104,73 @@ v6.2.0 is a production-practice pass over the v6.1.0 weakness-targeting release.
 - Lesson 23: Public sign read (controlled real-world) · 4 Thai items · check: Which sign word is built from ทาง + ออก?
 - Lesson 24: Bangkok end read (controlled real-world) · 8 Thai items · check: Which word has the เ◌ิ pattern?
 - Final checkpoint: 15 questions; 85% quiz plus smooth or slow-but-correct final controlled read.
+
+## v6.3 Decode Gym
+
+Seeded word-reading reps. Eligibility is gate-checked through the same prerequisite machinery as controlled reading surfaces; tone column is derived from the transliteration and verified against the route grid in the startup contract.
+
+| Gate | Thai | Reading | Tone | Verified |
+| --- | --- | --- | --- | --- |
+| l4 | ไม่ | mâi | Falling | yes |
+| l4 | บ้าน | bâan | Falling | yes |
+| l4 | ห้า | hâa | Falling | yes |
+| l5 | รอ | ror | Mid | yes |
+| l5 | เรา | rao | Mid | yes |
+| l5 | ยาว | yaao | Mid | yes |
+| l6 | ขอ | khǒr | Rising | yes |
+| l6 | ขาว | khǎao | Rising | yes |
+| l6 | สาม | sǎam | Rising | yes |
+| l7 | งาน | ngaan | Mid | yes |
+| l7 | ช้าง | cháang | High | yes |
+| l7 | จาน | jaan | Mid | yes |
+| l8 | ตา | dtaa | Mid | yes |
+| l8 | ถูก | thùuk | Low | yes |
+| l8 | ฟัน | fan | Mid | yes |
+| l9 | คน | khon | Mid | yes |
+| l9 | ผม | phǒm | Rising | yes |
+| l9 | ฝน | fǒn | Rising | yes |
+| l10 | แม่ | mâae | Falling | yes |
+| l10 | มือ | mue | Mid | yes |
+| l11 | ลึก | lúk | High | yes |
+| l11 | จะ | jà | Low | yes |
+| l11 | รถ | rót | High | yes |
+| l11 | ทุก | thúk | High | yes |
+| l12 | เขา | khǎo | Rising | yes |
+| l12 | น้ำ | náam | High | yes |
+| l12 | ใช่ | châi | Falling | yes |
+| l13 | จาก | jàak | Low | yes |
+| l13 | พูด | phûut | Falling | yes |
+| l13 | รัก | rák | High | yes |
+| l14 | เก่า | gào | Low | yes |
+| l14 | ได้ | dâi | Falling | yes |
+| l14 | ต้อง | dtôrng | Falling | yes |
+| l15 | ข้าว | khâao | Falling | yes |
+| l15 | ห้อง | hôrng | Falling | yes |
+| l15 | ถาม | thǎam | Rising | yes |
+| l16 | น้อง | nórng | High | yes |
+| l16 | พี่ | phîi | Falling | yes |
+| l16 | เล็ก | lék | High | yes |
+| l17 | หมา | mǎa | Rising | yes |
+| l17 | ไหน | nǎi | Rising | yes |
+| l17 | อยู่ | yùu | Low | yes |
+| l17 | อยาก | yàak | Low | yes |
+| l17 | ไหม | mǎi | Rising | yes |
+| l18 | ครับ | khráp | High | yes |
+| l18 | ปลา | bplaa | Mid | yes |
+| l18 | ครู | khruu | Mid | yes |
+| l18 | ใกล้ | glâi | Falling | yes |
+| l19 | จริง | jing | Mid | yes |
+| l19 | ทราบ | sâap | Falling | yes |
+| l19 | สร้าง | sâang | Falling | yes |
+| l20 | เธอ | ther | Mid | yes |
+| l20 | ศูนย์ | sǔun | Rising | yes |
+| l21 | ฉัน | chǎn | Rising | yes |
+| l22 | เรียน | rian | Mid | yes |
+| l22 | เพื่อน | phûean | Falling | yes |
+| l22 | ตัว | dtua | Mid | yes |
+| l22 | เสื้อ | sûea | Falling | yes |
+| l24 | เปิด | bpèrt | Low | yes |
+| l24 | ปิด | bpìt | Low | yes |
 
 ## Named Surface Audit
 

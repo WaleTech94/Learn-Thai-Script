@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-02
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.2.0`
+Current app version: `v6.3.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -91,6 +91,14 @@ v6.2.0 is a production-practice pass over v6.1.0:
 - `writeLog` stores bounded Write it session summaries; Route talk stores no separate state.
 - `validateProductionPassContracts()` guards the pass.
 
+v6.3.0 is an automaticity pass over v6.2.0:
+
+- Fluency reads and Reading room stories log reliable cold-read time samples in bounded `readTimes` entries; backgrounding or device voice support discards the sample.
+- Class sprint records best/last seconds-per-answer after the session, without adding time pressure during questions.
+- Decode Gym adds 60 gate-checked self-review word reps, all listed in the generated audit with tone-grid verification.
+- All automaticity surfaces remain optional and outside lesson blockers, checkpoints, SRS due load, review-governor load, network behaviour and dependencies.
+- `validateAutomaticityContracts()` guards the pass.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -123,9 +131,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.2.0`
+- app version `v6.3.0`
 - 24 lessons
-- 41 validators passing
+- 42 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -139,7 +147,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-2-0`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-3-0`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
@@ -147,6 +155,7 @@ High-value review areas:
 - v6 UI separation: Tones owns class/tone reference, Read prioritises controlled reading, Progress owns settings/diagnostics and class colours stay reserved for pedagogy
 - answer-feedback moment: wrong answers require Continue, class feedback is tile/chant structured, and class prompt colours appear only after settle
 - progress-honesty/interaction polish: route pips match real steps, mastery checks are not shown as locked when takeable, due badge colour stays calm below overload, and lesson-player Back/Next weight is clear
+- automaticity pass: read timing discards unreliable samples, Class sprint pace appears only after the session, and Decode Gym seed words remain gate-checked, tone-verified and outside SRS
 
 Out of scope for this release:
 

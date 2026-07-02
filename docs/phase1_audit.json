@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T00:04:29.425Z",
-  "appVersion": "v6.2.0",
+  "generatedAt": "2026-07-02T00:22:58.935Z",
+  "appVersion": "v6.3.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -207,6 +207,11 @@
       "name": "productionPass",
       "ok": true,
       "issues": []
+    },
+    {
+      "name": "automaticity",
+      "ok": true,
+      "issues": []
     }
   ],
   "prerequisites": {
@@ -276,6 +281,428 @@
       "realWorld": true,
       "itemCount": 8,
       "check": "Which word has the เ◌ิ pattern?"
+    }
+  ],
+  "decodeGym": [
+    {
+      "gate": "l4",
+      "thai": "ไม่",
+      "tr": "mâi",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l4",
+      "thai": "บ้าน",
+      "tr": "bâan",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l4",
+      "thai": "ห้า",
+      "tr": "hâa",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l5",
+      "thai": "รอ",
+      "tr": "ror",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l5",
+      "thai": "เรา",
+      "tr": "rao",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l5",
+      "thai": "ยาว",
+      "tr": "yaao",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l6",
+      "thai": "ขอ",
+      "tr": "khǒr",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l6",
+      "thai": "ขาว",
+      "tr": "khǎao",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l6",
+      "thai": "สาม",
+      "tr": "sǎam",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l7",
+      "thai": "งาน",
+      "tr": "ngaan",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l7",
+      "thai": "ช้าง",
+      "tr": "cháang",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l7",
+      "thai": "จาน",
+      "tr": "jaan",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l8",
+      "thai": "ตา",
+      "tr": "dtaa",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l8",
+      "thai": "ถูก",
+      "tr": "thùuk",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l8",
+      "thai": "ฟัน",
+      "tr": "fan",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l9",
+      "thai": "คน",
+      "tr": "khon",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l9",
+      "thai": "ผม",
+      "tr": "phǒm",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l9",
+      "thai": "ฝน",
+      "tr": "fǒn",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l10",
+      "thai": "แม่",
+      "tr": "mâae",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l10",
+      "thai": "มือ",
+      "tr": "mue",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l11",
+      "thai": "ลึก",
+      "tr": "lúk",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l11",
+      "thai": "จะ",
+      "tr": "jà",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l11",
+      "thai": "รถ",
+      "tr": "rót",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l11",
+      "thai": "ทุก",
+      "tr": "thúk",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l12",
+      "thai": "เขา",
+      "tr": "khǎo",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l12",
+      "thai": "น้ำ",
+      "tr": "náam",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l12",
+      "thai": "ใช่",
+      "tr": "châi",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l13",
+      "thai": "จาก",
+      "tr": "jàak",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l13",
+      "thai": "พูด",
+      "tr": "phûut",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l13",
+      "thai": "รัก",
+      "tr": "rák",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l14",
+      "thai": "เก่า",
+      "tr": "gào",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l14",
+      "thai": "ได้",
+      "tr": "dâi",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l14",
+      "thai": "ต้อง",
+      "tr": "dtôrng",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l15",
+      "thai": "ข้าว",
+      "tr": "khâao",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l15",
+      "thai": "ห้อง",
+      "tr": "hôrng",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l15",
+      "thai": "ถาม",
+      "tr": "thǎam",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l16",
+      "thai": "น้อง",
+      "tr": "nórng",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l16",
+      "thai": "พี่",
+      "tr": "phîi",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l16",
+      "thai": "เล็ก",
+      "tr": "lék",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l17",
+      "thai": "หมา",
+      "tr": "mǎa",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l17",
+      "thai": "ไหน",
+      "tr": "nǎi",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l17",
+      "thai": "อยู่",
+      "tr": "yùu",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l17",
+      "thai": "อยาก",
+      "tr": "yàak",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l17",
+      "thai": "ไหม",
+      "tr": "mǎi",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l18",
+      "thai": "ครับ",
+      "tr": "khráp",
+      "tone": "High",
+      "verified": true
+    },
+    {
+      "gate": "l18",
+      "thai": "ปลา",
+      "tr": "bplaa",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l18",
+      "thai": "ครู",
+      "tr": "khruu",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l18",
+      "thai": "ใกล้",
+      "tr": "glâi",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l19",
+      "thai": "จริง",
+      "tr": "jing",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l19",
+      "thai": "ทราบ",
+      "tr": "sâap",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l19",
+      "thai": "สร้าง",
+      "tr": "sâang",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l20",
+      "thai": "เธอ",
+      "tr": "ther",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l20",
+      "thai": "ศูนย์",
+      "tr": "sǔun",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l21",
+      "thai": "ฉัน",
+      "tr": "chǎn",
+      "tone": "Rising",
+      "verified": true
+    },
+    {
+      "gate": "l22",
+      "thai": "เรียน",
+      "tr": "rian",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l22",
+      "thai": "เพื่อน",
+      "tr": "phûean",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l22",
+      "thai": "ตัว",
+      "tr": "dtua",
+      "tone": "Mid",
+      "verified": true
+    },
+    {
+      "gate": "l22",
+      "thai": "เสื้อ",
+      "tr": "sûea",
+      "tone": "Falling",
+      "verified": true
+    },
+    {
+      "gate": "l24",
+      "thai": "เปิด",
+      "tr": "bpèrt",
+      "tone": "Low",
+      "verified": true
+    },
+    {
+      "gate": "l24",
+      "thai": "ปิด",
+      "tr": "bpìt",
+      "tone": "Low",
+      "verified": true
     }
   ],
   "phase1Completion": {

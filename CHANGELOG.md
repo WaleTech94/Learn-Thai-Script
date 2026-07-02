@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.3.0 - 2026-07-02
+
+- Added reliable cold-read timing for fluency reads and reading-room stories, stored in bounded `readTimes` samples with backgrounding or device voice discarding the sample.
+- Extended Class sprint results with best/last seconds-per-answer trends in `drillLog.sprint.pace[]`, without adding time pressure during questions.
+- Added Decode Gym to Practice as 10 self-checked word-reading reps from a 60-word gate-checked corpus; the audit lists every seed word with tone-grid verification.
+- Kept automaticity work optional and outside lesson blockers, checkpoints, the main SRS due deck and review-governor load.
+- Added `validateAutomaticityContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.3.0` and 42 validators passing.
+- Updated the app footer version to `v6.3.0` with service-worker cache `aan-thai-v6-3-0`.
+
 ## v6.2.0 - 2026-07-02
 
 - Added Write it to Practice as Thai-keyboard recall for learned `g:` letters and `f:` ending-job letters: the glyph stays hidden while the learner types it on the iPhone Thai keyboard, then wrong/skip paths reveal the answer and log the miss.
