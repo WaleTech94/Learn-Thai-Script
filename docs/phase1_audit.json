@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T00:22:58.935Z",
-  "appVersion": "v6.3.0",
+  "generatedAt": "2026-07-02T00:34:00.623Z",
+  "appVersion": "v6.4.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -210,6 +210,11 @@
     },
     {
       "name": "automaticity",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "captureLoop",
       "ok": true,
       "issues": []
     }
@@ -705,6 +710,16 @@
       "verified": true
     }
   ],
+  "captureLoop": {
+    "stateKey": "captures",
+    "cap": 200,
+    "entryPoints": [
+      "Read / Capture Thai",
+      "Read / Wild deck",
+      "Bangkok Mission / Capture Thai"
+    ],
+    "routeBoundary": "routes derive only when the captured Thai is taught, prerequisite-safe and grid-derivable"
+  },
   "phase1Completion": {
     "questionCount": 15,
     "axes": {

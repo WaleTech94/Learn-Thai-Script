@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.4.0 - 2026-07-02
+
+- Added Capture Thai to Read and as a secondary Bangkok Mission action: typed Thai-only local input, optional where-seen note, immediate class-coloured preview and no camera/upload/location/network path.
+- Added local `captures[]` storage capped at 200, with import shape support and sanitised rendering for Thai text plus notes.
+- Added Wild deck as self-checked practice over saved captures, ordered unseen/oldest first and spaced only with local `{lastSeen,n}` metadata outside SRS.
+- Show derived tone-route tiles only when a capture is taught, prerequisite-safe and grid-derivable; untaught letters/forms are marked plainly and saved for later.
+- Added `validateCaptureLoopContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.4.0` and 43 validators passing.
+- Updated the app footer version to `v6.4.0` with service-worker cache `aan-thai-v6-4-0`.
+
 ## v6.3.0 - 2026-07-02
 
 - Added reliable cold-read timing for fluency reads and reading-room stories, stored in bounded `readTimes` samples with backgrounding or device voice discarding the sample.

@@ -682,7 +682,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('contentPedagogyHardening', validateContentPedagogyHardeningContracts),
     validatorResult('weaknessTargeting', validateWeaknessTargetingContracts),
     validatorResult('productionPass', validateProductionPassContracts),
-    validatorResult('automaticity', validateAutomaticityContracts)
+    validatorResult('automaticity', validateAutomaticityContracts),
+    validatorResult('captureLoop', validateCaptureLoopContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -719,6 +720,12 @@ globalThis.__phase1Audit = (function(){
       tone:toneOf(item.tr),
       verified:decodeGymToneVerified(item)
     })),
+    captureLoop:{
+      stateKey:'captures',
+      cap:200,
+      entryPoints:['Read / Capture Thai','Read / Wild deck','Bangkok Mission / Capture Thai'],
+      routeBoundary:'routes derive only when the captured Thai is taught, prerequisite-safe and grid-derivable'
+    },
     phase1Completion:{
       questionCount:buildPhase1CompletionQuiz().length,
       axes:countBy(buildPhase1CompletionQuiz(), q=>q.axis || q._choice || q.kind || 'other'),
@@ -763,7 +770,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v6.3.0 is an automaticity pass over v6.2.0: fluency reads and reading-room stories now log reliable cold-read time samples, Class sprint records best/last pace after the session, and Practice adds Decode Gym as 10 self-checked word-reading reps from a 60-item gate-checked corpus. v6.2.0 remains the production-practice pass: Write it uses Thai-keyboard recall for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it, and Tones includes Route talk from existing tone-grid derivation. These v6.1-v6.3 surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v6.4.0 is a Bangkok capture-loop pass over v6.3.0: Read now has Capture Thai and Wild deck, Bangkok Mission links into the same typed local capture flow, captures are capped in local state, untaught letters/forms are marked and saved for later, and tone-route tiles appear only when the captured Thai is taught, prerequisite-safe and grid-derivable. v6.3.0 remains the automaticity pass: fluency reads and reading-room stories log reliable cold-read time samples, Class sprint records best/last pace after the session, and Practice includes Decode Gym as 10 self-checked word-reading reps from a 60-item gate-checked corpus. v6.2.0 remains the production-practice pass: Write it uses Thai-keyboard recall for learned letters and ending-job letters where the glyph stays hidden until the learner types it or reveals it, and Tones includes Route talk from existing tone-grid derivation. These v6.1-v6.4 surfaces remain optional practice only: no new lesson blockers, no new SRS cards, no review-governor load changes and no route-type changes. v6.1.0 still feeds bounded errorProfile buckets and weakness-first ordering for eligible drills. v6.0.3 still keeps honest Today route pips, Practice-only due badges, letter-wall counts from tile state, quieter lesson controls, numbered Quick decode examples and the muted-warm transliteration token. v6.0.2 still keeps wrong objective quiz/review answers paused for a learner Continue tap, high-contrast feedback panels, class-question tiles/chant and post-settle class colours. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -797,6 +804,12 @@ function renderMarkdown(audit){
   (audit.decodeGym||[]).forEach(item=>{
     lines.push(`| ${safeCell(item.gate)} | ${safeCell(item.thai)} | ${safeCell(item.tr)} | ${safeCell(item.tone)} | ${item.verified ? 'yes' : 'NO'} |`);
   });
+  lines.push('');
+  lines.push('## v6.4 Capture Loop');
+  lines.push('');
+  lines.push(`Wild captures use local typed input only. State key: ${safeCell((audit.captureLoop||{}).stateKey)}; cap: ${safeCell((audit.captureLoop||{}).cap)}.`);
+  lines.push(`Route boundary: ${safeCell((audit.captureLoop||{}).routeBoundary)}.`);
+  lines.push(`Entry points: ${safeCell(((audit.captureLoop||{}).entryPoints||[]).join(', '))}.`);
   lines.push('');
   lines.push('## Named Surface Audit');
   lines.push('');

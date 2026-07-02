@@ -662,6 +662,9 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .read-time-line{font-size:12px;color:var(--muted);margin-top:4px}
 .decode-gym-word{font-family:var(--font-display);font-size:58px;line-height:1.25;text-align:center;margin:14px 0}
 .decode-gym-reading{text-align:center;color:var(--ui-translit);font-size:22px;margin-top:4px}
+.capture-preview{font-family:var(--font-display);font-size:46px;line-height:1.35;text-align:center;margin:12px 0}
+.capture-note-line{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-word}
+.untaught-letter{display:inline-flex;border-bottom:2px solid var(--ui-danger);color:var(--ui-danger);padding:0 1px}
 .q-prompt .q-text{font-size:19px;font-family:var(--font-display);font-weight:500}
 .type-in{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:22px;text-align:center;font-family:var(--font-display);margin:4px 0 2px;outline:none}
 .type-in:focus{border-color:var(--blue)}
@@ -1075,7 +1078,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
-      <span class="version-pill">v6.3.0</span>
+      <span class="version-pill">v6.4.0</span>
     </header>
 
     <section class="today-focus">
@@ -1189,7 +1192,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.3.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.4.0 (PWA)</div>
     </div>
   </section>
 
@@ -1291,6 +1294,14 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
     <div class="action-stack read-stack">
       <button class="action-card primary reading-card recommended" id="library-read">
         <div><div class="t">Reading room</div><div class="d">Micro-stories from letters you know</div></div>
+        <span class="icon-right">→</span>
+      </button>
+      <button class="action-card primary reading-card" id="library-capture">
+        <div><div class="t">Capture Thai</div><div class="d">Type Thai you noticed in Bangkok</div></div>
+        <span class="icon-right">→</span>
+      </button>
+      <button class="action-card reading-card" id="library-wild-deck">
+        <div><div class="t">Wild deck</div><div class="d">Review your saved Thai</div></div>
         <span class="icon-right">→</span>
       </button>
       <button class="action-card primary reading-card" id="library-fluency">
@@ -2590,6 +2601,7 @@ let state = {
   contrastLog:{},
   fluencyReads:{},
   readTimes:{},
+  captures:[],
   writeLog:[],
   phase1Completion:null
 };
@@ -2640,7 +2652,7 @@ function validateImportedStateShape(s){
   assertPlainObject(s.srs, 'progress.srs');
   assertPlainObject(s.streak, 'progress.streak');
   assertStringArray(s.done, 'progress.done');
-  ['notes','packs','titles','themes','postcards','writeLog'].forEach(k=>{
+  ['notes','packs','titles','themes','postcards','writeLog','captures'].forEach(k=>{
     if(s[k] != null && !Array.isArray(s[k])) throw new Error('progress.' + k + ' must be an array');
   });
   ['baht','freeze','pace','paceN'].forEach(k=>assertNumberField(s, k, 'progress'));
@@ -5783,7 +5795,7 @@ function ensureStateCollections(target){
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}},
     boss:{}, checks:{}, skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
     notes:[], packs:[], titles:[], themes:[], notices:{}, migrations:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, retention:{}, signSafari:{seen:{}},
-    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, readTimes:{}, writeLog:[], phase1Completion:null, errorProfile:{}
+    missions:{done:{}}, contrastLog:{}, fluencyReads:{}, readTimes:{}, captures:[], writeLog:[], phase1Completion:null, errorProfile:{}
   };
   Object.keys(defaults).forEach(k=>{
     if(target[k] == null) target[k] = Array.isArray(defaults[k]) ? defaults[k].slice() : typeof defaults[k] === 'object' ? JSON.parse(JSON.stringify(defaults[k])) : defaults[k];
@@ -5799,6 +5811,8 @@ function ensureStateCollections(target){
   if(!target.signSafari.seen) target.signSafari.seen = {};
   if(!target.fluencyReads) target.fluencyReads = {};
   if(!target.readTimes || typeof target.readTimes !== 'object' || Array.isArray(target.readTimes)) target.readTimes = {};
+  if(!Array.isArray(target.captures)) target.captures = [];
+  target.captures = target.captures.map((c,i)=>normaliseCapture(c, i)).filter(Boolean).slice(-200);
   if(!Array.isArray(target.writeLog)) target.writeLog = [];
   if(!target.errorProfile || typeof target.errorProfile !== 'object' || Array.isArray(target.errorProfile)) target.errorProfile = {};
   Object.keys(target.srs || {}).forEach(id=>{
@@ -6805,6 +6819,52 @@ function validateAutomaticityContracts(){
   if(errors.length) throw new Error('Automaticity contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateCaptureLoopContracts(){
+  const errors = [];
+  const injected = sanitizeCaptureThai('<img src=x onerror=alert(1)>บ้าน<svg onload=alert(1)>');
+  if(injected !== 'บ้าน') errors.push('capture Thai sanitisation should strip non-Thai script input');
+  const note = sanitizeCaptureNote('BTS <b onclick=alert(1)>');
+  if(note.includes('\n') || note.length > 60) errors.push('capture note should be one short safe string');
+  withTemporaryState({done:LESSONS.slice(0,4).map(L=>L.id), srs:{}, days:{}, retention:{}, captures:null}, ()=>{
+    ensureStateCollections(state);
+    if(!Array.isArray(state.captures)) errors.push('captures migration should create an array');
+    const saved = saveCapture('บ้าน<img src=x onerror=alert(1)>', 'near station');
+    if(!saved || saved.thai !== 'บ้าน') errors.push('saveCapture should save sanitized Thai text');
+    if(!captureSummaryHtml(saved).includes('route-talk-step')) errors.push('decodable capture should show derived route tiles');
+    const before = Object.keys(state.srs || {}).join('|');
+    const deck = wildDeckPool();
+    if(deck.length !== 1 || deck[0].thai !== 'บ้าน') errors.push('Wild deck should use saved captures');
+    if(Object.keys(state.srs || {}).join('|') !== before) errors.push('Wild deck should not create SRS cards');
+  });
+  withTemporaryState({done:['l1'], srs:{}, days:{}, retention:{}, captures:[]}, ()=>{
+    const saved = saveCapture('เสื้อ', '<b>shop</b>');
+    if(!saved) errors.push('untaught capture should still save');
+    const missing = captureMissingGlyphs(saved.thai);
+    if(!missing.length) errors.push('untaught capture should report missing letters/forms');
+    if(captureRouteForThai(saved.thai)) errors.push('route should not derive before prerequisites are met');
+    for(let i=0;i<205;i++) saveCapture('กา' + (i%10), 'n' + i);
+    if(ensureCaptures().length > 200) errors.push('captures should cap at 200');
+  });
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, retention:{}, captures:[]}, ()=>{
+    const saved = saveCapture('เสื้อ', 'shop');
+    if(!captureRouteForThai(saved.thai)) errors.push('derivable capture should show route after prerequisites are met');
+    const deck = wildDeckPool();
+    if(deck.length !== 1 || deck[0].thai !== 'เสื้อ') errors.push('Wild deck should use saved captures');
+    markWildCapture(deck[0], true);
+    if(!state.captures[0].lastSeen || state.captures[0].n !== 1) errors.push('Wild deck self-check should update lastSeen and n');
+  });
+  const source = [saveCapture, startWildDeck, renderWildDeck, showCaptureLoop].map(fn=>String(fn)).join('\n');
+  if(/srsAdd|state\.srs\s*\[[^\]]+\]\s*=/.test(source)) errors.push('Capture loop must not create SRS cards');
+  if(/capture|wildDeck|captures/.test(String(getLessonBlocker))) errors.push('Capture loop must not enter lesson blockers');
+  if(!String(showBangkokMissions).includes('mission-capture')) errors.push('Bangkok Mission should link to Capture Thai');
+  try{
+    validateImportedStateShape({streak:{count:0,last:null}, done:[], srs:{}, captures:[]});
+  }catch(e){
+    errors.push('import shape should accept captures array');
+  }
+  if(errors.length) throw new Error('Capture loop contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV542StreamlinedCopyContracts(){
   const errors = [];
   const visibleTodayFns = [
@@ -7586,6 +7646,8 @@ el('library-read').addEventListener('click', ()=>{
   openOverlay();
   renderStoryList();
 });
+el('library-capture').addEventListener('click', ()=>showCaptureLoop());
+el('library-wild-deck').addEventListener('click', startWildDeck);
 el('library-fluency').addEventListener('click', showFluencyReadList);
 el('library-signs').addEventListener('click', showSignSafari);
 el('library-readiness').addEventListener('click', showReadinessReport);
@@ -10380,7 +10442,10 @@ function showBangkokMissions(focusId){
         </div>`;
       }).join('')}
     </div>
-    <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    <div class="stage-actions">
+      <button class="btn full ghost" id="mission-capture">Capture Thai</button>
+      <button class="btn full" id="st-done">Done</button>
+    </div>`;
   el('stage').querySelectorAll('[data-mission]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const item = BANGKOK_MISSIONS.find(m=>m.id===b.dataset.mission);
@@ -10388,7 +10453,199 @@ function showBangkokMissions(focusId){
       showBangkokMissions(item && item.id);
     });
   });
+  el('mission-capture').onclick = ()=>showCaptureLoop();
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+}
+function captureHash(text){
+  let h = 0;
+  for(const ch of String(text||'')) h = ((h * 31) + ch.charCodeAt(0)) >>> 0;
+  return h.toString(36);
+}
+function sanitizeCaptureThai(raw){
+  const clean = String(raw || '').normalize('NFC').replace(/[^\u0E00-\u0E7F ]+/g, '').replace(/\s+/g, ' ').trim();
+  return thaiChars(clean).slice(0, 30).join('');
+}
+function sanitizeCaptureNote(raw){
+  return String(raw || '').normalize('NFC').replace(/[\u0000-\u001F\u007F]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+}
+function normaliseCapture(c, index){
+  if(!c || typeof c !== 'object') return null;
+  const thai = sanitizeCaptureThai(c.thai);
+  if(!thai || !hasThaiText(thai)) return null;
+  const note = sanitizeCaptureNote(c.note);
+  const d = typeof c.d === 'string' ? c.d : todayStr();
+  const lastSeen = typeof c.lastSeen === 'string' ? c.lastSeen : null;
+  const n = Number.isFinite(c.n) ? Math.max(0, Math.floor(c.n)) : 0;
+  const id = String(c.id || ('cap-' + captureHash(thai + '|' + note + '|' + d + '|' + (index||0))));
+  return {id, thai, note, d, lastSeen, n};
+}
+function ensureCaptures(){
+  if(!Array.isArray(state.captures)) state.captures = [];
+  state.captures = state.captures.map((c,i)=>normaliseCapture(c, i)).filter(Boolean).slice(-200);
+  return state.captures;
+}
+function captureMissingGlyphs(thai, doneIds){
+  const taught = taughtGlyphSet(doneIds || state.done || []);
+  const taughtIds = taughtGlyphIdSet(doneIds || state.done || []);
+  return thaiVisibleGlyphTokens(thai).filter(token=>{
+    if(token.length === 1) return GLYPHS[token] && !taught.has(token);
+    return !taughtIds.has(token);
+  });
+}
+function captureMarkedHtml(thai, doneIds){
+  const missing = new Set(captureMissingGlyphs(thai, doneIds));
+  let out = '';
+  thaiChars(thai).forEach(ch=>{
+    if(missing.has(ch)) out += `<span class="untaught-letter">${esc(ch)}</span>`;
+    else out += classColourThaiHtml(ch);
+  });
+  return out;
+}
+function captureRouteForThai(thai, doneIds){
+  const ids = doneIds || state.done || [];
+  if(!thai || /\s/.test(thai)) return null;
+  if(!thaiTextReadable(thai, taughtGlyphSet(ids))) return null;
+  const source = findWord(thai) || {thai, tr:'mid'};
+  const f = wordFrame(source);
+  if(!thaiItemPrereqsMet(thai, ids, f)) return null;
+  const cls = firstConsonantClass(thai);
+  const initial = firstConsonantChar(thai);
+  const mark = (thai.match(/[่้๊๋]/) || [''])[0];
+  const liveDead = inferLiveDeadForDecode(thai, f);
+  const needsLength = !mark && cls === 'low' && liveDead === 'Dead';
+  const length = f && f.vowelLength ? f.vowelLength : needsLength ? (/[ะัิึุ็]/.test(thai) ? 'Short' : 'Long') : 'not needed';
+  const tone = expectedToneFromRoute(cls, mark, liveDead, length);
+  if(!initial || !cls || !liveDead || !tone) return null;
+  return {word:{thai}, initial, cls, mark, liveDead, length, tone};
+}
+function captureSummaryHtml(capture){
+  const missing = captureMissingGlyphs(capture.thai);
+  const route = !missing.length && captureRouteForThai(capture.thai);
+  if(route) return toneRouteStepsHtml(route);
+  if(missing.length){
+    return `<div class="notebox">${missing.length} letter${missing.length===1?'':'s'} you have not met yet - saved for later: ${missing.map(esc).join(' ')}</div>`;
+  }
+  return `<div class="notebox">Saved. Keep this for slow reading practice.</div>`;
+}
+function saveCapture(thai, note){
+  const cleanThai = sanitizeCaptureThai(thai);
+  if(!cleanThai || !hasThaiText(cleanThai)) return null;
+  const cleanNote = sanitizeCaptureNote(note);
+  const caps = ensureCaptures();
+  const existing = caps.find(c=>c.thai === cleanThai && (c.note || '') === cleanNote);
+  if(existing){
+    existing.d = todayStr();
+    saveState();
+    return existing;
+  }
+  const capture = normaliseCapture({thai:cleanThai, note:cleanNote, d:todayStr(), n:0}, caps.length);
+  caps.push(capture);
+  if(caps.length > 200) state.captures = caps.slice(-200);
+  saveState();
+  return capture;
+}
+function captureCardHtml(c){
+  const route = captureRouteForThai(c.thai);
+  const missing = captureMissingGlyphs(c.thai);
+  return `<div class="mission-card">
+    <div class="eyebrow">${route ? 'Readable now' : missing.length ? 'Saved for later' : 'Saved'}</div>
+    <div class="capture-preview">${captureMarkedHtml(c.thai)}</div>
+    ${c.note ? `<div class="capture-note-line">${esc(c.note)}</div>` : ''}
+    <div class="capture-note-line">${c.lastSeen ? 'Last seen ' + esc(c.lastSeen) : 'Not reviewed yet'}${c.n ? ' · ' + c.n + ' reps' : ''}</div>
+  </div>`;
+}
+function showCaptureLoop(saved){
+  player = {type:'capture'};
+  openOverlay();
+  renderCaptureLoop(saved || null);
+}
+function renderCaptureLoop(saved){
+  setProg(0);
+  const caps = ensureCaptures();
+  el('stage').innerHTML = `
+    <div class="center"><h2>Capture Thai</h2><p class="sub">Type Thai you noticed. No camera, upload, location or network.</p></div>
+    <input id="capture-thai" class="type-in" lang="th" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="30" inputmode="text" placeholder="พิมพ์ไทย">
+    <textarea id="capture-note" class="notes-ta" rows="2" maxlength="60" placeholder="Where seen"></textarea>
+    <div class="sub" style="text-align:center">Use your iPhone Thai keyboard. Thai text only.</div>
+    <div class="stage-actions">
+      <button class="btn full ghost" id="capture-wild">Wild deck</button>
+      <button class="btn full" id="capture-save">Save</button>
+    </div>
+    ${saved ? `<div class="mission-card today"><div class="eyebrow">Saved</div><div class="capture-preview">${captureMarkedHtml(saved.thai)}</div>${saved.note ? `<div class="capture-note-line">${esc(saved.note)}</div>` : ''}${captureSummaryHtml(saved)}</div>` : ''}
+    <div class="sign-list">${caps.slice(-5).reverse().map(captureCardHtml).join('') || '<div class="empty">No captures yet</div>'}</div>
+    <div class="stage-actions"><button class="btn full ghost" id="st-done">Done</button></div>`;
+  const input = el('capture-thai');
+  if(input && !saved) input.focus();
+  el('capture-save').onclick = ()=>{
+    const clean = sanitizeCaptureThai(el('capture-thai').value);
+    if(!clean){ toast('Type Thai first'); return; }
+    const capture = saveCapture(clean, el('capture-note').value);
+    if(!capture){ toast('Thai text only'); return; }
+    renderCaptureLoop(capture);
+  };
+  el('capture-wild').onclick = startWildDeck;
+  el('st-done').onclick = ()=>{ closeOverlay(); renderCats(); renderPhrases(); renderHome(); };
+}
+function wildDeckPool(){
+  return ensureCaptures().slice().sort((a,b)=>{
+    const au = a.lastSeen || '', bu = b.lastSeen || '';
+    if(!au && bu) return -1;
+    if(au && !bu) return 1;
+    return au.localeCompare(bu) || (a.d||'').localeCompare(b.d||'') || a.id.localeCompare(b.id);
+  }).slice(0, 8);
+}
+function markWildCapture(capture, ok){
+  const target = ensureCaptures().find(c=>c.id === capture.id);
+  if(!target) return;
+  target.lastSeen = todayStr();
+  target.n = (target.n || 0) + 1;
+  if(!ok){
+    String(target.thai || '').split('').forEach(ch=>{
+      if(GLYPHS[ch] && GLYPHS[ch].type === 'c') recordProfileError('sound', ch);
+    });
+  }
+  saveState();
+}
+function startWildDeck(){
+  const rounds = wildDeckPool();
+  if(!rounds.length){ toast('Capture Thai first'); return; }
+  player = {type:'wild-deck', rounds, i:0, got:0};
+  openOverlay();
+  renderWildDeck(false);
+}
+function renderWildDeck(revealed){
+  const p = player;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  if(p.i >= p.rounds.length){
+    setProg(100);
+    markDailyDepth('reading');
+    bumpStreak();
+    el('stage').innerHTML = `
+      <div class="result-big">${p.got} / ${p.rounds.length}</div>
+      <div class="result-sub">Wild deck complete.</div>
+      <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
+    el('st-done').onclick = ()=>{ closeOverlay(); renderCats(); renderPhrases(); renderHome(); };
+    return;
+  }
+  const capture = p.rounds[p.i];
+  const route = captureRouteForThai(capture.thai);
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Wild deck · ${p.i+1} of ${p.rounds.length}</div><h2>Decode this capture</h2></div>
+    <div class="capture-preview">${captureMarkedHtml(capture.thai)}</div>
+    ${capture.note ? `<div class="capture-note-line" style="text-align:center">${esc(capture.note)}</div>` : ''}
+    ${revealed ? (route ? toneRouteStepsHtml(route) : captureSummaryHtml(capture)) : `<div class="sub" style="text-align:center">Read it first, then reveal what the app can honestly show.</div>`}
+    <div class="stage-actions">
+      ${revealed ? `
+        <button class="btn full ghost" id="wild-miss">Missed it</button>
+        <button class="btn full" id="wild-got">Got it</button>
+      ` : `<button class="btn full" id="wild-reveal">Reveal →</button>`}
+    </div>`;
+  if(revealed){
+    el('wild-miss').onclick = ()=>{ markWildCapture(capture, false); p.i++; renderWildDeck(false); };
+    el('wild-got').onclick = ()=>{ markWildCapture(capture, true); p.got++; p.i++; renderWildDeck(false); };
+  } else {
+    el('wild-reveal').onclick = ()=>renderWildDeck(true);
+  }
 }
 const FLUENCY_RATINGS = [
   {id:'smooth', label:'Smooth', pass:true},
@@ -11416,7 +11673,8 @@ function runFullStartupValidators(){
     validateContentPedagogyHardeningContracts,
     validateWeaknessTargetingContracts,
     validateProductionPassContracts,
-    validateAutomaticityContracts
+    validateAutomaticityContracts,
+    validateCaptureLoopContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
