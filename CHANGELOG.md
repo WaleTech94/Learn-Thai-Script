@@ -2,6 +2,13 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.5.1 - 2026-07-03
+
+- Fixed synthesized feedback sounds not being audible on iPhone/PWA: SFX now waits for `AudioContext.resume()` to complete before scheduling tones.
+- Raised the synthesized tone peaks slightly so correct/wrong/completion feedback is easier to hear on phone speakers.
+- Kept the v6.5 feedback layer presentational only: no SRS, grading, blocker, token, content, network, or audio-asset changes.
+- Updated the app footer version to `v6.5.1` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit reports app version `v6.5.1`.
+
 ## v6.5.0 - 2026-07-02
 
 - Added synthesized Web Audio feedback sounds for objective correct answers, wrong answers, combo milestones and completed objective sessions; no audio assets or network calls were added.

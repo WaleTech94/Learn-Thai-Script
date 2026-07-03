@@ -1091,7 +1091,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">v6.5.0</span>
+        <span class="version-pill">v6.5.1</span>
       </div>
     </header>
 
@@ -1206,7 +1206,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.5.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.5.1 (PWA)</div>
     </div>
   </section>
 
@@ -3536,8 +3536,21 @@ function sfxContext(){
   const AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return null;
   if(!sfxCtx){ try{ sfxCtx = new AC(); }catch(e){ return null; } }
-  if(sfxCtx.state === 'suspended'){ try{ sfxCtx.resume(); }catch(e){} }
   return sfxCtx;
+}
+function sfxPlay(fn){
+  const ctx = sfxContext(); if(!ctx) return;
+  const play = ()=>{ if(sfxEnabled()){ try{ fn(ctx); }catch(e){} } };
+  if(ctx.state !== 'running' && typeof ctx.resume === 'function'){
+    try{
+      const resumed = ctx.resume();
+      if(resumed && typeof resumed.then === 'function'){
+        resumed.then(play).catch(()=>{});
+        return;
+      }
+    }catch(e){ return; }
+  }
+  play();
 }
 function sfxTone(ctx, freq, at, dur, peak, type){
   const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + (at||0);
@@ -3549,23 +3562,27 @@ function sfxTone(ctx, freq, at, dur, peak, type){
   o.start(t0); o.stop(t0 + dur + 0.05);
 }
 function sfxCorrect(combo){
-  const ctx = sfxContext(); if(!ctx) return;
-  const lift = Math.min(Math.max(combo||0,0), 10) * 18;
-  sfxTone(ctx, 660 + lift, 0, .12, .10);
-  sfxTone(ctx, 880 + lift*1.5, .09, .16, .10);
+  sfxPlay(ctx=>{
+    const lift = Math.min(Math.max(combo||0,0), 10) * 18;
+    sfxTone(ctx, 660 + lift, 0, .12, .16);
+    sfxTone(ctx, 880 + lift*1.5, .09, .16, .15);
+  });
 }
 function sfxWrong(){
-  const ctx = sfxContext(); if(!ctx) return;
-  sfxTone(ctx, 220, 0, .14, .07, 'triangle');
-  sfxTone(ctx, 185, .10, .18, .06, 'triangle');
+  sfxPlay(ctx=>{
+    sfxTone(ctx, 220, 0, .14, .10, 'triangle');
+    sfxTone(ctx, 185, .10, .18, .09, 'triangle');
+  });
 }
 function sfxMilestone(){
-  const ctx = sfxContext(); if(!ctx) return;
-  [784, 988, 1319].forEach((f,i)=>sfxTone(ctx, f, i*.07, .14, .09));
+  sfxPlay(ctx=>{
+    [784, 988, 1319].forEach((f,i)=>sfxTone(ctx, f, i*.07, .14, .14));
+  });
 }
 function sfxComplete(){
-  const ctx = sfxContext(); if(!ctx) return;
-  [523, 659, 784, 1047].forEach((f,i)=>sfxTone(ctx, f, i*.09, .22, .10));
+  sfxPlay(ctx=>{
+    [523, 659, 784, 1047].forEach((f,i)=>sfxTone(ctx, f, i*.09, .22, .15));
+  });
 }
 const COMBO_SHOW_AT = 3;
 function comboMilestone(n){ return n >= 5 && n % 5 === 0; }
@@ -6695,7 +6712,8 @@ function validateV65FeedbackContracts(){
     ['sfxCorrect', typeof sfxCorrect],
     ['sfxWrong', typeof sfxWrong],
     ['sfxComplete', typeof sfxComplete],
-    ['sfxMilestone', typeof sfxMilestone]
+    ['sfxMilestone', typeof sfxMilestone],
+    ['sfxPlay', typeof sfxPlay]
   ].forEach(([name, type])=>{
     if(type !== 'function') errors.push('missing sfx function ' + name);
   });
