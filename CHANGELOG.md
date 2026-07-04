@@ -2,6 +2,17 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.6.0 - 2026-07-04
+
+- Added corrupt-progress quarantine: unreadable `thai_state_v1` localStorage is copied to `thai_state_v1_corrupt` before the app falls back to defaults, with a one-time recovery-data copy notice.
+- Added persistent non-blocking safety banners for save failures, uncaught runtime errors and service-worker updates; update prompts never auto-reload in-progress work.
+- Replaced clipboard-only export with a downloaded `aan-thai-progress-YYYY-MM-DD.json` envelope containing app metadata and full state, while keeping a copy-backup action and legacy raw-state import support.
+- Added display-only backup nudges in Progress and Today using optional `lastExportAt` / `backupNudgeSnooze` state; they do not affect lesson blockers or review scheduling.
+- Added `tools/precommit-check.js` as the committed release harness for embedded-script syntax, NFC, particle/currency policy, tone-grid transliteration and Reading-room decodability checks.
+- Fixed `สวัสดีครับ` transliteration from `sa-wàt-dii` to `sà-wàt-dii`.
+- Added `validateV66DataSafetyContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.6.0` and 45 validators passing.
+- Updated the app footer version to `v6.6.0`. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+
 ## v6.5.1 - 2026-07-03
 
 - Fixed synthesized feedback sounds not being audible on iPhone/PWA: SFX now waits for `AudioContext.resume()` to complete before scheduling tones.

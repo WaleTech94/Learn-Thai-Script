@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-03T10:32:41.071Z",
-  "appVersion": "v6.5.1",
+  "generatedAt": "2026-07-04T00:40:18.599Z",
+  "appVersion": "v6.6.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -220,6 +220,11 @@
     },
     {
       "name": "v65Feedback",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v66DataSafety",
       "ok": true,
       "issues": []
     }

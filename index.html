@@ -806,6 +806,22 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   transition:all .25s ease;z-index:99;max-width:88vw;text-align:center;
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.safety-banner-stack{
+  position:fixed;left:12px;right:12px;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom, 0px));
+  z-index:75;display:grid;gap:10px;pointer-events:none;
+}
+.safety-banner{
+  pointer-events:auto;border:1px solid var(--line);border-radius:18px;padding:13px;
+  background:linear-gradient(160deg,rgba(22,27,45,.98),rgba(14,18,32,.96));box-shadow:var(--shadow);
+}
+.safety-banner-text{font-size:14px;line-height:1.45;color:var(--text);margin-bottom:10px}
+.safety-banner-actions{display:flex;gap:8px;flex-wrap:wrap}
+.safety-banner-actions .btn{min-height:38px}
+.backup-card{border-color:rgba(34,211,238,.24)}
+.backup-card .backup-title{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:3px}
+.backup-card .backup-copy{font-size:13px;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.today-backup-hint{margin-top:12px}
+.today-backup-hint .backup-copy{margin-bottom:8px}
 
 /* ---------- bottom nav ---------- */
 #tabbar{
@@ -1091,7 +1107,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">v6.5.1</span>
+        <span class="version-pill">v6.6.0</span>
       </div>
     </header>
 
@@ -1148,6 +1164,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         </button>
       </div>
       <div class="daily-win-card" id="daily-win-card" hidden></div>
+      <div class="section-card backup-card today-backup-hint is-hidden" id="backup-today-hint"></div>
     </section>
 
     <button class="card cta-card action-card recommended is-hidden" id="wai-banner">
@@ -1206,7 +1223,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.5.1 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.6.0 (PWA)</div>
     </div>
   </section>
 
@@ -1278,9 +1295,11 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
     </div>
     <div class="section-card progress-tools-card">
       <div class="eyebrow">Progress tools</div>
+      <div class="backup-card is-hidden" id="backup-nudge"></div>
       <button class="btn full ghost mb-12" id="notes-btn">Notes</button>
       <div class="row inline-tools">
-        <button class="btn small ghost" id="export-btn">Export progress</button>
+        <button class="btn small ghost" id="export-btn">Download backup</button>
+        <button class="btn small ghost" id="copy-export-btn">Copy backup</button>
         <button class="btn small ghost" id="import-btn">Import progress</button>
       </div>
       <button class="btn small ghost" id="sfx-toggle">Sounds: on</button>
@@ -2114,7 +2133,7 @@ const SLANG = [
   {cat:"Slang", thai:"ของกิน", tr:"khǒrng gin", en:"snacks / things to eat"}
 ];
 const PHRASES = [
-  {cat:"Politeness", thai:"สวัสดีครับ", tr:"sa-wàt-dii khráp", en:"hello / goodbye"},
+  {cat:"Politeness", thai:"สวัสดีครับ", tr:"sà-wàt-dii khráp", en:"hello / goodbye"},
   {cat:"Politeness", thai:"ขอบคุณครับ", tr:"khòrp-khun khráp", en:"thank you"},
   {cat:"Politeness", thai:"ขอโทษครับ", tr:"khǒr-thôht khráp", en:"sorry / excuse me"},
   {cat:"Politeness", thai:"ไม่เป็นไร", tr:"mâi bpen rai", en:"no worries / it's fine", note:"the most Thai sentence in existence"},
@@ -2624,7 +2643,36 @@ let state = {
   writeLog:[],
   phase1Completion:null
 };
+const APP_VERSION = 'v6.6.0';
 const SKEY = 'thai_state_v1';
+const CORRUPT_SKEY = SKEY + '_corrupt';
+const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
+let stateLoadHadCorruptState = false;
+let saveFailureWarningShown = false;
+let runtimeErrorBannerShown = false;
+let updateReadyNoticeShown = false;
+const safetyBanners = {};
+function cloneForJson(value){
+  return JSON.parse(JSON.stringify(value));
+}
+function quarantineCorruptState(raw, storage){
+  stateLoadHadCorruptState = true;
+  try{ (storage || localStorage).setItem(CORRUPT_SKEY, String(raw)); }catch(e){}
+}
+function mergeStateFromRaw(raw){
+  state = Object.assign(state, JSON.parse(raw));
+  return state;
+}
+function readLocalStateRaw(raw, storage){
+  if(!raw) return true;
+  try{
+    mergeStateFromRaw(raw);
+    return true;
+  }catch(e){
+    quarantineCorruptState(raw, storage);
+    return false;
+  }
+}
 async function loadState(){
   // 1) Claude artifact storage  2) localStorage (PWA / browser)
   try{
@@ -2633,10 +2681,109 @@ async function loadState(){
       if(r && r.value){ state = Object.assign(state, JSON.parse(r.value)); return; }
     }
   }catch(e){ /* fall through */ }
+  let raw = null;
   try{
-    const raw = localStorage.getItem(SKEY);
-    if(raw) state = Object.assign(state, JSON.parse(raw));
-  }catch(e){ /* private mode etc. */ }
+    raw = localStorage.getItem(SKEY);
+    readLocalStateRaw(raw);
+  }catch(e){
+    if(raw) quarantineCorruptState(raw);
+  }
+}
+function showSafetyBanner(id, opts){
+  if(safetyBanners[id]) return false;
+  if(typeof document === 'undefined' || !document.body || typeof document.createElement !== 'function') return false;
+  let root = document.getElementById('safety-banner-stack');
+  if(!root){
+    if(typeof document.body.appendChild !== 'function') return false;
+    root = document.createElement('div');
+    root.id = 'safety-banner-stack';
+    root.className = 'safety-banner-stack';
+    document.body.appendChild(root);
+  }
+  const actions = opts.actions || [];
+  const node = document.createElement('div');
+  node.className = 'safety-banner';
+  node.dataset.bannerId = id;
+  node.innerHTML = `
+    <div class="safety-banner-text">${esc(opts.text || '')}</div>
+    <div class="safety-banner-actions">
+      ${actions.map((action,i)=>`<button class="btn small ${action.ghost ? 'ghost' : ''}" data-banner-action="${i}">${esc(action.label)}</button>`).join('')}
+    </div>`;
+  root.appendChild(node);
+  safetyBanners[id] = node;
+  node.querySelectorAll('[data-banner-action]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const action = actions[+btn.dataset.bannerAction];
+      if(action && typeof action.fn === 'function') action.fn();
+      if(!action || action.dismiss !== false) hideSafetyBanner(id);
+    });
+  });
+  return true;
+}
+function hideSafetyBanner(id){
+  const node = safetyBanners[id];
+  if(node && typeof node.remove === 'function') node.remove();
+  delete safetyBanners[id];
+}
+async function copyTextWithPrompt(text, successMsg, promptLabel){
+  try{
+    await navigator.clipboard.writeText(text);
+    if(successMsg) toast(successMsg);
+    return true;
+  }catch(e){
+    prompt(promptLabel || 'Copy this JSON:', text);
+    return false;
+  }
+}
+function showCorruptStateNotice(){
+  if(!stateLoadHadCorruptState) return false;
+  stateLoadHadCorruptState = false;
+  return showSafetyBanner('corrupt-state', {
+    text:'Your saved progress could not be read. A copy has been kept.',
+    actions:[
+      {label:'Copy recovery data', dismiss:false, fn:()=>{
+        let raw = '';
+        try{ raw = localStorage.getItem(CORRUPT_SKEY) || ''; }catch(e){}
+        copyTextWithPrompt(raw, 'Recovery data copied', 'Copy recovery data:');
+      }},
+      {label:'Dismiss', ghost:true}
+    ]
+  });
+}
+function showSaveFailureNotice(){
+  if(saveFailureWarningShown) return false;
+  saveFailureWarningShown = true;
+  return showSafetyBanner('save-failure', {
+    text:'Progress is not saving on this device. Export a backup now.',
+    actions:[
+      {label:'Export backup', dismiss:false, fn:()=>downloadProgressExport()},
+      {label:'Dismiss', ghost:true}
+    ]
+  });
+}
+function showRuntimeErrorNotice(){
+  if(runtimeErrorBannerShown) return false;
+  runtimeErrorBannerShown = true;
+  showSafetyBanner('runtime-error', {
+    text:'Something went wrong. Your saved progress is safe. Reload the app.',
+    actions:[
+      {label:'Reload', fn:()=>location.reload()},
+      {label:'Dismiss', ghost:true}
+    ]
+  });
+  return true;
+}
+function showUpdateReadyNotice(){
+  if(updateReadyNoticeShown) return false;
+  updateReadyNoticeShown = true;
+  showSafetyBanner('update-ready', {
+    text:'Update ready — reload to get the latest version.',
+    actions:[
+      {label:'Reload', fn:()=>location.reload()},
+      {label:'Later', ghost:true}
+    ]
+  });
+  return true;
 }
 let saveTimer = null;
 function saveState(){
@@ -2646,7 +2793,12 @@ function saveState(){
     let ok = false;
     try{ if(window.storage){ await window.storage.set(SKEY, raw); ok = true; } }catch(e){}
     try{ localStorage.setItem(SKEY, raw); ok = true; }catch(e){}
-    if(!ok) console.error('save failed everywhere');
+    if(!ok){
+      console.error('save failed everywhere');
+      showSaveFailureNotice();
+    } else {
+      hideSafetyBanner('save-failure');
+    }
   }, 350);
 }
 
@@ -2688,6 +2840,9 @@ function validateImportedStateShape(s){
   if(s.skillStats && s.skillStats.listen != null && !Array.isArray(s.skillStats.listen)) throw new Error('progress.skillStats.listen must be an array');
   if(s.skillStats && s.skillStats.speak != null) assertPlainObject(s.skillStats.speak, 'progress.skillStats.speak');
   if(s.foundationRefresh && s.foundationRefresh.quarantinedFinals != null) assertStringArray(s.foundationRefresh.quarantinedFinals, 'progress.foundationRefresh.quarantinedFinals');
+  ['lastExportAt','backupNudgeSnooze'].forEach(k=>{
+    if(s[k] != null && typeof s[k] !== 'string') throw new Error('progress.' + k + ' must be a string');
+  });
   Object.keys(s.srs).forEach(id=>{
     const c = s.srs[id];
     assertPlainObject(c, 'progress.srs.' + id);
@@ -2716,6 +2871,20 @@ function importProgressState(s){
   validateStateDeckForDone(next, 'imported progress');
   return {state:next, migrated, migrated501, migrated54};
 }
+function unwrapProgressImport(obj){
+  if(!plainObject(obj)) throw new Error('progress import must be an object');
+  if(obj.key === SKEY){
+    if(!obj.state) throw new Error('progress envelope missing state');
+    return obj.state;
+  }
+  if(obj.app === 'aan-thai' || Object.prototype.hasOwnProperty.call(obj, 'key') || Object.prototype.hasOwnProperty.call(obj, 'state')){
+    throw new Error('progress envelope is not valid for this app');
+  }
+  return obj;
+}
+function importProgressPayload(obj){
+  return importProgressState(unwrapProgressImport(obj));
+}
 function renderAfterStateImport(){
   applyTheme();
   renderTitle();
@@ -2732,6 +2901,118 @@ function isoPlusDays(iso, days){
   const d = new Date((iso || todayStr()) + 'T00:00:00Z');
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0,10);
+}
+function daysSinceIso(iso){
+  if(!iso) return Infinity;
+  const a = new Date(iso + 'T00:00:00Z');
+  const b = new Date(todayStr() + 'T00:00:00Z');
+  if(Number.isNaN(a.getTime())) return Infinity;
+  return Math.floor((b - a) / 86400000);
+}
+function recordSuccessfulExport(target){
+  const s = target || state;
+  s.lastExportAt = todayStr();
+  return s.lastExportAt;
+}
+function progressExportEnvelope(target){
+  return {
+    app:'aan-thai',
+    appVersion:APP_VERSION,
+    key:SKEY,
+    exportedAt:new Date().toISOString(),
+    state:cloneForJson(target || state)
+  };
+}
+function progressExportJson(){
+  return JSON.stringify(progressExportEnvelope(state), null, 2);
+}
+function progressExportFilename(){
+  return 'aan-thai-progress-' + todayStr() + '.json';
+}
+function downloadTextFile(filename, text){
+  if(typeof Blob === 'undefined' || typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') throw new Error('file download unavailable');
+  const blob = new Blob([text], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 0);
+}
+function downloadProgressExport(){
+  recordSuccessfulExport(state);
+  const raw = progressExportJson();
+  try{
+    downloadTextFile(progressExportFilename(), raw);
+    toast('Progress backup downloaded');
+  }catch(e){
+    prompt('Copy this JSON:', raw);
+  }
+  saveState();
+  renderBackupNudge();
+}
+async function copyProgressExport(){
+  recordSuccessfulExport(state);
+  const raw = progressExportJson();
+  await copyTextWithPrompt(raw, 'Progress copied to clipboard', 'Copy this JSON:');
+  saveState();
+  renderBackupNudge();
+}
+function backupNudgeDue(target){
+  const s = target || state;
+  if(!s.done || !s.done.length) return false;
+  if(s.backupNudgeSnooze && s.backupNudgeSnooze > todayStr()) return false;
+  if(s.lastExportAt) return daysSinceIso(s.lastExportAt) >= 14;
+  return Object.keys(s.days || {}).filter(k=>dayHasLearningActivity(s.days[k])).length >= 14;
+}
+function markBackupHintSeenToday(){
+  try{ localStorage.setItem(BACKUP_HINT_SEEN_KEY, todayStr()); }catch(e){}
+}
+function backupHintSeenToday(){
+  try{ return localStorage.getItem(BACKUP_HINT_SEEN_KEY) === todayStr(); }catch(e){ return false; }
+}
+function dismissBackupNudge(){
+  state.backupNudgeSnooze = isoPlusDays(todayStr(), 14);
+  markBackupHintSeenToday();
+  saveState();
+  renderBackupNudge();
+}
+function backupNudgeHtml(compact){
+  return `
+    <div class="backup-title">Back up your progress</div>
+    <div class="backup-copy">${compact ? 'Save a backup today.' : 'Download a progress backup.'}</div>
+    <div class="row inline-tools">
+      <button class="btn small" data-backup-export>Export</button>
+      <button class="btn small ghost" data-backup-dismiss>Dismiss</button>
+    </div>`;
+}
+function wireBackupNudge(host){
+  if(!host) return;
+  const exportBtn = host.querySelector('[data-backup-export]');
+  const dismissBtn = host.querySelector('[data-backup-dismiss]');
+  if(exportBtn) exportBtn.onclick = ()=>downloadProgressExport();
+  if(dismissBtn) dismissBtn.onclick = dismissBackupNudge;
+}
+function renderBackupNudge(){
+  const due = backupNudgeDue();
+  const progress = el('backup-nudge');
+  if(progress){
+    progress.classList.toggle('is-hidden', !due);
+    progress.innerHTML = due ? backupNudgeHtml(false) : '';
+    if(due) wireBackupNudge(progress);
+  }
+  const today = el('backup-today-hint');
+  if(today){
+    const showToday = due && !backupHintSeenToday();
+    today.classList.toggle('is-hidden', !showToday);
+    today.innerHTML = showToday ? backupNudgeHtml(true) : '';
+    if(showToday){
+      markBackupHintSeenToday();
+      wireBackupNudge(today);
+    }
+  }
 }
 function bumpStreak(){
   const t = todayStr();
@@ -6295,7 +6576,7 @@ function validateV52BridgeContracts(){
       errors.push('bangkok-mission/' + mission.id + ':' + mission.thai + ' missing ' + (i.missing||[]).join(','));
     });
     if(/camera|upload|location|gps|photo|web access/i.test(mission.action || '')) errors.push('Bangkok mission asks for blocked device/web dependency: ' + mission.id);
-    if(/ค่ะ/.test(JSON.stringify(mission))) errors.push('female polite particle leaked into mission: ' + mission.id);
+    if(new RegExp('\\u0E04\\u0E48\\u0E30').test(JSON.stringify(mission))) errors.push('female polite particle leaked into mission: ' + mission.id);
   });
   if(typeof dailyCapabilityStatement !== 'function') errors.push('Daily capability statement helper missing');
   const afterL4 = LESSONS.slice(0,4).map(L=>L.id);
@@ -6316,7 +6597,7 @@ function validateV52FullBriefContracts(){
       prerequisiteIssuesForThai(payoff.thai, doneIds, 'lesson-payoff/' + L.id, wordFrame(findWord(payoff.thai))).forEach(i=>{
         errors.push('lesson-payoff/' + L.id + ':' + payoff.thai + ' missing ' + (i.missing||[]).join(','));
       });
-      if(/ค่ะ/.test(JSON.stringify(payoff))) errors.push(L.id + ': female polite particle leaked into payoff');
+      if(new RegExp('\\u0E04\\u0E48\\u0E30').test(JSON.stringify(payoff))) errors.push(L.id + ': female polite particle leaked into payoff');
     }
     const ids = axisCardIdsForLesson(L), axes = new Set(ids.map(id=>(parseAxisId(id)||{}).axis));
     if(!axes.has('transfer')) errors.push(L.id + ': missing transfer axis card');
@@ -6738,6 +7019,51 @@ function validateV65FeedbackContracts(){
   if(errors.length) throw new Error('V6.5 feedback contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateV66DataSafetyContracts(){
+  const errors = [];
+  const badRaw = '{"done":["l1"],';
+  const fakeStorage = {saved:{}, setItem(k,v){ this.saved[k] = v; }};
+  const oldCorruptFlag = stateLoadHadCorruptState;
+  stateLoadHadCorruptState = false;
+  if(readLocalStateRaw(badRaw, fakeStorage) !== false) errors.push('corrupt localStorage parse should fall back without reporting success');
+  if(fakeStorage.saved[CORRUPT_SKEY] !== badRaw) errors.push('corrupt localStorage blob should be copied to quarantine key');
+  if(!stateLoadHadCorruptState) errors.push('corrupt localStorage load should set the boot notice flag');
+  stateLoadHadCorruptState = oldCorruptFlag;
+
+  const legacy = {streak:{count:2,last:'2024-01-01'}, done:['l1'], srs:{}};
+  const legacyImported = importProgressPayload(legacy).state;
+  if(legacyImported.done.join(',') !== 'l1') errors.push('legacy raw-state import should still be accepted');
+  const envelope = {app:'aan-thai', appVersion:APP_VERSION, key:SKEY, exportedAt:'2026-07-04T00:00:00.000Z', state:legacy};
+  const envelopeImported = importProgressPayload(envelope).state;
+  if(envelopeImported.done.join(',') !== 'l1') errors.push('versioned export envelope should import through the normal path');
+  const before = JSON.stringify(state);
+  try{
+    importProgressPayload({app:'aan-thai', appVersion:APP_VERSION, key:SKEY});
+    errors.push('malformed export envelope should be rejected');
+  }catch(e){}
+  if(JSON.stringify(state) !== before) errors.push('malformed envelope rejection must not mutate live state');
+
+  const exportState = {streak:{count:0,last:null}, done:['l1'], srs:{}, days:{}};
+  recordSuccessfulExport(exportState);
+  if(exportState.lastExportAt !== todayStr()) errors.push('successful export should stamp lastExportAt');
+  const activeDays = {};
+  for(let i=1;i<=14;i++) activeDays[isoPlusDays(todayStr(), -i)] = {r:0,l:1,d:0,m:0,ret:0,due:0,paid:false,type:'L'};
+  const nudgeState = {streak:{count:1,last:todayStr()}, done:['l1'], srs:{}, days:activeDays, retention:{}};
+  ensureStateCollections(nudgeState);
+  if(!backupNudgeDue(nudgeState)) errors.push('backup nudge should appear after lesson progress plus 14 active days without export');
+  if(getLessonBlocker('l2', nudgeState)) errors.push('backup nudge must never block the next lesson');
+
+  const oldRuntimeFlag = runtimeErrorBannerShown;
+  runtimeErrorBannerShown = false;
+  const first = showRuntimeErrorNotice();
+  const second = showRuntimeErrorNotice();
+  if(!first || second) errors.push('runtime error banner should be once-only');
+  hideSafetyBanner('runtime-error');
+  runtimeErrorBannerShown = oldRuntimeFlag;
+
+  if(errors.length) throw new Error('V6.6 data-safety contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV601FirstRunContracts(){
   const errors = [];
   if(learnerHadProgressBeforeMigration({done:[], srs:{}})) errors.push('fresh blank states must not be treated as migrated progress');
@@ -6930,7 +7256,7 @@ function validateAutomaticityContracts(){
     seen.add(key);
     if(lessonThai.has(key)) errors.push('Decode Gym must add new reading mileage, not lesson words: ' + key);
     if(!/^l\d+$/.test(item.gate || '') || !lessonById(item.gate)) errors.push('Decode Gym invalid gate for ' + key);
-    if(/[฿]/.test(key)) errors.push('Decode Gym must not use baht symbols: ' + key);
+    if(new RegExp('\\u0E3F').test(key)) errors.push('Decode Gym must not use baht symbols: ' + key);
     if(String(key).normalize('NFC') !== key || String(item.tr).normalize('NFC') !== item.tr) errors.push('Decode Gym entry must be NFC-normalized: ' + key);
     const doneIds = lessonIdsThroughGate(item.gate);
     const source = decodeGymSourceItem(item);
@@ -7789,7 +8115,7 @@ function renderHome(){
     } else _wb.classList.add('is-hidden');
   }
   checkPostcard();
-  ensureDay(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
+  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
 }
 function findWordInLessons(thai){
   for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
@@ -8074,20 +8400,13 @@ function renderNotes(){
   }));
 }
 el('notes-btn').addEventListener('click', ()=>{ openOverlay(); renderNotes(); });
-el('export-btn').addEventListener('click', async ()=>{
-  const raw = JSON.stringify(state);
-  try{
-    await navigator.clipboard.writeText(raw);
-    toast('Progress copied to clipboard');
-  }catch(e){
-    prompt('Copy this JSON:', raw);
-  }
-});
+el('export-btn').addEventListener('click', ()=>downloadProgressExport());
+el('copy-export-btn').addEventListener('click', ()=>copyProgressExport());
 el('import-btn').addEventListener('click', ()=>{
   const raw = prompt('Paste your exported progress JSON:');
   if(!raw) return;
   try{
-    const imported = importProgressState(JSON.parse(raw));
+    const imported = importProgressPayload(JSON.parse(raw));
     state = imported.state;
     saveState();
     renderAfterStateImport();
@@ -11824,9 +12143,26 @@ document.addEventListener('touchstart', ()=>{
 }, {once:true, passive:true});
 
 /* service worker (only when served over https, e.g. GitHub Pages) */
+let serviceWorkerHadController = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+function watchServiceWorkerRegistration(registration){
+  if(!registration || typeof registration.addEventListener !== 'function') return;
+  registration.addEventListener('updatefound', ()=>{
+    const worker = registration.installing;
+    if(!worker || typeof worker.addEventListener !== 'function') return;
+    worker.addEventListener('statechange', ()=>{
+      if(worker.state === 'installed' && navigator.serviceWorker.controller) showUpdateReadyNotice();
+    });
+  });
+}
 if('serviceWorker' in navigator && location.protocol === 'https:'){
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(serviceWorkerHadController && navigator.serviceWorker.controller) showUpdateReadyNotice();
+    serviceWorkerHadController = !!navigator.serviceWorker.controller;
+  });
   window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW skipped', e));
+    navigator.serviceWorker.register('sw.js')
+      .then(watchServiceWorkerRegistration)
+      .catch(e=>console.log('SW skipped', e));
   });
 }
 
@@ -11880,7 +12216,8 @@ function runFullStartupValidators(){
     validateProductionPassContracts,
     validateAutomaticityContracts,
     validateCaptureLoopContracts,
-    validateV65FeedbackContracts
+    validateV65FeedbackContracts,
+    validateV66DataSafetyContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -11892,17 +12229,29 @@ function runStartupValidators(){
   runCriticalStartupValidators();
 }
 
+window.addEventListener('error', e=>{
+  if(e && e.target && e.target !== window) return;
+  showRuntimeErrorNotice();
+});
+window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
+
 (async function init(){
-  runStartupValidators();
-  await loadState();
-  const hadProgressBeforeRepair = learnerHadProgressBeforeMigration(state);
-  const migrated = repairStateForV5(state);
-  const migrated501 = repairStateForV501(state);
-  const migrated54 = repairStateForV54(state);
-  if(migrated.changed || migrated501.changed || migrated54.changed) saveState();
-  applyTheme(); renderTitle();
-  renderHome(); renderLearn(); renderReviewTab();
-  showV5NoticeIfNeeded(hadProgressBeforeRepair);
+  try{
+    runStartupValidators();
+    await loadState();
+    const hadProgressBeforeRepair = learnerHadProgressBeforeMigration(state);
+    const migrated = repairStateForV5(state);
+    const migrated501 = repairStateForV501(state);
+    const migrated54 = repairStateForV54(state);
+    if(migrated.changed || migrated501.changed || migrated54.changed) saveState();
+    applyTheme(); renderTitle();
+    renderHome(); renderLearn(); renderReviewTab();
+    showV5NoticeIfNeeded(hadProgressBeforeRepair);
+    showCorruptStateNotice();
+  }catch(e){
+    console.error(e);
+    showRuntimeErrorNotice();
+  }
 })();
 </script>
 </body>

@@ -1,8 +1,8 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-07-02
+Prepared: 2026-07-04
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.4.0`
+Current app version: `v6.6.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -107,6 +107,28 @@ v6.4.0 is a Bangkok capture-loop pass over v6.3.0:
 - Tone-route tiles appear only for taught, prerequisite-safe, grid-derivable captures; untaught letters/forms are marked and saved for later.
 - `validateCaptureLoopContracts()` guards the pass.
 
+v6.4.1 is a Decode Gym mileage and Write it feedback fix:
+
+- Write it correct answers show a green `Correct` panel with the revealed glyph before auto-advance.
+- Write it and Capture Thai inputs accept the Thai keyboard return key.
+- Decode Gym uses 60 new non-lesson monosyllables, tone-verified and gate-spread through taught tone patterns.
+
+v6.5.0/v6.5.1 are presentational feedback releases:
+
+- Objective MCQ/typed answers get synthesized Web Audio feedback sounds, combo chips, completion best-run lines and Today streak-salience moments.
+- Progress tools includes a `Sounds: on/off` toggle.
+- v6.5.1 waits for `AudioContext.resume()` before scheduling tones and raises tone peaks for iPhone/PWA audibility.
+- The feedback layer stays presentational only: no SRS, grading, blockers, tokens, curriculum, network features or audio assets changed.
+
+v6.6.0 is a data-safety and release-harness pass:
+
+- Corrupt local progress is copied to `thai_state_v1_corrupt` before the app falls back to defaults.
+- Save failures, uncaught runtime errors and service-worker updates show persistent non-blocking recovery/reload banners; updates never auto-reload in-progress work.
+- Progress export downloads a versioned JSON envelope and keeps copy-to-clipboard plus legacy raw-state import support.
+- Backup nudges in Progress/Today are display-only and use optional `lastExportAt` / `backupNudgeSnooze` state.
+- `tools/precommit-check.js` is the committed gate for embedded-script syntax, NFC, particle/currency policy, tone-grid transliteration and Reading-room decodability.
+- `validateV66DataSafetyContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -132,6 +154,7 @@ Use these checks for source review:
 
 ```bash
 node --check tools/phase1-audit.js
+node tools/precommit-check.js
 node tools/phase1-audit.js
 node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('index.html','utf8');const scripts=[...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\\n');new vm.Script(scripts);console.log('embedded scripts parse OK');"
 tools/make-release-zip.sh
@@ -139,9 +162,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.4.0`
+- app version `v6.6.0`
 - 24 lessons
-- 43 validators passing
+- 45 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -155,7 +178,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-4-0`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-4-1`
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
@@ -165,6 +188,7 @@ High-value review areas:
 - progress-honesty/interaction polish: route pips match real steps, mastery checks are not shown as locked when takeable, due badge colour stays calm below overload, and lesson-player Back/Next weight is clear
 - automaticity pass: read timing discards unreliable samples, Class sprint pace appears only after the session, and Decode Gym seed words remain gate-checked, tone-verified and outside SRS
 - capture loop: typed input sanitisation, local-only captures, no route tiles for untaught/unsafe captures, Wild deck spacing staying capture-local and outside SRS
+- data safety: corrupt-state quarantine, save-failure export warning, versioned backup envelope, envelope/legacy import compatibility, backup nudges staying non-blocking, and update-ready reload prompt without auto-reload
 
 Out of scope for this release:
 
