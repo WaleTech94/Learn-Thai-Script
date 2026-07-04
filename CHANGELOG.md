@@ -2,6 +2,17 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v6.7.0 - 2026-07-04
+
+- Added a post-completion maintenance Today route for learners who have passed the Phase 1 completion checkpoint, routing to due review first and then existing warm-up surfaces such as fluency re-reads, Wild deck, readiness report or boss rematch.
+- Added a one-time Phase 1 completion celebration that reuses the bounded readiness/can-do wording and stores only optional `phase1Completion.celebrated`.
+- Added a Progress Phase 1 dashboard card for lessons, checkpoints, fluency reads, Letters boss and final completion.
+- Surfaced previously orphaned optional drills in normal navigation: Write it, Route talk, Decode Gym, Wild deck and a Lesson 21 rare-letter class-only drill. These remain outside SRS, blockers and review-governor load.
+- Clarified return-after-gap, overload and streak-freeze expectations. One freeze now covers one missed day; if there are not enough freezes, none are consumed and the streak resets.
+- Added Capture Thai count/export affordances: `N/200 saved`, cap warning near 200, and a plain-text copy export for saved captures.
+- Added `validateV67CompletionJourneyContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v6.7.0` and 46 validators passing.
+- Updated the app footer version to `v6.7.0`. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+
 ## v6.6.0 - 2026-07-04
 
 - Added corrupt-progress quarantine: unreadable `thai_state_v1` localStorage is copied to `thai_state_v1_corrupt` before the app falls back to defaults, with a one-time recovery-data copy notice.

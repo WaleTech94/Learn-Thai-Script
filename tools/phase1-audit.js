@@ -392,6 +392,102 @@ globalThis.__phase1Audit = (function(){
       roleContract('N/A', [], 'slow pass, smoother pass, decoding check and self-rating; no speech scoring')
     );
   }
+  function writeItSurface(doneIds){
+    if(!lessonGateMet('l2', doneIds)){
+      return surfaceRow(
+        'write-it',
+        'Write it',
+        [],
+        0,
+        8,
+        0,
+        {status:'PASS', issueCount:0, issues:[]},
+        roleContract('N/A', [], 'Thai-keyboard recall unlocks after Lesson 2; no new SRS ids')
+      );
+    }
+    const glyphs = learnedGlyphIdsFor(doneIds).filter(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c');
+    const finals = learnedFinalGlyphIds(doneIds).filter(ch=>GLYPHS[ch] && finalJob(ch));
+    const available = glyphs.map(ch=>({thai:ch})).concat(finals.map(ch=>({thai:ch})));
+    return surfaceRow(
+      'write-it',
+      'Write it',
+      available,
+      available.length >= 3 ? Math.min(8, available.length) : 0,
+      8,
+      available.length,
+      {status:'PASS', issueCount:0, issues:[]},
+      roleContract('N/A', [], 'Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids')
+    );
+  }
+  function routeTalkSurface(doneIds){
+    if(!lessonGateMet('l13', doneIds)){
+      return surfaceRow(
+        'route-talk',
+        'Route talk',
+        [],
+        0,
+        5,
+        0,
+        {status:'PASS', issueCount:0, issues:[]},
+        roleContract('N/A', [], 'spoken tone-route explanation unlocks after Lesson 13; no scoring')
+      );
+    }
+    const raw = learnedWords(doneIds);
+    const available = raw
+      .filter(w=>thaiTextReadable(w.thai, taughtGlyphSet(doneIds)) && thaiItemPrereqsMet(w.thai, doneIds, wordFrame(w)))
+      .map(w=>({word:w, route:toneRouteForWord(w, doneIds)}))
+      .filter(x=>x.route)
+      .map(x=>({thai:x.word.thai}));
+    return surfaceRow(
+      'route-talk',
+      'Route talk',
+      available,
+      available.length >= 5 ? Math.min(5, available.length) : 0,
+      5,
+      raw.length,
+      prereqStatus(available, doneIds, 'route-talk'),
+      roleContract('N/A', [], 'spoken self-explanation of class/mark/live-dead/length/tone; no scoring')
+    );
+  }
+  function decodeGymSurface(doneIds){
+    const raw = DECODE_GYM.filter(item=>lessonGateMet(item.gate, doneIds));
+    const available = decodeGymPool(doneIds).map(item=>({thai:item.thai}));
+    return surfaceRow(
+      'decode-gym',
+      'Decode Gym',
+      available,
+      available.length >= 6 ? Math.min(10, available.length) : 0,
+      10,
+      raw.length,
+      prereqStatus(available, doneIds, 'decode-gym'),
+      roleContract('N/A', [], 'tone-verified non-lesson word mileage; no meanings and no SRS ids')
+    );
+  }
+  function wildDeckSurface(doneIds){
+    return surfaceRow(
+      'wild-deck',
+      'Wild deck',
+      0,
+      0,
+      8,
+      0,
+      {status:'PASS', issueCount:0, issues:[]},
+      roleContract('N/A', [], 'state-driven from local captures only; never creates SRS ids or blockers')
+    );
+  }
+  function rareLetterSurface(doneIds){
+    const available = rareLetterClassPool(doneIds).map(ch=>({thai:ch}));
+    return surfaceRow(
+      'rare-letter-class',
+      'Rare-letter class',
+      available,
+      available.length,
+      available.length,
+      available.length,
+      {status:'PASS', issueCount:0, issues:[]},
+      roleContract('N/A', [], 'Lesson 21 class-only recognition material; definition-free and neutral before answer')
+    );
+  }
   function phase1CompletionSurface(doneIds){
     const raw = doneIds.length >= LESSONS.length ? 1 : 0;
     const qs = raw ? buildPhase1CompletionQuiz() : [];
@@ -507,6 +603,11 @@ globalThis.__phase1Audit = (function(){
       retentionSurface(doneIds),
       storySurface(doneIds),
       fluencySurface(doneIds),
+      writeItSurface(doneIds),
+      routeTalkSurface(doneIds),
+      decodeGymSurface(doneIds),
+      wildDeckSurface(doneIds),
+      rareLetterSurface(doneIds),
       phase1CompletionSurface(doneIds),
       chunkSurface(doneIds),
       signSafariSurface(doneIds),
@@ -629,7 +730,7 @@ globalThis.__phase1Audit = (function(){
         toneItems,
         twinSets,
         echoItems,
-        unlockedDrills:DRILLS.filter(d=>lessonGateMet(d.gate, doneIds)).map(d=>d.id),
+        unlockedDrills:DRILLS.filter(d=>d.gate && lessonGateMet(d.gate, doneIds)).map(d=>d.id),
         unlockedStories:STORIES.filter(s=>doneIds.includes(s.gate)).map(s=>s.id),
         unlockedFluencyReads:FLUENCY_READS.filter(read=>lessonGateMet(read.gate, doneIds)).map(read=>read.id)
       },
@@ -685,7 +786,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('automaticity', validateAutomaticityContracts),
     validatorResult('captureLoop', validateCaptureLoopContracts),
     validatorResult('v65Feedback', validateV65FeedbackContracts),
-    validatorResult('v66DataSafety', validateV66DataSafetyContracts)
+    validatorResult('v66DataSafety', validateV66DataSafetyContracts),
+    validatorResult('v67CompletionJourney', validateV67CompletionJourneyContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -772,7 +874,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v6.6.0 is a data-safety and release-harness pass over v6.5.1: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate now covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v6.6 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v6.7.0 is a completion-journey and maintenance pass over v6.6.0: completed learners now land on a maintenance Today route instead of a new-lesson dead end, a one-time Phase 1 completion celebration reuses the bounded readiness wording, Progress shows a Phase 1 dashboard, return-after-gap and overload copy set steadier expectations, streak freezes cover one missed day each, orphaned optional drills are surfaced in Practice/Tones/Read, the Lesson 21 rare-letter class rows get a dedicated class-only drill, and Capture Thai shows the 200-item cap plus copy export. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v6.7 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);

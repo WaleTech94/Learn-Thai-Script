@@ -993,6 +993,20 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 	.rematch-card .t{font-family:var(--font-display);font-size:15px}
 	.rematch-card .d{font-size:11px;color:var(--muted);margin-top:4px}
 	.rematch-card.locked{opacity:.55}
+	.phase1-dashboard{width:100%;text-align:left;color:var(--text);cursor:pointer;border-color:rgba(34,211,238,.28);background:linear-gradient(160deg,rgba(34,211,238,.08),rgba(255,255,255,.025)),var(--surface-glass)}
+	.phase1-dashboard-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+	.phase1-dashboard-metric{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:10px;min-height:74px}
+	.phase1-dashboard-metric b{display:block;font-family:var(--font-display);font-size:19px;line-height:1.1}
+	.phase1-dashboard-metric span{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+	.capture-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;flex-wrap:wrap}
+	.capture-count.warn{color:var(--gold)}
+	.capture-warning{border-color:rgba(255,210,74,.45)}
+	.rare-letter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+	.rare-letter-tile{min-height:66px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);font-family:var(--font-display);font-size:32px}
+	.rare-letter-tile.mid{border-color:var(--mid);color:var(--mid)}
+	.rare-letter-tile.high{border-color:var(--high);color:var(--high)}
+	.rare-letter-tile.low{border-color:var(--low);color:var(--low)}
+	@media(max-width:430px){.phase1-dashboard-grid{grid-template-columns:repeat(2,1fr)}.rare-letter-grid{grid-template-columns:repeat(2,1fr)}}
 /* skill constellation + personal-best lap (v2.14) - uses ACCENT palette, never the class colours */
 .constel-wrap{display:flex;gap:16px;align-items:center;margin-top:6px}
 .constel-svg{flex:0 0 132px;width:132px;height:120px}
@@ -1107,7 +1121,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">v6.6.0</span>
+        <span class="version-pill">v6.7.0</span>
       </div>
     </header>
 
@@ -1223,7 +1237,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.6.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.7.0 (PWA)</div>
     </div>
   </section>
 
@@ -1234,10 +1248,20 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       <h1 class="screen-title">Progress &amp; settings</h1>
       <p class="screen-sub">Track script progress, streaks, saved progress, and optional extras.</p>
     </div>
+    <button class="section-card phase1-dashboard" id="phase1-dashboard-card">
+      <div class="spread">
+        <div>
+          <div class="eyebrow">Phase 1 dashboard</div>
+          <h2>Script mastery map</h2>
+        </div>
+        <span class="sub meta-mini">tap for report</span>
+      </div>
+      <div class="phase1-dashboard-grid" id="phase1-dashboard-grid"></div>
+    </button>
     <div class="streak-kpis trophy-shelf">
       <button class="streak kpi-chip reward-glint" id="token-chip">💎<span id="baht-num">0</span><span class="kpi-label">tokens</span></button>
       <button class="streak kpi-chip" id="streak-chip" aria-label="Streak details"><span class="flame" id="streak-flame">🔥</span><span id="streak-num">0</span><span class="kpi-label">days</span></button>
-      <button class="streak kpi-chip freeze-buy-chip" id="buy-freeze">Freeze 30💎<span class="kpi-label">streak save</span></button>
+      <button class="streak kpi-chip freeze-buy-chip" id="buy-freeze">Freeze 30💎<span class="kpi-label">missed days</span></button>
       <div class="streak kpi-chip"><span id="freeze-n">0</span><span class="kpi-label">freezes</span></div>
     </div>
     <div class="section-card">
@@ -1347,7 +1371,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <span class="icon-right">→</span>
       </button>
       <button class="action-card readiness-card" id="library-readiness">
-        <div><div class="t">Readiness report</div><div class="d">Phase 1 can-do check after the boss</div></div>
+        <div><div class="t">Readiness report</div><div class="d">What you can do so far</div></div>
         <span class="icon-right">→</span>
       </button>
       <button class="action-card optional phrase-bonus-card" id="cta-shop">
@@ -2643,7 +2667,7 @@ let state = {
   writeLog:[],
   phase1Completion:null
 };
-const APP_VERSION = 'v6.6.0';
+const APP_VERSION = 'v6.7.0';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3017,17 +3041,23 @@ function renderBackupNudge(){
 function bumpStreak(){
   const t = todayStr();
   if(state.streak.last === t) return;
-  const y  = new Date(Date.now()-86400000).toISOString().slice(0,10);
-  const y2 = new Date(Date.now()-2*86400000).toISOString().slice(0,10);
-  if(state.streak.last === y){ state.streak.count++; }
-  else if(state.streak.last === y2 && state.freeze > 0){
-    state.freeze--; state.streak.count++;
-    toast('Streak freeze used. Streak saved.');
+  const gapDays = isoDayDiff(state.streak.last, t);
+  if(gapDays === 1){ state.streak.count++; }
+  else if(gapDays >= 2){
+    const missed = gapDays - 1;
+    if((state.freeze || 0) >= missed){
+      state.freeze -= missed;
+      state.streak.count++;
+      toast('Streak freeze used ×' + missed + '. Streak saved.');
+    } else {
+      state.streak.count = 1;
+    }
   }
   else { state.streak.count = 1; }
   state.streak.last = t;
   saveState();
   el('streak-num').textContent = state.streak.count;
+  if(el('freeze-n')) el('freeze-n').textContent = state.freeze || 0;
   renderTodayStreakChip();
 }
 
@@ -3167,7 +3197,7 @@ function getLessonBlocker(lessonId, target){
   if(reviewLoadBand(due) === 'hard') return {
     code:'review-overload',
     title:'Review load too high',
-    explanation:'Lesson ' + lessonNum(L.id) + ' is locked because ' + due + ' review cards are due. Reduce the deck below ' + REVIEW_HARD_CAP + ' first.',
+    explanation:'Lesson ' + lessonNum(L.id) + ' is locked because ' + due + ' review cards are due. Reduce the deck below ' + REVIEW_HARD_CAP + ' first. Clearing it takes a few steady days.',
     actionLabel:'Review ' + due,
     actionRoute:'review'
   };
@@ -3309,14 +3339,21 @@ const DRILLS = [
   {id:'clinic',      title:'Confusion clinic',  rung:3, gate:'l3',  go:()=>el('cta-clinic').click()},
   {id:'sprint',      title:'Class sprint',      rung:1, gate:'l1',  go:()=>el('class-sprint-btn').click()},
   {id:'ghost',       title:'Glyph ghost',       rung:3, gate:'l7',  go:()=>el('cta-ghost').click()},
+  {id:'write-it',    title:'Write it',          rung:3, gate:'l2',  available:()=>writeItPool().length >= 3, go:()=>startWriteIt()},
   {id:'tone-rule',   title:'Tone-rule trainer', rung:3, gate:'l13', go:()=>el('tone-rule-btn').click()},
+  {id:'route-talk',  title:'Route talk',        rung:3, gate:'l13', available:()=>routeTalkPool().length >= 5, go:()=>startRouteTalk()},
   {id:'reading',     title:'Reading room',      rung:4, gate:'l4',  go:()=>el('cta-read').click()},
+  {id:'decode-gym',  title:'Decode Gym',        rung:4, gate:'l4',  available:()=>decodeGymPool().length >= 6, go:()=>startDecodeGym()},
+  {id:'wild-deck',   title:'Wild deck',         rung:4, gate:null,  available:()=>ensureCaptures().length > 0, lockedLabel:'Capture Thai first', go:()=>startWildDeck()},
   {id:'chunk',        title:'Chunk this word',   rung:4, gate:'l20', go:()=>el('cta-chunk').click()},
   {id:'font-shock',   title:'Font shock',        rung:4, gate:'l23', go:()=>el('cta-font-shock').click()},
+  {id:'rare-letters', title:'Rare-letter class', rung:5, gate:'l21', available:()=>rareLetterClassPool().length > 0, go:()=>startRareLetterClassDrill()},
 ];
-const TONE_DEPTH_IDS = new Set(['tone-listen','twins','echo','sprint','ghost','tone-rule']);
-// edge-case drills (Silent-Letter, rare-letter recognition) register at rung 5 when built - never gating.
-function drillUnlocked(d){ return (state.done||[]).includes(d.gate); }
+const TONE_DEPTH_IDS = new Set(['tone-listen','twins','echo','sprint','ghost','tone-rule','route-talk']);
+function drillUnlocked(d){
+  const gateOpen = d.gate ? (state.done||[]).includes(d.gate) : true;
+  return !!(gateOpen && (!d.available || d.available()));
+}
 function nextDrill(){
   const avail = DRILLS.filter(drillUnlocked);
   if(!avail.length) return null;
@@ -3502,6 +3539,7 @@ function dailyBridgeMissing(d){
 }
 function dailyDepthComplete(d){
   const day = d || ensureDay();
+  if(phase1CompletionPassed()) return true;
   if(day.lite) return true;
   const needed = dailyBridgeMissing(day);
   if(needed.length) return false;
@@ -3627,9 +3665,9 @@ function renderPath(){
       const open = drillUnlocked(d), isNext = next && next.id===d.id;
       const practised = state.drillLog && state.drillLog[d.id];
       const cls = !open ? 'locked' : isNext ? 'next' : practised ? 'done' : '';
-      const label = open ? d.title : d.title + ' · l' + d.gate.slice(1);
+      const label = open ? d.title : d.lockedLabel || (d.gate ? d.title + ' · l' + d.gate.slice(1) : d.title);
       return `<button class="path-node ${escAttr(cls)}" ${open ? 'data-drill="'+escAttr(d.id)+'"' : 'disabled'}>${esc(label)}</button>`;
-    }).join('') : '<span class="path-soon">coming soon</span>';
+    }).join('') : '';
     return `<div class="path-rung"><div class="path-rlabel"><b>${r.n}</b>${r.title} <span class="sub">· ${r.sub}</span></div><div class="path-nodes">${nodes}</div></div>`;
   }).join('');
   host.querySelectorAll('[data-drill]').forEach(b=>b.addEventListener('click', ()=>launchDrill(b.dataset.drill)));
@@ -3639,6 +3677,48 @@ function firstReadyCheckpoint(){
     if(isCheckpointIndex(i) && checkpointReady(i) && !checkpointPassed(i)) return i;
   }
   return -1;
+}
+function stableDayIndex(count){
+  if(!count) return 0;
+  const digits = todayStr().replace(/\D/g, '').split('').reduce((sum,ch)=>sum + (+ch || 0), 0);
+  return digits % count;
+}
+function maintenanceFluencyRead(target){
+  const s = target || state;
+  const reads = FLUENCY_READS.filter(read=>fluencyReadDone(read, s) && fluencyReadUnlocked(read, s.done || []) && !fluencyReadPrereqIssues(read, s.done || []).length);
+  return reads.length ? reads[stableDayIndex(reads.length)] : null;
+}
+function maintenanceRematchItem(target){
+  const items = bossRematchItems(target);
+  return items.length ? items[stableDayIndex(items.length)] : null;
+}
+function startMaintenanceReadinessReport(){
+  const d = ensureDay();
+  d.d = (d.d || 0) + 1;
+  saveState();
+  showReadinessReport();
+}
+function maintenanceMainTask(target){
+  const s = target || state;
+  if(!phase1CompletionPassed(s)) return null;
+  const due = srsDueFor(s).length;
+  if(due){
+    return {type:'maintenance', label:'Maintenance review', sub:'Keep old material warm.', id:'maintenance-review', go:()=>goTodayReviewTask()};
+  }
+  const options = [];
+  const read = maintenanceFluencyRead(s);
+  if(read){
+    options.push({type:'maintenance', label:'Fluency re-read', sub:read.title + ' · keep it warm', id:'maintenance-fluency', go:()=>startFluencyRead(read)});
+  }
+  if((s.captures || []).length){
+    options.push({type:'maintenance', label:'Wild deck', sub:'Re-read saved Thai from Bangkok', id:'maintenance-wild', go:()=>startWildDeck()});
+  }
+  const rematch = maintenanceRematchItem(s);
+  const finalOption = rematch && stableDayIndex(2)
+    ? {type:'maintenance', label:'Boss rematch', sub:rematch.label + ' · no extra tokens', id:'maintenance-rematch', go:rematch.go}
+    : {type:'maintenance', label:'Readiness report', sub:'What you can do so far', id:'maintenance-readiness', go:()=>startMaintenanceReadinessReport()};
+  options.push(finalOption);
+  return options[stableDayIndex(options.length)];
 }
 function currentPathNode(){
   const P = buildPath(), i = pathIndex(P);
@@ -3650,6 +3730,8 @@ function mainTaskNode(){
   const ck = firstReadyCheckpoint();
   if(ck >= 0) return {type:'checkpoint', label:'Mastery check', sub:'prove 80% before new lessons unlock', id:checkpointId(ck), checkpoint:ck};
   if(cur && cur.letters42) return cur;
+  const maintenance = maintenanceMainTask();
+  if(maintenance) return maintenance;
   const recovery = returnGapRecoveryMode();
   const retention = nextRetentionCheck();
   if(recovery && retention){
@@ -3717,6 +3799,7 @@ function dailyMissingStep(){
   return '';
 }
 function dailyMainStepDone(d){
+  if(phase1CompletionPassed()) return !!(d && ((d.r||0) || (d.d||0) || (d.m||0) || (d.ret||0)));
   return d && d.type === 'C'
     ? (d.d > 0 || (d.m||0) > 0 || (d.ret||0) > 0)
     : !!(d && (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0));
@@ -3782,6 +3865,7 @@ function dailyWinSummary(d){
   if(!d) return '';
   const due = srsDue().length;
   const review = due ? 'Review recommended (' + due + ' due)' : 'Review clear';
+  if(phase1CompletionPassed()) return review + ' · maintenance complete';
   if(d.lite) return review + ' · lighter day accepted · streak safe';
   if(d.type === 'C') return review + ' · current-material block complete';
   if((d.ret||0) > 0) return review + ' · memory check done';
@@ -3791,6 +3875,7 @@ function dailyWinSummary(d){
 function dailyCapabilityStatement(d){
   if(state.lastCapability && state.lastCapability.date === todayStr()) return state.lastCapability.text;
   const doneN = (state.done || []).length;
+  if(phase1CompletionPassed()) return 'Phase 1 complete. Keep old material warm with review and re-reading.';
   if(d && d.type === 'C') return 'Today reviewed older Thai instead of adding a new lesson.';
   if(doneN >= 23) return 'You are reading Bangkok sign words from this course.';
   if(doneN >= 18) return 'You are reading clusters and ครับ in everyday Thai.';
@@ -3900,6 +3985,7 @@ function routeVisualClass(summary, missing){
   if(!missing) return 'route-complete';
   if(missing === 'foundations') return 'route-foundation';
   if(missing === 'review') return 'route-review';
+  if(summary.dayType === 'Phase 1 complete · Maintenance') return 'route-consolidation';
   if(summary.dayType === 'Recovery day') return 'route-recovery';
   if(summary.dayType === 'Consolidation day') return 'route-consolidation';
   if(summary.dayType === 'Foundation day' || summary.dayType === 'Updated foundations') return 'route-foundation';
@@ -3907,6 +3993,7 @@ function routeVisualClass(summary, missing){
 }
 function routeOptionalHint(missing, summary){
   if(!missing) return 'All clear. Stop for today or choose optional reading.';
+  if(summary.dayType === 'Phase 1 complete · Maintenance') return 'Maintenance today: review, re-read or rematch.';
   if(missing === 'review') return 'Optional after review: controlled reading or today\'s practice task.';
   if(missing === 'main') return 'Optional after main task: the practice task, then stop.';
   if(missing === 'depth') return 'After this: End today is ready.';
@@ -3939,7 +4026,7 @@ function renderDailyWinCard(){
   card.innerHTML = `
     <div>
       <div class="eyebrow">Daily win</div>
-      <h2>${d.type === 'C' ? 'Consolidation complete' : due ? 'Main task complete' : 'Today is complete'}</h2>
+      <h2>${phase1CompletionPassed() ? 'Maintenance complete' : d.type === 'C' ? 'Consolidation complete' : due ? 'Main task complete' : 'Today is complete'}</h2>
       <p class="sub">${esc(dailyWinSummary(d))}${d.paid ? ' · +10💎 claimed' : ''}</p>
       <div class="capability-line">${esc(dailyCapabilityStatement(d))}</div>
     </div>
@@ -3984,6 +4071,7 @@ function todayRouteSummary(){
   const band = reviewLoadBand(due);
 	  const shape = todayReviewShape();
 	  const recovery = shape.recovery;
+  const maintenance = phase1CompletionPassed();
 	  const missing = dailyMissingStep();
 	  const currentStep = todayRouteStepKey(missing);
 	  const early = earlyFoundationWindow();
@@ -3991,6 +4079,7 @@ function todayRouteSummary(){
 	  const next = nextLesson();
   const blocker = next && getLessonBlocker(next.id);
   const dayType = foundationRefreshRequired() ? 'Updated foundations'
+    : maintenance ? 'Phase 1 complete · Maintenance'
     : recovery ? 'Recovery day'
     : d.type === 'C' ? 'Consolidation day'
     : early ? 'Foundation day'
@@ -4005,7 +4094,8 @@ function todayRouteSummary(){
     };
   }
 	  if(currentStep === 'review'){
-	    const reason = recovery ? 'Start with a smaller return-after-gap review.'
+	    const reason = recovery ? 'Welcome back — you were away ' + recovery.gapDays + ' days. Start with a smaller return-after-gap review.'
+	      : maintenance ? 'Keep old material warm.'
 	      : band === 'hard' ? 'Review due cards before adding more.'
 	      : 'Start with today\'s review slice.';
     return {
@@ -4020,7 +4110,7 @@ function todayRouteSummary(){
 	    return {
 	      dayType,
 	      next:blocker ? shortBlockerTitle(blocker) : main && main.label ? main.label : 'Main task',
-	      reason:blocker ? concreteBlockerDetail(blocker, next) : d.type === 'C' ? 'Review today before new lessons.' : 'Start the next lesson.',
+	      reason:blocker ? concreteBlockerDetail(blocker, next) : maintenance ? 'Keep old material warm.' : d.type === 'C' ? 'Review today before new lessons.' : 'Start the next lesson.',
 	      actionLabel:'Start',
 	      action:()=>routeToDailyStep('main')
 	    };
@@ -4148,6 +4238,7 @@ function renderTodayActions(){
 	  const missing = dailyMissingStep();
 	  const currentStep = todayRouteStepKey(missing);
   const early = earlyFoundationWindow();
+  const maintenance = phase1CompletionPassed();
   const main = mainTaskNode();
   const next = nextLesson();
   const lessonBlocker = next && getLessonBlocker(next.id);
@@ -4186,9 +4277,9 @@ function renderTodayActions(){
 	    syncTabRecommendations();
 	    return;
 	  }
-  if(el('course-day-label')) el('course-day-label').textContent = recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
-  el('today-heading').textContent = recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
-  el('today-brief').textContent = 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
+  if(el('course-day-label')) el('course-day-label').textContent = maintenance ? 'MAINTENANCE' : recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
+  el('today-heading').textContent = maintenance ? 'Phase 1 complete · Maintenance' : recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
+  el('today-brief').textContent = maintenance ? 'Review is now the whole job; the pile naturally thins as intervals grow.' : 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
 	  setTaskButton('today-review-btn', {
 	    state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
 	    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
@@ -5652,6 +5743,38 @@ function renderSkillEvidence(){
       <span class="evidence-value">${speak.attempts||0} comparisons · practice</span>
     </div>`;
 }
+function phase1DashboardCounts(target){
+  const s = target || state;
+  const done = s.done || [];
+  const checks = s.checks || {};
+  const checkpointTotal = LESSONS.filter((L,i)=>isCheckpointIndex(i)).length;
+  const checkpointPassedN = LESSONS.filter((L,i)=>isCheckpointIndex(i) && checks[checkpointId(i)]).length;
+  const fluencyReads = s.fluencyReads || {};
+  const fluencyDone = FLUENCY_READS.filter(read=>fluencyReads[read.id] && fluencyReads[read.id].completed).length;
+  return {
+    lessons:done.filter(id=>LESSONS.some(L=>L.id === id)).length,
+    lessonTotal:LESSONS.length,
+    checkpoints:checkpointPassedN,
+    checkpointTotal,
+    lettersBoss:!!checks.letters42,
+    fluency:fluencyDone,
+    fluencyTotal:FLUENCY_READS.length,
+    final:!!checks.phase1Completion
+  };
+}
+function renderPhase1Dashboard(){
+  const host = el('phase1-dashboard-grid');
+  if(!host) return;
+  const c = phase1DashboardCounts();
+  const metric = (label, value, sub)=>`<div class="phase1-dashboard-metric"><b>${esc(value)}</b><span>${esc(label)}${sub ? ' · ' + esc(sub) : ''}</span></div>`;
+  host.innerHTML = [
+    metric('lessons', c.lessons + '/' + c.lessonTotal, ''),
+    metric('mastery checkpoints', c.checkpoints + '/' + c.checkpointTotal, ''),
+    metric('Letters boss', c.lettersBoss ? '✓' : '-', ''),
+    metric('fluency reads', c.fluency + '/' + c.fluencyTotal, ''),
+    metric('final checkpoint', c.final ? '✓' : '-', '')
+  ].join('');
+}
 function toneOf(tr){
   const n = tr.normalize('NFD');
   if(n.includes('\u030C')) return 'Rising';
@@ -6738,7 +6861,7 @@ function validateTtsAssessmentSafetyContracts(){
 }
 function validatePhase1CompletionStandardContracts(){
   const errors = [];
-  const readiness = String(showReadinessReport);
+  const readiness = String(showReadinessReport) + String(phase1CanDoHtml);
   [
     'Decode taught Thai script without Romanisation',
     'Apply consonant class and tone logic',
@@ -7062,6 +7185,83 @@ function validateV66DataSafetyContracts(){
   runtimeErrorBannerShown = oldRuntimeFlag;
 
   if(errors.length) throw new Error('V6.6 data-safety contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV67CompletionJourneyContracts(){
+  const errors = [];
+  const allDone = LESSONS.map(L=>L.id);
+  const allChecks = {letters42:true, phase1Completion:true};
+  LESSONS.forEach((L,i)=>{ if(isCheckpointIndex(i)) allChecks[checkpointId(i)] = true; });
+  const allReads = {};
+  FLUENCY_READS.forEach(read=>{ allReads[read.id] = {completed:todayStr(), rating:'slow but correct', gate:read.gate}; });
+  const completedBase = extra=>Object.assign({
+    done:allDone.slice(),
+    checks:Object.assign({}, allChecks),
+    fluencyReads:JSON.parse(JSON.stringify(allReads)),
+    phase1Completion:{date:todayStr(), passed:true},
+    srs:{},
+    days:{},
+    retention:{},
+    captures:[]
+  }, extra || {});
+  const dueCard = {iv:0, due:todayStr(), lapses:0, sameDayMisses:0};
+
+  withTemporaryState(completedBase(), ()=>{
+    const d = ensureDay();
+    const summary = todayRouteSummary();
+    const text = [summary.dayType, summary.next, summary.reason, dailyCapabilityStatement(d), el('today-heading') ? el('today-heading').textContent : ''].join(' ');
+    if(!summary.dayType.includes('Maintenance')) errors.push('post-completion Today should identify maintenance mode');
+    if(/before new lessons/i.test(text)) errors.push('post-completion Today should not say before new lessons');
+    const task = maintenanceMainTask();
+    if(!task || typeof task.go !== 'function') errors.push('maintenance main task should route to an existing surface');
+    if(getLessonBlocker('l24')) errors.push('maintenance route should not create a lesson blocker');
+  });
+  withTemporaryState(completedBase({srs:{'test-due':Object.assign({}, dueCard)}}), ()=>{
+    const task = maintenanceMainTask();
+    if(!task || task.id !== 'maintenance-review') errors.push('maintenance should route due review first');
+  });
+  withTemporaryState(completedBase({captures:[normaliseCapture({thai:'บ้าน', note:'station', d:todayStr()}, 0)]}), ()=>{
+    const task = maintenanceMainTask();
+    const allowed = ['maintenance-fluency','maintenance-wild','maintenance-readiness','maintenance-rematch'];
+    if(!task || !allowed.includes(task.id)) errors.push('maintenance rotation targeted an unknown surface: ' + (task && task.id));
+  });
+  const celebrate = completedBase();
+  if(!phase1CompletionCelebrationDue(celebrate)) errors.push('completed imports should be due the once-only celebration before the flag');
+  celebrate.phase1Completion.celebrated = true;
+  if(phase1CompletionCelebrationDue(celebrate)) errors.push('celebration flag should make the completion celebration idempotent');
+
+  const freezeCase = (gap, freezes, expectedCount, expectedFreeze)=>{
+    withTemporaryState({streak:{count:5,last:isoPlusDays(todayStr(), -gap)}, freeze:freezes, done:[], srs:{}, days:{}, retention:{}}, ()=>{
+      bumpStreak();
+      if(state.streak.count !== expectedCount || state.freeze !== expectedFreeze){
+        errors.push('freeze gap ' + gap + ' with ' + freezes + ' freeze(s) expected streak ' + expectedCount + ' and freezes ' + expectedFreeze + ', got ' + state.streak.count + '/' + state.freeze);
+      }
+    });
+  };
+  freezeCase(2, 1, 6, 0);
+  freezeCase(4, 2, 1, 2);
+  freezeCase(4, 3, 6, 0);
+
+  if(String(renderPath).includes('coming' + ' soon')) errors.push('training path should not render a placeholder rung');
+  const drillIds = DRILLS.map(d=>d.id);
+  ['decode-gym','write-it','route-talk','wild-deck','rare-letters'].forEach(id=>{
+    if(!drillIds.includes(id)) errors.push('DRILLS missing rotated optional drill: ' + id);
+  });
+  withTemporaryState({done:['l1','l2','l3'], srs:{'g:ก':dueCard,'g:น':dueCard,'g:ม':dueCard}, days:{}, retention:{}, captures:[]}, ()=>{
+    if(drillUnlocked(DRILLS.find(d=>d.id === 'decode-gym'))) errors.push('Decode Gym must not unlock before Lesson 4');
+    if(drillUnlocked(DRILLS.find(d=>d.id === 'route-talk'))) errors.push('Route talk must not unlock before Lesson 13');
+    if(drillUnlocked(DRILLS.find(d=>d.id === 'wild-deck'))) errors.push('Wild deck must require saved captures');
+    const before = Object.keys(state.srs || {}).sort().join('|');
+    drillUnlocked(DRILLS.find(d=>d.id === 'write-it'));
+    if(Object.keys(state.srs || {}).sort().join('|') !== before) errors.push('drill unlock checks must not create SRS ids');
+  });
+  withTemporaryState({done:LESSONS.slice(0,21).map(L=>L.id), srs:{}, days:{}, retention:{}, captures:[]}, ()=>{
+    const qs = buildRareLetterClassQuiz();
+    if(!drillUnlocked(DRILLS.find(d=>d.id === 'rare-letters')) || !qs.length) errors.push('rung 5 rare-letter class drill should unlock after Lesson 21');
+    if(qs.some(q=>q.colourPrompt || /meaning|definition/i.test(q.text + ' ' + q.explain))) errors.push('rare-letter drill should stay neutral and definition-free');
+    if(Object.keys(state.srs || {}).length) errors.push('rare-letter drill should not create SRS ids');
+  });
+  if(errors.length) throw new Error('V6.7 completion journey contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -8115,7 +8315,7 @@ function renderHome(){
     } else _wb.classList.add('is-hidden');
   }
   checkPostcard();
-  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
+  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderPhase1Dashboard(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
 }
 function findWordInLessons(thai){
   for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
@@ -8138,6 +8338,7 @@ el('library-wild-deck').addEventListener('click', startWildDeck);
 el('library-fluency').addEventListener('click', showFluencyReadList);
 el('library-signs').addEventListener('click', showSignSafari);
 el('library-readiness').addEventListener('click', showReadinessReport);
+el('phase1-dashboard-card').addEventListener('click', showReadinessReport);
 el('wai-banner').addEventListener('click', ()=>{
   const weak = weakestCards(3);
   if(!weak.length){ toast('No cards yet. Finish a lesson first.'); return; }
@@ -8266,6 +8467,7 @@ function showEmber(){
   const pop = document.createElement('div'); pop.className = 'ember-pop';
   pop.innerHTML = `<div class="big">🔥 ${n}-day streak</div>`
     + `<div class="esub">${f} freeze${f===1?'':'s'} in reserve</div>`
+    + `<div class="esub">One freeze covers one missed day.</div>`
     + `<div class="thai">${t.thai}</div><div class="etr">${t.tr} · ${t.en}</div>`;
   document.body.append(back, pop);
   const close = ()=>{ pop.remove(); back.remove(); };
@@ -8351,7 +8553,7 @@ function renderEarnBoard(){
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Spending it</div>
-      ${row("Streak freeze <span class='sub' style='font-size:12px'>(auto-saves a missed day)</span>", "30 💎", (state.freeze||0) + " owned")}
+      ${row("Streak freeze <span class='sub' style='font-size:12px'>(covers missed days, one freeze per day)</span>", "30 💎", (state.freeze||0) + " owned")}
       ${row("Street slang pack", "50 💎", slangOwned() ? "✓ owned" : "locked")}
     </div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
@@ -8411,6 +8613,7 @@ el('import-btn').addEventListener('click', ()=>{
     saveState();
     renderAfterStateImport();
     toast('Progress imported');
+    showPhase1CompletionCelebrationIfNeeded();
   }catch(e){ toast('Import failed. That is not valid progress data.'); }
 });
 el('sfx-toggle').addEventListener('click', ()=>{
@@ -8423,7 +8626,7 @@ el('buy-freeze').addEventListener('click', ()=>{
   if((state.baht||0) < 30){ toast('Not enough tokens. Need 30 💎.'); return; }
   award(-30); state.freeze = (state.freeze||0) + 1; saveState();
   el('freeze-n').textContent = state.freeze;
-  toast('Streak freeze bought. It will be used if you miss a day.');
+  toast('Streak freeze bought. One freeze covers one missed day.');
 });
 
 /* ----- letter wall ----- */
@@ -8891,15 +9094,15 @@ function finishPhase1CompletionCheckpoint(pct, ratingId, rematch){
   const rating = FLUENCY_RATINGS.find(r=>r.id === ratingId) || FLUENCY_RATINGS[2];
   const passed = pct >= 85 && rating.pass;
   const d = ensureDay();
-  if(!state.phase1Completion || typeof state.phase1Completion !== 'object') state.phase1Completion = {};
-  state.phase1Completion = {
+  const previousCompletion = state.phase1Completion && typeof state.phase1Completion === 'object' ? state.phase1Completion : {};
+  state.phase1Completion = Object.assign({}, previousCompletion, {
     date:todayStr(),
     pct,
     rating:rating.label.toLowerCase(),
     passed,
     quizBar:85,
     boundary:'controlled reading, not real-world listening or full speaking mastery'
-  };
+  });
   let firstPass = false;
   if(passed){
     if(!state.checks) state.checks = {};
@@ -8914,6 +9117,10 @@ function finishPhase1CompletionCheckpoint(pct, ratingId, rematch){
   bumpStreak();
   questCheck();
   setProg(100);
+  if(passed && firstPass && !state.phase1Completion.celebrated){
+    showPhase1CompletionCelebration(true);
+    return;
+  }
   el('stage').innerHTML = passed ? `
     <div class="result-big">Checkpoint passed</div>
     <div class="result-sub">Final Thai read complete${firstPass ? ' · +20💎 first pass' : ''}</div>
@@ -10260,8 +10467,8 @@ function renderReviewTab(){
   setActionCardState('cta-leech', leeches ? 'recommended' : 'done');
   setActionCardState('cta-read', active && active.id === 'reading' ? 'recommended' : unreadStory ? '' : 'done');
   setActionCardState('cta-fluency', active && active.id === 'fluency' ? 'recommended' : nextRead ? '' : 'done');
-  setActionCardState('cta-write-it', writeItPool().length ? '' : 'locked');
-  setActionCardState('cta-decode-gym', decodeGymPool().length ? '' : 'locked');
+  setActionCardState('cta-write-it', active && active.id === 'write-it' ? 'recommended' : writeItPool().length ? '' : 'locked');
+  setActionCardState('cta-decode-gym', active && active.id === 'decode-gym' ? 'recommended' : decodeGymPool().length ? '' : 'locked');
   setActionCardState('cta-chunk', state.done.includes('l20') ? '' : 'locked');
   setActionCardState('cta-font-shock', state.done.includes('l23') ? '' : 'locked');
   setActionCardState('cta-hear-thai', state.done.includes('l1') ? '' : 'locked');
@@ -10495,6 +10702,32 @@ function renderRouteTalk(revealed){
   } else {
     el('route-reveal').onclick = ()=>renderRouteTalk(true);
   }
+}
+function rareLetterClassPool(doneIds){
+  const ids = doneIds || state.done || [];
+  if(!ids.includes('l21')) return [];
+  const L = lessonById('l21');
+  return (L && L.classOnlyGlyphs || []).filter(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c');
+}
+function rareLetterClassQuestion(ch){
+  return {
+    kind:'mcq',
+    prompt:ch,
+    promptBig:true,
+    text:'Which class?',
+    answer:CLS_LABEL[GLYPHS[ch].cls],
+    options:shuffle(Object.values(CLS_LABEL)),
+    axis:'rare-letter-class',
+    explain:GLYPHS[ch].cls === 'mid' ? 'Rare, but still mid class.' : GLYPHS[ch].cls === 'high' ? 'Rare, but still high class.' : 'Rare, and low class.'
+  };
+}
+function buildRareLetterClassQuiz(doneIds){
+  return rareLetterClassPool(doneIds).map(rareLetterClassQuestion);
+}
+function startRareLetterClassDrill(){
+  const qs = buildRareLetterClassQuiz();
+  if(!qs.length){ toast('Rare-letter class practice opens after Lesson 21'); return; }
+  startGenericQuiz(shuffle(qs), 'Rare-letter class drill');
 }
 function decodeGymSourceItem(item){
   const source = findWord(item.thai) || {};
@@ -11038,6 +11271,27 @@ function captureSummaryHtml(capture){
   }
   return `<div class="notebox">Saved. Keep this for slow reading practice.</div>`;
 }
+function captureCountHtml(){
+  const n = ensureCaptures().length;
+  return `<span class="sub meta-mini capture-count ${n >= 180 ? 'warn' : ''}">${n}/200 saved</span>`;
+}
+function captureCapWarningHtml(){
+  return ensureCaptures().length >= 180
+    ? '<div class="notebox capture-warning">At 200 captures, the oldest saved Thai drops off first.</div>'
+    : '';
+}
+function capturesPlainText(){
+  return ensureCaptures().map(c=>{
+    const note = c.note || 'no note';
+    const date = c.d || c.lastSeen || 'no date';
+    return c.thai + ' — ' + note + ' — ' + date;
+  }).join('\n');
+}
+async function copyCaptures(){
+  const text = capturesPlainText();
+  if(!text){ toast('No captures yet'); return; }
+  await copyTextWithPrompt(text, 'Captures copied', 'Copy captures:');
+}
 function saveCapture(thai, note){
   const cleanThai = sanitizeCaptureThai(thai);
   if(!cleanThai || !hasThaiText(cleanThai)) return null;
@@ -11075,6 +11329,8 @@ function renderCaptureLoop(saved){
   const caps = ensureCaptures();
   el('stage').innerHTML = `
     <div class="center"><h2>Capture Thai</h2><p class="sub">Type Thai you noticed. No camera, upload, location or network.</p></div>
+    <div class="capture-tools">${captureCountHtml()}<button class="btn small ghost" id="capture-copy">Copy captures</button></div>
+    ${captureCapWarningHtml()}
     <input id="capture-thai" class="type-in" lang="th" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="30" inputmode="text" placeholder="พิมพ์ไทย">
     <textarea id="capture-note" class="notes-ta" rows="2" maxlength="60" placeholder="Where seen"></textarea>
     <div class="sub" style="text-align:center">Use your iPhone Thai keyboard. Thai text only.</div>
@@ -11097,6 +11353,7 @@ function renderCaptureLoop(saved){
   el('capture-save').onclick = save;
   if(input) input.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); save(); } });
   el('capture-wild').onclick = startWildDeck;
+  el('capture-copy').onclick = copyCaptures;
   el('st-done').onclick = ()=>{ closeOverlay(); renderCats(); renderPhrases(); renderHome(); };
 }
 function wildDeckPool(){
@@ -11144,6 +11401,7 @@ function renderWildDeck(revealed){
   const route = captureRouteForThai(capture.thai);
   el('stage').innerHTML = `
     <div class="center"><div class="eyebrow">Wild deck · ${p.i+1} of ${p.rounds.length}</div><h2>Decode this capture</h2></div>
+    <div class="capture-tools">${captureCountHtml()}<button class="btn small ghost" id="wild-copy-captures">Copy captures</button></div>
     <div class="capture-preview">${captureMarkedHtml(capture.thai)}</div>
     ${capture.note ? `<div class="capture-note-line" style="text-align:center">${esc(capture.note)}</div>` : ''}
     ${revealed ? (route ? toneRouteStepsHtml(route) : captureSummaryHtml(capture)) : `<div class="sub" style="text-align:center">Read it first, then reveal what the app can honestly show.</div>`}
@@ -11159,6 +11417,7 @@ function renderWildDeck(revealed){
   } else {
     el('wild-reveal').onclick = ()=>renderWildDeck(true);
   }
+  el('wild-copy-captures').onclick = copyCaptures;
 }
 const FLUENCY_RATINGS = [
   {id:'smooth', label:'Smooth', pass:true},
@@ -11496,6 +11755,51 @@ function showMouthCoach(){
 function readinessMetric(label, value, sub){
   return `<div class="readiness-stat"><div class="sub" style="font-size:12px">${esc(label)}</div><div class="n">${esc(value)}</div><div class="sub" style="font-size:12px">${esc(sub||'')}</div></div>`;
 }
+function phase1CanDoHtml(finalPassed){
+  return `
+      <b>Can do now</b><br>
+      • Decode taught Thai script without Romanisation.<br>
+      • Apply consonant class and tone logic.<br>
+      • Recognise live/dead syllables and final consonant jobs.<br>
+      • Read controlled cumulative items chunk by chunk.<br>
+      • ${finalPassed ? 'Passed the final controlled-reading checkpoint.' : 'Final controlled-reading checkpoint still pending.'}<br><br>
+      <b>Keep practising</b><br>
+      • Real-world listening.<br>
+      • Speaking naturally in open conversation.`;
+}
+function ensurePhase1CompletionRecord(){
+  if(!state.phase1Completion || typeof state.phase1Completion !== 'object') state.phase1Completion = {};
+  return state.phase1Completion;
+}
+function phase1CompletionCelebrationDue(target){
+  const s = target || state;
+  return phase1CompletionPassed(s) && !(s.phase1Completion && s.phase1Completion.celebrated);
+}
+function showPhase1CompletionCelebration(force){
+  if(!phase1CompletionPassed()) return false;
+  const rec = ensurePhase1CompletionRecord();
+  if(rec.celebrated && !force) return false;
+  if(!force && ((el('overlay') && el('overlay').classList.contains('open')) || document.querySelector('.confirm-modal'))){
+    setTimeout(()=>showPhase1CompletionCelebration(false), 700);
+    return false;
+  }
+  rec.celebrated = true;
+  saveState();
+  player = {type:'phase1-celebration'};
+  openOverlay();
+  setProg(100);
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Phase 1 complete</div><h2>Reading maintenance starts now</h2><p class="sub">You can now decode taught Thai script and keep it warm through review.</p></div>
+    <div class="notebox" style="margin-top:14px;text-align:left">${phase1CanDoHtml(true)}</div>
+    <div class="stage-actions"><button class="btn full" id="phase1-celebration-done">Continue to Today</button></div>`;
+  sfxComplete();
+  triggerRewardBurst('phase1');
+  el('phase1-celebration-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
+  return true;
+}
+function showPhase1CompletionCelebrationIfNeeded(){
+  return showPhase1CompletionCelebration(false);
+}
 function showReadinessReport(){
   player = {type:'readiness'};
   openOverlay();
@@ -11524,17 +11828,7 @@ function showReadinessReport(){
       ${readinessMetric('Read-aloud practice', String(speak.attempts||0), 'comparisons logged')}
       ${readinessMetric('Transfer', storiesRead + ' stories · ' + signSeen + ' signs', 'optional practice')}
     </div>
-    <div class="notebox" style="margin-top:14px;text-align:left">
-      <b>Can do now</b><br>
-      • Decode taught Thai script without Romanisation.<br>
-      • Apply consonant class and tone logic.<br>
-      • Recognise live/dead syllables and final consonant jobs.<br>
-      • Read controlled cumulative items chunk by chunk.<br>
-      • ${finalPassed ? 'Passed the final controlled-reading checkpoint.' : 'Final controlled-reading checkpoint still pending.'}<br><br>
-      <b>Keep practising</b><br>
-      • Real-world listening.<br>
-      • Speaking naturally in open conversation.
-    </div>
+    <div class="notebox" style="margin-top:14px;text-align:left">${phase1CanDoHtml(finalPassed)}</div>
     <div class="stage-actions"><button class="btn full" id="st-done">Done</button></div>`;
   el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
 }
@@ -12217,7 +12511,8 @@ function runFullStartupValidators(){
     validateAutomaticityContracts,
     validateCaptureLoopContracts,
     validateV65FeedbackContracts,
-    validateV66DataSafetyContracts
+    validateV66DataSafetyContracts,
+    validateV67CompletionJourneyContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -12248,6 +12543,7 @@ window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
     renderHome(); renderLearn(); renderReviewTab();
     showV5NoticeIfNeeded(hadProgressBeforeRepair);
     showCorruptStateNotice();
+    showPhase1CompletionCelebrationIfNeeded();
   }catch(e){
     console.error(e);
     showRuntimeErrorNotice();

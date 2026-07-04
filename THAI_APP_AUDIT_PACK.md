@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-04
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.6.0`
+Current app version: `v6.7.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -129,6 +129,16 @@ v6.6.0 is a data-safety and release-harness pass:
 - `tools/precommit-check.js` is the committed gate for embedded-script syntax, NFC, particle/currency policy, tone-grid transliteration and Reading-room decodability.
 - `validateV66DataSafetyContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
 
+v6.7.0 is a completion-journey, progress-map and orphan-surfacing pass:
+
+- Completed Phase 1 learners land on a maintenance Today route instead of a new-lesson dead end; due review still comes first.
+- A one-time completion celebration reuses the bounded readiness wording and stores only optional `phase1Completion.celebrated`.
+- Progress includes a Phase 1 dashboard for lessons, checkpoints, fluency reads, Letters boss and final completion.
+- Write it, Route talk, Decode Gym, Wild deck and rare-letter class practice are surfaced through normal tabs while staying outside SRS, blockers and review-governor load.
+- Streak freezes now cover one missed day each; if the learner lacks enough freezes for the whole gap, none are consumed and the streak resets.
+- Capture Thai shows `N/200 saved`, warns near the cap and can copy saved captures as plain text.
+- `validateV67CompletionJourneyContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -162,9 +172,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.6.0`
+- app version `v6.7.0`
 - 24 lessons
-- 45 validators passing
+- 46 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -189,6 +199,7 @@ High-value review areas:
 - automaticity pass: read timing discards unreliable samples, Class sprint pace appears only after the session, and Decode Gym seed words remain gate-checked, tone-verified and outside SRS
 - capture loop: typed input sanitisation, local-only captures, no route tiles for untaught/unsafe captures, Wild deck spacing staying capture-local and outside SRS
 - data safety: corrupt-state quarantine, save-failure export warning, versioned backup envelope, envelope/legacy import compatibility, backup nudges staying non-blocking, and update-ready reload prompt without auto-reload
+- completion journey: post-Phase 1 maintenance route, once-only celebration, dashboard counts, fair freeze-gap consumption, surfaced optional drills and capture copy export staying outside SRS/blockers
 
 Out of scope for this release:
 

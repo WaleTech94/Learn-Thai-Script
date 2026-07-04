@@ -1,24 +1,80 @@
-# v6.6.0 Smoke-Test Checklist
+# v6.7.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
 ## Fresh Load
 
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.6.0`.
+- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.7.0`.
 - Confirm no Endings Refresh, Morning warm-up or legacy Phase 1 progress-kept modal appears for a blank first-ever state.
-- Confirm the service-worker cache marker remains `aan-thai-v6-4-1`; v6.6.0 does not change cached asset filenames.
+- Confirm the service-worker cache marker remains `aan-thai-v6-4-1`; v6.7.0 does not change cached asset filenames.
 
 ## Validation Gate
 
 - Run `node tools/precommit-check.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v6.6.0`, 45 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v6.7.0`, 46 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v67CompletionJourney` and the Write it, Route talk, Decode Gym, Wild deck and Rare-letter class surface rows.
+
+## v6.7 Completion Journey
+
+- Import or create a completed Phase 1 state with `checks.phase1Completion` true.
+- Pass: Today says `Phase 1 complete · Maintenance`, does not offer a new lesson, and routes first to due review if due cards exist.
+- Clear due review in that completed state.
+- Pass: the main action routes to an existing maintenance surface such as a fluency re-read, Wild deck, readiness report or boss rematch.
+- Use a completed state with no `phase1Completion.celebrated`.
+- Pass: the one-time completion overlay appears, uses bounded can-do / keep-practising wording, then sets `phase1Completion.celebrated`.
+- Reload the same state.
+- Pass: the completion overlay does not repeat.
+
+## Progress Dashboard
+
+- Open Progress.
+- Pass: a Phase 1 dashboard card shows lesson, checkpoint, fluency-read, Letters boss and final-completion counts from current progress.
+- Tap the dashboard card.
+- Pass: it opens the readiness report rather than changing progress or scheduling.
+
+## Optional Drill Surfacing
+
+- With early progress through Lesson 2, open Practice.
+- Pass: Write it is available only when its learned-letter/ending pool exists and it creates no SRS cards.
+- With progress through Lesson 13, open Tones.
+- Pass: Route talk appears and reveals derived route tiles only after the learner self-explains.
+- With progress through Lesson 4+, open Practice.
+- Pass: Decode Gym appears once enough gate-checked non-lesson word reps are available.
+- With at least one saved capture, open Read.
+- Pass: Wild deck is visible and uses saved local captures only.
+- With progress through Lesson 21, open Practice.
+- Pass: Rare-letter class appears as a class-only drill with neutral pre-answer prompts and no meaning questions.
+
+## Streak Freeze Gaps
+
+- Set a state whose last active day was two calendar days ago with one freeze.
+- Pass: one freeze is consumed, the streak continues, and the copy says one freeze covers one missed day.
+- Set a state whose last active day was four calendar days ago with two freezes.
+- Pass: no freeze is consumed and the streak resets because three missed days need three freezes.
+- Set the same four-day gap with three freezes.
+- Pass: three freezes are consumed and the streak continues.
+
+## Return And Overload Copy
+
+- Use a state returning after at least three inactive days.
+- Pass: Today includes a welcome-back line and a smaller return-after-gap review route.
+- Use a state with 45+ due review cards.
+- Pass: the overload copy explains that clearing the deck takes a few steady days while short task labels stay compact.
+
+## Capture Count And Export
+
+- Save local Thai captures until the count is visible.
+- Pass: Capture Thai and Wild deck show `N/200 saved`.
+- Near 180 captures, pass: the app warns that at 200 captures the oldest saved Thai drops off first.
+- Tap `Copy captures`.
+- Pass: saved captures copy or appear in the fallback prompt as plain text lines with Thai, note and date.
 
 ## Export And Import
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v6.6.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v6.7.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -69,7 +125,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v6.6.0`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer version `v6.7.0`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

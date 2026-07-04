@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-04T00:40:18.599Z
-App version: v6.6.0
+Generated: 2026-07-04T01:06:10.323Z
+App version: v6.7.0
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -52,6 +52,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 - PASS captureLoop
 - PASS v65Feedback
 - PASS v66DataSafety
+- PASS v67CompletionJourney
 
 ## Prerequisite Audit
 - Lesson prerequisite issues: 0
@@ -63,7 +64,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 
 Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.
 
-v6.6.0 is a data-safety and release-harness pass over v6.5.1: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate now covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v6.6 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
+v6.7.0 is a completion-journey and maintenance pass over v6.6.0: completed learners now land on a maintenance Today route instead of a new-lesson dead end, a one-time Phase 1 completion celebration reuses the bounded readiness wording, Progress shows a Phase 1 dashboard, return-after-gap and overload copy set steadier expectations, streak freezes cover one missed day each, orphaned optional drills are surfaced in Practice/Tones/Read, the Lesson 21 rare-letter class rows get a dedicated class-only drill, and Capture Thai shows the 200-item cap plus copy export. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v6.7 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
 
 - Today review default max: 30 cards
 - Manual Review catch-up cap: 40 cards
@@ -198,6 +199,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 1 | Delayed retention | 1 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 1 | Reading/stories | 0 stories | 0 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 1 | Fluency reads | 0 reads | 0 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 1 | Write it | 0 items | 0 / 8 | 0 | PASS | N/A · Thai-keyboard recall unlocks after Lesson 2; no new SRS ids |
+| 1 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 1 | Decode Gym | 0 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 1 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 1 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 1 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 1 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 1 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -216,6 +222,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 2 | Delayed retention | 2 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 2 | Reading/stories | 0 stories | 0 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 2 | Fluency reads | 0 reads | 0 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 2 | Write it | 11 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 2 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 2 | Decode Gym | 0 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 2 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 2 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 2 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 2 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 2 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -234,6 +245,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 3 | Delayed retention | 3 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 3 | Reading/stories | 0 stories | 0 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 3 | Fluency reads | 0 reads | 0 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 3 | Write it | 15 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 3 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 3 | Decode Gym | 0 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 3 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 3 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 3 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 3 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 3 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -252,6 +268,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 4 | Delayed retention | 4 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 4 | Reading/stories | 1 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 4 | Fluency reads | 0 reads | 0 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 4 | Write it | 16 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 4 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 4 | Decode Gym | 3 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 4 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 4 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 4 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 4 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 4 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -270,6 +291,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 5 | Delayed retention | 5 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 5 | Reading/stories | 1 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 5 | Fluency reads | 0 reads | 0 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 5 | Write it | 24 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 5 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 5 | Decode Gym | 4 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 5 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 5 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 5 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 5 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 5 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -288,6 +314,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 6 | Delayed retention | 6 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 6 | Reading/stories | 2 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 6 | Fluency reads | 1 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 6 | Write it | 28 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 6 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 6 | Decode Gym | 5 items | 0 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 6 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 6 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 6 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 6 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 6 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -306,6 +337,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 7 | Delayed retention | 7 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 7 | Reading/stories | 2 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 7 | Fluency reads | 1 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 7 | Write it | 34 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 7 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 7 | Decode Gym | 6 items | 6 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 7 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 7 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 7 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 7 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 7 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -324,6 +360,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 8 | Delayed retention | 8 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 8 | Reading/stories | 2 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 8 | Fluency reads | 1 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 8 | Write it | 42 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 8 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 8 | Decode Gym | 8 items | 8 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 8 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 8 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 8 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 8 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 8 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -342,6 +383,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 9 | Delayed retention | 9 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 9 | Reading/stories | 3 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 9 | Fluency reads | 1 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 9 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 9 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 9 | Decode Gym | 13 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 9 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 9 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 9 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 9 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 9 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -360,6 +406,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 10 | Delayed retention | 10 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 10 | Reading/stories | 3 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 10 | Fluency reads | 2 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 10 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 10 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 10 | Decode Gym | 15 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 10 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 10 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 10 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 10 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 10 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -378,6 +429,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 11 | Delayed retention | 11 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 11 | Reading/stories | 3 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 11 | Fluency reads | 2 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 11 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 11 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 11 | Decode Gym | 16 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 11 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 11 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 11 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 11 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 11 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -396,6 +452,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 12 | Delayed retention | 12 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 12 | Reading/stories | 3 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 12 | Fluency reads | 2 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 12 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 12 | Route talk | 0 items | 0 / 5 | 0 | PASS | N/A · spoken tone-route explanation unlocks after Lesson 13; no scoring |
+| 12 | Decode Gym | 19 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 12 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 12 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 12 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 12 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 12 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -414,6 +475,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 13 | Delayed retention | 13 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 13 | Reading/stories | 4 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 13 | Fluency reads | 3 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 13 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 13 | Route talk | 26 items | 5 / 5 | 27 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 13 | Decode Gym | 22 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 13 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 13 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 13 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 13 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 13 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -432,6 +498,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 14 | Delayed retention | 14 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 14 | Reading/stories | 4 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 14 | Fluency reads | 3 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 14 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 14 | Route talk | 27 items | 5 / 5 | 30 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 14 | Decode Gym | 24 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 14 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 14 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 14 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 14 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 14 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -450,6 +521,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 15 | Delayed retention | 15 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 15 | Reading/stories | 4 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 15 | Fluency reads | 3 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 15 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 15 | Route talk | 30 items | 5 / 5 | 30 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 15 | Decode Gym | 26 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 15 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 15 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 15 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 15 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 15 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -468,6 +544,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 16 | Delayed retention | 16 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 16 | Reading/stories | 4 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 16 | Fluency reads | 3 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 16 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 16 | Route talk | 32 items | 5 / 5 | 32 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 16 | Decode Gym | 30 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 16 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 16 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 16 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 16 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 16 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -486,6 +567,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 17 | Delayed retention | 17 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 17 | Reading/stories | 5 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 17 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 17 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 17 | Route talk | 33 items | 5 / 5 | 36 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 17 | Decode Gym | 36 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 17 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 17 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 17 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 17 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 17 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -504,6 +590,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 18 | Delayed retention | 18 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 18 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 18 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 18 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 18 | Route talk | 37 items | 5 / 5 | 36 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 18 | Decode Gym | 40 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 18 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 18 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 18 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 18 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 18 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -522,6 +613,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 19 | Delayed retention | 19 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 19 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 19 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 19 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 19 | Route talk | 39 items | 5 / 5 | 38 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 19 | Decode Gym | 42 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 19 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 19 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 19 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 19 | Chunk this word | 0 items | 0 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 19 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -540,6 +636,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 20 | Delayed retention | 20 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 20 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 20 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 20 | Write it | 59 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 20 | Route talk | 39 items | 5 / 5 | 42 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 20 | Decode Gym | 44 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 20 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 20 | Rare-letter class | 0 items | 0 / 0 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 20 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 20 | Chunk this word | 3 items | 3 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 20 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -558,6 +659,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 21 | Delayed retention | 21 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 21 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 21 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 21 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 21 | Route talk | 40 items | 5 / 5 | 45 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 21 | Decode Gym | 46 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 21 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 21 | Rare-letter class | 8 items | 8 / 8 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 21 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 21 | Chunk this word | 3 items | 3 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 21 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -576,6 +682,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 22 | Delayed retention | 22 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 22 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 22 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 22 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 22 | Route talk | 42 items | 5 / 5 | 47 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 22 | Decode Gym | 56 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 22 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 22 | Rare-letter class | 8 items | 8 / 8 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 22 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 22 | Chunk this word | 4 items | 4 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 22 | Seen in the wild | 0 signs | 0 / 0 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -594,6 +705,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 23 | Delayed retention | 23 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 23 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 23 | Fluency reads | 5 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 23 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 23 | Route talk | 42 items | 5 / 5 | 51 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 23 | Decode Gym | 56 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 23 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 23 | Rare-letter class | 8 items | 8 / 8 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 23 | Phase 1 completion checkpoint | 0 checks | 0 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 23 | Chunk this word | 8 items | 8 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 23 | Seen in the wild | 4 signs | 4 / 4 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -612,6 +728,11 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 24 | Delayed retention | 24 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
 | 24 | Reading/stories | 10 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 24 | Fluency reads | 6 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
+| 24 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
+| 24 | Route talk | 45 items | 5 / 5 | 52 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
+| 24 | Decode Gym | 60 items | 10 / 10 | 0 | PASS | N/A · tone-verified non-lesson word mileage; no meanings and no SRS ids |
+| 24 | Wild deck | 0 items | 0 / 8 | 0 | PASS | N/A · state-driven from local captures only; never creates SRS ids or blockers |
+| 24 | Rare-letter class | 8 items | 8 / 8 | 0 | PASS | N/A · Lesson 21 class-only recognition material; definition-free and neutral before answer |
 | 24 | Phase 1 completion checkpoint | 15 checks | 1 / 1 | 0 | PASS | N/A · final observable reading behaviours; 85% quiz plus smooth/slow final read |
 | 24 | Chunk this word | 11 items | 8 / 8 | 0 | PASS | N/A · definition-free script chunking; no meaning test |
 | 24 | Seen in the wild | 10 signs | 10 / 10 | 0 | PASS | N/A · self-paced local checklist; no camera, upload or location |
@@ -623,30 +744,30 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 ## Lesson Map
 | Day | Lesson | New starts | Finals taught | Quiz axes | Available pools after lesson | Issues |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | l1 First sounds | ก น ม | - | glyph-choice:1, glyph-sound:1, class:3, class-pick:1, mcq:2, listen:2 | tone 1, echo 4 | - |
-| 2 | l2 Eat, look, fly | ด บ อ | ก -k, น -n, ม -m, ด -t, บ -p | vowel-length:1, live-dead:1, class:3, final-job:5, final:1, listen:2 | tone 1, echo 8 | - |
-| 3 | l3 Street words | ป ท | ป -p, ท -t, ก -k | class:2, live-dead:1, vowel-order:1, final-job:3, listen:2, final:1 | tone 1, echo 12 | - |
-| 4 | l4 Tone-mark preview | ห | น -n | word-reading:2, glyph-choice:1, final:1, class:1, listen:2, class-pick:1, final-job:1, live-dead:1 | tone 4, twins 2, echo 23, stories 1 | - |
-| 5 | l5 Waiting and we | ร ล ว ย | ร -n, ล -n, ว -ao/-aao, ย -y glide | final-job:4, final:1, class:4, listen:2, vowel-order:1, live-dead:1 | tone 4, twins 2, echo 27, stories 1 | - |
-| 6 | l6 High class, please | ส ข | ส -t, ข -k, ม -m, ว -ao/-aao | listen:2, final-job:4, class:2, live-dead:1, final:1 | tone 6, twins 3, echo 35, stories 2 | - |
-| 7 | l7 Work and elephants | จ ช ง | จ -t, ช -t, ง -ng, น -n | class:3, final:1, final-job:4, live-dead:1, listen:2, vowel-length:1 | tone 6, twins 7, echo 47, stories 2 | - |
-| 8 | l8 ต ถ พ ฟ + dead syllables | ต ถ พ ฟ | ต -t, ถ -t, พ -p, ฟ -p, ก -k, น -n | final-job:6, class:4, live-dead:1, listen:2, final:1 | tone 6, twins 7, echo 51, stories 2 | - |
-| 9 | l9 The hidden vowel | ค ผ ฝ ซ | ค -k, ซ -t, น -n, ม -m, ย -y glide | hidden-vowel:1, listen:2, class:4, final-job:5, final:1, live-dead:1 | tone 9, twins 8, echo 60, stories 3 | - |
-| 10 | l10 Front vowels เ แ + ึ ื | - | ง -ng, ก -k | glyph-choice:1, word-reading:1, vowel-order:1, final-job:2, listen:2, live-dead:1, final:1, glyph-sound:1 | tone 9, twins 8, echo 64, stories 3 | - |
-| 11 | l11 Short and snappy | - | ถ -t, ก -k, ง -ng | final-job:3, final:1, live-dead:1, word-reading:1, hidden-vowel:1, listen:2, vowel-length:1 | tone 9, twins 8, echo 68, stories 3 | - |
-| 12 | l12 He, she, water, yes | - | - | listen:2, glyph-sound:1, glyph-choice:2, vowel-order:1, word-reading:1, live-dead:1, mcq:2 | tone 9, twins 8, echo 72, stories 3 | - |
-| 13 | l13 Live or dead? | - | ก -k, ด -t, น -n | mcq:4, vowel-length:1, listen:2, final-job:3, final:1, live-dead:1 | tone 9, twins 8, echo 76, stories 4 | - |
-| 14 | l14 Mid class: all five | - | ง -ng | mcq:4, listen:2, live-dead:1, final-job:1, final:1, glyph-choice:1 | tone 9, twins 8, echo 80, stories 4 | - |
-| 15 | l15 High class: the grid | - | ว -ao/-aao, ง -ng, ม -m | mcq:3, live-dead:1, listen:2, final-job:3, final:1 | tone 9, twins 8, echo 82, stories 4 | - |
-| 16 | l16 Low class: the flip | - | ง -ng, ก -k | final:1, vowel-length:1, listen:2, live-dead:1, mcq:3, final-job:2 | tone 9, twins 8, echo 86, stories 4 | - |
-| 17 | l17 The silent leaders | - | ก -k | listen:2, word-reading:1, mcq:4, final:1, final-job:1, live-dead:1 | tone 11, twins 10, echo 93, stories 5 | - |
-| 18 | l18 Decode ครับ | - | บ -p | mcq:3, listen:2, vowel-order:1, cluster:1, live-dead:1, final-job:1, vowel-length:1, final:1 | tone 11, twins 10, echo 97, stories 6 | - |
-| 19 | l19 Fake clusters | - | ง -ng, บ -p, ย -y glide | final:1, final-job:3, live-dead:1, mcq:3, listen:2, cluster:1 | tone 11, twins 10, echo 101, stories 6 | - |
-| 20 | l20 Formal friends | ธ ภ ศ ษ ญ ฮ | ธ -t, ภ -p, ศ -t, ษ -t, ญ -n, ง -ng, น -n | final-job:7, class:6, final:1, vowel-order:1, mcq:1, listen:1, live-dead:1 | tone 11, twins 10, echo 105, stories 6 | - |
-| 21 | l21 Rare-letter class rows | ฉ ฬ | ฬ -n, น -n, ก -k | final:1, rare-class:4, final-job:3, class:2, live-dead:1, hidden-vowel:1, listen:1 | tone 11, twins 10, echo 109, stories 6 | - |
-| 22 | l22 Three-piece vowels | - | น -n | final-job:1, live-dead:1, listen:2, glyph-sound:1, mcq:2, final:1, word-reading:1, vowel-order:1 | tone 11, twins 11, echo 115, stories 6 | - |
-| 23 | l23 Useful signs | - | ง -ng, ก -k | final:1, mcq:4, live-dead:1, final-job:2, listen:2 | tone 11, twins 11, echo 119, stories 6 | - |
-| 24 | l24 Capstone: read Bangkok | - | ด -t, ม -m, ร -n | final-job:3, live-dead:1, listen:2, mcq:3, final:1, vowel-order:1 | tone 11, twins 11, echo 123, stories 10 | - |
+| 1 | l1 First sounds | ก น ม | - | mcq:2, class:3, class-pick:1, listen:2, glyph-choice:1, glyph-sound:1 | tone 1, echo 4 | - |
+| 2 | l2 Eat, look, fly | ด บ อ | ก -k, น -n, ม -m, ด -t, บ -p | class:3, live-dead:1, final-job:5, listen:2, final:1, vowel-length:1 | tone 1, echo 8 | - |
+| 3 | l3 Street words | ป ท | ป -p, ท -t, ก -k | final-job:3, class:2, listen:2, final:1, live-dead:1, vowel-order:1 | tone 1, echo 12 | - |
+| 4 | l4 Tone-mark preview | ห | น -n | word-reading:2, mcq:2, final-job:1, class:1, listen:2, live-dead:1, final:1 | tone 4, twins 2, echo 23, stories 1 | - |
+| 5 | l5 Waiting and we | ร ล ว ย | ร -n, ล -n, ว -ao/-aao, ย -y glide | class:4, final-job:4, live-dead:1, vowel-order:1, final:1, listen:2 | tone 4, twins 2, echo 27, stories 1 | - |
+| 6 | l6 High class, please | ส ข | ส -t, ข -k, ม -m, ว -ao/-aao | final-job:4, listen:2, live-dead:1, class:2, final:1 | tone 6, twins 3, echo 35, stories 2 | - |
+| 7 | l7 Work and elephants | จ ช ง | จ -t, ช -t, ง -ng, น -n | class:3, final:1, live-dead:1, final-job:4, vowel-length:1, listen:2 | tone 6, twins 7, echo 47, stories 2 | - |
+| 8 | l8 ต ถ พ ฟ + dead syllables | ต ถ พ ฟ | ต -t, ถ -t, พ -p, ฟ -p, ก -k, น -n | final-job:6, listen:2, class:4, final:1, live-dead:1 | tone 6, twins 7, echo 51, stories 2 | - |
+| 9 | l9 The hidden vowel | ค ผ ฝ ซ | ค -k, ซ -t, น -n, ม -m, ย -y glide | final-job:5, class:4, listen:2, live-dead:1, final:1, hidden-vowel:1 | tone 9, twins 8, echo 60, stories 3 | - |
+| 10 | l10 Front vowels เ แ + ึ ื | - | ง -ng, ก -k | vowel-order:2, glyph-sound:1, listen:2, live-dead:1, final-job:2, word-reading:1, final:1 | tone 9, twins 8, echo 64, stories 3 | - |
+| 11 | l11 Short and snappy | - | ถ -t, ก -k, ง -ng | final:1, listen:2, final-job:3, word-reading:1, vowel-length:1, live-dead:1, hidden-vowel:1 | tone 9, twins 8, echo 68, stories 3 | - |
+| 12 | l12 He, she, water, yes | - | - | live-dead:1, glyph-sound:1, mcq:2, vowel-order:1, glyph-choice:2, word-reading:1, listen:2 | tone 9, twins 8, echo 72, stories 3 | - |
+| 13 | l13 Live or dead? | - | ก -k, ด -t, น -n | listen:2, final-job:3, mcq:4, final:1, live-dead:1, vowel-length:1 | tone 9, twins 8, echo 76, stories 4 | - |
+| 14 | l14 Mid class: all five | - | ง -ng | listen:2, final-job:1, word-reading:1, mcq:4, final:1, live-dead:1 | tone 9, twins 8, echo 80, stories 4 | - |
+| 15 | l15 High class: the grid | - | ว -ao/-aao, ง -ng, ม -m | mcq:3, listen:2, final-job:3, final:1, live-dead:1 | tone 9, twins 8, echo 82, stories 4 | - |
+| 16 | l16 Low class: the flip | - | ง -ng, ก -k | vowel-length:1, mcq:3, final:1, listen:2, final-job:2, live-dead:1 | tone 9, twins 8, echo 86, stories 4 | - |
+| 17 | l17 The silent leaders | - | ก -k | mcq:4, final:1, word-reading:1, final-job:1, listen:2, live-dead:1 | tone 11, twins 10, echo 93, stories 5 | - |
+| 18 | l18 Decode ครับ | - | บ -p | listen:2, mcq:3, live-dead:1, vowel-order:1, final:1, vowel-length:1, final-job:1, cluster:1 | tone 11, twins 10, echo 97, stories 6 | - |
+| 19 | l19 Fake clusters | - | ง -ng, บ -p, ย -y glide | live-dead:1, final-job:3, cluster:1, listen:2, final:1, mcq:3 | tone 11, twins 10, echo 101, stories 6 | - |
+| 20 | l20 Formal friends | ธ ภ ศ ษ ญ ฮ | ธ -t, ภ -p, ศ -t, ษ -t, ญ -n, ง -ng, น -n | live-dead:1, final-job:7, class:6, final:1, listen:1, vowel-order:1, mcq:1 | tone 11, twins 10, echo 105, stories 6 | - |
+| 21 | l21 Rare-letter class rows | ฉ ฬ | ฬ -n, น -n, ก -k | final-job:3, rare-class:4, class:2, listen:1, final:1, live-dead:1, hidden-vowel:1 | tone 11, twins 10, echo 109, stories 6 | - |
+| 22 | l22 Three-piece vowels | - | น -n | listen:2, final-job:1, mcq:2, live-dead:1, final:1, glyph-sound:2, vowel-order:1 | tone 11, twins 11, echo 115, stories 6 | - |
+| 23 | l23 Useful signs | - | ง -ng, ก -k | listen:2, mcq:4, final-job:2, live-dead:1, final:1 | tone 11, twins 11, echo 119, stories 6 | - |
+| 24 | l24 Capstone: read Bangkok | - | ด -t, ม -m, ร -n | listen:2, final:1, mcq:3, live-dead:1, final-job:3, vowel-order:1 | tone 11, twins 11, echo 123, stories 10 | - |
 
 ## Per-Lesson Detail
 ### l1 - First sounds
@@ -654,22 +775,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ก น ม า ี
 - Final jobs: -
 - Quiz count: 10
-- Quiz axes: glyph-choice 1, glyph-sound 1, class 3, class-pick 1, mcq 2, listen 2
+- Quiz axes: mcq 2, class 3, class-pick 1, listen 2, glyph-choice 1, glyph-sound 1
 - Review after lesson: glyph cards 5, start-consonant glyphs 3, final cards 0, echo pool 4
 - Workload: lesson payload glyph 5, final 0, quiz 10; Today route due 5, served 5/30, Lesson day
-- Surface audit: Hear & Pick Thai 4 items -> 4/10 PASS; Spell It 2 items -> 0/8 PASS; Echo 4 items -> 4/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 15 questions -> 10/10 PASS; Lesson payoff 1 items -> 1/1 PASS; Axis review 23 cards -> 23/40 PASS; Delayed retention 1 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 0 missions -> 0/1 PASS
+- Surface audit: Hear & Pick Thai 4 items -> 4/10 PASS; Spell It 2 items -> 0/8 PASS; Echo 4 items -> 4/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 15 questions -> 10/10 PASS; Lesson payoff 1 items -> 1/1 PASS; Axis review 23 cards -> 23/40 PASS; Delayed retention 1 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Write it 0 items -> 0/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 0 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 0 missions -> 0/1 PASS
 - Unlocked drills: hear-thai, echo, sprint
 - Quiz prompts:
-  - glyph-choice: Hear it. Which consonant is it? -> น
-  - glyph-sound: What vowel sound? -> ii (long)
+  - mcq: <span class="classchip mid">Mid class</span> กา has no tone mark. What tone do we read here? -> Mid
+  - class: Which class? -> Low class
   - class: Which class? -> Low class
   - class-pick: Pick the mid class consonant -> ก
-  - mcq: <span class="classchip low">Low class</span> นาน has no tone mark. What tone do we read here? -> Mid
   - class: Which class? -> Mid class
-  - listen: Listen: which Thai did you hear? -> มี
-  - listen: Listen: which Thai did you hear? -> มา
   - mcq: <span class="classchip low">Low class</span> มา has no tone mark. What tone do we read here? -> Mid
-  - class: Which class? -> Low class
+  - listen: Listen: which Thai did you hear? -> มี
+  - glyph-choice: Hear it. Which consonant is it? -> ม
+  - glyph-sound: What vowel sound? -> ii (long)
+  - listen: Listen: which Thai did you hear? -> มา
 - Words:
   - มา (maa) - core
   - มี (mii) - core
@@ -681,25 +802,25 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ด บ อ ิ ู
 - Final jobs: ก -> -k (stop), น -> -n (ring), ม -> -m (ring), ด -> -t (stop), บ -> -p (stop)
 - Quiz count: 13
-- Quiz axes: vowel-length 1, live-dead 1, class 3, final-job 5, final 1, listen 2
+- Quiz axes: class 3, live-dead 1, final-job 5, listen 2, final 1, vowel-length 1
 - Review after lesson: glyph cards 10, start-consonant glyphs 6, final cards 5, echo pool 8
 - Workload: lesson payload glyph 5, final 5, quiz 13; Today route due 15, served 15/30, Lesson day
-- Surface audit: Hear & Pick Thai 8 items -> 8/10 PASS; Spell It 5 items -> 5/8 PASS; Echo 8 items -> 8/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 38 questions -> 10/10 PASS; Lesson payoff 2 items -> 1/1 PASS; Axis review 54 cards -> 40/40 PASS; Delayed retention 2 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 0 missions -> 0/1 PASS
-- Unlocked drills: hear-thai, echo, sprint
+- Surface audit: Hear & Pick Thai 8 items -> 8/10 PASS; Spell It 5 items -> 5/8 PASS; Echo 8 items -> 8/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 38 questions -> 10/10 PASS; Lesson payoff 2 items -> 1/1 PASS; Axis review 54 cards -> 40/40 PASS; Delayed retention 2 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Write it 11 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 0 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 0 missions -> 0/1 PASS
+- Unlocked drills: hear-thai, echo, sprint, write-it
 - Quiz prompts:
-  - vowel-length: Vowel length: short or long? -> Short
+  - class: Which class? -> Mid class
+  - class: Which class? -> Mid class
   - live-dead: Sound feel: live or dead? -> Live
-  - class: Which class? -> Mid class
   - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - class: Which class? -> Mid class
-  - class: Which class? -> Mid class
-  - final: Ending job: what sound does น make here? -> -n
-  - final-job: Ending job: what sound does this letter make at the end? -> -m
   - listen: Listen: which Thai did you hear? -> ดี
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - listen: Listen: which Thai did you hear? -> กิน
+  - final: Ending job: what sound does น make here? -> -n
+  - class: Which class? -> Mid class
+  - vowel-length: Vowel length: short or long? -> Short
   - final-job: Ending job: what sound does this letter make at the end? -> -k
   - final-job: Ending job: what sound does this letter make at the end? -> -p
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - final-job: Ending job: what sound does this letter make at the end? -> -m
+  - listen: Listen: which Thai did you hear? -> กิน
 - Words:
   - กิน (gin) - core; final น -n; Short
   - ดี (dii) - core
@@ -711,22 +832,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ป ท ไ โ
 - Final jobs: ป -> -p (stop), ท -> -t (stop), ก -> -k (stop)
 - Quiz count: 10
-- Quiz axes: class 2, live-dead 1, vowel-order 1, final-job 3, listen 2, final 1
+- Quiz axes: final-job 3, class 2, listen 2, final 1, live-dead 1, vowel-order 1
 - Review after lesson: glyph cards 14, start-consonant glyphs 8, final cards 7, echo pool 12
 - Workload: lesson payload glyph 4, final 2, quiz 10; Today route due 21, served 21/30, Lesson day
-- Surface audit: Hear & Pick Thai 12 items -> 10/10 PASS; Spell It 8 items -> 8/8 PASS; Echo 12 items -> 8/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 55 questions -> 10/10 PASS; Lesson payoff 3 items -> 1/1 PASS; Axis review 79 cards -> 40/40 PASS; Delayed retention 3 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 1 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, echo, spell, clinic, sprint
+- Surface audit: Hear & Pick Thai 12 items -> 10/10 PASS; Spell It 8 items -> 8/8 PASS; Echo 12 items -> 8/8 PASS; Sound Twins 0 sets -> 0/10 PASS; Tone listening 1 items -> 0/8 PASS; Mixed review 55 questions -> 10/10 PASS; Lesson payoff 3 items -> 1/1 PASS; Axis review 79 cards -> 40/40 PASS; Delayed retention 3 checks -> 1/1 PASS; Reading/stories 0 stories -> 0/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Write it 15 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 0 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 0 cards -> 0/0 PASS; Contrast Block 0 blocks -> 0/1 PASS; Bangkok Mission 1 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, echo, spell, clinic, sprint, write-it
 - Quiz prompts:
-  - class: Which class? -> Low class
-  - live-dead: Sound feel: live or dead? -> Dead
-  - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - final-job: Ending job: what sound does this letter make at the end? -> -p
-  - listen: Listen: which Thai did you hear? -> บาท
   - class: Which class? -> Mid class
-  - listen: Listen: which Thai did you hear? -> ไป
+  - listen: Listen: which Thai did you hear? -> บาท
   - final: Ending job: what sound does ท make here? -> -t
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - live-dead: Sound feel: live or dead? -> Dead
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
+  - listen: Listen: which Thai did you hear? -> ไป
+  - class: Which class? -> Low class
 - Words:
   - ไป (bpai) - core; written before, spoken after
   - บาท (bàat) - core; final ท -t
@@ -738,22 +859,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ่ ้ ห
 - Final jobs: น -> -n (ring)
 - Quiz count: 10
-- Quiz axes: word-reading 2, glyph-choice 1, final 1, class 1, listen 2, class-pick 1, final-job 1, live-dead 1
+- Quiz axes: word-reading 2, mcq 2, final-job 1, class 1, listen 2, live-dead 1, final 1
 - Review after lesson: glyph cards 17, start-consonant glyphs 9, final cards 7, echo pool 23
 - Workload: lesson payload glyph 3, final 0, quiz 10; Today route due 24, served 24/30, Lesson day
-- Surface audit: Hear & Pick Thai 17 items -> 10/10 PASS; Spell It 11 items -> 8/8 PASS; Echo 23 items -> 8/8 PASS; Sound Twins 2 sets -> 2/10 PASS; Tone listening 4 items -> 4/8 PASS; Mixed review 71 questions -> 10/10 PASS; Lesson payoff 4 items -> 1/1 PASS; Axis review 97 cards -> 40/40 PASS; Delayed retention 4 checks -> 1/1 PASS; Reading/stories 1 stories -> 1/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 2 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, reading
+- Surface audit: Hear & Pick Thai 17 items -> 10/10 PASS; Spell It 11 items -> 8/8 PASS; Echo 23 items -> 8/8 PASS; Sound Twins 2 sets -> 2/10 PASS; Tone listening 4 items -> 4/8 PASS; Mixed review 71 questions -> 10/10 PASS; Lesson payoff 4 items -> 1/1 PASS; Axis review 97 cards -> 40/40 PASS; Delayed retention 4 checks -> 1/1 PASS; Reading/stories 1 stories -> 1/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Write it 16 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 3 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 2 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, write-it, reading, decode-gym
 - Quiz prompts:
-  - word-reading: Mini decode: how does this read? -> bâan
-  - word-reading: Mini decode: how does this read? -> mâi
-  - glyph-choice: Hear it. Which consonant is it? -> ห
-  - final: Ending job: what sound does น make here? -> -n
+  - word-reading: Mini decode: how does this read? -> àan
+  - mcq: <span class="classchip low">Low class</span> + Thai tone mark: which tone? -> Falling
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - class: Which class? -> High class
   - listen: Listen: which Thai did you hear? -> บ้าน
-  - listen: Listen: which Thai did you hear? -> ไม่
-  - class-pick: Pick the high class consonant -> ห
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - live-dead: Sound feel: live or dead? -> Live
+  - word-reading: Mini decode: how does this read? -> nîi
+  - mcq: <span class="classchip high">High class</span> + Thai tone mark: which tone? -> Falling
+  - listen: Listen: which Thai did you hear? -> ไม่
+  - final: Ending job: what sound does น make here? -> -n
 - Words:
   - ไม่ (mâi) - core
   - บ้าน (bâan) - core; final น -n
@@ -766,25 +887,25 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ร ล ว ย เ◌า
 - Final jobs: ร -> -n (ring), ล -> -n (ring), ว -> -ao/-aao (glide), ย -> -y glide (glide)
 - Quiz count: 13
-- Quiz axes: final-job 4, final 1, class 4, listen 2, vowel-order 1, live-dead 1
+- Quiz axes: class 4, final-job 4, live-dead 1, vowel-order 1, final 1, listen 2
 - Review after lesson: glyph cards 22, start-consonant glyphs 13, final cards 11, echo pool 27
 - Workload: lesson payload glyph 5, final 4, quiz 13; Today route due 33, served 30/30, Lesson day
-- Surface audit: Hear & Pick Thai 21 items -> 10/10 PASS; Spell It 13 items -> 8/8 PASS; Echo 27 items -> 8/8 PASS; Sound Twins 2 sets -> 2/10 PASS; Tone listening 4 items -> 4/8 PASS; Mixed review 92 questions -> 10/10 PASS; Lesson payoff 5 items -> 1/1 PASS; Axis review 128 cards -> 40/40 PASS; Delayed retention 5 checks -> 1/1 PASS; Reading/stories 1 stories -> 1/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 2 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, reading
+- Surface audit: Hear & Pick Thai 21 items -> 10/10 PASS; Spell It 13 items -> 8/8 PASS; Echo 27 items -> 8/8 PASS; Sound Twins 2 sets -> 2/10 PASS; Tone listening 4 items -> 4/8 PASS; Mixed review 92 questions -> 10/10 PASS; Lesson payoff 5 items -> 1/1 PASS; Axis review 128 cards -> 40/40 PASS; Delayed retention 5 checks -> 1/1 PASS; Reading/stories 1 stories -> 1/1 PASS; Fluency reads 0 reads -> 0/1 PASS; Write it 24 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 4 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 2 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, write-it, reading, decode-gym
 - Quiz prompts:
-  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
-  - final: Ending job: what sound does ว make here? -> -aao
+  - class: Which class? -> Low class
   - final-job: Ending job: what sound does this letter make at the end? -> -n
   - class: Which class? -> Low class
-  - listen: Listen: which Thai did you hear? -> รอ
-  - listen: Listen: which Thai did you hear? -> เรา
-  - class: Which class? -> Low class
-  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
-  - class: Which class? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -y glide
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - live-dead: Sound feel: live or dead? -> Live
+  - final-job: Ending job: what sound does this letter make at the end? -> -y glide
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
+  - final: Ending job: what sound does ว make here? -> -aao
   - class: Which class? -> Low class
+  - class: Which class? -> Low class
+  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
+  - listen: Listen: which Thai did you hear? -> รอ
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - listen: Listen: which Thai did you hear? -> เรา
 - Words:
   - รอ (ror) - core
   - เรา (rao) - core; wraps the consonant
@@ -796,22 +917,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ส ข
 - Final jobs: ส -> -t (stop), ข -> -k (stop), ม -> -m (ring), ว -> -ao/-aao (glide)
 - Quiz count: 10
-- Quiz axes: listen 2, final-job 4, class 2, live-dead 1, final 1
+- Quiz axes: final-job 4, listen 2, live-dead 1, class 2, final 1
 - Review after lesson: glyph cards 24, start-consonant glyphs 15, final cards 13, echo pool 35
 - Workload: lesson payload glyph 2, final 2, quiz 10; Today route due 37, served 30/30, Lesson day
-- Surface audit: Hear & Pick Thai 25 items -> 10/10 PASS; Spell It 15 items -> 8/8 PASS; Echo 35 items -> 8/8 PASS; Sound Twins 3 sets -> 3/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 106 questions -> 10/10 PASS; Lesson payoff 6 items -> 1/1 PASS; Axis review 151 cards -> 40/40 PASS; Delayed retention 6 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 3 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, reading
+- Surface audit: Hear & Pick Thai 25 items -> 10/10 PASS; Spell It 15 items -> 8/8 PASS; Echo 35 items -> 8/8 PASS; Sound Twins 3 sets -> 3/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 106 questions -> 10/10 PASS; Lesson payoff 6 items -> 1/1 PASS; Axis review 151 cards -> 40/40 PASS; Delayed retention 6 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Write it 28 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 5 items -> 0/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 1 blocks -> 1/1 PASS; Bangkok Mission 3 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, write-it, reading, decode-gym
 - Quiz prompts:
-  - listen: Listen: which Thai did you hear? -> ขอ
-  - final-job: Ending job: what sound does this letter make at the end? -> -m
   - final-job: Ending job: what sound does this letter make at the end? -> -t
   - listen: Listen: which Thai did you hear? -> สี
-  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
-  - class: Which class? -> High class
   - live-dead: Sound feel: live or dead? -> Live
   - class: Which class? -> High class
+  - listen: Listen: which Thai did you hear? -> ขอ
   - final: Ending job: what sound does ม make here? -> -m
+  - final-job: Ending job: what sound does this letter make at the end? -> -m
   - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - class: Which class? -> High class
+  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
 - Words:
   - ขอ (khǒr) - core
   - สี (sǐi) - core
@@ -823,24 +944,24 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: จ ช ง ั
 - Final jobs: จ -> -t (stop), ช -> -t (stop), ง -> -ng (ring), น -> -n (ring)
 - Quiz count: 12
-- Quiz axes: class 3, final 1, final-job 4, live-dead 1, listen 2, vowel-length 1
+- Quiz axes: class 3, final 1, live-dead 1, final-job 4, vowel-length 1, listen 2
 - Review after lesson: glyph cards 28, start-consonant glyphs 18, final cards 16, echo pool 47
 - Workload: lesson payload glyph 4, final 3, quiz 12; Today route due 44, served 30/30, Lesson day
-- Surface audit: Hear & Pick Thai 29 items -> 10/10 PASS; Spell It 17 items -> 8/8 PASS; Echo 47 items -> 8/8 PASS; Sound Twins 7 sets -> 7/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 123 questions -> 10/10 PASS; Lesson payoff 7 items -> 1/1 PASS; Axis review 180 cards -> 40/40 PASS; Delayed retention 7 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 4 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 29 items -> 10/10 PASS; Spell It 17 items -> 8/8 PASS; Echo 47 items -> 8/8 PASS; Sound Twins 7 sets -> 7/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 123 questions -> 10/10 PASS; Lesson payoff 7 items -> 1/1 PASS; Axis review 180 cards -> 40/40 PASS; Delayed retention 7 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Write it 34 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 6 items -> 6/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 4 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
-  - class: Which class? -> Low class
-  - final: Ending job: what sound does น make here? -> -n
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - live-dead: Sound feel: live or dead? -> Live
-  - listen: Listen: which Thai did you hear? -> วันนี้
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
   - class: Which class? -> Mid class
-  - listen: Listen: which Thai did you hear? -> งาน
+  - final: Ending job: what sound does น make here? -> -n
+  - live-dead: Sound feel: live or dead? -> Live
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - class: Which class? -> Low class
   - class: Which class? -> Low class
   - vowel-length: Vowel length: short or long? -> Short
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - listen: Listen: which Thai did you hear? -> งาน
+  - listen: Listen: which Thai did you hear? -> วันนี้
 - Words:
   - งาน (ngaan) - core; final น -n
   - ช้าง (cháang) - decode; final ง -ng
@@ -852,26 +973,26 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ต ถ พ ฟ
 - Final jobs: ต -> -t (stop), ถ -> -t (stop), พ -> -p (stop), ฟ -> -p (stop), ก -> -k (stop), น -> -n (ring)
 - Quiz count: 14
-- Quiz axes: final-job 6, class 4, live-dead 1, listen 2, final 1
+- Quiz axes: final-job 6, listen 2, class 4, final 1, live-dead 1
 - Review after lesson: glyph cards 32, start-consonant glyphs 22, final cards 20, echo pool 51
 - Workload: lesson payload glyph 4, final 4, quiz 14; Today route due 52, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 33 items -> 10/10 PASS; Spell It 19 items -> 8/8 PASS; Echo 51 items -> 8/8 PASS; Sound Twins 7 sets -> 7/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 144 questions -> 10/10 PASS; Lesson payoff 8 items -> 1/1 PASS; Axis review 212 cards -> 40/40 PASS; Delayed retention 8 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 4 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 33 items -> 10/10 PASS; Spell It 19 items -> 8/8 PASS; Echo 51 items -> 8/8 PASS; Sound Twins 7 sets -> 7/10 PASS; Tone listening 6 items -> 6/8 PASS; Mixed review 144 questions -> 10/10 PASS; Lesson payoff 8 items -> 1/1 PASS; Axis review 212 cards -> 40/40 PASS; Delayed retention 8 checks -> 1/1 PASS; Reading/stories 2 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Write it 42 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 8 items -> 8/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 4 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
   - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - class: Which class? -> Mid class
   - final-job: Ending job: what sound does this letter make at the end? -> -p
-  - final-job: Ending job: what sound does this letter make at the end? -> -p
-  - live-dead: Sound feel: live or dead? -> Dead
   - listen: Listen: which Thai did you hear? -> ถูก
-  - class: Which class? -> High class
-  - final: Ending job: what sound does ก make here? -> -k
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
   - listen: Listen: which Thai did you hear? -> พ่อ
-  - class: Which class? -> Low class
-  - class: Which class? -> Low class
+  - final-job: Ending job: what sound does this letter make at the end? -> -p
+  - class: Which class? -> High class
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - final: Ending job: what sound does ก make here? -> -k
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - class: Which class? -> Mid class
+  - class: Which class? -> Low class
+  - class: Which class? -> Low class
+  - live-dead: Sound feel: live or dead? -> Dead
 - Words:
   - ตา (dtaa) - recognition
   - ถูก (thùuk) - core; final ก -k
@@ -883,26 +1004,26 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ค ผ ฝ ซ
 - Final jobs: ค -> -k (stop), ซ -> -t (stop), น -> -n (ring), ม -> -m (ring), ย -> -y glide (glide)
 - Quiz count: 14
-- Quiz axes: hidden-vowel 1, listen 2, class 4, final-job 5, final 1, live-dead 1
+- Quiz axes: final-job 5, class 4, listen 2, live-dead 1, final 1, hidden-vowel 1
 - Review after lesson: glyph cards 36, start-consonant glyphs 26, final cards 22, echo pool 60
 - Workload: lesson payload glyph 4, final 2, quiz 14; Today route due 58, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 37 items -> 10/10 PASS; Spell It 22 items -> 8/8 PASS; Echo 60 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 166 questions -> 10/10 PASS; Lesson payoff 9 items -> 1/1 PASS; Axis review 246 cards -> 40/40 PASS; Delayed retention 9 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 37 items -> 10/10 PASS; Spell It 22 items -> 8/8 PASS; Echo 60 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 166 questions -> 10/10 PASS; Lesson payoff 9 items -> 1/1 PASS; Axis review 246 cards -> 40/40 PASS; Delayed retention 9 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 1 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 13 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
-  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden o
-  - listen: Listen: which Thai did you hear? -> ผม
-  - class: Which class? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - final-job: Ending job: what sound does this letter make at the end? -> -y glide
-  - class: Which class? -> High class
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - final-job: Ending job: what sound does this letter make at the end? -> -m
   - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - listen: Listen: which Thai did you hear? -> คน
-  - final: Ending job: what sound does น make here? -> -n
-  - class: Which class? -> High class
-  - live-dead: Sound feel: live or dead? -> Live
   - class: Which class? -> Low class
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - class: Which class? -> Low class
+  - class: Which class? -> High class
+  - final-job: Ending job: what sound does this letter make at the end? -> -m
+  - listen: Listen: which Thai did you hear? -> คน
+  - live-dead: Sound feel: live or dead? -> Live
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - final: Ending job: what sound does น make here? -> -n
+  - listen: Listen: which Thai did you hear? -> ผม
+  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden o
+  - class: Which class? -> High class
 - Words:
   - คน (khon) - core; final น -n; hidden hidden o
   - ผม (phǒm) - core; final ม -m; hidden hidden o
@@ -914,22 +1035,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: เ แ ึ ื
 - Final jobs: ง -> -ng (ring), ก -> -k (stop)
 - Quiz count: 10
-- Quiz axes: glyph-choice 1, word-reading 1, vowel-order 1, final-job 2, listen 2, live-dead 1, final 1, glyph-sound 1
+- Quiz axes: vowel-order 2, glyph-sound 1, listen 2, live-dead 1, final-job 2, word-reading 1, final 1
 - Review after lesson: glyph cards 40, start-consonant glyphs 26, final cards 22, echo pool 64
 - Workload: lesson payload glyph 4, final 0, quiz 10; Today route due 62, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 41 items -> 10/10 PASS; Spell It 25 items -> 8/8 PASS; Echo 64 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 175 questions -> 10/10 PASS; Lesson payoff 10 items -> 1/1 PASS; Axis review 265 cards -> 40/40 PASS; Delayed retention 10 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 41 items -> 10/10 PASS; Spell It 25 items -> 8/8 PASS; Echo 64 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 175 questions -> 10/10 PASS; Lesson payoff 10 items -> 1/1 PASS; Axis review 265 cards -> 40/40 PASS; Delayed retention 10 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 15 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
-  - glyph-choice: Hear it. Which vowel is it? -> เอ
-  - word-reading: Mini decode: how does this read? -> muue
   - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - glyph-sound: What vowel sound? -> aae (long)
   - listen: Listen: which Thai did you hear? -> แม่
-  - listen: Listen: which Thai did you hear? -> แพง
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
   - live-dead: Sound feel: live or dead? -> Live
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - listen: Listen: which Thai did you hear? -> แพง
+  - word-reading: Mini decode: how does this read? -> phaaeng
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - final: Ending job: what sound does ง make here? -> -ng
-  - glyph-sound: What vowel sound? -> ue (short)
 - Words:
   - แม่ (mâae) - core; written before, spoken after
   - แพง (phaaeng) - core; final ง -ng; written before, spoken after
@@ -941,22 +1062,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ุ ะ
 - Final jobs: ถ -> -t (stop), ก -> -k (stop), ง -> -ng (ring)
 - Quiz count: 10
-- Quiz axes: final-job 3, final 1, live-dead 1, word-reading 1, hidden-vowel 1, listen 2, vowel-length 1
+- Quiz axes: final 1, listen 2, final-job 3, word-reading 1, vowel-length 1, live-dead 1, hidden-vowel 1
 - Review after lesson: glyph cards 42, start-consonant glyphs 26, final cards 22, echo pool 68
 - Workload: lesson payload glyph 2, final 0, quiz 10; Today route due 64, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 45 items -> 10/10 PASS; Spell It 28 items -> 8/8 PASS; Echo 68 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 187 questions -> 10/10 PASS; Lesson payoff 11 items -> 1/1 PASS; Axis review 286 cards -> 40/40 PASS; Delayed retention 11 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 45 items -> 10/10 PASS; Spell It 28 items -> 8/8 PASS; Echo 68 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 187 questions -> 10/10 PASS; Lesson payoff 11 items -> 1/1 PASS; Axis review 286 cards -> 40/40 PASS; Delayed retention 11 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 16 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 1 cards -> 1/1 PASS; Contrast Block 2 blocks -> 1/1 PASS; Bangkok Mission 5 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
   - final: Ending job: what sound does ถ make here? -> -t
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
-  - live-dead: Sound feel: live or dead? -> Dead
-  - word-reading: Mini decode: how does this read? -> jà
-  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden o
-  - listen: Listen: which Thai did you hear? -> จะ
   - listen: Listen: which Thai did you hear? -> รถ
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - word-reading: Mini decode: how does this read? -> rót
   - vowel-length: Vowel length: short or long? -> Short
+  - live-dead: Sound feel: live or dead? -> Dead
+  - listen: Listen: which Thai did you hear? -> จะ
+  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden o
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
 - Words:
   - จะ (jà) - core
   - รถ (rót) - core; final ถ -t; hidden hidden o; Short
@@ -968,22 +1089,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: เ◌า ำ ใ
 - Final jobs: -
 - Quiz count: 10
-- Quiz axes: listen 2, glyph-sound 1, glyph-choice 2, vowel-order 1, word-reading 1, live-dead 1, mcq 2
+- Quiz axes: live-dead 1, glyph-sound 1, mcq 2, vowel-order 1, glyph-choice 2, word-reading 1, listen 2
 - Review after lesson: glyph cards 44, start-consonant glyphs 26, final cards 22, echo pool 72
 - Workload: lesson payload glyph 2, final 0, quiz 10; Today route due 66, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 49 items -> 10/10 PASS; Spell It 32 items -> 8/8 PASS; Echo 72 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 199 questions -> 10/10 PASS; Lesson payoff 12 items -> 1/1 PASS; Axis review 304 cards -> 40/40 PASS; Delayed retention 12 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 2 cards -> 2/2 PASS; Contrast Block 3 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, reading
+- Surface audit: Hear & Pick Thai 49 items -> 10/10 PASS; Spell It 32 items -> 8/8 PASS; Echo 72 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 199 questions -> 10/10 PASS; Lesson payoff 12 items -> 1/1 PASS; Axis review 304 cards -> 40/40 PASS; Delayed retention 12 checks -> 1/1 PASS; Reading/stories 3 stories -> 1/1 PASS; Fluency reads 2 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 0 items -> 0/5 PASS; Decode Gym 19 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 2 cards -> 2/2 PASS; Contrast Block 3 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, reading, decode-gym
 - Quiz prompts:
-  - listen: Listen: which Thai did you hear? -> เขา
-  - listen: Listen: which Thai did you hear? -> น้ำ
-  - glyph-sound: What vowel sound? -> am
-  - glyph-choice: Hear it. Which vowel is it? -> อำ
-  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
-  - glyph-choice: Hear it. Which vowel is it? -> เอา
-  - word-reading: Mini decode: how does this read? -> tham
   - live-dead: Sound feel: live or dead? -> Live
+  - glyph-sound: What vowel sound? -> ao
+  - mcq: <span class="classchip high">High class</span> No tone mark: use class + live/dead. Which tone? -> Rising
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
+  - glyph-choice: Hear it. Which vowel is it? -> อำ
+  - word-reading: Mini decode: how does this read? -> náam
+  - listen: Listen: which Thai did you hear? -> น้ำ
   - mcq: <span class="classchip low">Low class</span> ทำ has no tone mark. What tone do we read here? -> Mid
-  - mcq: <span class="classchip low">Low class</span> + Thai tone mark: which tone? -> Falling
+  - glyph-choice: Hear it. Which vowel is it? -> เอา
+  - listen: Listen: which Thai did you hear? -> เขา
 - Words:
   - เขา (khǎo) - core; wraps the consonant
   - น้ำ (náam) - core
@@ -995,24 +1116,24 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: -
 - Final jobs: ก -> -k (stop), ด -> -t (stop), น -> -n (ring)
 - Quiz count: 12
-- Quiz axes: mcq 4, vowel-length 1, listen 2, final-job 3, final 1, live-dead 1
+- Quiz axes: listen 2, final-job 3, mcq 4, final 1, live-dead 1, vowel-length 1
 - Review after lesson: glyph cards 44, start-consonant glyphs 26, final cards 22, echo pool 76
 - Workload: lesson payload glyph 0, final 0, quiz 12; Today route due 66, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 53 items -> 10/10 PASS; Spell It 35 items -> 8/8 PASS; Echo 76 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 214 questions -> 10/10 PASS; Lesson payoff 13 items -> 1/1 PASS; Axis review 324 cards -> 40/40 PASS; Delayed retention 13 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 3 cards -> 3/3 PASS; Contrast Block 4 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 53 items -> 10/10 PASS; Spell It 35 items -> 8/8 PASS; Echo 76 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 214 questions -> 10/10 PASS; Lesson payoff 13 items -> 1/1 PASS; Axis review 324 cards -> 40/40 PASS; Delayed retention 13 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 26 items -> 5/5 PASS; Decode Gym 22 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 3 cards -> 3/3 PASS; Contrast Block 4 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - mcq: Live or dead? -> Live
+  - listen: Listen: which Thai did you hear? -> จาก
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - mcq: Live or dead? -> Dead
-  - vowel-length: Vowel length: short or long? -> Long
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
   - mcq: Live or dead? -> Dead
+  - final: Ending job: what sound does ก make here? -> -k
+  - live-dead: Sound feel: live or dead? -> Dead
   - mcq: Live or dead? -> Live
   - listen: Listen: which Thai did you hear? -> พูด
-  - listen: Listen: which Thai did you hear? -> จาก
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - final: Ending job: what sound does ก make here? -> -k
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - mcq: Live or dead? -> Live
+  - vowel-length: Vowel length: short or long? -> Long
   - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - live-dead: Sound feel: live or dead? -> Dead
 - Words:
   - จาก (jàak) - core; final ก -k; Long
   - พูด (phûut) - core; final ด -t
@@ -1024,22 +1145,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ๊ ๋
 - Final jobs: ง -> -ng (ring)
 - Quiz count: 10
-- Quiz axes: mcq 4, listen 2, live-dead 1, final-job 1, final 1, glyph-choice 1
+- Quiz axes: listen 2, final-job 1, word-reading 1, mcq 4, final 1, live-dead 1
 - Review after lesson: glyph cards 46, start-consonant glyphs 26, final cards 22, echo pool 80
 - Workload: lesson payload glyph 2, final 0, quiz 10; Today route due 68, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 57 items -> 10/10 PASS; Spell It 38 items -> 8/8 PASS; Echo 80 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 226 questions -> 10/10 PASS; Lesson payoff 14 items -> 1/1 PASS; Axis review 339 cards -> 40/40 PASS; Delayed retention 14 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 3 cards -> 3/3 PASS; Contrast Block 4 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 57 items -> 10/10 PASS; Spell It 38 items -> 8/8 PASS; Echo 80 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 226 questions -> 10/10 PASS; Lesson payoff 14 items -> 1/1 PASS; Axis review 339 cards -> 40/40 PASS; Delayed retention 14 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 27 items -> 5/5 PASS; Decode Gym 24 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 3 cards -> 3/3 PASS; Contrast Block 4 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - mcq: <span class='classchip mid'>mid class</span> + ไม้โท ้ gives which tone? -> Falling
   - listen: Listen: which Thai did you hear? -> ได้
-  - live-dead: Sound feel: live or dead? -> Live
-  - mcq: <span class="classchip mid">Mid class</span> + Thai tone mark: which tone? -> High
-  - listen: Listen: which Thai did you hear? -> ต้อง
-  - mcq: <span class='classchip mid'>mid class</span> + ไม้ตรี ๊ gives which tone? -> High
   - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - final: Ending job: what sound does ง make here? -> -ng
-  - glyph-choice: Hear it. Which mark is it? -> ก๋
+  - word-reading: Mini decode: how does this read? -> dtó
+  - mcq: <span class='classchip mid'>mid class</span> + ไม้โท ้ gives which tone? -> Falling
   - mcq: <span class='classchip mid'>mid class</span> + ไม้เอก ่ gives which tone? -> Low
+  - mcq: <span class="classchip mid">Mid class</span> + Thai tone mark: which tone? -> Low
+  - final: Ending job: what sound does ง make here? -> -ng
+  - live-dead: Sound feel: live or dead? -> Live
+  - mcq: <span class='classchip mid'>mid class</span> + ไม้ตรี ๊ gives which tone? -> High
+  - listen: Listen: which Thai did you hear? -> ต้อง
 - Words:
   - เก่า (gào) - recognition
   - ได้ (dâi) - core
@@ -1051,22 +1172,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: -
 - Final jobs: ว -> -ao/-aao (glide), ง -> -ng (ring), ม -> -m (ring)
 - Quiz count: 10
-- Quiz axes: mcq 3, live-dead 1, listen 2, final-job 3, final 1
+- Quiz axes: mcq 3, listen 2, final-job 3, final 1, live-dead 1
 - Review after lesson: glyph cards 46, start-consonant glyphs 26, final cards 22, echo pool 82
 - Workload: lesson payload glyph 0, final 0, quiz 10; Today route due 68, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 60 items -> 10/10 PASS; Spell It 41 items -> 8/8 PASS; Echo 82 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 235 questions -> 10/10 PASS; Lesson payoff 15 items -> 1/1 PASS; Axis review 355 cards -> 40/40 PASS; Delayed retention 15 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 60 items -> 10/10 PASS; Spell It 41 items -> 8/8 PASS; Echo 82 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 235 questions -> 10/10 PASS; Lesson payoff 15 items -> 1/1 PASS; Axis review 355 cards -> 40/40 PASS; Delayed retention 15 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 30 items -> 5/5 PASS; Decode Gym 26 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - mcq: <span class='classchip high'>high class</span>, live, no mark gives which tone? -> Rising
-  - live-dead: Sound feel: live or dead? -> Live
+  - mcq: <span class='classchip high'>high class</span> + dead syllable gives which tone? -> Low
   - listen: Listen: which Thai did you hear? -> ข้าว
-  - mcq: <span class='classchip high'>high class</span> + ไม้โท ้ gives which tone? -> Falling
-  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
   - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - final-job: Ending job: what sound does this letter make at the end? -> -m
+  - final-job: Ending job: what sound does this letter make at the end? -> -ao/-aao
+  - mcq: <span class='classchip high'>high class</span> + ไม้โท ้ gives which tone? -> Falling
+  - mcq: <span class='classchip high'>high class</span>, live, no mark gives which tone? -> Rising
   - final: Ending job: what sound does ว make here? -> -aao
   - listen: Listen: which Thai did you hear? -> ห้อง
-  - final-job: Ending job: what sound does this letter make at the end? -> -m
-  - mcq: <span class='classchip high'>high class</span> + dead syllable gives which tone? -> Low
+  - live-dead: Sound feel: live or dead? -> Live
 - Words:
   - ข้าว (khâao) - core; final ว -aao
   - ห้อง (hôrng) - core; final ง -ng
@@ -1077,22 +1198,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ็
 - Final jobs: ง -> -ng (ring), ก -> -k (stop)
 - Quiz count: 10
-- Quiz axes: final 1, vowel-length 1, listen 2, live-dead 1, mcq 3, final-job 2
+- Quiz axes: vowel-length 1, mcq 3, final 1, listen 2, final-job 2, live-dead 1
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 86
 - Workload: lesson payload glyph 1, final 0, quiz 10; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 64 items -> 10/10 PASS; Spell It 44 items -> 8/8 PASS; Echo 86 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 247 questions -> 10/10 PASS; Lesson payoff 16 items -> 1/1 PASS; Axis review 373 cards -> 40/40 PASS; Delayed retention 16 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 64 items -> 10/10 PASS; Spell It 44 items -> 8/8 PASS; Echo 86 items -> 8/8 PASS; Sound Twins 8 sets -> 8/10 PASS; Tone listening 9 items -> 8/8 PASS; Mixed review 247 questions -> 10/10 PASS; Lesson payoff 16 items -> 1/1 PASS; Axis review 373 cards -> 40/40 PASS; Delayed retention 16 checks -> 1/1 PASS; Reading/stories 4 stories -> 1/1 PASS; Fluency reads 3 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 32 items -> 5/5 PASS; Decode Gym 30 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - final: Ending job: what sound does ง make here? -> -ng
   - vowel-length: Vowel length: short or long? -> Short
+  - mcq: <span class='classchip low'>low class</span> + ไม้โท ้ gives which tone? -> High
+  - final: Ending job: what sound does ง make here? -> -ng
   - listen: Listen: which Thai did you hear? -> น้อง
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - mcq: <span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone? -> Falling
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - listen: Listen: which Thai did you hear? -> พี่
   - live-dead: Sound feel: live or dead? -> Live
   - mcq: <span class='classchip low'>low class</span> + dead-short gives which tone? -> High
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
-  - listen: Listen: which Thai did you hear? -> พี่
-  - mcq: <span class='classchip low'>low class</span> + ไม้โท ้ gives which tone? -> High
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - mcq: <span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone? -> Falling
 - Words:
   - น้อง (nórng) - core; final ง -ng
   - พี่ (phîi) - core
@@ -1104,22 +1225,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: -
 - Final jobs: ก -> -k (stop)
 - Quiz count: 10
-- Quiz axes: listen 2, word-reading 1, mcq 4, final 1, final-job 1, live-dead 1
+- Quiz axes: mcq 4, final 1, word-reading 1, final-job 1, listen 2, live-dead 1
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 93
 - Workload: lesson payload glyph 0, final 0, quiz 10; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 69 items -> 10/10 PASS; Spell It 48 items -> 8/8 PASS; Echo 93 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 262 questions -> 10/10 PASS; Lesson payoff 17 items -> 1/1 PASS; Axis review 391 cards -> 40/40 PASS; Delayed retention 17 checks -> 1/1 PASS; Reading/stories 5 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 69 items -> 10/10 PASS; Spell It 48 items -> 8/8 PASS; Echo 93 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 262 questions -> 10/10 PASS; Lesson payoff 17 items -> 1/1 PASS; Axis review 391 cards -> 40/40 PASS; Delayed retention 17 checks -> 1/1 PASS; Reading/stories 5 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 33 items -> 5/5 PASS; Decode Gym 36 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - listen: Listen: which Thai did you hear? -> ไหน
-  - word-reading: Mini decode: how does this read? -> nǎi
+  - mcq: <span class="classchip mid">Mid class</span> + Thai tone mark: which tone? -> Low
+  - final: Ending job: what sound does ก make here? -> -k
+  - mcq: What does silent ห do here? -> Makes ม follow high-class tone rules
+  - mcq: Silent ห makes น follow <span class='classchip high'>high class</span> rules. Which tone? -> Rising
+  - word-reading: Mini decode: how does this read? -> mǎa
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - listen: Listen: which Thai did you hear? -> อยู่
   - mcq: Silent อ in the four special words uses which class row? -> Mid class
-  - final: Ending job: what sound does ก make here? -> -k
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
-  - mcq: Silent ห makes น follow <span class='classchip high'>high class</span> rules. Which tone? -> Rising
-  - mcq: <span class="classchip high">High class</span> No tone mark: use class + live/dead. Which tone? -> Rising
   - live-dead: Sound feel: live or dead? -> Dead
-  - mcq: What does silent ห do here? -> Makes ม follow high-class tone rules
+  - listen: Listen: which Thai did you hear? -> ไหน
 - Words:
   - หมา (mǎa) - recognition
   - ไหน (nǎi) - core
@@ -1132,23 +1253,23 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: -
 - Final jobs: บ -> -p (stop)
 - Quiz count: 11
-- Quiz axes: mcq 3, listen 2, vowel-order 1, cluster 1, live-dead 1, final-job 1, vowel-length 1, final 1
+- Quiz axes: listen 2, mcq 3, live-dead 1, vowel-order 1, final 1, vowel-length 1, final-job 1, cluster 1
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 97
 - Workload: lesson payload glyph 0, final 0, quiz 11; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 73 items -> 10/10 PASS; Spell It 51 items -> 8/8 PASS; Echo 97 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 274 questions -> 10/10 PASS; Lesson payoff 18 items -> 1/1 PASS; Axis review 409 cards -> 40/40 PASS; Delayed retention 18 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 8 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 73 items -> 10/10 PASS; Spell It 51 items -> 8/8 PASS; Echo 97 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 274 questions -> 10/10 PASS; Lesson payoff 18 items -> 1/1 PASS; Axis review 409 cards -> 40/40 PASS; Delayed retention 18 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 37 items -> 5/5 PASS; Decode Gym 40 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 8 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
+  - listen: Listen: which Thai did you hear? -> ครับ
+  - mcq: What makes ใกล้ different from ไกล? -> The Thai tone mark
+  - live-dead: Sound feel: live or dead? -> Dead
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
+  - final: Ending job: what sound does บ make here? -> -p
+  - vowel-length: Vowel length: short or long? -> Short
+  - final-job: Ending job: what sound does this letter make at the end? -> -p
+  - cluster: Cluster check: what is happening here? -> true cluster
   - mcq: <span class='classchip low'>low class</span> + dead-short gives which tone? -> High
   - listen: Listen: which Thai did you hear? -> ครู
-  - mcq: What makes ใกล้ different from ไกล? -> The Thai tone mark
-  - listen: Listen: which Thai did you hear? -> ครับ
-  - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
-  - cluster: Cluster check: what is happening here? -> true cluster
   - mcq: A true cluster takes its class from which letter? -> ค
-  - live-dead: Sound feel: live or dead? -> Dead
-  - final-job: Ending job: what sound does this letter make at the end? -> -p
-  - vowel-length: Vowel length: short or long? -> Short
-  - final: Ending job: what sound does บ make here? -> -p
 - Words:
   - ครับ (khráp) - core; final บ -p; Short; true cluster
   - ปลา (bplaa) - recognition; Long; true cluster
@@ -1160,23 +1281,23 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: -
 - Final jobs: ง -> -ng (ring), บ -> -p (stop), ย -> -y glide (glide)
 - Quiz count: 11
-- Quiz axes: final 1, final-job 3, live-dead 1, mcq 3, listen 2, cluster 1
+- Quiz axes: live-dead 1, final-job 3, cluster 1, listen 2, final 1, mcq 3
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 101
 - Workload: lesson payload glyph 0, final 0, quiz 11; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 77 items -> 10/10 PASS; Spell It 53 items -> 8/8 PASS; Echo 101 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 282 questions -> 10/10 PASS; Lesson payoff 19 items -> 1/1 PASS; Axis review 426 cards -> 40/40 PASS; Delayed retention 19 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading
+- Surface audit: Hear & Pick Thai 77 items -> 10/10 PASS; Spell It 53 items -> 8/8 PASS; Echo 101 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 282 questions -> 10/10 PASS; Lesson payoff 19 items -> 1/1 PASS; Axis review 426 cards -> 40/40 PASS; Delayed retention 19 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 42 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
-  - final: Ending job: what sound does ง make here? -> -ng
-  - final-job: Ending job: what sound does this letter make at the end? -> -y glide
   - live-dead: Sound feel: live or dead? -> Live
   - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - mcq: ทร usually begins with which sound? -> s
-  - final-job: Ending job: what sound does this letter make at the end? -> -p
-  - mcq: What happens to ร here? -> It drops out
-  - listen: Listen: which Thai did you hear? -> จริง
-  - listen: Listen: which Thai did you hear? -> อร่อย
-  - mcq: What job is อ doing? -> Carrying the opening vowel
   - cluster: Cluster check: what is happening here? -> fake cluster
+  - listen: Listen: which Thai did you hear? -> อร่อย
+  - listen: Listen: which Thai did you hear? -> จริง
+  - final-job: Ending job: what sound does this letter make at the end? -> -y glide
+  - final: Ending job: what sound does ง make here? -> -ng
+  - mcq: ทร usually begins with which sound? -> s
+  - mcq: What happens to ร here? -> It drops out
+  - final-job: Ending job: what sound does this letter make at the end? -> -p
+  - mcq: What job is อ doing? -> Carrying the opening vowel
 - Words:
   - จริง (jing) - core; final ง -ng; fake cluster
   - ทราบ (sâap) - recognition; final บ -p; fake cluster
@@ -1188,30 +1309,30 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ธ ภ ศ ษ ญ ฮ เ◌อ ์
 - Final jobs: ธ -> -t (stop), ภ -> -p (stop), ศ -> -t (stop), ษ -> -t (stop), ญ -> -n (ring), ง -> -ng (ring), น -> -n (ring)
 - Quiz count: 18
-- Quiz axes: final-job 7, class 6, final 1, vowel-order 1, mcq 1, listen 1, live-dead 1
+- Quiz axes: live-dead 1, final-job 7, class 6, final 1, listen 1, vowel-order 1, mcq 1
 - Review after lesson: glyph cards 55, start-consonant glyphs 32, final cards 27, echo pool 105
 - Workload: lesson payload glyph 8, final 5, quiz 18; Today route due 82, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 81 items -> 10/10 PASS; Spell It 54 items -> 8/8 PASS; Echo 105 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 309 questions -> 10/10 PASS; Lesson payoff 20 items -> 1/1 PASS; Axis review 465 cards -> 40/40 PASS; Delayed retention 20 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading, chunk
+- Surface audit: Hear & Pick Thai 81 items -> 10/10 PASS; Spell It 54 items -> 8/8 PASS; Echo 105 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 309 questions -> 10/10 PASS; Lesson payoff 20 items -> 1/1 PASS; Axis review 465 cards -> 40/40 PASS; Delayed retention 20 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 59 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 44 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk
 - Quiz prompts:
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - class: Which class? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - class: Which class? -> High class
-  - class: Which class? -> Low class
-  - final: Ending job: what sound does ง make here? -> -ng
-  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
-  - mcq: In ศูนย์, what does ์ do? -> Silences the marked letter
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - listen: Listen: which Thai did you hear? -> ภาษา
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - class: Which class? -> High class
-  - class: Which class? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - class: Which class? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
   - live-dead: Sound feel: live or dead? -> Live
   - final-job: Ending job: what sound does this letter make at the end? -> -p
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - class: Which class? -> Low class
+  - class: Which class? -> High class
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
+  - final: Ending job: what sound does ง make here? -> -ng
+  - class: Which class? -> Low class
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - listen: Listen: which Thai did you hear? -> ภาษา
+  - vowel-order: Vowel order: how do you read the vowel shape here? -> wraps the consonant
+  - mcq: In ศูนย์, what does ์ do? -> Silences the marked letter
+  - class: Which class? -> Low class
+  - class: Which class? -> Low class
+  - class: Which class? -> High class
 - Words:
   - เธอ (ter) - recognition; wraps the consonant
   - ภาษา (phaa-sǎa) - core
@@ -1223,25 +1344,25 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ฉ ฬ
 - Final jobs: ฬ -> -n (ring), น -> -n (ring), ก -> -k (stop)
 - Quiz count: 13
-- Quiz axes: final 1, rare-class 4, final-job 3, class 2, live-dead 1, hidden-vowel 1, listen 1
+- Quiz axes: final-job 3, rare-class 4, class 2, listen 1, final 1, live-dead 1, hidden-vowel 1
 - Review after lesson: glyph cards 57, start-consonant glyphs 34, final cards 28, echo pool 109
 - Workload: lesson payload glyph 2, final 1, quiz 13; Today route due 85, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 85 items -> 10/10 PASS; Spell It 55 items -> 8/8 PASS; Echo 109 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 321 questions -> 10/10 PASS; Lesson payoff 21 items -> 1/1 PASS; Axis review 485 cards -> 40/40 PASS; Delayed retention 21 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading, chunk
+- Surface audit: Hear & Pick Thai 85 items -> 10/10 PASS; Spell It 55 items -> 8/8 PASS; Echo 109 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 321 questions -> 10/10 PASS; Lesson payoff 21 items -> 1/1 PASS; Axis review 485 cards -> 40/40 PASS; Delayed retention 21 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 40 items -> 5/5 PASS; Decode Gym 46 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, rare-letters
 - Quiz prompts:
-  - final: Ending job: what sound does น make here? -> -n
-  - rare-class: Rare-letter class row? -> Mid class
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
   - rare-class: Rare-letter class row? -> Low class
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - rare-class: Formal s-family class row? -> High class
-  - rare-class: Rare-letter class row? -> High class
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - class: Which class? -> High class
-  - live-dead: Sound feel: live or dead? -> Live
-  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden a
-  - listen: Listen: which Thai did you hear? -> สนุก
   - class: Which class? -> Low class
+  - listen: Listen: which Thai did you hear? -> สนุก
+  - rare-class: Formal s-family class row? -> High class
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - final: Ending job: what sound does น make here? -> -n
+  - live-dead: Sound feel: live or dead? -> Live
+  - rare-class: Rare-letter class row? -> High class
+  - hidden-vowel: Hidden vowel: what sound is added here? -> hidden a
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - rare-class: Rare-letter class row? -> Mid class
+  - class: Which class? -> High class
 - Words:
   - ฉัน (chǎn) - recognition; final น -n
   - กีฬา (gii-laa) - decode
@@ -1253,21 +1374,21 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: เ◌ีย เ◌ือ ◌ัว
 - Final jobs: น -> -n (ring)
 - Quiz count: 10
-- Quiz axes: final-job 1, live-dead 1, listen 2, glyph-sound 1, mcq 2, final 1, word-reading 1, vowel-order 1
+- Quiz axes: listen 2, final-job 1, mcq 2, live-dead 1, final 1, glyph-sound 2, vowel-order 1
 - Review after lesson: glyph cards 60, start-consonant glyphs 34, final cards 28, echo pool 115
 - Workload: lesson payload glyph 3, final 0, quiz 10; Today route due 88, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 89 items -> 10/10 PASS; Spell It 58 items -> 8/8 PASS; Echo 115 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 333 questions -> 10/10 PASS; Lesson payoff 22 items -> 1/1 PASS; Axis review 504 cards -> 40/40 PASS; Delayed retention 22 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 4 items -> 4/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading, chunk
+- Surface audit: Hear & Pick Thai 89 items -> 10/10 PASS; Spell It 58 items -> 8/8 PASS; Echo 115 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 333 questions -> 10/10 PASS; Lesson payoff 22 items -> 1/1 PASS; Axis review 504 cards -> 40/40 PASS; Delayed retention 22 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 4 items -> 4/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, rare-letters
 - Quiz prompts:
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - live-dead: Sound feel: live or dead? -> Live
-  - listen: Listen: which Thai did you hear? -> เรียน
-  - glyph-sound: What vowel sound? -> ia
-  - mcq: <span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone? -> Falling
-  - mcq: What still drives the tone in a three-piece vowel? -> The consonant class
-  - final: Ending job: what sound does น make here? -> -n
   - listen: Listen: which Thai did you hear? -> เพื่อน
-  - word-reading: Mini decode: how does this read? -> sûea
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - mcq: What still drives the tone in a three-piece vowel? -> The consonant class
+  - live-dead: Sound feel: live or dead? -> Live
+  - final: Ending job: what sound does น make here? -> -n
+  - mcq: <span class='classchip low'>low class</span> + ไม้เอก ่ gives which tone? -> Falling
+  - glyph-sound: What vowel sound? -> ua
+  - listen: Listen: which Thai did you hear? -> เรียน
+  - glyph-sound: What vowel sound? -> uea
   - vowel-order: Vowel order: how do you read the vowel shape here? -> three pieces around the consonant
 - Words:
   - เรียน (rian) - core; final น -n; three pieces around the consonant
@@ -1280,22 +1401,22 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: ๆ
 - Final jobs: ง -> -ng (ring), ก -> -k (stop)
 - Quiz count: 10
-- Quiz axes: final 1, mcq 4, live-dead 1, final-job 2, listen 2
+- Quiz axes: listen 2, mcq 4, final-job 2, live-dead 1, final 1
 - Review after lesson: glyph cards 61, start-consonant glyphs 34, final cards 28, echo pool 119
 - Workload: lesson payload glyph 1, final 0, quiz 10; Today route due 89, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 93 items -> 10/10 PASS; Spell It 62 items -> 8/8 PASS; Echo 119 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 341 questions -> 10/10 PASS; Lesson payoff 23 items -> 1/1 PASS; Axis review 520 cards -> 40/40 PASS; Delayed retention 23 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 5 reads -> 1/1 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 8 items -> 8/8 PASS; Seen in the wild 4 signs -> 4/4 PASS; Font Shock 4 items -> 4/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 8 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading, chunk, font-shock
+- Surface audit: Hear & Pick Thai 93 items -> 10/10 PASS; Spell It 62 items -> 8/8 PASS; Echo 119 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 341 questions -> 10/10 PASS; Lesson payoff 23 items -> 1/1 PASS; Axis review 520 cards -> 40/40 PASS; Delayed retention 23 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 5 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 8 items -> 8/8 PASS; Seen in the wild 4 signs -> 4/4 PASS; Font Shock 4 items -> 4/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 8 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, font-shock, rare-letters
 - Quiz prompts:
-  - final: Ending job: what sound does ง make here? -> -ng
+  - listen: Listen: which Thai did you hear? -> ระวัง
+  - mcq: What does ๆ do? -> Repeats the previous word
+  - listen: Listen: which Thai did you hear? -> ทางออก
+  - final-job: Ending job: what sound does this letter make at the end? -> -ng
+  - final-job: Ending job: what sound does this letter make at the end? -> -k
   - mcq: How does this sign read? -> thaang-òrk
-  - mcq: How does this sign read? -> thaang-khâo
   - mcq: The first syllable ระ is live or dead? -> Dead
   - live-dead: Sound feel: live or dead? -> Live
-  - mcq: What does ๆ do? -> Repeats the previous word
-  - final-job: Ending job: what sound does this letter make at the end? -> -ng
-  - listen: Listen: which Thai did you hear? -> ระวัง
-  - listen: Listen: which Thai did you hear? -> ทางออก
-  - final-job: Ending job: what sound does this letter make at the end? -> -k
+  - mcq: How does this sign read? -> thaang-khâo
+  - final: Ending job: what sound does ง make here? -> -ng
 - Words:
   - ระวัง (rá-wang) - core; final ง -ng
   - ทางออก (thaang-òrk) - core; final ก -k
@@ -1307,23 +1428,23 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Glyphs: เ◌ิ
 - Final jobs: ด -> -t (stop), ม -> -m (ring), ร -> -n (ring)
 - Quiz count: 11
-- Quiz axes: final-job 3, live-dead 1, listen 2, mcq 3, final 1, vowel-order 1
+- Quiz axes: listen 2, final 1, mcq 3, live-dead 1, final-job 3, vowel-order 1
 - Review after lesson: glyph cards 62, start-consonant glyphs 34, final cards 28, echo pool 123
 - Workload: lesson payload glyph 1, final 0, quiz 11; Today route due 90, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 97 items -> 10/10 PASS; Spell It 66 items -> 8/8 PASS; Echo 123 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 352 questions -> 10/10 PASS; Lesson payoff 24 items -> 1/1 PASS; Axis review 540 cards -> 40/40 PASS; Delayed retention 24 checks -> 1/1 PASS; Reading/stories 10 stories -> 1/1 PASS; Fluency reads 6 reads -> 1/1 PASS; Phase 1 completion checkpoint 15 checks -> 1/1 PASS; Chunk this word 11 items -> 8/8 PASS; Seen in the wild 10 signs -> 10/10 PASS; Font Shock 10 items -> 8/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 9 missions -> 1/1 PASS
-- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, tone-rule, reading, chunk, font-shock
+- Surface audit: Hear & Pick Thai 97 items -> 10/10 PASS; Spell It 66 items -> 8/8 PASS; Echo 123 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 352 questions -> 10/10 PASS; Lesson payoff 24 items -> 1/1 PASS; Axis review 540 cards -> 40/40 PASS; Delayed retention 24 checks -> 1/1 PASS; Reading/stories 10 stories -> 1/1 PASS; Fluency reads 6 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 45 items -> 5/5 PASS; Decode Gym 60 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 15 checks -> 1/1 PASS; Chunk this word 11 items -> 8/8 PASS; Seen in the wild 10 signs -> 10/10 PASS; Font Shock 10 items -> 8/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 9 missions -> 1/1 PASS
+- Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, font-shock, rare-letters
 - Quiz prompts:
-  - final-job: Ending job: what sound does this letter make at the end? -> -t
-  - live-dead: Sound feel: live or dead? -> Dead
-  - listen: Listen: which Thai did you hear? -> ปิด
-  - mcq: How does this read? -> aa-hǎan
-  - final-job: Ending job: what sound does this letter make at the end? -> -m
-  - final-job: Ending job: what sound does this letter make at the end? -> -n
-  - mcq: <span class='classchip mid'>mid class</span> + dead syllable gives which tone? -> Low
   - listen: Listen: which Thai did you hear? -> เปิด
   - final: Ending job: what sound does ด make here? -> -t
   - mcq: How does this sign read? -> hâam
+  - mcq: <span class='classchip mid'>mid class</span> + dead syllable gives which tone? -> Low
+  - live-dead: Sound feel: live or dead? -> Dead
+  - final-job: Ending job: what sound does this letter make at the end? -> -n
+  - final-job: Ending job: what sound does this letter make at the end? -> -m
   - vowel-order: Vowel order: how do you read the vowel shape here? -> written before, spoken after
+  - listen: Listen: which Thai did you hear? -> ปิด
+  - mcq: How does this read? -> aa-hǎan
+  - final-job: Ending job: what sound does this letter make at the end? -> -t
 - Words:
   - เปิด (bpèrt) - core; final ด -t; written before, spoken after
   - ปิด (bpìt) - core; final ด -t
