@@ -2,6 +2,26 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.2.0 - 2026-07-04
+
+- Added three purchasable dark themes: Temple gold (60), Monsoon (40) and Loy Krathong (60). `validateThemeContracts()` now checks contrast and class-colour boundaries across every theme; the existing grade Again button now uses the shared dark button ink to meet contrast.
+- Added the Ranat synthesized sound pack (50) using the existing Web Audio engine: no audio assets, no network, same four feedback events, and the existing Progress sound toggle still mutes every voice.
+- Added the Bangkok reads story pack (80) with four decodable Reading-room stories gated at Lessons 17, 19 and 24. First-read +3 rewards remain unchanged.
+- Added Taxi & Grab and Market bargaining phrase packs (12 phrases each, 60 tokens each), visible in Read only after purchase and still opt-in for `w:` review cards.
+- Reworked shop presentation into Phrase & story packs / Sounds / Themes / Titles while preserving `✓ owned`, active states and existing ownership.
+- Added optional `soundPacks[]` and `sfxVoice` import/state support, plus new ids inside existing `packs[]` and `themes[]`; no existing state keys were renamed.
+- Documented economy calibration in `docs/economy_notes.md`: routine daily completion still yields about 70 tokens/week for both mid-course and completed maintenance learners, with optional extras landing the normal week around 60-80 tokens.
+- Added `validateV72ShopContracts()`, registered `validateThemeContracts()` in the generated audit, and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v7.2.0` and 50 validators passing. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+
+## v7.1.0 - 2026-07-04
+
+- Repaired the paid Day market theme with semantic surface tokens for the bottom tab bar, lesson overlay, quiz options, safety banners, soft-fill controls, review grade buttons and onboarding/about surfaces; Skytrain and Songkran now get matching card/tab/overlay surface tokens.
+- Retired drifted colour literals on reward, danger, success, review and contrast surfaces, and moved reading accents to the cyan family so they no longer collide with the reserved mid-class teal.
+- Added objective SFX coverage to Write it, Spell it, Glyph Ghost, Contrast Block and in-lesson Quick decode/class-check answers while leaving self-graded listening/read-aloud surfaces silent.
+- Gave the completion sound a distinct low-root/resolved-chord identity and softened the wrong sound into a shorter, flatter fall.
+- Added a memory-only lesson/mastery-check exit guard: tapping the close button after meaningful progress asks before discarding the attempt; Escape cancels the close. OS swipe-away loss remains an accepted limitation.
+- Added `validateV71VisualSoundContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; v7.1.0 adds no new required learner state key. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+
 ## v7.0.0 - 2026-07-04
 
 - Added first-run onboarding for genuinely fresh states only: no completed lessons, no SRS cards and no pre-existing saved progress blob. Finish and Skip both set optional `notices.onboarded`; existing learners and saved blank states never see it.

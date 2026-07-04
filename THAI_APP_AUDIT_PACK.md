@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-04
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.0.0`
+Current app version: `v7.2.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -149,6 +149,26 @@ v7.0.0 is the Phase 1 1.0 beta identity and release-finalisation pass:
 - Safe dialog overlays get bounded Escape-to-close and focus restore; the typed reset-confirmation step does not close on Escape.
 - `validateV70OnboardingContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
 
+v7.1.0 is the visual and sound repair pass over the 1.0 beta:
+
+- Day market now uses semantic light-safe fills for the bottom tab bar, lesson overlay, quiz options, safety banners, soft controls, review grade buttons, onboarding and About surfaces.
+- Skytrain and Songkran now override card, tab bar and lesson-player surface tokens so their paid themes sit in their own palettes without changing class colours.
+- Legacy gold/blue/green/red literals are retired from the named reward, review, contrast and warning surfaces; reading accents now use cyan so they do not collide with the reserved mid-class teal.
+- Objective Write it, Spell it, Glyph Ghost, Contrast Block and in-lesson Quick decode/class-check answers now play synthesized correct/wrong feedback. Self-rated listening, Echo, Route talk, Decode Gym and Wild deck remain silent by design.
+- The completion sound now has a distinct low-root/resolved-chord identity, the wrong sound is a shorter flatter fall, and no audio assets or network calls are added.
+- The lesson/checkpoint close button asks before discarding meaningful in-memory progress; this does not add resume persistence, and OS swipe-away loss remains an accepted limitation.
+- `validateV71VisualSoundContracts()` guards the pass. v7.1.0 adds no new required learner state key and the service-worker cache remains `aan-thai-v6-4-1`.
+
+v7.2.0 is the shop expansion and economy pass:
+
+- Adds Temple gold, Monsoon and Loy Krathong paid dark themes, with `validateThemeContracts()` checking contrast and class-colour boundaries across every theme.
+- Adds the Ranat synthesized sound pack as a second Web Audio feedback voice. It uses no audio assets or network calls, and the existing Progress sound toggle mutes all voices.
+- Adds Bangkok reads as a paid Reading-room story pack with four decodable micro-stories through the existing story pipeline and first-read reward path.
+- Adds Taxi & Grab and Market bargaining paid phrase packs with 12 phrases each. They remain Read-tab enrichment only until the learner manually adds a `w:` card.
+- Adds optional `soundPacks[]` and `sfxVoice` only, plus new ids in existing `packs[]` and `themes[]`.
+- Documents the weekly token economy in `docs/economy_notes.md`; earn rates stay unchanged and the normal mid-course/completed week remains around 60-80 tokens.
+- `validateV72ShopContracts()` guards shop ids, owned/active states, paid story visibility, import shape and purchase simulations that must not mutate SRS, completed lessons, checks or blockers.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -160,6 +180,7 @@ v7.0.0 is the Phase 1 1.0 beta identity and release-finalisation pass:
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
 - `docs/v7_release_notes.md` - Phase 1 1.0 beta release notes and post-1.0 backlog.
+- `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
 - `docs/phase2_refactor_plan.md` - future no-build/low-build split plan.
@@ -183,9 +204,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.0.0`
+- app version `v7.2.0`
 - 24 lessons
-- 47 validators passing
+- 50 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

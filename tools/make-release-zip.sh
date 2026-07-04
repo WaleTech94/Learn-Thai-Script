@@ -2,7 +2,7 @@
 set -eu
 
 ROOT=$(git rev-parse --show-toplevel)
-VERSION=v7.0.0
+VERSION=v7.2.0
 OUT_DIR="$ROOT/dist"
 OUT="$OUT_DIR/aan-thai-$VERSION-source.zip"
 

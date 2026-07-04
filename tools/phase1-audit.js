@@ -66,7 +66,14 @@ function stubElement(){
   };
 }
 
-function sandbox(){
+function styleTextFromHtml(htmlText){
+  const match = String(htmlText || '').match(/<style>([\s\S]*?)<\/style>/);
+  return match ? match[1] : '';
+}
+
+function sandbox(htmlText){
+  const styleText = styleTextFromHtml(htmlText);
+  const styleElement = Object.assign(stubElement(), {textContent:styleText});
   const math = deterministicMath('phase1-audit-v2');
   const doc = {
     body:{style:{}, classList:{add(){}, remove(){}, toggle(){}}},
@@ -74,7 +81,7 @@ function sandbox(){
     addEventListener(){},
     removeEventListener(){},
     getElementById(){ return stubElement(); },
-    querySelector(){ return stubElement(); },
+    querySelector(sel){ return sel === 'style' ? styleElement : stubElement(); },
     querySelectorAll(){ return []; },
     createElement(){ return stubElement(); }
   };
@@ -788,7 +795,10 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v65Feedback', validateV65FeedbackContracts),
     validatorResult('v66DataSafety', validateV66DataSafetyContracts),
     validatorResult('v67CompletionJourney', validateV67CompletionJourneyContracts),
-    validatorResult('v70Onboarding', validateV70OnboardingContracts)
+    validatorResult('v70Onboarding', validateV70OnboardingContracts),
+    validatorResult('v71VisualSound', validateV71VisualSoundContracts),
+    validatorResult('themeContracts', validateThemeContracts),
+    validatorResult('v72Shop', validateV72ShopContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -875,7 +885,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v7.0.0 is the Phase 1 1.0 beta identity pass over v6.7.0: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version move to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v7.2.0 is the shop expansion and economy pass over the Phase 1 1.0 beta: Temple gold, Monsoon and Loy Krathong add paid dark visual identities, Ranat adds a second synthesized SFX voice, Bangkok reads adds four paid Reading-room stories, Taxi & Grab and Market bargaining add 24 optional phrases, shop rows are grouped by Phrase & story packs / Sounds / Themes / Titles, theme contrast and shop purchase boundaries are validator-guarded, and the economy notes document a normal 60-80 token week without changing earn rates. v7.1.0 remains the visual and sound repair pass: Day market uses light-safe semantic fills, Skytrain and Songkran get palette-specific surface tokens, reading accents move to cyan instead of the reserved mid-class teal, objective Write it/Spell it/Glyph Ghost/Contrast Block/Quick decode answers play SFX, completion/wrong sounds are more distinct, and in-progress lessons/mastery checks confirm before close discards the memory-only attempt. v7.0.0 remains the Phase 1 1.0 beta identity pass: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version moved to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -1000,7 +1010,7 @@ function preserveGeneratedAtIfContentSame(audit){
 }
 
 const html = indexHtml();
-const box = sandbox();
+const box = sandbox(html);
 vm.runInNewContext(appScript(html) + auditSnippet(appVersionFromHtml(html)), box, {filename:INDEX});
 box.__phase1Audit = preserveGeneratedAtIfContentSame(box.__phase1Audit);
 fs.mkdirSync(DOCS_DIR, {recursive:true});

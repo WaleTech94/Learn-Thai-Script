@@ -219,7 +219,7 @@ globalThis.__precommitTone = (function(){
   }
   function routeTone(item){
     const thai = item.thai || item.t || '';
-    if(/^(SLANG|PHRASES|TEACHER|FOOD2)/.test(item.path || '') && item.path !== 'PHRASES[0]') return null;
+    if(/^(SLANG|PHRASES|TEACHER|FOOD2|TAXI_GRAB|MARKET_BARGAIN)/.test(item.path || '') && item.path !== 'PHRASES[0]') return null;
     const source = Object.assign({}, findWord(thai) || {}, item, {thai, tr:item.tr});
     const doneIds = item.gate ? lessonIdsThroughGate(item.gate) : LESSONS.map(L=>L.id);
     const route = toneRouteForWord(source, doneIds);
@@ -239,7 +239,7 @@ globalThis.__precommitTone = (function(){
       Object.keys(value).forEach(key=>collect(value[key], path + '.' + key, out, seen));
     }
   }
-  const roots = {LESSONS, TONES, TONES2, TONE_SETS, LENGTH_PAIRS, SLANG, PHRASES, TEACHER, FOOD2, POSTCARDS, STORIES, FLUENCY_READS, DECODE_GYM, CHUNK_ITEMS, SIGN_SAFARI_ITEMS, FONT_SHOCK_ITEMS, MOUTH_COACH_CARDS, CONTRAST_BLOCKS, BANGKOK_MISSIONS, LESSON_PAYOFFS};
+  const roots = {LESSONS, TONES, TONES2, TONE_SETS, LENGTH_PAIRS, SLANG, PHRASES, TEACHER, FOOD2, TAXI_GRAB, MARKET_BARGAIN, POSTCARDS, STORIES, FLUENCY_READS, DECODE_GYM, CHUNK_ITEMS, SIGN_SAFARI_ITEMS, FONT_SHOCK_ITEMS, MOUTH_COACH_CARDS, CONTRAST_BLOCKS, BANGKOK_MISSIONS, LESSON_PAYOFFS};
   const items = [];
   Object.keys(roots).forEach(key=>collect(roots[key], key, items, new Set()));
   const issues = [];

@@ -1,4 +1,4 @@
-# v7.0.0 Smoke-Test Checklist
+# v7.2.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -7,9 +7,9 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js`.
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v7.0.0`, 47 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.0.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.json` reports app version `v7.2.0`, 50 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.2.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -38,8 +38,8 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.0.0)`.
-- Confirm exported backup JSON uses `appVersion: "v7.0.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.2.0)`.
+- Confirm exported backup JSON uses `appVersion: "v7.2.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## Dialog Accessibility Polish
@@ -103,7 +103,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.0.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.2.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -140,17 +140,46 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - With Sounds on, answer objective MCQ/typed questions correctly and incorrectly.
 - Pass: synthesized correct/wrong feedback sounds play after the user gesture, including on iPhone/PWA.
+- In Practice, answer Write it, Spell it and Glyph Ghost correctly and incorrectly.
+- Pass: objective correct/wrong sounds play on these surfaces.
+- In Practice → Contrast block, answer the listening MCQ correctly and incorrectly.
+- Pass: objective correct/wrong sounds play on the MCQ step; the later self-rated read-aloud step stays silent.
+- In a lesson Quick decode/class-check inline MCQ, answer correctly and incorrectly.
+- Pass: objective correct/wrong sounds play.
+- Open Echo, Route talk, Decode Gym and Wild deck.
+- Pass: these self-graded/read-aloud surfaces do not play objective feedback sounds.
 - Answer three objective questions correctly in a row.
 - Pass: the combo chip appears; fifth-answer milestones give the small milestone sound/pop.
 - Complete an objective session.
-- Pass: completion sound, best-run line and streak-extension line appear where relevant.
+- Pass: completion sound is distinct from the milestone sound, and best-run/streak-extension lines appear where relevant.
 - Toggle `Sounds: on/off` in Progress tools.
 - Pass: SFX mute is respected and no audio assets or network requests are added.
+
+## v7.1 Visual Repair And Exit Guard
+
+- Buy/select Day market or set `state.theme = "day"` in a test profile.
+- Pass: Today, lesson stages, quiz feedback, Review flashcards and grade buttons, Practice, Tones, Read, Progress, shop, onboarding/About and safety banners remain legible with visible controls.
+- Switch to Skytrain and Songkran.
+- Pass: cards, the tab bar and the lesson player sit in each theme palette while mid/high/low class colours stay teal/pink/marigold.
+- Confirm reading accents on Read/reading cards use cyan rather than the mid-class teal.
+- Start a lesson, advance past the first stage, then tap the close button.
+- Pass: a confirm dialog says `Leave this lesson? This attempt restarts from the beginning next time.` Stay/Escape keeps the lesson open; Leave closes it.
+- Start a mastery checkpoint, Letters boss or Phase 1 completion checkpoint, answer at least one question, then tap the close button.
+- Pass: the same discard confirmation appears. Ordinary shop/read/drill overlays with no meaningful mastery attempt still close immediately.
+
+## v7.2 Shop Expansion
+
+- On a test profile with enough tokens, open the shop and confirm groups read Phrase & story packs / Sounds / Themes / Titles.
+- Buy Taxi & Grab and Market bargaining. Pass: both appear as Read categories, each has 12 phrases, and tapping `+ deck` is still required before any `w:` card enters review.
+- Buy Bangkok reads. Pass: four extra Reading-room stories become visible, remain lesson-gated, and first read gives the normal +3 token reward.
+- Buy/select Ranat. Pass: objective feedback sounds use the brighter synthesized voice; switching back to Default works; `Sounds: off` mutes both voices.
+- Buy/select Temple gold, Monsoon and Loy Krathong. Pass: Today, lesson player, review grades, Read, Progress and shop remain legible, and mid/high/low class colours keep their meaning.
+- Import a pre-v7.2 backup. Pass: progress imports without `soundPacks[]` or `sfxVoice`, shop opens, Default sound is active, and existing packs/themes/titles remain owned.
 
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 · 1.0 beta (v7.0.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 · 1.0 beta (v7.2.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

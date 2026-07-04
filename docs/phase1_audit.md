@@ -1,7 +1,7 @@
 # Phase 1 Audit
 
-Generated: 2026-07-04T01:44:45.270Z
-App version: v7.0.0
+Generated: 2026-07-04T09:32:48.283Z
+App version: v7.2.0
 Lessons: 24
 
 This is the generated review surface for Phase 1. The markdown gives a readable map; the adjacent `phase1_audit.json` contains the full extracted quiz prompts, options, lesson words, generated pools, prerequisite issue objects and workload estimates for scripted review.
@@ -54,6 +54,9 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 - PASS v66DataSafety
 - PASS v67CompletionJourney
 - PASS v70Onboarding
+- PASS v71VisualSound
+- PASS themeContracts
+- PASS v72Shop
 
 ## Prerequisite Audit
 - Lesson prerequisite issues: 0
@@ -65,7 +68,7 @@ This is the generated review surface for Phase 1. The markdown gives a readable 
 
 Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.
 
-v7.0.0 is the Phase 1 1.0 beta identity pass over v6.7.0: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version move to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
+v7.2.0 is the shop expansion and economy pass over the Phase 1 1.0 beta: Temple gold, Monsoon and Loy Krathong add paid dark visual identities, Ranat adds a second synthesized SFX voice, Bangkok reads adds four paid Reading-room stories, Taxi & Grab and Market bargaining add 24 optional phrases, shop rows are grouped by Phrase & story packs / Sounds / Themes / Titles, theme contrast and shop purchase boundaries are validator-guarded, and the economy notes document a normal 60-80 token week without changing earn rates. v7.1.0 remains the visual and sound repair pass: Day market uses light-safe semantic fills, Skytrain and Songkran get palette-specific surface tokens, reading accents move to cyan instead of the reserved mid-class teal, objective Write it/Spell it/Glyph Ghost/Contrast Block/Quick decode answers play SFX, completion/wrong sounds are more distinct, and in-progress lessons/mastery checks confirm before close discards the memory-only attempt. v7.0.0 remains the Phase 1 1.0 beta identity pass: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version moved to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.
 
 - Today review default max: 30 cards
 - Manual Review catch-up cap: 40 cards
@@ -91,14 +94,14 @@ v7.0.0 is the Phase 1 1.0 beta identity pass over v6.7.0: genuinely fresh learne
 | 14 | glyph 2, final 0, quiz 10 | glyph 46, final 22, tone 9, twins 8, echo 80, stories 4, fluency 3, chunks 0, signs 0, font 0, mouth 3 | due 68 -> served 30 / cap 30; Consolidation day | Reading room or drill |
 | 15 | glyph 0, final 0, quiz 10 | glyph 46, final 22, tone 9, twins 8, echo 82, stories 4, fluency 3, chunks 0, signs 0, font 0, mouth 4 | due 68 -> served 30 / cap 30; Consolidation day | Reading room or drill |
 | 16 | glyph 1, final 0, quiz 10 | glyph 47, final 22, tone 9, twins 8, echo 86, stories 4, fluency 3, chunks 0, signs 0, font 0, mouth 4 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 17 | glyph 0, final 0, quiz 10 | glyph 47, final 22, tone 11, twins 10, echo 93, stories 5, fluency 4, chunks 0, signs 0, font 0, mouth 4 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 18 | glyph 0, final 0, quiz 11 | glyph 47, final 22, tone 11, twins 10, echo 97, stories 6, fluency 4, chunks 0, signs 0, font 0, mouth 8 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 19 | glyph 0, final 0, quiz 11 | glyph 47, final 22, tone 11, twins 10, echo 101, stories 6, fluency 4, chunks 0, signs 0, font 0, mouth 8 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 20 | glyph 8, final 5, quiz 18 | glyph 55, final 27, tone 11, twins 10, echo 105, stories 6, fluency 4, chunks 3, signs 0, font 0, mouth 8 | due 82 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 21 | glyph 2, final 1, quiz 13 | glyph 57, final 28, tone 11, twins 10, echo 109, stories 6, fluency 4, chunks 3, signs 0, font 0, mouth 8 | due 85 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 22 | glyph 3, final 0, quiz 10 | glyph 60, final 28, tone 11, twins 11, echo 115, stories 6, fluency 4, chunks 4, signs 0, font 0, mouth 8 | due 88 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 23 | glyph 1, final 0, quiz 10 | glyph 61, final 28, tone 11, twins 11, echo 119, stories 6, fluency 5, chunks 8, signs 4, font 4, mouth 10 | due 89 -> served 30 / cap 30; Consolidation day | Reading room or drill |
-| 24 | glyph 1, final 0, quiz 11 | glyph 62, final 28, tone 11, twins 11, echo 123, stories 10, fluency 6, chunks 11, signs 10, font 10, mouth 10 | due 90 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 17 | glyph 0, final 0, quiz 10 | glyph 47, final 22, tone 11, twins 10, echo 93, stories 6, fluency 4, chunks 0, signs 0, font 0, mouth 4 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 18 | glyph 0, final 0, quiz 11 | glyph 47, final 22, tone 11, twins 10, echo 97, stories 7, fluency 4, chunks 0, signs 0, font 0, mouth 8 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 19 | glyph 0, final 0, quiz 11 | glyph 47, final 22, tone 11, twins 10, echo 101, stories 8, fluency 4, chunks 0, signs 0, font 0, mouth 8 | due 69 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 20 | glyph 8, final 5, quiz 18 | glyph 55, final 27, tone 11, twins 10, echo 105, stories 8, fluency 4, chunks 3, signs 0, font 0, mouth 8 | due 82 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 21 | glyph 2, final 1, quiz 13 | glyph 57, final 28, tone 11, twins 10, echo 109, stories 8, fluency 4, chunks 3, signs 0, font 0, mouth 8 | due 85 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 22 | glyph 3, final 0, quiz 10 | glyph 60, final 28, tone 11, twins 11, echo 115, stories 8, fluency 4, chunks 4, signs 0, font 0, mouth 8 | due 88 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 23 | glyph 1, final 0, quiz 10 | glyph 61, final 28, tone 11, twins 11, echo 119, stories 8, fluency 5, chunks 8, signs 4, font 4, mouth 10 | due 89 -> served 30 / cap 30; Consolidation day | Reading room or drill |
+| 24 | glyph 1, final 0, quiz 11 | glyph 62, final 28, tone 11, twins 11, echo 123, stories 14, fluency 6, chunks 11, signs 10, font 10, mouth 10 | due 90 -> served 30 / cap 30; Consolidation day | Reading room or drill |
 
 ## v5.4 Fluency Reads
 
@@ -566,7 +569,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 17 | Lesson payoff | 17 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 17 | Axis review | 391 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 17 | Delayed retention | 17 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 17 | Reading/stories | 5 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 17 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 17 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 17 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 17 | Route talk | 33 items | 5 / 5 | 36 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -589,7 +592,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 18 | Lesson payoff | 18 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 18 | Axis review | 409 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 18 | Delayed retention | 18 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 18 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 18 | Reading/stories | 7 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 18 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 18 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 18 | Route talk | 37 items | 5 / 5 | 36 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -612,7 +615,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 19 | Lesson payoff | 19 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 19 | Axis review | 426 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 19 | Delayed retention | 19 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 19 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 19 | Reading/stories | 8 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 19 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 19 | Write it | 48 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 19 | Route talk | 39 items | 5 / 5 | 38 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -635,7 +638,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 20 | Lesson payoff | 20 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 20 | Axis review | 465 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 20 | Delayed retention | 20 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 20 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 20 | Reading/stories | 8 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 20 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 20 | Write it | 59 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 20 | Route talk | 39 items | 5 / 5 | 42 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -658,7 +661,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 21 | Lesson payoff | 21 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 21 | Axis review | 485 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 21 | Delayed retention | 21 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 21 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 21 | Reading/stories | 8 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 21 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 21 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 21 | Route talk | 40 items | 5 / 5 | 45 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -681,7 +684,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 22 | Lesson payoff | 22 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 22 | Axis review | 504 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 22 | Delayed retention | 22 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 22 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 22 | Reading/stories | 8 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 22 | Fluency reads | 4 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 22 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 22 | Route talk | 42 items | 5 / 5 | 47 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -704,7 +707,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 23 | Lesson payoff | 23 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 23 | Axis review | 520 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 23 | Delayed retention | 23 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 23 | Reading/stories | 6 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 23 | Reading/stories | 8 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 23 | Fluency reads | 5 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 23 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 23 | Route talk | 42 items | 5 / 5 | 51 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -727,7 +730,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 24 | Lesson payoff | 24 items | 1 / 1 | 0 | PASS | N/A · decode first, then meaning/context/use reveal |
 | 24 | Axis review | 540 cards | 40 / 40 | 0 | PASS | N/A · quota-balanced SRS axes for glyph/class/initial/final/live-dead/tone/listen/say/transfer |
 | 24 | Delayed retention | 24 checks | 1 / 1 | 0 | PASS | N/A · +1 day retained and +7 day stabilised checks; one due lesson served per day |
-| 24 | Reading/stories | 10 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
+| 24 | Reading/stories | 14 stories | 1 / 1 | 0 | PASS | N/A · stories use their own decodability/prerequisite gate |
 | 24 | Fluency reads | 6 reads | 1 / 1 | 0 | PASS | N/A · slow pass, smoother pass, decoding check and self-rating; no speech scoring |
 | 24 | Write it | 62 items | 8 / 8 | 0 | PASS | N/A · Thai-keyboard recall from existing g:/f: review eligibility; no new SRS ids |
 | 24 | Route talk | 45 items | 5 / 5 | 52 | PASS | N/A · spoken self-explanation of class/mark/live-dead/length/tone; no scoring |
@@ -761,14 +764,14 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 | 14 | l14 Mid class: all five | - | ง -ng | listen:2, final-job:1, word-reading:1, mcq:4, final:1, live-dead:1 | tone 9, twins 8, echo 80, stories 4 | - |
 | 15 | l15 High class: the grid | - | ว -ao/-aao, ง -ng, ม -m | mcq:3, listen:2, final-job:3, final:1, live-dead:1 | tone 9, twins 8, echo 82, stories 4 | - |
 | 16 | l16 Low class: the flip | - | ง -ng, ก -k | vowel-length:1, mcq:3, final:1, listen:2, final-job:2, live-dead:1 | tone 9, twins 8, echo 86, stories 4 | - |
-| 17 | l17 The silent leaders | - | ก -k | mcq:4, final:1, word-reading:1, final-job:1, listen:2, live-dead:1 | tone 11, twins 10, echo 93, stories 5 | - |
-| 18 | l18 Decode ครับ | - | บ -p | listen:2, mcq:3, live-dead:1, vowel-order:1, final:1, vowel-length:1, final-job:1, cluster:1 | tone 11, twins 10, echo 97, stories 6 | - |
-| 19 | l19 Fake clusters | - | ง -ng, บ -p, ย -y glide | live-dead:1, final-job:3, cluster:1, listen:2, final:1, mcq:3 | tone 11, twins 10, echo 101, stories 6 | - |
-| 20 | l20 Formal friends | ธ ภ ศ ษ ญ ฮ | ธ -t, ภ -p, ศ -t, ษ -t, ญ -n, ง -ng, น -n | live-dead:1, final-job:7, class:6, final:1, listen:1, vowel-order:1, mcq:1 | tone 11, twins 10, echo 105, stories 6 | - |
-| 21 | l21 Rare-letter class rows | ฉ ฬ | ฬ -n, น -n, ก -k | final-job:3, rare-class:4, class:2, listen:1, final:1, live-dead:1, hidden-vowel:1 | tone 11, twins 10, echo 109, stories 6 | - |
-| 22 | l22 Three-piece vowels | - | น -n | listen:2, final-job:1, mcq:2, live-dead:1, final:1, glyph-sound:2, vowel-order:1 | tone 11, twins 11, echo 115, stories 6 | - |
-| 23 | l23 Useful signs | - | ง -ng, ก -k | listen:2, mcq:4, final-job:2, live-dead:1, final:1 | tone 11, twins 11, echo 119, stories 6 | - |
-| 24 | l24 Capstone: read Bangkok | - | ด -t, ม -m, ร -n | listen:2, final:1, mcq:3, live-dead:1, final-job:3, vowel-order:1 | tone 11, twins 11, echo 123, stories 10 | - |
+| 17 | l17 The silent leaders | - | ก -k | mcq:4, final:1, word-reading:1, final-job:1, listen:2, live-dead:1 | tone 11, twins 10, echo 93, stories 6 | - |
+| 18 | l18 Decode ครับ | - | บ -p | listen:2, mcq:3, live-dead:1, vowel-order:1, final:1, vowel-length:1, final-job:1, cluster:1 | tone 11, twins 10, echo 97, stories 7 | - |
+| 19 | l19 Fake clusters | - | ง -ng, บ -p, ย -y glide | live-dead:1, final-job:3, cluster:1, listen:2, final:1, mcq:3 | tone 11, twins 10, echo 101, stories 8 | - |
+| 20 | l20 Formal friends | ธ ภ ศ ษ ญ ฮ | ธ -t, ภ -p, ศ -t, ษ -t, ญ -n, ง -ng, น -n | live-dead:1, final-job:7, class:6, final:1, listen:1, vowel-order:1, mcq:1 | tone 11, twins 10, echo 105, stories 8 | - |
+| 21 | l21 Rare-letter class rows | ฉ ฬ | ฬ -n, น -n, ก -k | final-job:3, rare-class:4, class:2, listen:1, final:1, live-dead:1, hidden-vowel:1 | tone 11, twins 10, echo 109, stories 8 | - |
+| 22 | l22 Three-piece vowels | - | น -n | listen:2, final-job:1, mcq:2, live-dead:1, final:1, glyph-sound:2, vowel-order:1 | tone 11, twins 11, echo 115, stories 8 | - |
+| 23 | l23 Useful signs | - | ง -ng, ก -k | listen:2, mcq:4, final-job:2, live-dead:1, final:1 | tone 11, twins 11, echo 119, stories 8 | - |
+| 24 | l24 Capstone: read Bangkok | - | ด -t, ม -m, ร -n | listen:2, final:1, mcq:3, live-dead:1, final-job:3, vowel-order:1 | tone 11, twins 11, echo 123, stories 14 | - |
 
 ## Per-Lesson Detail
 ### l1 - First sounds
@@ -1229,7 +1232,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: mcq 4, final 1, word-reading 1, final-job 1, listen 2, live-dead 1
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 93
 - Workload: lesson payload glyph 0, final 0, quiz 10; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 69 items -> 10/10 PASS; Spell It 48 items -> 8/8 PASS; Echo 93 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 262 questions -> 10/10 PASS; Lesson payoff 17 items -> 1/1 PASS; Axis review 391 cards -> 40/40 PASS; Delayed retention 17 checks -> 1/1 PASS; Reading/stories 5 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 33 items -> 5/5 PASS; Decode Gym 36 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 69 items -> 10/10 PASS; Spell It 48 items -> 8/8 PASS; Echo 93 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 262 questions -> 10/10 PASS; Lesson payoff 17 items -> 1/1 PASS; Axis review 391 cards -> 40/40 PASS; Delayed retention 17 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 33 items -> 5/5 PASS; Decode Gym 36 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 4 cards -> 4/4 PASS; Contrast Block 5 blocks -> 1/1 PASS; Bangkok Mission 6 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
   - mcq: <span class="classchip mid">Mid class</span> + Thai tone mark: which tone? -> Low
@@ -1257,7 +1260,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: listen 2, mcq 3, live-dead 1, vowel-order 1, final 1, vowel-length 1, final-job 1, cluster 1
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 97
 - Workload: lesson payload glyph 0, final 0, quiz 11; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 73 items -> 10/10 PASS; Spell It 51 items -> 8/8 PASS; Echo 97 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 274 questions -> 10/10 PASS; Lesson payoff 18 items -> 1/1 PASS; Axis review 409 cards -> 40/40 PASS; Delayed retention 18 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 37 items -> 5/5 PASS; Decode Gym 40 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 8 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 73 items -> 10/10 PASS; Spell It 51 items -> 8/8 PASS; Echo 97 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 274 questions -> 10/10 PASS; Lesson payoff 18 items -> 1/1 PASS; Axis review 409 cards -> 40/40 PASS; Delayed retention 18 checks -> 1/1 PASS; Reading/stories 7 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 37 items -> 5/5 PASS; Decode Gym 40 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 8 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
   - listen: Listen: which Thai did you hear? -> ครับ
@@ -1285,7 +1288,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: live-dead 1, final-job 3, cluster 1, listen 2, final 1, mcq 3
 - Review after lesson: glyph cards 47, start-consonant glyphs 26, final cards 22, echo pool 101
 - Workload: lesson payload glyph 0, final 0, quiz 11; Today route due 69, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 77 items -> 10/10 PASS; Spell It 53 items -> 8/8 PASS; Echo 101 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 282 questions -> 10/10 PASS; Lesson payoff 19 items -> 1/1 PASS; Axis review 426 cards -> 40/40 PASS; Delayed retention 19 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 42 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 77 items -> 10/10 PASS; Spell It 53 items -> 8/8 PASS; Echo 101 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 282 questions -> 10/10 PASS; Lesson payoff 19 items -> 1/1 PASS; Axis review 426 cards -> 40/40 PASS; Delayed retention 19 checks -> 1/1 PASS; Reading/stories 8 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 48 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 42 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 0 items -> 0/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym
 - Quiz prompts:
   - live-dead: Sound feel: live or dead? -> Live
@@ -1313,7 +1316,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: live-dead 1, final-job 7, class 6, final 1, listen 1, vowel-order 1, mcq 1
 - Review after lesson: glyph cards 55, start-consonant glyphs 32, final cards 27, echo pool 105
 - Workload: lesson payload glyph 8, final 5, quiz 18; Today route due 82, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 81 items -> 10/10 PASS; Spell It 54 items -> 8/8 PASS; Echo 105 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 309 questions -> 10/10 PASS; Lesson payoff 20 items -> 1/1 PASS; Axis review 465 cards -> 40/40 PASS; Delayed retention 20 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 59 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 44 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 81 items -> 10/10 PASS; Spell It 54 items -> 8/8 PASS; Echo 105 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 309 questions -> 10/10 PASS; Lesson payoff 20 items -> 1/1 PASS; Axis review 465 cards -> 40/40 PASS; Delayed retention 20 checks -> 1/1 PASS; Reading/stories 8 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 59 items -> 8/8 PASS; Route talk 39 items -> 5/5 PASS; Decode Gym 44 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 0 items -> 0/0 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk
 - Quiz prompts:
   - live-dead: Sound feel: live or dead? -> Live
@@ -1348,7 +1351,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: final-job 3, rare-class 4, class 2, listen 1, final 1, live-dead 1, hidden-vowel 1
 - Review after lesson: glyph cards 57, start-consonant glyphs 34, final cards 28, echo pool 109
 - Workload: lesson payload glyph 2, final 1, quiz 13; Today route due 85, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 85 items -> 10/10 PASS; Spell It 55 items -> 8/8 PASS; Echo 109 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 321 questions -> 10/10 PASS; Lesson payoff 21 items -> 1/1 PASS; Axis review 485 cards -> 40/40 PASS; Delayed retention 21 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 40 items -> 5/5 PASS; Decode Gym 46 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 85 items -> 10/10 PASS; Spell It 55 items -> 8/8 PASS; Echo 109 items -> 8/8 PASS; Sound Twins 10 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 321 questions -> 10/10 PASS; Lesson payoff 21 items -> 1/1 PASS; Axis review 485 cards -> 40/40 PASS; Delayed retention 21 checks -> 1/1 PASS; Reading/stories 8 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 40 items -> 5/5 PASS; Decode Gym 46 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 3 items -> 3/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, rare-letters
 - Quiz prompts:
   - final-job: Ending job: what sound does this letter make at the end? -> -n
@@ -1378,7 +1381,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: listen 2, final-job 1, mcq 2, live-dead 1, final 1, glyph-sound 2, vowel-order 1
 - Review after lesson: glyph cards 60, start-consonant glyphs 34, final cards 28, echo pool 115
 - Workload: lesson payload glyph 3, final 0, quiz 10; Today route due 88, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 89 items -> 10/10 PASS; Spell It 58 items -> 8/8 PASS; Echo 115 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 333 questions -> 10/10 PASS; Lesson payoff 22 items -> 1/1 PASS; Axis review 504 cards -> 40/40 PASS; Delayed retention 22 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 4 items -> 4/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 89 items -> 10/10 PASS; Spell It 58 items -> 8/8 PASS; Echo 115 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 333 questions -> 10/10 PASS; Lesson payoff 22 items -> 1/1 PASS; Axis review 504 cards -> 40/40 PASS; Delayed retention 22 checks -> 1/1 PASS; Reading/stories 8 stories -> 1/1 PASS; Fluency reads 4 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 4 items -> 4/8 PASS; Seen in the wild 0 signs -> 0/0 PASS; Font Shock 0 items -> 0/8 PASS; Mouth Coach 8 cards -> 8/8 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 7 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, rare-letters
 - Quiz prompts:
   - listen: Listen: which Thai did you hear? -> เพื่อน
@@ -1405,7 +1408,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: listen 2, mcq 4, final-job 2, live-dead 1, final 1
 - Review after lesson: glyph cards 61, start-consonant glyphs 34, final cards 28, echo pool 119
 - Workload: lesson payload glyph 1, final 0, quiz 10; Today route due 89, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 93 items -> 10/10 PASS; Spell It 62 items -> 8/8 PASS; Echo 119 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 341 questions -> 10/10 PASS; Lesson payoff 23 items -> 1/1 PASS; Axis review 520 cards -> 40/40 PASS; Delayed retention 23 checks -> 1/1 PASS; Reading/stories 6 stories -> 1/1 PASS; Fluency reads 5 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 8 items -> 8/8 PASS; Seen in the wild 4 signs -> 4/4 PASS; Font Shock 4 items -> 4/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 8 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 93 items -> 10/10 PASS; Spell It 62 items -> 8/8 PASS; Echo 119 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 341 questions -> 10/10 PASS; Lesson payoff 23 items -> 1/1 PASS; Axis review 520 cards -> 40/40 PASS; Delayed retention 23 checks -> 1/1 PASS; Reading/stories 8 stories -> 1/1 PASS; Fluency reads 5 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 42 items -> 5/5 PASS; Decode Gym 56 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 0 checks -> 0/1 PASS; Chunk this word 8 items -> 8/8 PASS; Seen in the wild 4 signs -> 4/4 PASS; Font Shock 4 items -> 4/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 8 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, font-shock, rare-letters
 - Quiz prompts:
   - listen: Listen: which Thai did you hear? -> ระวัง
@@ -1432,7 +1435,7 @@ These rows reuse the app source gates. `Available` is the post-gate pool after e
 - Quiz axes: listen 2, final 1, mcq 3, live-dead 1, final-job 3, vowel-order 1
 - Review after lesson: glyph cards 62, start-consonant glyphs 34, final cards 28, echo pool 123
 - Workload: lesson payload glyph 1, final 0, quiz 11; Today route due 90, served 30/30, Consolidation day
-- Surface audit: Hear & Pick Thai 97 items -> 10/10 PASS; Spell It 66 items -> 8/8 PASS; Echo 123 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 352 questions -> 10/10 PASS; Lesson payoff 24 items -> 1/1 PASS; Axis review 540 cards -> 40/40 PASS; Delayed retention 24 checks -> 1/1 PASS; Reading/stories 10 stories -> 1/1 PASS; Fluency reads 6 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 45 items -> 5/5 PASS; Decode Gym 60 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 15 checks -> 1/1 PASS; Chunk this word 11 items -> 8/8 PASS; Seen in the wild 10 signs -> 10/10 PASS; Font Shock 10 items -> 8/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 9 missions -> 1/1 PASS
+- Surface audit: Hear & Pick Thai 97 items -> 10/10 PASS; Spell It 66 items -> 8/8 PASS; Echo 123 items -> 8/8 PASS; Sound Twins 11 sets -> 10/10 PASS; Tone listening 11 items -> 8/8 PASS; Mixed review 352 questions -> 10/10 PASS; Lesson payoff 24 items -> 1/1 PASS; Axis review 540 cards -> 40/40 PASS; Delayed retention 24 checks -> 1/1 PASS; Reading/stories 14 stories -> 1/1 PASS; Fluency reads 6 reads -> 1/1 PASS; Write it 62 items -> 8/8 PASS; Route talk 45 items -> 5/5 PASS; Decode Gym 60 items -> 10/10 PASS; Wild deck 0 items -> 0/8 PASS; Rare-letter class 8 items -> 8/8 PASS; Phase 1 completion checkpoint 15 checks -> 1/1 PASS; Chunk this word 11 items -> 8/8 PASS; Seen in the wild 10 signs -> 10/10 PASS; Font Shock 10 items -> 8/8 PASS; Mouth Coach 10 cards -> 10/10 PASS; Contrast Block 9 blocks -> 1/1 PASS; Bangkok Mission 9 missions -> 1/1 PASS
 - Unlocked drills: hear-thai, tone-listen, twins, echo, spell, clinic, sprint, ghost, write-it, tone-rule, route-talk, reading, decode-gym, chunk, font-shock, rare-letters
 - Quiz prompts:
   - listen: Listen: which Thai did you hear? -> เปิด
