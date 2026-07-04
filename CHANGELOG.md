@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.0.0 - 2026-07-04
+
+- Added first-run onboarding for genuinely fresh states only: no completed lessons, no SRS cards and no pre-existing saved progress blob. Finish and Skip both set optional `notices.onboarded`; existing learners and saved blank states never see it.
+- Added the onboarding screens for what อ่าน is, the letter → class → tone engine, Today's Review → Main task → Practice route, and proactive Thai voice / backup setup. The Thai voice test reuses the existing setup panel and does not autoplay.
+- Added a static Progress → Progress tools `About this app` entry covering Phase 1 scope, what completion does not claim, device voice support as a rough model, current version and backup/export.
+- Updated beta identity: footer/version pill now reads `Phase 1 · 1.0 beta (v7.0.0)`, internal export/audit version is `v7.0.0`, and `manifest.json` now foregrounds learning to read Thai script.
+- Added bounded dialog accessibility polish: Escape-to-close and focus restore for safe dialogs, while leaving the typed reset-confirmation step out of Escape dismissal.
+- Added `validateV70OnboardingContracts()` and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`; audit now reports app version `v7.0.0` and 47 validators passing.
+- Deleted the root `CODEX_PROMPT_*.md` working artifacts from the release surface. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+
 ## v6.7.0 - 2026-07-04
 
 - Added a post-completion maintenance Today route for learners who have passed the Phase 1 completion checkpoint, routing to due review first and then existing warm-up surfaces such as fluency re-reads, Wild deck, readiness report or boss rematch.

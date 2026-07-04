@@ -1,7 +1,7 @@
 {
   "name": "อ่าน — Learn Thai",
   "short_name": "อ่าน",
-  "description": "Beginner to conversational Thai. Phase 1: script mastery.",
+  "description": "Learn to read Thai script from zero: letters, class and tone logic for Phase 1.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-04
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v6.7.0`
+Current app version: `v7.0.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -139,6 +139,16 @@ v6.7.0 is a completion-journey, progress-map and orphan-surfacing pass:
 - Capture Thai shows `N/200 saved`, warns near the cap and can copy saved captures as plain text.
 - `validateV67CompletionJourneyContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
 
+v7.0.0 is the Phase 1 1.0 beta identity and release-finalisation pass:
+
+- Genuinely fresh states only get a one-time, skippable onboarding overlay for the reading-first scope, letter → class → tone engine, Today route and setup basics.
+- Existing learners, saved blank states, completed lessons and states with any SRS card never see onboarding.
+- Onboarding sets optional `notices.onboarded` on finish or skip and does not affect blockers, SRS, scheduling, lesson gates, imports, tokens or cache naming.
+- Progress tools gains a static About this app entry covering Phase 1 scope, completion boundaries, device voice support and backup/export.
+- The visible footer/version pill reads `Phase 1 · 1.0 beta (v7.0.0)`, while internal export/audit version is `v7.0.0`.
+- Safe dialog overlays get bounded Escape-to-close and focus restore; the typed reset-confirmation step does not close on Escape.
+- `validateV70OnboardingContracts()` guards the pass. The service-worker cache remains `aan-thai-v6-4-1` because cached asset filenames did not change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -149,6 +159,7 @@ v6.7.0 is a completion-journey, progress-map and orphan-surfacing pass:
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
+- `docs/v7_release_notes.md` - Phase 1 1.0 beta release notes and post-1.0 backlog.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
 - `docs/phase2_refactor_plan.md` - future no-build/low-build split plan.
@@ -172,9 +183,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v6.7.0`
+- app version `v7.0.0`
 - 24 lessons
-- 46 validators passing
+- 47 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -200,6 +211,7 @@ High-value review areas:
 - capture loop: typed input sanitisation, local-only captures, no route tiles for untaught/unsafe captures, Wild deck spacing staying capture-local and outside SRS
 - data safety: corrupt-state quarantine, save-failure export warning, versioned backup envelope, envelope/legacy import compatibility, backup nudges staying non-blocking, and update-ready reload prompt without auto-reload
 - completion journey: post-Phase 1 maintenance route, once-only celebration, dashboard counts, fair freeze-gap consumption, surfaced optional drills and capture copy export staying outside SRS/blockers
+- v7 beta surface: fresh-only onboarding, About page, beta footer string, safe Escape/focus dialog behaviour and no impact on route blockers or Today copy
 
 Out of scope for this release:
 

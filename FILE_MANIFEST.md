@@ -2,8 +2,9 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v6.7.0`.
-Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v6.7.0 because cached asset filenames did not change).
+Verified current app version: `v7.0.0`.
+Verified current footer string: `Phase 1 · 1.0 beta (v7.0.0)`.
+Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v7.0.0 because cached asset filenames did not change).
 
 ## Tracked Source For Review/Deploy Packages
 
@@ -29,10 +30,11 @@ Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v6.7.0 be
 - `docs/phase1_content_pedagogy_notes.md` - notes from the v5.4.6 content/pedagogy hardening pass.
 - `docs/content_pedagogy_checklist.md` - future Phase 1 curriculum safety checklist.
 - `docs/v6_ui_pass_notes.md` - notes from the v6.0.0 UI hierarchy, accessibility and scope-separation pass.
+- `docs/v7_release_notes.md` - final Phase 1 1.0 beta release notes and post-1.0 backlog.
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v6.7.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v7.0.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -44,6 +46,7 @@ These may exist in the working folder but are not current tracked source:
 - `idea-engine/` - local proposal/review harness and generated outputs.
 - `.vercel/` - local Vercel project binding metadata.
 - `dist/` - generated release zip output.
+- `CODEX_PROMPT_*.md` - working prompts only; v7.0.0 deletes the three root prompt files from the release surface.
 - `.DS_Store` - macOS metadata.
 
 ## Exclude From Review Zips
@@ -62,7 +65,7 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v6.7.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v7.0.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
@@ -88,6 +91,7 @@ For a clean current-source audit, include:
 - `docs/phase1_content_pedagogy_notes.md`
 - `docs/content_pedagogy_checklist.md`
 - `docs/v6_ui_pass_notes.md`
+- `docs/v7_release_notes.md`
 - `docs/phase2_refactor_plan.md`
 - `THAI_APP_AUDIT_PACK.md`
 - `FILE_MANIFEST.md`

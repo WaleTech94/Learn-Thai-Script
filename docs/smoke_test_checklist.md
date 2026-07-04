@@ -1,19 +1,59 @@
-# v6.7.0 Smoke-Test Checklist
+# v7.0.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
-
-## Fresh Load
-
-- Clear `localStorage["thai_state_v1"]`, open the app online, and confirm Today loads with version `v6.7.0`.
-- Confirm no Endings Refresh, Morning warm-up or legacy Phase 1 progress-kept modal appears for a blank first-ever state.
-- Confirm the service-worker cache marker remains `aan-thai-v6-4-1`; v6.7.0 does not change cached asset filenames.
 
 ## Validation Gate
 
 - Run `node tools/precommit-check.js`.
+- Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v6.7.0`, 46 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS v67CompletionJourney` and the Write it, Route talk, Decode Gym, Wild deck and Rare-letter class surface rows.
+- Confirm `docs/phase1_audit.json` reports app version `v7.0.0`, 47 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.0.0 does not change cached asset filenames.
+
+## Fresh-State Onboarding
+
+- Clear `localStorage["thai_state_v1"]` and any Codex/browser artifact storage for the app origin, then open the app online.
+- Pass: the first-run onboarding overlay appears once with Skip visible.
+- Step through the screens. Pass: it explains reading Thai from zero, letter → class → tone, Today's Review → Main task → Practice route, and setup basics.
+- On the engine screen, pass: mid/high/low examples use the existing teal/pink/marigold class colours.
+- On the setup screen, tap `Test Thai voice`.
+- Pass: no audio autoplays before the tap. If no Thai voice exists, the existing Audio setup panel opens; if one exists, the sample plays from device voice support.
+- Finish onboarding. Pass: Today remains available, first lesson/review routing is unchanged, and `state.notices.onboarded` is true.
+- Reload. Pass: onboarding does not repeat.
+
+## Onboarding Skip And Existing Learners
+
+- Clear storage again, open the app and tap Skip on the first onboarding screen.
+- Pass: onboarding closes, `state.notices.onboarded` is true, and reload does not repeat it.
+- Load a saved blank-state blob with no completed lessons and no SRS cards.
+- Pass: onboarding does not appear because a saved blob already existed.
+- Import or create a state with `done: ["l1"]`.
+- Pass: onboarding never appears.
+- Import or create a state with any SRS card.
+- Pass: onboarding never appears.
+- Confirm no legacy Phase 1 progress-kept modal appears for a blank first-ever state.
+
+## About And Beta Identity
+
+- Open Progress → Progress tools → About this app.
+- Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
+- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.0.0)`.
+- Confirm exported backup JSON uses `appVersion: "v7.0.0"`.
+- Confirm `manifest.json` description foregrounds learning to read Thai script.
+
+## Dialog Accessibility Polish
+
+- Open Audio setup from a missing Thai voice or the onboarding voice test.
+- Press Escape. Pass: the panel closes and focus returns to the triggering control.
+- Open End today.
+- Press Escape. Pass: the modal closes and focus returns to End today.
+- Open About this app.
+- Press Escape. Pass: the modal closes and focus returns to About this app.
+- Open Reset all progress and press Escape on warning steps 1-3.
+- Pass: the modal closes and focus returns to Reset all progress.
+- Reopen Reset all progress and continue to the typed `I Understand` step.
+- Press Escape. Pass: the typed-confirmation step does not close on Escape; Cancel still closes safely.
 
 ## v6.7 Completion Journey
 
@@ -25,13 +65,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Pass: the one-time completion overlay appears, uses bounded can-do / keep-practising wording, then sets `phase1Completion.celebrated`.
 - Reload the same state.
 - Pass: the completion overlay does not repeat.
-
-## Progress Dashboard
-
-- Open Progress.
-- Pass: a Phase 1 dashboard card shows lesson, checkpoint, fluency-read, Letters boss and final-completion counts from current progress.
-- Tap the dashboard card.
-- Pass: it opens the readiness report rather than changing progress or scheduling.
+- Open Progress. Pass: the Phase 1 dashboard shows lesson, checkpoint, fluency-read, Letters boss and final-completion counts.
 
 ## Optional Drill Surfacing
 
@@ -46,21 +80,16 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - With progress through Lesson 21, open Practice.
 - Pass: Rare-letter class appears as a class-only drill with neutral pre-answer prompts and no meaning questions.
 
-## Streak Freeze Gaps
+## Streak, Return And Overload
 
 - Set a state whose last active day was two calendar days ago with one freeze.
 - Pass: one freeze is consumed, the streak continues, and the copy says one freeze covers one missed day.
 - Set a state whose last active day was four calendar days ago with two freezes.
 - Pass: no freeze is consumed and the streak resets because three missed days need three freezes.
-- Set the same four-day gap with three freezes.
-- Pass: three freezes are consumed and the streak continues.
-
-## Return And Overload Copy
-
 - Use a state returning after at least three inactive days.
 - Pass: Today includes a welcome-back line and a smaller return-after-gap review route.
 - Use a state with 45+ due review cards.
-- Pass: the overload copy explains that clearing the deck takes a few steady days while short task labels stay compact.
+- Pass: overload copy explains that clearing the deck takes a few steady days while short task labels stay compact.
 
 ## Capture Count And Export
 
@@ -74,7 +103,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v6.7.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.0.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -88,15 +117,11 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Tap `Copy recovery data`; pass: the corrupt blob copies to clipboard or appears in the fallback prompt.
 - Dismiss the notice and confirm the quarantine key is not auto-deleted.
 
-## Save-Failure Warning
+## Save, Error And Update Notices
 
 - Simulate unavailable storage or use a constrained/private context where both storage writes fail.
 - Pass: a persistent banner says `Progress is not saving on this device. Export a backup now.`
 - Tap `Export backup`; pass: backup export opens from the banner.
-- Restore storage and trigger a save; pass: the warning clears and does not stack repeatedly in the same session.
-
-## Error And Update Notices
-
 - Trigger one uncaught test error in a local debug session.
 - Pass: one banner says `Something went wrong. Your saved progress is safe. Reload the app.` with a reload button.
 - Trigger another error; pass: a second banner does not stack.
@@ -125,7 +150,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer version `v6.7.0`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 · 1.0 beta (v7.0.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

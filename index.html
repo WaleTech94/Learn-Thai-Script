@@ -315,6 +315,27 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .audio-setup-card li{padding-left:4px}
 .audio-setup-card .audio-setup-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .audio-setup-card .audio-setup-link{display:block;text-align:center;color:var(--blue);font-size:13px;margin-top:12px}
+.onboarding-modal{position:fixed;inset:0;z-index:95;background:rgba(8,10,14,.86);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease}
+.onboarding-card{width:100%;max-width:460px;background:linear-gradient(160deg,var(--surface),var(--surface2));border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 22px 64px rgba(0,0,0,.56)}
+.onboarding-card h2{font-size:24px;margin-bottom:8px}
+.onboarding-body{min-height:190px;display:grid;align-content:start;gap:14px}
+.onboarding-dots{display:flex;gap:7px;margin-bottom:16px}
+.onboarding-dot{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.2)}
+.onboarding-dot.active{width:22px;background:var(--ui-cyan)}
+.onboarding-class-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.onboarding-class-tile{min-height:88px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.045);display:grid;place-items:center;text-align:center;padding:10px}
+.onboarding-class-tile .glyph{font-family:var(--font-display);font-size:34px;line-height:1}
+.onboarding-class-tile .label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:5px}
+.onboarding-class-tile.mid{border-color:rgba(47,212,181,.52)}.onboarding-class-tile.mid .glyph{color:var(--mid)}
+.onboarding-class-tile.high{border-color:rgba(255,92,158,.52)}.onboarding-class-tile.high .glyph{color:var(--high)}
+.onboarding-class-tile.low{border-color:rgba(255,178,62,.52)}.onboarding-class-tile.low .glyph{color:var(--low)}
+.onboarding-route-list{display:grid;gap:9px}
+.onboarding-route-list div{padding:11px 12px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.onboarding-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.onboarding-actions .btn{min-height:44px;padding-inline:12px}
+.onboarding-skip{width:100%;min-height:44px;margin-top:10px}
+.about-list{display:grid;gap:9px;margin:13px 0;color:var(--muted);font-size:14px;line-height:1.5}
+.about-list div{padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 /* progress wall / journey map (v2.10) - neutral blue for "done"; class colours stay reserved for consonants */
 .pw-unit{margin-top:10px}
 .pw-ulabel{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px}
@@ -350,7 +371,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.today-streak{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-size:15px;min-height:44px}
 	.today-streak.dim .flame{filter:grayscale(1) opacity(.45);animation:none}
 	.today-streak.dim{color:var(--muted)}
-	.version-pill{flex:none;border:1px solid var(--line);border-radius:99px;padding:7px 11px;color:var(--muted);font-size:12px;background:var(--surface)}
+	.version-pill{flex:none;border:1px solid var(--line);border-radius:99px;padding:6px 9px;color:var(--muted);font-size:11px;line-height:1.2;background:var(--surface);max-width:150px;text-align:center;white-space:normal}
 	.today-focus{margin-bottom:16px;padding:4px 0 2px}
 	.today-focus h1{font-size:32px;margin-bottom:6px}
 	.hero-card{position:relative;overflow:hidden;border-radius:22px}
@@ -1121,7 +1142,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">v6.7.0</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.0.0)</span>
       </div>
     </header>
 
@@ -1237,7 +1258,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; Script mastery &middot; v6.7.0 (PWA)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.0.0)</div>
     </div>
   </section>
 
@@ -1320,6 +1341,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
     <div class="section-card progress-tools-card">
       <div class="eyebrow">Progress tools</div>
       <div class="backup-card is-hidden" id="backup-nudge"></div>
+      <button class="btn full ghost mb-12" id="about-app-btn">About this app</button>
       <button class="btn full ghost mb-12" id="notes-btn">Notes</button>
       <div class="row inline-tools">
         <button class="btn small ghost" id="export-btn">Download backup</button>
@@ -2667,10 +2689,12 @@ let state = {
   writeLog:[],
   phase1Completion:null
 };
-const APP_VERSION = 'v6.7.0';
+const APP_VERSION = 'v7.0.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.0.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
+let stateHadSavedBlobAtBoot = false;
 let stateLoadHadCorruptState = false;
 let saveFailureWarningShown = false;
 let runtimeErrorBannerShown = false;
@@ -2702,12 +2726,13 @@ async function loadState(){
   try{
     if(window.storage){
       const r = await window.storage.get(SKEY);
-      if(r && r.value){ state = Object.assign(state, JSON.parse(r.value)); return; }
+      if(r && r.value){ stateHadSavedBlobAtBoot = true; state = Object.assign(state, JSON.parse(r.value)); return; }
     }
   }catch(e){ /* fall through */ }
   let raw = null;
   try{
     raw = localStorage.getItem(SKEY);
+    if(raw) stateHadSavedBlobAtBoot = true;
     readLocalStateRaw(raw);
   }catch(e){
     if(raw) quarantineCorruptState(raw);
@@ -4156,13 +4181,48 @@ function renderTodayRouteSummary(){
     btn.onclick = summary.action;
   }
 }
+function currentFocusTarget(){
+  try{
+    const active = document.activeElement;
+    return active && typeof active.focus === 'function' ? active : null;
+  }catch(e){
+    return null;
+  }
+}
+function restoreFocus(target){
+  if(target && typeof target.focus === 'function'){
+    setTimeout(()=>{ try{ target.focus({preventScroll:true}); }catch(e){ try{ target.focus(); }catch(_){} } }, 0);
+  }
+}
+function bindDialogDismissal(wrap, close, opts){
+  const options = opts || {};
+  const focusTarget = options.focusTarget || currentFocusTarget();
+  let closed = false;
+  const finish = ()=>{
+    if(closed) return;
+    closed = true;
+    document.removeEventListener('keydown', onKey);
+    close();
+    restoreFocus(focusTarget);
+  };
+  const canEscape = ()=> options.canEscape ? options.canEscape() : true;
+  function onKey(e){
+    if(e.key === 'Escape' && canEscape()){
+      e.preventDefault();
+      finish();
+    }
+  }
+  document.addEventListener('keydown', onKey);
+  return finish;
+}
 function showEndDayModal(){
   const missing = dailyMissingStep();
+  const focusTarget = currentFocusTarget();
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
-  wrap.innerHTML = `<div class="confirm-card">
+  wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="end-day-title">
     <div class="eyebrow">${missing ? 'Stop for today' : 'Day complete'}</div>
-    <h2>Mastery beats breadth.</h2>
+    <h2 id="end-day-title">Mastery beats breadth.</h2>
     <p class="sub">${missing ? 'You can stop here. The route will keep the recommended work ready when you return.' : "You have cleared today's required work. Extra study can stay on review, stories or drills, or you can start the next lesson if no true blocker exists."}</p>
     <div class="confirm-actions">
       <button class="btn ghost" id="end-more">Bonus practice</button>
@@ -4170,9 +4230,10 @@ function showEndDayModal(){
     </div>
   </div>`;
   document.body.appendChild(wrap);
-  wrap.querySelector('#end-more').onclick = ()=>{ wrap.remove(); startDepthBlock(); };
-  wrap.querySelector('#end-close').onclick = ()=>wrap.remove();
-  wrap.addEventListener('click', e=>{ if(e.target === wrap) wrap.remove(); });
+  const close = bindDialogDismissal(wrap, ()=>wrap.remove(), {focusTarget});
+  wrap.querySelector('#end-more').onclick = ()=>{ close(); startDepthBlock(); };
+  wrap.querySelector('#end-close').onclick = close;
+  wrap.addEventListener('click', e=>{ if(e.target === wrap) close(); });
 }
 function handleEndDay(){
   const missing = dailyMissingStep();
@@ -4197,11 +4258,12 @@ function showV5NoticeIfNeeded(hadProgressBeforeRepair){
     saveState();
     return;
   }
+  const focusTarget = currentFocusTarget();
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
-  wrap.innerHTML = `<div class="confirm-card">
+  wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="v5-notice-title">
     <div class="eyebrow">Phase 1 update</div>
-    <h2>Progress kept</h2>
+    <h2 id="v5-notice-title">Progress kept</h2>
     <p class="sub">Phase 1 has been reorganised so review, signs and transfer practice stay inside the lesson gates. Your lessons, tokens, titles and valid review cards have been kept.</p>
     <div class="confirm-actions">
       <button class="btn" id="v5-notice-ok">Continue</button>
@@ -4213,7 +4275,144 @@ function showV5NoticeIfNeeded(hadProgressBeforeRepair){
     saveState();
     wrap.remove();
   };
-  wrap.querySelector('#v5-notice-ok').onclick = close;
+  const dismiss = bindDialogDismissal(wrap, close, {focusTarget});
+  wrap.querySelector('#v5-notice-ok').onclick = dismiss;
+}
+function srsCardCountFor(target){
+  const s = target || state;
+  return Object.keys(s.srs || {}).length;
+}
+function onboardingEligibleForState(target, hadSavedBlob){
+  const s = target || state;
+  const saved = hadSavedBlob == null ? stateHadSavedBlobAtBoot : !!hadSavedBlob;
+  if(saved) return false;
+  if(s.notices && s.notices.onboarded) return false;
+  if(Array.isArray(s.done) && s.done.length) return false;
+  if(srsCardCountFor(s)) return false;
+  return true;
+}
+function completeOnboarding(mode, target){
+  const s = target || state;
+  if(!s.notices) s.notices = {};
+  s.notices.onboarded = true;
+  if(!target || target === state) saveState();
+  return mode || 'done';
+}
+const ONBOARDING_STEPS = [
+  {
+    title:'Read Thai from zero',
+    body:`<p class="sub">อ่าน teaches you to read Thai script from the letters up. This is letters, not phrase memorising. Normal course days are built around about 45 minutes, with Bangkok life as the target context.</p>`
+  },
+  {
+    title:'The reading engine',
+    body:`<div class="onboarding-class-row" aria-label="Thai consonant class colours">
+      <div class="onboarding-class-tile mid"><div><div class="glyph">ก</div><div class="label">Mid</div></div></div>
+      <div class="onboarding-class-tile high"><div><div class="glyph">ข</div><div class="label">High</div></div></div>
+      <div class="onboarding-class-tile low"><div><div class="glyph">น</div><div class="label">Low</div></div></div>
+    </div>
+    <p class="sub">The class is the dial that sets the tone. Phase 1 keeps coming back to letter → class → tone until it is automatic.</p>`
+  },
+  {
+    title:'Use Today first',
+    body:`<div class="onboarding-route-list">
+      <div><b>Review</b><br><span class="sub">Warm up cards that are due.</span></div>
+      <div><b>Main task</b><br><span class="sub">The next lesson, check or recovery block.</span></div>
+      <div><b>Practice</b><br><span class="sub">One useful extra when the main route is done.</span></div>
+    </div>
+    <p class="sub">End today wraps up. Streaks and 💎 are encouragement, not the point.</p>`
+  },
+  {
+    title:'Set up the basics',
+    body:`<p class="sub">Thai audio uses device voice support: a rough model for practice, not assessment evidence. Test it after this tap; if no Thai voice is found, the setup panel opens.</p>
+    <button class="btn full ghost" id="onboard-test-voice">Test Thai voice</button>
+    <p class="sub">Progress → Progress tools has backup/export and the Sounds toggle.</p>`
+  }
+];
+function onboardingStepHtml(i){
+  const step = ONBOARDING_STEPS[i] || ONBOARDING_STEPS[0];
+  const dots = ONBOARDING_STEPS.map((_,idx)=>`<span class="onboarding-dot ${idx===i?'active':''}" aria-hidden="true"></span>`).join('');
+  return `
+    <div class="onboarding-dots">${dots}</div>
+    <div class="onboarding-body">
+      <div>
+        <div class="eyebrow">First run ${i+1} of ${ONBOARDING_STEPS.length}</div>
+        <h2 id="onboarding-title">${step.title}</h2>
+      </div>
+      ${step.body}
+    </div>
+    <div class="onboarding-actions">
+      <button class="btn ghost" id="onboard-back" ${i===0?'disabled':''}>Back</button>
+      <button class="btn" id="onboard-next">${i===ONBOARDING_STEPS.length-1?'Start reading':'Next'}</button>
+    </div>
+    <button class="btn ghost onboarding-skip" id="onboard-skip">Skip</button>`;
+}
+function testOnboardingThaiVoice(btn){
+  const sample = 'สวัสดีครับ';
+  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', sample, btn); return; }
+  try{ speechSynthesis.resume(); }catch(e){}
+  pickVoice();
+  if(!thaiVoice){ showAudioSetup('missing-thai', sample, btn); return; }
+  speak(sample, btn);
+}
+function showOnboarding(){
+  const focusTarget = currentFocusTarget();
+  const wrap = document.createElement('div');
+  wrap.className = 'onboarding-modal';
+  wrap.innerHTML = `<div class="onboarding-card" role="dialog" aria-modal="true" aria-labelledby="onboarding-title"></div>`;
+  const card = wrap.querySelector('.onboarding-card');
+  let i = 0;
+  let touchStartX = null;
+  const dismiss = bindDialogDismissal(wrap, ()=>{ completeOnboarding('skip'); wrap.remove(); }, {focusTarget});
+  const render = ()=>{
+    card.innerHTML = onboardingStepHtml(i);
+    const back = wrap.querySelector('#onboard-back');
+    const next = wrap.querySelector('#onboard-next');
+    const skip = wrap.querySelector('#onboard-skip');
+    const test = wrap.querySelector('#onboard-test-voice');
+    if(back) back.onclick = ()=>{ if(i > 0){ i--; render(); } };
+    if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completeOnboarding('finish'); dismiss(); } };
+    if(skip) skip.onclick = dismiss;
+    if(test) test.onclick = ()=>testOnboardingThaiVoice(test);
+  };
+  wrap.addEventListener('touchstart', e=>{
+    touchStartX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : null;
+  }, {passive:true});
+  wrap.addEventListener('touchend', e=>{
+    if(touchStartX == null || !e.changedTouches || !e.changedTouches[0]) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if(Math.abs(dx) < 48) return;
+    if(dx < 0 && i < ONBOARDING_STEPS.length - 1){ i++; render(); }
+    if(dx > 0 && i > 0){ i--; render(); }
+  }, {passive:true});
+  render();
+  document.body.appendChild(wrap);
+  return true;
+}
+function showOnboardingIfNeeded(){
+  if(!onboardingEligibleForState(state, stateHadSavedBlobAtBoot)) return false;
+  return showOnboarding();
+}
+function showAboutApp(){
+  const focusTarget = currentFocusTarget();
+  const wrap = document.createElement('div');
+  wrap.className = 'confirm-modal';
+  wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="about-app-title">
+    <div class="eyebrow">About this app</div>
+    <h2 id="about-app-title">อ่าน means to read</h2>
+    <div class="about-list">
+      <div>อ่าน is a self-contained Learn Thai PWA for learning to read Thai script from zero.</div>
+      <div>Phase 1 covers script reading, consonant class, tone logic, live/dead syllables, final jobs, vowel length and controlled reading.</div>
+      <div>Phase 1 completion does not claim real-world listening mastery, speaking mastery, broad vocabulary or free conversation.</div>
+      <div>Audio is device voice support: a rough model for practice, not assessment evidence.</div>
+      <div>Current version: ${esc(APP_VERSION_LABEL)}.</div>
+      <div>Backups live in Progress → Progress tools. Export before resetting or changing devices.</div>
+    </div>
+    <button class="btn full" id="about-close">Close</button>
+  </div>`;
+  document.body.appendChild(wrap);
+  const close = bindDialogDismissal(wrap, ()=>wrap.remove(), {focusTarget});
+  wrap.querySelector('#about-close').onclick = close;
 }
 function setTaskButton(id, cfg){
   const b = el(id); if(!b) return;
@@ -5217,7 +5416,7 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
 /* =====================================================
    SPEECH
 ===================================================== */
-let thaiVoice = null, voiceWarned = false, audioSetupOpen = false;
+let thaiVoice = null, voiceWarned = false, audioSetupOpen = false, audioSetupFocusTarget = null, audioSetupKeyHandler = null;
 function emitReviewTimingEvent(name){
   try{
     if(typeof document !== 'undefined' && document.dispatchEvent && typeof CustomEvent === 'function'){
@@ -5277,9 +5476,10 @@ function audioSetupCopy(reason){
     ]
   };
 }
-function showAudioSetup(reason, sampleText){
+function showAudioSetup(reason, sampleText, trigger){
   if(audioSetupOpen) return;
   audioSetupOpen = true;
+  audioSetupFocusTarget = trigger || currentFocusTarget();
   const copy = audioSetupCopy(reason);
   const wrap = document.createElement('div');
   wrap.className = 'audio-setup-modal';
@@ -5297,6 +5497,13 @@ function showAudioSetup(reason, sampleText){
       <button class="btn ghost full" id="audio-close-help" style="margin-top:12px">Close</button>
     </div>`;
   document.body.appendChild(wrap);
+  audioSetupKeyHandler = e=>{
+    if(e.key === 'Escape'){
+      e.preventDefault();
+      closeAudioSetup();
+    }
+  };
+  document.addEventListener('keydown', audioSetupKeyHandler);
   const stepsText = copy.context + '\n\n' + copy.steps.map((s,i)=>(i+1)+'. '+s).join('\n');
   el('audio-copy-steps').onclick = async ()=>{
     try{ await navigator.clipboard.writeText(stepsText); toast('Audio steps copied'); }
@@ -5311,20 +5518,26 @@ function showAudioSetup(reason, sampleText){
   el('audio-close-help').onclick = closeAudioSetup;
 }
 function closeAudioSetup(){
+  if(audioSetupKeyHandler){
+    document.removeEventListener('keydown', audioSetupKeyHandler);
+    audioSetupKeyHandler = null;
+  }
   const modal = document.querySelector('.audio-setup-modal');
   if(modal) modal.remove();
   audioSetupOpen = false;
+  restoreFocus(audioSetupFocusTarget);
+  audioSetupFocusTarget = null;
 }
 function speak(text, btn, rate){
   speakWithDeviceVoice(text, btn, rate);
 }
 function speakWithDeviceVoice(text, btn, rate){
   markReadTimerUnreliable();
-  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text); return; }
+  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text, btn); return; }
   try{ speechSynthesis.resume(); }catch(e){}
   if(!thaiVoice) pickVoice();
   if(!thaiVoice){
-    if(!voiceWarned){ showAudioSetup('missing-thai', text); voiceWarned = true; }
+    if(!voiceWarned){ showAudioSetup('missing-thai', text, btn); voiceWarned = true; }
     return;
   }
   speechSynthesis.cancel();
@@ -5344,11 +5557,11 @@ function speakWithDeviceVoice(text, btn, rate){
     u.onerror = e=>{
       btn.classList.remove('playing');
       closeTiming();
-      if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text);
+      if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text, btn);
     };
   } else {
     u.onend = closeTiming;
-    u.onerror = e=>{ closeTiming(); if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text); };
+    u.onerror = e=>{ closeTiming(); if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text, btn); };
   }
   speechSynthesis.speak(u);
 }
@@ -7264,6 +7477,48 @@ function validateV67CompletionJourneyContracts(){
   if(errors.length) throw new Error('V6.7 completion journey contract failed:\n' + errors.join('\n'));
   return true;
 }
+function validateV70OnboardingContracts(){
+  const errors = [];
+  const finishState = {done:[], srs:{}, notices:{}, days:{}, retention:{}};
+  if(!onboardingEligibleForState(finishState, false)) errors.push('fresh state should be eligible for onboarding');
+  completeOnboarding('finish', finishState);
+  if(!finishState.notices.onboarded) errors.push('finish should set notices.onboarded');
+  if(onboardingEligibleForState(finishState, false)) errors.push('finished onboarding should not be offered again');
+
+  const skipState = {done:[], srs:{}, notices:{}, days:{}, retention:{}};
+  completeOnboarding('skip', skipState);
+  if(!skipState.notices.onboarded) errors.push('skip should set notices.onboarded');
+  if(onboardingEligibleForState(skipState, false)) errors.push('skipped onboarding should not be offered again');
+
+  if(onboardingEligibleForState({done:['l1'], srs:{}, notices:{}}, false)) errors.push('completed lesson state must never see onboarding');
+  if(onboardingEligibleForState({done:[], srs:{'g:ก':{iv:0,due:todayStr(),lapses:0}}, notices:{}}, false)) errors.push('SRS state must never see onboarding');
+  if(onboardingEligibleForState({done:[], srs:{}, notices:{}}, true)) errors.push('pre-existing saved blank state must never see onboarding');
+
+  withTemporaryState({done:[], srs:{}, notices:{}, days:{}, retention:{}}, ()=>{
+    const d = ensureDay();
+    const beforeDay = JSON.stringify(d);
+    const beforeBlocker = JSON.stringify(getLessonBlocker('l1') || null);
+    const beforeSummary = todayRouteSummary();
+    const beforeCopy = [beforeSummary.dayType, beforeSummary.next, beforeSummary.reason].join('|');
+    onboardingEligibleForState(state, false);
+    const afterSummary = todayRouteSummary();
+    const afterCopy = [afterSummary.dayType, afterSummary.next, afterSummary.reason].join('|');
+    if(JSON.stringify(getLessonBlocker('l1') || null) !== beforeBlocker) errors.push('onboarding eligibility must not alter lesson blockers');
+    if(afterCopy !== beforeCopy) errors.push('onboarding eligibility must not alter route copy');
+    if(JSON.stringify(ensureDay()) !== beforeDay) errors.push('onboarding eligibility must not alter frozen day shape');
+  });
+
+  const onboardingSource = String(showOnboarding) + JSON.stringify(ONBOARDING_STEPS);
+  if(!/onboard-skip/.test(onboardingSource)) errors.push('onboarding needs a skip control');
+  if(!/Test Thai voice/.test(onboardingSource) || !/showAudioSetup/.test(String(testOnboardingThaiVoice))) errors.push('onboarding must expose proactive Thai voice setup');
+  if(!/touchstart/.test(onboardingSource) || !/touchend/.test(onboardingSource)) errors.push('onboarding should support swipe gestures');
+  const aboutSource = String(showAboutApp);
+  if(!/About this app/.test(aboutSource) || !/device voice support/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
+  if(APP_VERSION !== 'v7.0.0') errors.push('internal app version should be v7.0.0');
+  if(!/1\.0 beta/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain 1.0 beta and v7.0.0');
+  if(errors.length) throw new Error('V7.0 onboarding contract failed:\n' + errors.join('\n'));
+  return true;
+}
 function validateV601FirstRunContracts(){
   const errors = [];
   if(learnerHadProgressBeforeMigration({done:[], srs:{}})) errors.push('fresh blank states must not be treated as migrated progress');
@@ -8602,6 +8857,7 @@ function renderNotes(){
   }));
 }
 el('notes-btn').addEventListener('click', ()=>{ openOverlay(); renderNotes(); });
+el('about-app-btn').addEventListener('click', showAboutApp);
 el('export-btn').addEventListener('click', ()=>downloadProgressExport());
 el('copy-export-btn').addEventListener('click', ()=>copyProgressExport());
 el('import-btn').addEventListener('click', ()=>{
@@ -8778,6 +9034,7 @@ async function resetProgressNow(){
   setTimeout(()=>location.reload(), 450);                          // reload → init() rebuilds cleanly, no half-wiped state
 }
 function showResetFlow(){
+  const focusTarget = currentFocusTarget();
   const steps = [
     {h:'Reset all progress?', b:'This clears completed lessons, review cards, streak, tokens, mastery checks, unlocks and today plans. Notes are kept.'},
     {h:'This cannot be undone.', b:'Export first if you might want this progress later. The installed PWA will restart as a fresh learner.'},
@@ -8787,11 +9044,12 @@ function showResetFlow(){
   let i = 0;
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
+  const close = bindDialogDismissal(wrap, ()=>wrap.remove(), {focusTarget, canEscape:()=>i < steps.length - 1});
   const render = ()=>{
     const s = steps[i], final = i === steps.length - 1;
-    wrap.innerHTML = `<div class="confirm-card">
+    wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="reset-title">
       <div class="eyebrow">Reset warning ${i+1} of ${steps.length}</div>
-      <h2>${s.h}</h2>
+      <h2 id="reset-title">${s.h}</h2>
       <p class="sub">${s.b}</p>
       ${final ? '<input id="reset-confirm-input" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="I Understand">' : ''}
       <div class="confirm-actions">
@@ -8799,7 +9057,7 @@ function showResetFlow(){
         <button class="btn" id="reset-next" ${final?'disabled':''}>${final?'Erase progress':'Continue'}</button>
       </div>
     </div>`;
-    wrap.querySelector('#reset-cancel').onclick = ()=>wrap.remove();
+    wrap.querySelector('#reset-cancel').onclick = close;
     const next = wrap.querySelector('#reset-next');
     if(final){
       const input = wrap.querySelector('#reset-confirm-input');
@@ -12512,7 +12770,8 @@ function runFullStartupValidators(){
     validateCaptureLoopContracts,
     validateV65FeedbackContracts,
     validateV66DataSafetyContracts,
-    validateV67CompletionJourneyContracts
+    validateV67CompletionJourneyContracts,
+    validateV70OnboardingContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -12543,6 +12802,7 @@ window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
     renderHome(); renderLearn(); renderReviewTab();
     showV5NoticeIfNeeded(hadProgressBeforeRepair);
     showCorruptStateNotice();
+    showOnboardingIfNeeded();
     showPhase1CompletionCelebrationIfNeeded();
   }catch(e){
     console.error(e);

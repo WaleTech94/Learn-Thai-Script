@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-04T01:06:10.323Z",
-  "appVersion": "v6.7.0",
+  "generatedAt": "2026-07-04T01:44:45.270Z",
+  "appVersion": "v7.0.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -230,6 +230,11 @@
     },
     {
       "name": "v67CompletionJourney",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v70Onboarding",
       "ok": true,
       "issues": []
     }
