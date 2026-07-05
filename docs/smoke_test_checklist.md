@@ -1,4 +1,4 @@
-# v7.2.0 Smoke-Test Checklist
+# v7.3.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -7,9 +7,9 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js`.
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v7.2.0`, 50 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.2.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.json` reports app version `v7.3.0`, 51 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.3.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -38,8 +38,8 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.2.0)`.
-- Confirm exported backup JSON uses `appVersion: "v7.2.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.3.0)`.
+- Confirm exported backup JSON uses `appVersion: "v7.3.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## Dialog Accessibility Polish
@@ -103,7 +103,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.2.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.3.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -176,10 +176,22 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Buy/select Temple gold, Monsoon and Loy Krathong. Pass: Today, lesson player, review grades, Read, Progress and shop remain legible, and mid/high/low class colours keep their meaning.
 - Import a pre-v7.2 backup. Pass: progress imports without `soundPacks[]` or `sfxVoice`, shop opens, Default sound is active, and existing packs/themes/titles remain owned.
 
+## v7.3 Reading Mileage And Automaticity
+
+- Fresh state: open Read before Lesson 8. Pass: the new v7.3 Reading-room stories are not visible, completed-story timed re-read controls are absent, and Tone sprint is not visible before Lesson 13.
+- Mid-course Lesson 10 state: open Read. Pass: the Lesson 8 and Lesson 10 new stories are visible, first read uses the normal reading flow, and the `Timed re-read` button appears only after the story has been completed.
+- Background the app during a story or fluency read before finishing. Pass: no unreliable timing sample is stored.
+- Complete a story or fluency read, then use `Timed re-read`. Pass: the repeat sample stores in `readTimes`, does not award tokens, does not create SRS/review cards, and the Progress dashboard shows a Reading mileage line with story count, timed-read count and pace wording.
+- Lesson 18+ state with at least 20 tone-rule answers and 85%+ rule accuracy: open Tones. Pass: Tone sprint is visible, has no countdown, wrong answers show the rose panel plus `Continue`, and the end screen reports seconds per answer.
+- Complete Tone sprint. Pass: `drillLog["tone-sprint"]` records last/best pace, no new lesson blocker appears, and no sprint-specific token reward is awarded.
+- Lesson 18+ Decode Gym: start several sessions. Pass: each 10-rep set includes at least two true-cluster words when the pool allows, while remaining self-checked and outside SRS.
+- Wild deck with a route-eligible taught capture: tap `Drill this`. Pass: the route is hidden first, reveal shows the existing tone-route tiles, and only the capture practice count/date changes.
+- Import a pre-v7.3 backup with no `readTimes` or `drillLog`. Pass: import succeeds, Progress opens, and the new surfaces remain optional.
+
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 · 1.0 beta (v7.2.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 · 1.0 beta (v7.3.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

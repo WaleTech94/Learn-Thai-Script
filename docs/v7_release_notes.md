@@ -8,11 +8,29 @@
 
 `v7.2.0` expands optional shop spenders with themes, a synthesized sound voice, story pack, phrase packs and economy notes while keeping paid content outside lesson gates, SRS scheduling and mastery.
 
+`v7.2.1` ships the post-review cleanup as a patch release: the runtime identity moves to v7.2.1, the new theme contrast map matches rendered CSS, paid story surfaces stay ownership-aware and unit boss quizzes share the in-progress exit guard.
+
+`v7.3.0` adds reading mileage and automaticity practice inside the existing Phase 1 beta: eight more decodable Reading-room stories, word-recurrence audit evidence, optional timed re-reads, a gated Tone sprint, Decode Gym cluster boosting and Wild deck Drill this.
+
 What beta means here:
 
 - Phase 1 reading, consonant class, tone logic, final jobs, controlled reads, review, backup/export and maintenance routing are complete enough for owner testing and public self-release preparation.
 - The release is still a beta because final iPhone/PWA checks, live deployment propagation and real learner-device use can surface small bugs.
-- Until public self-release, changes should be bug fixes, copy clarifications, release safety fixes or validator/doc corrections only.
+- Until public self-release, changes should be bug fixes, copy clarifications, release safety fixes, validator/doc corrections or explicitly scoped optional-practice mileage only.
+
+## v7.3.0 scope
+
+- Reading mileage: eight new free Reading-room stories unlock at Lessons 8, 10, 12, 14, 16, 18, 20 and 22, with the generated audit reporting story/fluency word recurrence.
+- Timed re-reads: completed stories and fluency reads gain optional repeat timing using the existing `readTimes` evidence bucket; repeat timing does not award tokens, create SRS cards or affect lesson gates.
+- Automaticity: Tone sprint unlocks only after Lesson 13 and at least 85% tone-rule accuracy over 20 rule answers, then stores pace in the existing `drillLog` bucket.
+- Decode Gym and Wild deck: Decode Gym grows to 63 tone-verified non-lesson items with a post-L18 true-cluster booster; Wild deck adds Drill this for route-eligible local captures.
+- Scope boundary: no curriculum, SRS, grading, economy, audio asset, network, service-worker cache or required state-schema change.
+
+## v7.2.1 scope
+
+- Runtime identity: `APP_VERSION`, `APP_VERSION_LABEL`, the visible footer/version pill and the v7.2 validator identity string now read `v7.2.1`.
+- Post-review cleanup: the new themes' `--muted` CSS values match the contrast map, paid story Course Map and earnings-board surfaces are ownership-aware, unit boss quizzes share the in-progress exit guard, and stray prompt artifacts are removed.
+- Scope boundary: no curriculum, SRS, grading, economy, audio asset, network, service-worker cache or state-schema change.
 
 ## v7.2.0 scope
 

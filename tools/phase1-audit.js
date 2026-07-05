@@ -126,6 +126,39 @@ globalThis.__phase1Audit = (function(){
     try{ fn(); return {name, ok:true, issues:[]}; }
     catch(e){ return {name, ok:false, issues:String(e.message||e).split('\\n').slice(1).filter(Boolean)}; }
   }
+  const TRUE_CLUSTER_ONSETS = ['กร','กล','กว','ขร','ขล','ขว','คร','คล','คว','ปร','ปล','พร','พล','ตร'];
+  function trueClusterWord(word){
+    const t = String(word || '').normalize('NFC');
+    return TRUE_CLUSTER_ONSETS.some(onset=>t.startsWith(onset));
+  }
+  function gateSortKey(gate){
+    const n = lessonNum(gate);
+    return Number.isFinite(n) && n > 0 ? n : 999;
+  }
+  function wordRecurrenceAudit(){
+    const rows = new Map();
+    const add = (item, gate)=>{
+      if(!item || !item.t) return;
+      const word = String(item.t).normalize('NFC');
+      const row = rows.get(word) || {
+        word,
+        tr:item.tr || '',
+        earliestGate:gate,
+        total:0,
+        isCluster:trueClusterWord(word),
+        status:'LOW'
+      };
+      row.total += 1;
+      if(!row.tr && item.tr) row.tr = item.tr;
+      if(gateSortKey(gate) < gateSortKey(row.earliestGate)) row.earliestGate = gate;
+      rows.set(word, row);
+    };
+    STORIES.forEach(story=>(story.lines||[]).flat().forEach(item=>add(item, story.gate)));
+    FLUENCY_READS.forEach(read=>(read.lines||[]).flat().forEach(item=>add(item, read.gate)));
+    return Array.from(rows.values())
+      .map(row=>Object.assign(row, {status:row.total >= (row.isCluster ? 6 : 4) ? 'OK' : 'LOW'}))
+      .sort((a,b)=>gateSortKey(a.earliestGate) - gateSortKey(b.earliestGate) || a.word.localeCompare(b.word, 'th'));
+  }
   function learnedGlyphIdsFor(doneIds){
     const doneSet = new Set(doneIds || []);
     const out = [];
@@ -798,7 +831,8 @@ globalThis.__phase1Audit = (function(){
     validatorResult('v70Onboarding', validateV70OnboardingContracts),
     validatorResult('v71VisualSound', validateV71VisualSoundContracts),
     validatorResult('themeContracts', validateThemeContracts),
-    validatorResult('v72Shop', validateV72ShopContracts)
+    validatorResult('v72Shop', validateV72ShopContracts),
+    validatorResult('v73ReadingMileage', validateV73ReadingMileageContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -835,6 +869,7 @@ globalThis.__phase1Audit = (function(){
       tone:toneOf(item.tr),
       verified:decodeGymToneVerified(item)
     })),
+    wordRecurrence:wordRecurrenceAudit(),
     captureLoop:{
       stateKey:'captures',
       cap:200,
@@ -885,7 +920,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v7.2.0 is the shop expansion and economy pass over the Phase 1 1.0 beta: Temple gold, Monsoon and Loy Krathong add paid dark visual identities, Ranat adds a second synthesized SFX voice, Bangkok reads adds four paid Reading-room stories, Taxi & Grab and Market bargaining add 24 optional phrases, shop rows are grouped by Phrase & story packs / Sounds / Themes / Titles, theme contrast and shop purchase boundaries are validator-guarded, and the economy notes document a normal 60-80 token week without changing earn rates. v7.1.0 remains the visual and sound repair pass: Day market uses light-safe semantic fills, Skytrain and Songkran get palette-specific surface tokens, reading accents move to cyan instead of the reserved mid-class teal, objective Write it/Spell it/Glyph Ghost/Contrast Block/Quick decode answers play SFX, completion/wrong sounds are more distinct, and in-progress lessons/mastery checks confirm before close discards the memory-only attempt. v7.0.0 remains the Phase 1 1.0 beta identity pass: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version moved to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v7.3.0 is the reading mileage and automaticity pass: eight new decodable Reading-room stories at Lessons 8, 10, 12, 14, 16, 18, 20 and 22 raise underexposed words through the recurrence audit; completed stories and fluency reads gain optional timed re-read using existing readTimes; Tone sprint reuses tone-rule trainer questions after 85% rule accuracy; Decode Gym grows to 63 items with a post-L18 cluster booster; Wild deck adds Drill this for route-eligible captures; no curriculum, SRS, economy, audio asset, network, service-worker or required-state-schema change. v7.2.1 is the post-review cleanup and identity bump: the runtime label moves to v7.2.1, the new theme --muted CSS values match the contrast map, paid Bangkok reads Course Map and earnings-board surfaces stay ownership-aware, unit boss quizzes share the mastery-stakes exit guard, and stray prompt artifacts are removed. v7.2.0 is the shop expansion and economy pass over the Phase 1 1.0 beta: Temple gold, Monsoon and Loy Krathong add paid dark visual identities, Ranat adds a second synthesized SFX voice, Bangkok reads adds four paid Reading-room stories, Taxi & Grab and Market bargaining add 24 optional phrases, shop rows are grouped by Phrase & story packs / Sounds / Themes / Titles, theme contrast and shop purchase boundaries are validator-guarded, and the economy notes document a normal 60-80 token week without changing earn rates. v7.1.0 remains the visual and sound repair pass: Day market uses light-safe semantic fills, Skytrain and Songkran get palette-specific surface tokens, reading accents move to cyan instead of the reserved mid-class teal, objective Write it/Spell it/Glyph Ghost/Contrast Block/Quick decode answers play SFX, completion/wrong sounds are more distinct, and in-progress lessons/mastery checks confirm before close discards the memory-only attempt. v7.0.0 remains the Phase 1 1.0 beta identity pass: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version moved to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -909,6 +944,16 @@ function renderMarkdown(audit){
     lines.push(`- Lesson ${String(read.gate||'').replace('l','')}: ${safeCell(read.title)}${read.realWorld ? ' (controlled real-world)' : ' (cumulative)'} · ${read.itemCount} Thai items · check: ${safeCell(read.check||'')}`);
   });
   lines.push(`- Final checkpoint: ${audit.phase1Completion.questionCount} questions; ${audit.phase1Completion.pass}.`);
+  lines.push('');
+  lines.push('## Reading Word Recurrence');
+  lines.push('');
+  lines.push('Corpus: Reading-room story tokens plus fluency-read tokens. Status is OK at 4+ encounters, or 6+ for true-cluster words.');
+  lines.push('');
+  lines.push('| Word | Reading | Earliest gate | Encounters | Cluster | Status |');
+  lines.push('| --- | --- | --- | --- | --- | --- |');
+  (audit.wordRecurrence||[]).forEach(row=>{
+    lines.push(`| ${safeCell(row.word)} | ${safeCell(row.tr)} | ${safeCell(row.earliestGate)} | ${row.total} | ${row.isCluster ? 'yes' : 'no'} | ${safeCell(row.status)} |`);
+  });
   lines.push('');
   lines.push('## v6.3 Decode Gym');
   lines.push('');

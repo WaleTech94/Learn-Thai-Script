@@ -2,6 +2,21 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.3.0 - 2026-07-05
+
+- Added the Reading mileage ladder: eight new decodable Reading-room stories gated at Lessons 8, 10, 12, 14, 16, 18, 20 and 22, written from the recurrence audit to lift underexposed controlled words without changing the curriculum order.
+- Added a Progress `Reading mileage` line showing stories read, timed read IDs and whether recent reliable pace is improving or steady, derived from existing `stories` and `readTimes`.
+- Added optional `Timed re-read` buttons for completed stories and completed fluency reads. First reads keep their existing cold-read timing; re-reads write only bounded `readTimes` samples and do not award tokens or alter routes.
+- Added gated Tone sprint in Tones: it unlocks after Lesson 13 once tone-rule accuracy reaches 85% over at least 20 samples, reuses tone-rule questions, logs into `toneStats.rule` / `errorProfile`, and stores pace under `drillLog['tone-sprint']`.
+- Strengthened Decode Gym for cluster automaticity: the corpus is now 63 tone-verified non-lesson monosyllables, and post-L18 sessions include at least two true-cluster reps when the pool allows.
+- Added Wild deck `Drill this` for route-eligible captures; it hides/reveals the existing tone route and updates only the capture-local `lastSeen` / `n` fields.
+- Added the recurrence table to `tools/phase1-audit.js`, regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`, and added `validateV73ReadingMileageContracts()`. Audit now reports app version `v7.3.0` and 51 validators passing. `sw.js` cache remains `aan-thai-v6-4-1` because no cached asset filenames changed.
+- v7.3.0 adds no new required learner state key; timed re-reads reuse `readTimes`, tone sprint reuses `drillLog` / `toneStats` / `errorProfile`, and Wild deck Drill this reuses existing `captures[]` fields. No SRS, grading, leech, blocker, lesson-gate, token-economy, audio-asset, runtime-network or service-worker-cache change.
+
+## v7.2.1 - 2026-07-04
+
+- Shipped the post-review cleanup as its own patch release: aligned the three new theme `--muted` CSS tokens with the contrast map, kept paid Bangkok reads Course Map and earnings-board surfaces ownership-aware, extended the in-progress exit guard to unit boss quizzes, removed stray prompt artifacts, and bumped the app identity to `Phase 1 · 1.0 beta (v7.2.1)`.
+
 ## v7.2.0 - 2026-07-04
 
 - Added three purchasable dark themes: Temple gold (60), Monsoon (40) and Loy Krathong (60). `validateThemeContracts()` now checks contrast and class-colour boundaries across every theme; the existing grade Again button now uses the shared dark button ink to meet contrast.

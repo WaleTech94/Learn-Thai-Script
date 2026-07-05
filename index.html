@@ -939,6 +939,7 @@ body[data-theme="songkran"]{
 body[data-theme="temple"]{
   --bg-0:#0F0B08; --bg-1:#17100B; --bg-2:#241A11; --bg:#0F0B08;
   --surface:#17100B; --surface2:#241A11; --surface-glass:rgba(23,16,11,.82); --surface-glass-strong:rgba(23,16,11,.94); --surface-raised:rgba(36,26,17,.94); --surface-soft:rgba(174,132,63,.075); --surface-soft-strong:rgba(174,132,63,.11);
+  --muted:#B8A988;
   --line:#3B2B1A; --line-soft:rgba(174,132,63,.15); --line-bright:rgba(174,132,63,.28); --line-hot:rgba(174,132,63,.36);
   --ui-primary:#A67A33; --ui-primary-2:#D8B36A; --ui-secondary:#D8B36A; --ui-info:#7DD3FC; --ui-reading:#7DD3FC; --ui-progress:#B88738; --ui-warning:#B88738; --ui-reward:#A66B2E; --ui-translit:#D7BC83;
   --ui-progress-soft:rgba(184,135,56,.15); --ui-progress-mid:rgba(184,135,56,.38); --ui-warning-soft:rgba(184,135,56,.13); --ui-reward-soft:rgba(166,107,46,.16);
@@ -950,6 +951,7 @@ body[data-theme="temple"]{
 body[data-theme="monsoon"]{
   --bg-0:#07121C; --bg-1:#0D1B28; --bg-2:#142839; --bg:#07121C;
   --surface:#0D1B28; --surface2:#142839; --surface-glass:rgba(13,27,40,.82); --surface-glass-strong:rgba(13,27,40,.94); --surface-raised:rgba(20,40,57,.94); --surface-soft:rgba(118,183,216,.075); --surface-soft-strong:rgba(118,183,216,.11);
+  --muted:#A7B9C8;
   --line:#22384B; --line-soft:rgba(118,183,216,.14); --line-bright:rgba(118,183,216,.26); --line-hot:rgba(118,183,216,.36);
   --ui-primary:#5DADEC; --ui-primary-2:#8BD3FF; --ui-secondary:#8BD3FF; --ui-info:#8BD3FF; --ui-reading:#8BD3FF; --ui-review:#7DB6E8; --ui-progress:#C9A15A; --ui-warning:#C9A15A; --ui-translit:#9BC7E5;
   --ui-info-soft:rgba(139,211,255,.12); --ui-warning-soft:rgba(201,161,90,.13);
@@ -961,6 +963,7 @@ body[data-theme="monsoon"]{
 body[data-theme="krathong"]{
   --bg-0:#070A1B; --bg-1:#0D1230; --bg-2:#17113E; --bg:#070A1B;
   --surface:#0D1230; --surface2:#17113E; --surface-glass:rgba(13,18,48,.82); --surface-glass-strong:rgba(13,18,48,.94); --surface-raised:rgba(23,17,62,.94); --surface-soft:rgba(180,150,255,.075); --surface-soft-strong:rgba(180,150,255,.11);
+  --muted:#B8B3D4;
   --line:#2B275D; --line-soft:rgba(180,150,255,.14); --line-bright:rgba(180,150,255,.25); --line-hot:rgba(180,150,255,.34);
   --ui-primary:#A78BFA; --ui-primary-2:#67E8F9; --ui-secondary:#67E8F9; --ui-info:#67E8F9; --ui-reading:#67E8F9; --ui-progress:#D49A48; --ui-warning:#D49A48; --ui-reward:#D8833D; --ui-translit:#C7B8FF;
   --ui-progress-soft:rgba(212,154,72,.15); --ui-warning-soft:rgba(212,154,72,.13); --ui-reward-soft:rgba(216,131,61,.16);
@@ -1202,7 +1205,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.2.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.3.0)</span>
       </div>
     </header>
 
@@ -1318,7 +1321,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.2.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.3.0)</div>
     </div>
   </section>
 
@@ -1338,6 +1341,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         <span class="sub meta-mini">tap for report</span>
       </div>
       <div class="phase1-dashboard-grid" id="phase1-dashboard-grid"></div>
+      <div id="reading-mileage-row"></div>
     </button>
     <div class="streak-kpis trophy-shelf">
       <button class="streak kpi-chip reward-glint" id="token-chip">💎<span id="baht-num">0</span><span class="kpi-label">tokens</span></button>
@@ -1628,12 +1632,14 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
 	      <div class="tone-button-grid">
         <button class="btn" id="tone-drill-btn">Tone ear practice</button>
         <button class="btn ghost" id="tone-rule-btn">Tone rules</button>
+        <button class="btn ghost" id="tone-sprint-btn">Tone sprint</button>
         <button class="btn ghost" id="route-talk-btn">Route talk</button>
         <button class="btn ghost" id="class-sprint-btn">Class sprint</button>
         <button class="btn ghost" id="twins-btn">Sound twins</button>
         <button class="btn ghost" id="echo-btn">Echo chamber</button>
         <button class="btn ghost" id="cta-ghost">Glyph ghost</button>
       </div>
+      <p class="sub meta-mini mt-10 is-hidden" id="tone-sprint-hint">Unlocks at 85% rule accuracy</p>
       <p class="lab-note mt-10">Try the rule first, then listen and compare.</p>
     </section>
     <div class="section-card tone-badge-card">
@@ -2439,6 +2445,11 @@ const POSTCARDS = [
  {days:100, gate:'l24', e:'🏆', cap:[{t:'สุด',tr:'sùt',en:'simply'},{t:'ยอด',tr:'yôrt',en:'the best'},{t:'ครับ',tr:'khráp',en:'!'}]}
 ];
 const CONF_SETS = [["บ","ป"],["ผ","ฝ","พ","ฟ"],["ด","ต"],["ก","ถ","ภ"],["ข","ช"],["อ","ฮ"]];
+const TRUE_CLUSTER_ONSETS = ['กร','กล','กว','ขร','ขล','ขว','คร','คล','คว','ปร','ปล','พร','พล','ตร'];
+function trueClusterWord(word){
+  const t = String(word || '').normalize('NFC');
+  return TRUE_CLUSTER_ONSETS.some(onset=>t.startsWith(onset));
+}
 
 /* decodable micro-stories: every character readable at the gate lesson */
 const STORIES = [
@@ -2512,6 +2523,62 @@ const STORIES = [
    [{t:"เพื่อน",tr:"phûean",en:"friend"},{t:"อยู่",tr:"yùu",en:"is in"},{t:"ห้อง",tr:"hôrng",en:"the room"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"สนุก",tr:"sà-nùk",en:"have fun"},{t:"มาก",tr:"mâak",en:"a lot"}],
    [{t:"เรา",tr:"rao",en:"we"},{t:"อ่าน",tr:"àan",en:"read"},{t:"ได้",tr:"dâi",en:"can"}]
+ ]},
+ {id:"s11", gate:"l8", title:"ยายไล่กา - Grandma chases the crow", lines:[
+   [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"มี",tr:"mii",en:"has"},{t:"นา",tr:"naa",en:"a rice field"}],
+   [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"ไล่",tr:"lâi",en:"chases"},{t:"กา",tr:"gaa",en:"the crow"}],
+   [{t:"กา",tr:"gaa",en:"the crow"},{t:"บิน",tr:"bin",en:"flies"},{t:"ไป",tr:"bpai",en:"away"}],
+   [{t:"กา",tr:"gaa",en:"the crow"},{t:"มา",tr:"maa",en:"comes"},{t:"นา",tr:"naa",en:"to the field"}],
+   [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"ไล่",tr:"lâi",en:"chases"},{t:"กา",tr:"gaa",en:"the crow"}]
+ ]},
+ {id:"s12", gate:"l10", title:"พ่อซื้อผัก - Dad at the market", lines:[
+   [{t:"พ่อ",tr:"phôr",en:"dad"},{t:"ชอบ",tr:"chôrp",en:"likes"},{t:"ผัก",tr:"phàk",en:"vegetables"}],
+   [{t:"ผัก",tr:"phàk",en:"vegetables"},{t:"ถูก",tr:"thùuk",en:"are cheap"}],
+   [{t:"บาท",tr:"bàat",en:"baht"},{t:"ไม่",tr:"mâi",en:"not"},{t:"แพง",tr:"phaaeng",en:"expensive"}],
+   [{t:"พ่อ",tr:"phôr",en:"dad"},{t:"กิน",tr:"gin",en:"eats"},{t:"ข้าว",tr:"khâao",en:"rice"}],
+   [{t:"กา",tr:"gaa",en:"the crow"},{t:"บิน",tr:"bin",en:"flies"},{t:"ไป",tr:"bpai",en:"away"}]
+ ]},
+ {id:"s13", gate:"l12", title:"ผักไม่แพง - Vegetables are not expensive", lines:[
+   [{t:"บาท",tr:"bàat",en:"baht"},{t:"ถูก",tr:"thùuk",en:"cheap"},{t:"มาก",tr:"mâak",en:"very"}],
+   [{t:"บาท",tr:"bàat",en:"baht"},{t:"ไม่",tr:"mâi",en:"not"},{t:"แพง",tr:"phaaeng",en:"expensive"}],
+   [{t:"พ่อ",tr:"phôr",en:"dad"},{t:"ชอบ",tr:"chôrp",en:"likes"},{t:"ผัก",tr:"phàk",en:"vegetables"}],
+   [{t:"ยาย",tr:"yaai",en:"grandma"},{t:"ไล่",tr:"lâi",en:"chases"},{t:"กา",tr:"gaa",en:"the crow"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"กิน",tr:"gin",en:"eat"},{t:"ข้าว",tr:"khâao",en:"rice"}]
+ ]},
+ {id:"s14", gate:"l14", title:"วันนี้มีข้าว - Rice today", lines:[
+   [{t:"วันนี้",tr:"wan-níi",en:"today"},{t:"เขา",tr:"khǎo",en:"they"},{t:"มา",tr:"maa",en:"come"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ทำ",tr:"tham",en:"make"},{t:"ข้าว",tr:"khâao",en:"rice"}],
+   [{t:"เขา",tr:"khǎo",en:"they"},{t:"ฟัง",tr:"fang",en:"listen"},{t:"นาน",tr:"naan",en:"for a long time"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ดีใจ",tr:"dii-jai",en:"are happy"},{t:"มาก",tr:"mâak",en:"very"}],
+   [{t:"บาท",tr:"bàat",en:"baht"},{t:"แพง",tr:"phaaeng",en:"expensive"}]
+ ]},
+ {id:"s15", gate:"l16", title:"วันนี้เราทำข้าว - Cooking today", lines:[
+   [{t:"วันนี้",tr:"wan-níi",en:"today"},{t:"เรา",tr:"rao",en:"we"},{t:"ทำ",tr:"tham",en:"make"},{t:"ข้าว",tr:"khâao",en:"rice"}],
+   [{t:"เขา",tr:"khǎo",en:"they"},{t:"ฟัง",tr:"fang",en:"listen"},{t:"เรา",tr:"rao",en:"to us"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ดีใจ",tr:"dii-jai",en:"are happy"},{t:"มาก",tr:"mâak",en:"very"}],
+   [{t:"วันนี้",tr:"wan-níi",en:"today"},{t:"บาท",tr:"bàat",en:"baht"},{t:"แพง",tr:"phaaeng",en:"expensive"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ทำ",tr:"tham",en:"make"},{t:"ข้าว",tr:"khâao",en:"rice"}]
+ ]},
+ {id:"s16", gate:"l18", title:"ครูกินปลา - Teacher eats fish", lines:[
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"มา",tr:"maa",en:"comes"},{t:"บ้าน",tr:"bâan",en:"home"}],
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"กิน",tr:"gin",en:"eats"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยาก",tr:"yàak",en:"wants"},{t:"กิน",tr:"gin",en:"to eat"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"คน",tr:"khon",en:"people"},{t:"มา",tr:"maa",en:"come"},{t:"ใน",tr:"nai",en:"in"},{t:"รถ",tr:"rót",en:"the car"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"ดีใจ",tr:"dii-jai",en:"are happy"},{t:"ครับ",tr:"khráp",en:"ครับ"}]
+ ]},
+ {id:"s17", gate:"l20", title:"ร้านมีปลา - Shop with fish", lines:[
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"ไป",tr:"bpai",en:"go to"},{t:"ร้าน",tr:"ráan",en:"the shop"}],
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"ซื้อ",tr:"súue",en:"buys"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"เอา",tr:"ao",en:"take"},{t:"น้ำ",tr:"náam",en:"water"},{t:"เย็น",tr:"yen",en:"cold"}],
+   [{t:"ไม่",tr:"mâi",en:"not"},{t:"เอา",tr:"ao",en:"take"},{t:"ถุง",tr:"thǔng",en:"a bag"}],
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"พูด",tr:"phûut",en:"says"},{t:"ครับ",tr:"khráp",en:"ครับ"}]
+ ]},
+ {id:"s18", gate:"l22", title:"ซื้อปลาเย็น - Buying cold fish", lines:[
+   [{t:"ครู",tr:"khruu",en:"teacher"},{t:"ซื้อ",tr:"súue",en:"buys"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"ซื้อ",tr:"súue",en:"buy"},{t:"ปลา",tr:"bplaa",en:"fish"}],
+   [{t:"ร้าน",tr:"ráan",en:"the shop"},{t:"มี",tr:"mii",en:"has"},{t:"น้ำ",tr:"náam",en:"water"},{t:"เย็น",tr:"yen",en:"cold"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"เอา",tr:"ao",en:"take"},{t:"ถุง",tr:"thǔng",en:"a bag"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"say"},{t:"ครับ",tr:"khráp",en:"ครับ"}]
  ]},
  {id:"bk1", pack:"reads1", gate:"l17", title:"รถไฟฟ้า - BTS ride", lines:[
    [{t:"รถ",tr:"rót",en:"vehicle"},{t:"ไฟฟ้า",tr:"fai-fáa",en:"electric train"}],
@@ -2598,7 +2665,7 @@ const FLUENCY_READS = [
    check:{text:'Which word has the เ◌ิ pattern?', answer:'เปิด', options:['เปิด','ปิด','อาหาร','ภาษา'], explain:'เปิด uses เ before the consonant plus ิ over it.'}}
 ];
 
-/* v6.4.1: pure reading-mileage corpus - 60 common monosyllables that are NOT lesson words.
+/* v6.4.1/v7.3.0: pure reading-mileage corpus - common monosyllables that are NOT lesson words.
    Every entry is tone-verified against the class/live-dead/length grid by
    validateAutomaticityContracts() and listed in docs/phase1_audit.md for review. */
 const DECODE_GYM = [
@@ -2616,7 +2683,7 @@ const DECODE_GYM = [
   {gate:'l15', thai:'พัน', tr:'phan'}, {gate:'l15', thai:'ร้อย', tr:'rói'},
   {gate:'l16', thai:'เย็น', tr:'yen'}, {gate:'l16', thai:'เจ็ด', tr:'jèt'}, {gate:'l16', thai:'เค็ม', tr:'khem'}, {gate:'l16', thai:'เผ็ด', tr:'phèt'},
   {gate:'l17', thai:'หมอ', tr:'mǒr'}, {gate:'l17', thai:'หมู', tr:'mǔu'}, {gate:'l17', thai:'หนู', tr:'nǔu'}, {gate:'l17', thai:'หวาน', tr:'wǎan'}, {gate:'l17', thai:'หลัง', tr:'lǎng'}, {gate:'l17', thai:'หลับ', tr:'làp'},
-  {gate:'l18', thai:'หมด', tr:'mòt'}, {gate:'l18', thai:'หยุด', tr:'yùt'}, {gate:'l18', thai:'ซื้อ', tr:'súue'}, {gate:'l18', thai:'ขาย', tr:'khǎai'},
+  {gate:'l18', thai:'หมด', tr:'mòt'}, {gate:'l18', thai:'หยุด', tr:'yùt'}, {gate:'l18', thai:'ซื้อ', tr:'súue'}, {gate:'l18', thai:'ขาย', tr:'khǎai'}, {gate:'l18', thai:'กลาง', tr:'glaang'}, {gate:'l18', thai:'กลับ', tr:'glàp'}, {gate:'l18', thai:'ปรับ', tr:'bpràp'},
   {gate:'l19', thai:'ร้าน', tr:'ráan'}, {gate:'l19', thai:'ถุง', tr:'thǔng'},
   {gate:'l20', thai:'ตรง', tr:'dtrong'}, {gate:'l20', thai:'ยาก', tr:'yâak'},
   {gate:'l21', thai:'ง่าย', tr:'ngâai'}, {gate:'l21', thai:'ของ', tr:'khǒrng'},
@@ -2834,8 +2901,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.2.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.2.0)';
+const APP_VERSION = 'v7.3.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.3.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3621,31 +3688,48 @@ function ensureDrillLogEntry(id){
   state.drillLog[id] = Object.assign({}, prev, {n:(prev.n||0)+1, last:todayStr()});
   return state.drillLog[id];
 }
-function sprintPaceEntry(){
+function drillPaceEntry(id){
   if(!state.drillLog) state.drillLog = {};
-  const entry = state.drillLog.sprint || {};
+  const entry = state.drillLog[id] || {};
   if(!Array.isArray(entry.pace)) entry.pace = [];
-  state.drillLog.sprint = entry;
+  state.drillLog[id] = entry;
   return entry;
 }
+function sprintPaceEntry(){ return drillPaceEntry('sprint'); }
 function formatSeconds(secs){
   const n = Math.round(secs || 0);
   return n >= 60 ? Math.floor(n/60) + 'm ' + String(n%60).padStart(2,'0') + 's' : n + 's';
 }
-function recordSprintPace(count, started){
-  if(!count || !started) return null;
-  const per = (Date.now() - started) / 1000 / count;
+function recordDrillPaceValue(id, per, cap){
   if(!Number.isFinite(per) || per < 0.5 || per > 60) return null;
-  const entry = sprintPaceEntry();
+  const entry = drillPaceEntry(id);
+  const previousBest = entry.pace.reduce((m,x)=>Math.min(m, x.sec), Infinity);
   entry.pace.push({d:todayStr(), sec:+per.toFixed(2)});
-  if(entry.pace.length > 20) entry.pace = entry.pace.slice(-20);
+  if(entry.pace.length > cap) entry.pace = entry.pace.slice(-cap);
   const best = entry.pace.reduce((m,x)=>Math.min(m, x.sec), Infinity);
   saveState();
-  return {last:per, best};
+  return {last:per, best, previousBest:Number.isFinite(previousBest) ? previousBest : null};
+}
+function recordDrillPace(id, count, started, cap){
+  if(!count || !started) return null;
+  const per = (Date.now() - started) / 1000 / count;
+  return recordDrillPaceValue(id, per, cap);
+}
+function recordSprintPace(count, started){ return recordDrillPace('sprint', count, started, 20); }
+function recordToneSprintPace(times){
+  const clean = (times || []).filter(Number.isFinite);
+  if(!clean.length) return null;
+  const mean = clean.reduce((a,b)=>a+b, 0) / clean.length;
+  return recordDrillPaceValue('tone-sprint', mean, 10);
 }
 function sprintPaceText(pace){
   if(!pace) return '';
   return 'last ' + pace.last.toFixed(1) + 's/answer · best ' + pace.best.toFixed(1) + 's';
+}
+function toneSprintPaceText(pace){
+  if(!pace) return '';
+  const previous = pace.previousBest == null ? 'previous best none' : 'previous best ' + pace.previousBest.toFixed(1) + 's/answer';
+  return 'mean ' + pace.last.toFixed(1) + 's/answer · ' + previous;
 }
 let activeReadTimer = null;
 function ensureReadTimes(target){
@@ -3702,6 +3786,28 @@ function readTimeSummaryHtml(id){
 function readTimeResultText(result){
   if(!result || !result.sample) return '';
   return formatSeconds(result.sample.secs) + (result.fastest ? ' - your fastest yet.' : '.');
+}
+function bindTimedReRead(buttonId, resultId, kind, id){
+  const btn = el(buttonId), out = el(resultId);
+  if(!btn) return;
+  let running = false;
+  const key = readTimerKey(kind, id);
+  btn.onclick = ()=>{
+    if(!running){
+      clearReadTimer();
+      beginReadTimer(key);
+      running = true;
+      btn.textContent = 'Reading... tap when done';
+      if(out) out.textContent = '';
+      return;
+    }
+    const result = finishReadTimer();
+    running = false;
+    btn.textContent = 'Timed re-read';
+    const resultText = readTimeResultText(result);
+    const summary = readTimeSummaryText(key);
+    if(out) out.textContent = resultText ? [resultText, summary].filter(Boolean).join(' · ') : 'Timing not recorded.';
+  };
 }
 function dailyBridgeMissing(d){
   const day = d || ensureDay();
@@ -6103,6 +6209,16 @@ function renderTones(){
   const li = toneAcc('listen'), ru = toneAcc('rule');
   el('lic-listen').innerHTML = (li.pct===null?'-':li.pct+'%') + ' <span class="sub meta-mini">n='+li.n+'</span>';
   el('lic-rule').innerHTML = (ru.pct===null?'-':ru.pct+'%') + ' <span class="sub meta-mini">n='+ru.n+'</span>';
+  const sprintUnlocked = state.done.includes('l13');
+  const sprintReady = sprintUnlocked && ru.n >= 20 && ru.pct >= 85;
+  const sprintBtn = el('tone-sprint-btn');
+  const sprintHint = el('tone-sprint-hint');
+  if(sprintBtn){
+    sprintBtn.classList.toggle('is-hidden', !sprintUnlocked);
+    sprintBtn.disabled = sprintUnlocked && !sprintReady;
+    sprintBtn.classList.toggle('locked', sprintUnlocked && !sprintReady);
+  }
+  if(sprintHint) sprintHint.classList.toggle('is-hidden', !sprintUnlocked || sprintReady);
   const lic = state.toneLicence;
   el('lic-state').textContent = !lic ? 'not yet earned'
     : (lic.expires >= todayStr() ? 'practice badge until ' + lic.expires : 'ready to refresh');
@@ -6154,6 +6270,31 @@ function phase1DashboardCounts(target){
     final:!!checks.phase1Completion
   };
 }
+function medianNumber(values){
+  const sorted = (values || []).filter(Number.isFinite).slice().sort((a,b)=>a-b);
+  if(!sorted.length) return null;
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+function readingPaceImproving(target){
+  const s = target || state;
+  const since = isoPlusDays(todayStr(), -14);
+  const rt = ensureReadTimes(s);
+  return Object.keys(rt).some(id=>{
+    const samples = readTimeSamples(id, s);
+    if(samples.length < 2) return false;
+    const latest = samples[samples.length - 1];
+    if(!latest || latest.d < since) return false;
+    const earlierMedian = medianNumber(samples.slice(0, -1).map(x=>x.secs));
+    return Number.isFinite(earlierMedian) && latest.secs < earlierMedian;
+  });
+}
+function readingMileageText(target){
+  const s = target || state;
+  const storiesRead = Object.keys(s.stories || {}).filter(id=>STORIES.some(story=>story.id === id)).length;
+  const timedIds = Object.keys(ensureReadTimes(s)).filter(id=>readTimeSamples(id, s).length).length;
+  return 'Reading mileage · ' + storiesRead + '/' + STORIES.length + ' stories · ' + timedIds + ' timed reads · best pace ' + (readingPaceImproving(s) ? 'improving' : 'steady');
+}
 function renderPhase1Dashboard(){
   const host = el('phase1-dashboard-grid');
   if(!host) return;
@@ -6166,6 +6307,13 @@ function renderPhase1Dashboard(){
     metric('fluency reads', c.fluency + '/' + c.fluencyTotal, ''),
     metric('final checkpoint', c.final ? '✓' : '-', '')
   ].join('');
+  const mileage = el('reading-mileage-row');
+  if(mileage){
+    mileage.innerHTML = `<div class="evidence-row mt-10">
+      <span>Reading mileage</span><span class="evidence-bar"><span style="width:${Math.min(100, Math.round(100 * c.fluency / Math.max(1, c.fluencyTotal)))}%;background:var(--ui-reading)"></span></span>
+      <span class="evidence-value">${esc(readingMileageText())}</span>
+    </div>`;
+  }
 }
 function toneOf(tr){
   const n = tr.normalize('NFD');
@@ -7795,7 +7943,7 @@ function validateV71VisualSoundContracts(){
   if(!String(renderLessonStep).includes('we-fb') || !String(renderLessonStep).includes('sfxCorrect') || !String(renderLessonStep).includes('sfxWrong')) errors.push('Quick decode inline MCQ should play objective SFX');
   const guardSource = String(requestOverlayClose) + String(showOverlayExitConfirm) + String(overlayExitWouldDiscard) + String(lessonExitWouldDiscard) + String(masteryQuizExitWouldDiscard);
   if(!guardSource.includes('overlayExitWouldDiscard') || !guardSource.includes('bindDialogDismissal') || !guardSource.includes('closeOverlay()')) errors.push('overlay close button should route through the v7.1 discard guard');
-  if(!String(lessonExitWouldDiscard).includes('p.i > 0') || !String(masteryQuizExitWouldDiscard).includes('p.opts.checkpoint') || !String(masteryQuizExitWouldDiscard).includes('p.opts.letters42') || !String(masteryQuizExitWouldDiscard).includes('p.opts.phase1Completion')) errors.push('discard guard should cover progressed lessons and mastery-stakes quizzes only');
+  if(!String(lessonExitWouldDiscard).includes('p.i > 0') || !String(masteryQuizExitWouldDiscard).includes('p.opts.boss') || !String(masteryQuizExitWouldDiscard).includes('p.opts.checkpoint') || !String(masteryQuizExitWouldDiscard).includes('p.opts.letters42') || !String(masteryQuizExitWouldDiscard).includes('p.opts.phase1Completion')) errors.push('discard guard should cover progressed lessons and mastery-stakes quizzes only');
   if(!/^v7\.\d+\.\d+$/.test(APP_VERSION)) errors.push('internal app version should stay on the v7 beta line');
   if(!/1\.0 beta/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain 1.0 beta and the current app version');
   if(errors.length) throw new Error('V7.1 visual/sound contract failed:\n' + errors.join('\n'));
@@ -7869,9 +8017,11 @@ function validateThemeContracts(){
   });
   ['temple','monsoon','krathong'].forEach(id=>{
     const block = styleRule(css, 'body[data-theme="' + id + '"]{');
-    ['--bg-0','--surface-glass','--surface-soft','--tabbar-bg','--overlay-bg','--safety-banner-bg'].forEach(token=>{
+    ['--bg-0','--surface-glass','--surface-soft','--muted','--tabbar-bg','--overlay-bg','--safety-banner-bg'].forEach(token=>{
       if(!block.includes(token)) errors.push(id + ' theme CSS missing ' + token);
     });
+    const override = THEME_CONTRAST_OVERRIDES[id] || {};
+    if(override.muted && !block.replace(/\s+/g, '').includes('--muted:' + override.muted + ';')) errors.push(id + ' theme CSS --muted must match contrast map');
   });
   if(errors.length) throw new Error('Theme contrast contract failed:\n' + errors.join('\n'));
   return true;
@@ -7893,8 +8043,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.2.0') errors.push('internal app version should be v7.2.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.2.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.2.0)');
+  if(APP_VERSION !== 'v7.3.0') errors.push('internal app version should be v7.3.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.3.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.3.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -7935,6 +8085,13 @@ function validateV72ShopContracts(){
     state.packs.push('reads1');
     if(!STORIES.filter(s=>s.pack === 'reads1').every(storyVisible)) errors.push('paid stories should become visible after reads1 purchase');
   });
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, packs:[], stories:{}}, ()=>{
+    if(buildPath().some(n=>/^p:bk/.test(n.id))) errors.push('Course Map must not expose Bangkok reads nodes before reads1 ownership');
+  });
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, packs:['reads1'], stories:{}}, ()=>{
+    if(!buildPath().some(n=>n.id === 'p:bk2')) errors.push('Course Map should expose Lesson 19 Bangkok reads node after reads1 ownership');
+  });
+  if(String(renderEarnBoard).includes('STORIES.length')) errors.push('earnings board should count visible stories, not all paid stories');
   withTemporaryState({done:['l1','l2','l3'], srs:{'g:ก':{iv:1,due:todayStr(),lapses:0}}, checks:{}, days:{}, baht:999, packs:[], themes:[], titles:[], soundPacks:[], theme:'night'}, ()=>{
     const before = purchasedSnapshot();
     PACK_SHOP_ITEMS.forEach(item=>{ if(!state.packs.includes(item.id)) state.packs.push(item.id); });
@@ -7957,6 +8114,111 @@ function validateV72ShopContracts(){
   });
   if(!String(validateImportedStateShape).includes('soundPacks') || !String(validateImportedStateShape).includes('sfxVoice')) errors.push('import shape must allow soundPacks[] and sfxVoice');
   if(errors.length) throw new Error('V7.2 shop contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV73ReadingMileageContracts(){
+  const errors = [];
+  const newIds = ['s11','s12','s13','s14','s15','s16','s17','s18'];
+  const gateById = {s11:'l8', s12:'l10', s13:'l12', s14:'l14', s15:'l16', s16:'l18', s17:'l20', s18:'l22'};
+  const newStories = newIds.map(id=>STORIES.find(s=>s.id === id));
+  if(newStories.some(s=>!s)) errors.push('v7.3 story ids missing');
+  if(newStories.filter(Boolean).length !== 8) errors.push('v7.3 should add exactly 8 stories');
+  newStories.filter(Boolean).forEach(story=>{
+    if(story.gate !== gateById[story.id]) errors.push(story.id + ' should be gated at ' + gateById[story.id]);
+    if(!Array.isArray(story.lines) || story.lines.length < 3 || story.lines.length > 5) errors.push(story.id + ' should have 3-5 lines');
+    const doneIds = lessonIdsThroughGate(story.gate);
+    (story.lines || []).forEach((line, li)=>{
+      if(!Array.isArray(line) || line.length < 2 || line.length > 4) errors.push(story.id + ' line ' + (li+1) + ' should have 2-4 words');
+      (line || []).forEach(item=>{
+        if(!item || !item.t || !item.tr || !item.en) errors.push(story.id + ' item missing t/tr/en');
+        const thai = item && item.t;
+        if(thai && String(thai).normalize('NFC') !== thai) errors.push(story.id + ' item not NFC: ' + thai);
+        prerequisiteIssuesForThai(thai, doneIds, 'story/' + story.id, wordFrame(findWord(thai))).forEach(i=>{
+          errors.push(story.id + ':' + thai + ' missing ' + (i.missing || []).join(','));
+        });
+        const route = item && item.tr && !/[\s·-]/.test(item.tr) ? captureRouteForThai(thai, doneIds) : null;
+        const firstTone = firstTrTone(item && item.tr);
+        if(route && route.tone !== firstTone) errors.push(story.id + ':' + thai + ' tr tone mismatch, expected ' + route.tone + ' got ' + firstTone);
+      });
+    });
+  });
+  function firstTrTone(tr){
+    const first = String(tr || '').normalize('NFD').split(/[\s·-]+/).filter(Boolean)[0] || '';
+    if(first.includes('\u030C')) return 'Rising';
+    if(first.includes('\u0302')) return 'Falling';
+    if(first.includes('\u0301')) return 'High';
+    if(first.includes('\u0300')) return 'Low';
+    return 'Mid';
+  }
+  function recurrenceRows(stories){
+    const rows = {};
+    const add = item=>{
+      if(!item || !item.t) return;
+      const word = String(item.t).normalize('NFC');
+      const row = rows[word] || {word, total:0, isCluster:trueClusterWord(word)};
+      row.total += 1;
+      rows[word] = row;
+    };
+    stories.forEach(story=>(story.lines || []).flat().forEach(add));
+    FLUENCY_READS.forEach(read=>(read.lines || []).flat().forEach(add));
+    Object.keys(rows).forEach(word=>{
+      const row = rows[word];
+      row.status = row.total >= (row.isCluster ? 6 : 4) ? 'OK' : 'LOW';
+    });
+    return rows;
+  }
+  const oldRows = recurrenceRows(STORIES.filter(story=>!newIds.includes(story.id)));
+  const newRows = recurrenceRows(STORIES);
+  const lifted = Object.keys(oldRows).filter(word=>oldRows[word].status === 'LOW' && newRows[word] && newRows[word].status === 'OK');
+  if(lifted.length < 12) errors.push('v7.3 stories should lift at least 12 previously LOW words to OK, got ' + lifted.length);
+  const oldWords = new Set(Object.keys(oldRows));
+  const introducedSingles = Object.keys(newRows).filter(word=>!oldWords.has(word) && newRows[word].total === 1 && newStories.some(story=>(story.lines || []).flat().some(item=>item.t === word)));
+  if(introducedSingles.length) errors.push('new story words must not be one-offs: ' + introducedSingles.join(', '));
+  newStories.filter(story=>['l18','l20','l22'].includes(story.gate)).forEach(story=>{
+    const clusterCount = (story.lines || []).flat().filter(item=>trueClusterWord(item.t)).length;
+    if(clusterCount < 2) errors.push(story.id + ' should contain at least 2 true-cluster words');
+  });
+  const newClusterCounts = {};
+  newStories.forEach(story=>(story.lines || []).flat().forEach(item=>{
+    if(trueClusterWord(item.t)) newClusterCounts[item.t] = (newClusterCounts[item.t] || 0) + 1;
+  }));
+  Object.keys(newClusterCounts).forEach(word=>{
+    if(newClusterCounts[word] < 2) errors.push('cluster word should recur in v7.3 stories: ' + word);
+  });
+  const rereadSource = String(bindTimedReRead);
+  if(!rereadSource.includes('finishReadTimer') || /baht|days|srs/.test(rereadSource)) errors.push('Timed re-read handler should write only through read timing helpers');
+  withTemporaryState({done:LESSONS.slice(0,13).map(L=>L.id), srs:{}, days:{}, retention:{}, toneStats:{rule:Array(19).fill(1), listen:[]}}, ()=>{
+    if(toneSprintReady()) errors.push('Tone sprint should stay locked below 20 rule samples');
+  });
+  withTemporaryState({done:LESSONS.slice(0,13).map(L=>L.id), srs:{}, days:{}, retention:{}, toneStats:{rule:Array(16).fill(1).concat(Array(4).fill(0)), listen:[]}}, ()=>{
+    if(toneSprintReady()) errors.push('Tone sprint should stay locked below 85% rule accuracy');
+  });
+  withTemporaryState({done:LESSONS.slice(0,13).map(L=>L.id), srs:{}, days:{}, retention:{}, toneStats:{rule:Array(17).fill(1).concat(Array(3).fill(0)), listen:[]}}, ()=>{
+    if(!toneSprintReady()) errors.push('Tone sprint should unlock at 85% rule accuracy with 20 samples');
+  });
+  const sprintSource = [startToneSprint, toneSprintReady, recordToneSprintPace].map(fn=>String(fn)).join('\n');
+  if(/srs|baht|checks|getLessonBlocker/.test(sprintSource)) errors.push('Tone sprint source should not reference SRS, tokens, checks or blockers');
+  if(String(getLessonBlocker).includes('tone-sprint')) errors.push('getLessonBlocker must not reference tone-sprint');
+  withTemporaryState({done:LESSONS.slice(0,18).map(L=>L.id), srs:{}, days:{}, retention:{}}, ()=>{
+    const pool = decodeGymPool();
+    if(pool.filter(item=>trueClusterWord(item.thai)).length >= 2){
+      for(let i=0;i<3;i++){
+        const rounds = buildDecodeGymRounds(pool, state.done || []);
+        if(rounds.filter(item=>trueClusterWord(item.thai)).length < 2) errors.push('Decode Gym post-l18 session missing cluster booster');
+      }
+    }
+  });
+  if(DECODE_GYM.length !== 63) errors.push('Decode Gym exact count should be 63');
+  DECODE_GYM.forEach(item=>{ if(!decodeGymToneVerified(item)) errors.push('Decode Gym tone verification failed for ' + item.thai); });
+  const fresh = {done:[], srs:{}};
+  ensureStateCollections(fresh);
+  ['readingMileage','toneSprint','v73'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.3 key ' + key); });
+  const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
+  ensureStateCollections(legacy);
+  if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
+  if(APP_VERSION !== 'v7.3.0') errors.push('internal app version should be v7.3.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.3.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.3.0)');
+  if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -8142,7 +8404,7 @@ function validateProductionPassContracts(){
 }
 function validateAutomaticityContracts(){
   const errors = [];
-  if(DECODE_GYM.length !== 60) errors.push('Decode Gym seed batch should contain exactly 60 words');
+  if(DECODE_GYM.length !== 63) errors.push('Decode Gym seed batch should contain exactly 63 words');
   const seen = new Set();
   const lessonThai = new Set(LESSONS.flatMap(L=>L.words||[]).map(w=>w.thai));
   DECODE_GYM.forEach(item=>{
@@ -8780,7 +9042,7 @@ function buildPath(){
 		    N.push({type:'lesson', label:'Lesson: '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
     const pool = i<3 ? W_START : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
     N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, lessonScope:L.id, go:w.go});
-    const story = STORIES.find(s=>s.gate===L.id);
+    const story = STORIES.find(s=>s.gate===L.id && storyVisible(s));
     if(story) N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, lessonScope:L.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
     if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'80% script check on sounds, class, finals and tone logic', id:checkpointId(i), checkpoint:i});
   });
@@ -9244,7 +9506,8 @@ function renderEarnBoard(){
   const wkPaid = weekDates().filter(d=>days[d] && days[d].paid).length;
   const packUsed = (state.week && state.week.key===weekKey()) ? Object.keys(state.week.used||{}).length : 0;
   const packN = (state.week && state.week.key===weekKey()) ? state.week.picks.length : 5;
-  const storiesRead = Object.keys(state.stories||{}).length;
+  const visibleStories = STORIES.filter(storyVisible);
+  const storiesRead = visibleStories.filter(s=>(state.stories||{})[s.id]).length;
   const totalChecks = LESSONS.filter((_,i)=>isCheckpointIndex(i)).length;
   const checksPassed = Object.keys(state.checks||{}).length;
   const lic = state.toneLicence;
@@ -9260,7 +9523,7 @@ function renderEarnBoard(){
     <div class="card section-gap">
       <div class="eyebrow">Every week</div>
       ${row("Rehearse an optional phrase", "+5 💎 each", packUsed + "/" + packN + " this week")}
-      ${row("Read a new story", "+3 💎 first read", storiesRead + "/" + STORIES.length + " read")}
+      ${row("Read a new story", "+3 💎 first read", storiesRead + "/" + visibleStories.length + " read")}
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Milestones</div>
@@ -9894,7 +10157,7 @@ function lessonExitWouldDiscard(p){
 function masteryQuizExitWouldDiscard(p){
   if(!p || p.type !== 'quiz' || !p.opts) return false;
   const progress = p.qIdx != null ? p.qIdx : p.i;
-  const stakes = p.opts.checkpoint != null || p.opts.letters42 || p.opts.phase1Completion;
+  const stakes = p.opts.boss || p.opts.checkpoint != null || p.opts.letters42 || p.opts.phase1Completion;
   return !!(stakes && progress > 0 && progress < (p.qs || []).length);
 }
 function overlayExitWouldDiscard(){
@@ -10851,9 +11114,15 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
     });
   }
   let settled = false;
+  const optionRenderTime = Date.now();
   function settle(ok, pickedBtn, timedOut){
     if(settled) return; settled = true;
     clearInterval(window._qTimer);
+    if(player && player.opts && player.opts.toneSprint && !timedOut){
+      if(!Array.isArray(player.toneSprintTimes)) player.toneSprintTimes = [];
+      const sec = (Date.now() - optionRenderTime) / 1000;
+      if(Number.isFinite(sec) && sec > 0) player.toneSprintTimes.push(sec);
+    }
     const confidenceMeta = responseTimer ? responseTimer.finish() : null;
     if(!ok && q._set){
       if(!state.confs) state.confs = {};
@@ -11045,21 +11314,46 @@ function renderEcho(){
   el('echo-next').onclick = ()=>{ logSpeakAttempt(); clearLocalRecording(); p.i++; renderEcho(); };
 }
 
-el('tone-rule-btn').addEventListener('click', ()=>{
+function toneRuleTrainerPool(doneIds){
+  let pool = learnedWords(doneIds).filter(monoSyllable);
+  if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
+  const upToLessonNum = (doneIds && doneIds.length) ? Math.max(...doneIds.map(lessonNum)) : (state.done.length ? Math.max(...state.done.map(lessonNum)) : 0);
+  return pool.map(w=>toneQuestion(w, upToLessonNum)).filter(Boolean);
+}
+function toneSprintScore(q){
+  const w = findWord(q && q.prompt);
+  const frame = w && wordFrame(w);
+  const final = frame && frame.final;
+  return weaknessScore('tone', q && q._err && q._err.key) +
+    (w ? weaknessScore('class', firstConsonantChar(w.thai)) : 0) +
+    (final ? weaknessScore('final', final) : 0);
+}
+function toneSprintReady(){
+  const ru = toneAcc('rule');
+  return state.done.includes('l13') && ru.n >= 20 && ru.pct >= 85;
+}
+function startToneRules(){
   if(!state.done.includes('l13')){
     toast('Tone-rule trainer unlocks after Lesson 13, once live/dead has been taught.');
     return;
   }
-  let pool = learnedWords().filter(monoSyllable);
-  if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
-  const qs = weightedWeakSample(pool, 10, w=>weaknessScore('tone', ruleCellKey(w))).map(w=>({
-    kind:'mcq', prompt:w.thai, colourPrompt:true, text:toneQuestionText(w),
-    answer:toneOf(w.tr), options:shuffle(TONE_NAMES.slice()),
-    explain:toneQuestionExplain(w),
-    _err:{kind:'tone', key:ruleCellKey(w)}
-  }));
+  const qs = weightedWeakSample(toneRuleTrainerPool(), 10, q=>weaknessScore('tone', q && q._err && q._err.key));
   startGenericQuiz(qs, 'Tone rules', {toneLog:'rule'});
-});
+}
+function startToneSprint(){
+  if(!state.done.includes('l13')){
+    toast('Tone-rule trainer unlocks after Lesson 13, once live/dead has been taught.');
+    return;
+  }
+  if(!toneSprintReady()){
+    toast('Unlocks at 85% rule accuracy');
+    return;
+  }
+  const qs = weightedWeakSample(toneRuleTrainerPool(), 10, toneSprintScore);
+  startGenericQuiz(qs, 'Tone sprint', {toneLog:'rule', toneSprint:true});
+}
+el('tone-rule-btn').addEventListener('click', startToneRules);
+el('tone-sprint-btn').addEventListener('click', startToneSprint);
 
 /* =====================================================
    LIBRARY TAB
@@ -11545,6 +11839,24 @@ function decodeGymPool(doneIds){
   const ids = doneIds || state.done || [];
   return DECODE_GYM.map(decodeGymSourceItem).filter(item=>decodeGymAvailable(item, ids) && decodeGymToneVerified(item));
 }
+function decodeGymScore(item){ return glyphWeaknessSum(item.thai); }
+function buildDecodeGymRounds(pool, doneIds){
+  const ids = doneIds || state.done || [];
+  const size = Math.min(10, pool.length);
+  let rounds = weightedWeakSample(pool, size, decodeGymScore);
+  const clusterPool = pool.filter(item=>trueClusterWord(item.thai));
+  if(ids.includes('l18') && clusterPool.length >= 2){
+    const have = new Set(rounds.filter(item=>trueClusterWord(item.thai)).map(item=>item.thai));
+    const needed = weightedWeakSample(clusterPool, Math.min(2, clusterPool.length), decodeGymScore)
+      .filter(item=>!have.has(item.thai));
+    needed.forEach(item=>{
+      if(rounds.filter(x=>trueClusterWord(x.thai)).length >= 2) return;
+      const replaceAt = rounds.map((x,i)=>({x,i})).reverse().find(pair=>!trueClusterWord(pair.x.thai));
+      if(replaceAt) rounds[replaceAt.i] = item;
+    });
+  }
+  return rounds;
+}
 function decodeGymMiss(item){
   String(item.thai || '').split('').forEach(ch=>{
     if(GLYPHS[ch] && GLYPHS[ch].type === 'c'){
@@ -11556,7 +11868,7 @@ function decodeGymMiss(item){
 function startDecodeGym(){
   const pool = decodeGymPool();
   if(pool.length < 6){ toast('Decode Gym opens once enough word patterns are covered'); return; }
-  player = {type:'decode-gym', rounds:weightedWeakSample(pool, Math.min(10, pool.length), item=>glyphWeaknessSum(item.thai)), i:0, got:0};
+  player = {type:'decode-gym', rounds:buildDecodeGymRounds(pool, state.done || []), i:0, got:0};
   openOverlay();
   renderDecodeGym(false);
 }
@@ -12141,12 +12453,38 @@ function markWildCapture(capture, ok){
   }
   saveState();
 }
+function bumpWildDrillCapture(capture){
+  const target = ensureCaptures().find(c=>c.id === capture.id);
+  if(!target) return;
+  target.lastSeen = todayStr();
+  target.n = (target.n || 0) + 1;
+  saveState();
+}
 function startWildDeck(){
   const rounds = wildDeckPool();
   if(!rounds.length){ toast('Capture Thai first'); return; }
   player = {type:'wild-deck', rounds, i:0, got:0};
   openOverlay();
   renderWildDeck(false);
+}
+function renderWildDrill(capture, revealed){
+  const route = captureRouteForThai(capture.thai);
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Wild deck</div><h2>Drill this capture</h2></div>
+    <div class="capture-preview">${captureMarkedHtml(capture.thai)}</div>
+    ${capture.note ? `<div class="capture-note-line" style="text-align:center">${esc(capture.note)}</div>` : ''}
+    ${revealed && route ? toneRouteStepsHtml(route) : `<div class="sub" style="text-align:center">Read it first.</div>`}
+    <div class="stage-actions">
+      ${revealed ? `<button class="btn full" id="wild-drill-back">Back to deck</button>` : `<button class="btn full" id="wild-drill-reveal">Reveal route</button>`}
+    </div>`;
+  if(revealed){
+    el('wild-drill-back').onclick = ()=>renderWildDeck(true);
+  } else {
+    el('wild-drill-reveal').onclick = ()=>{
+      bumpWildDrillCapture(capture);
+      renderWildDrill(capture, true);
+    };
+  }
 }
 function renderWildDeck(revealed){
   const p = player;
@@ -12172,11 +12510,14 @@ function renderWildDeck(revealed){
     ${revealed ? (route ? toneRouteStepsHtml(route) : captureSummaryHtml(capture)) : `<div class="sub" style="text-align:center">Read it first, then reveal what the app can honestly show.</div>`}
     <div class="stage-actions">
       ${revealed ? `
+        ${route ? `<button class="btn full ghost" id="wild-drill">Drill this</button>` : ''}
         <button class="btn full ghost" id="wild-miss">Missed it</button>
         <button class="btn full" id="wild-got">Got it</button>
       ` : `<button class="btn full" id="wild-reveal">Reveal →</button>`}
     </div>`;
   if(revealed){
+    const drill = el('wild-drill');
+    if(drill) drill.onclick = ()=>renderWildDrill(capture, false);
     el('wild-miss').onclick = ()=>{ markWildCapture(capture, false); p.i++; renderWildDeck(false); };
     el('wild-got').onclick = ()=>{ markWildCapture(capture, true); p.got++; p.i++; renderWildDeck(false); };
   } else {
@@ -12315,17 +12656,20 @@ function renderFluencyRead(){
   const p = player, read = p.read;
   setProg([12,42,70,88][p.i] || 100);
   if(p.i === 0){
+    const completed = fluencyReadDone(read);
     el('stage').innerHTML = `
       <div class="center"><div class="eyebrow">${read.realWorld ? 'Sign-style read' : 'Cumulative read'}</div><h2>${esc(read.title)}</h2><p class="sub">Read this slowly first.</p></div>
       ${fluencyReadHtml(read)}
       <div class="notebox" style="margin-top:14px">You are building reading fluency from taught patterns.</div>
-      <div class="stage-actions"><button class="btn full" id="fluency-next">I read it slowly →</button></div>`;
-    beginReadTimer(readTimerKey('fluency', read.id));
+      <div class="stage-actions"><button class="btn full" id="fluency-next">I read it slowly →</button></div>
+      ${completed ? `<div class="stage-actions"><button class="btn ghost" id="fluency-reread">Timed re-read</button></div><div class="result-sub meta-mini" id="fluency-reread-result"></div>` : ''}`;
+    if(!completed) beginReadTimer(readTimerKey('fluency', read.id));
     el('fluency-next').onclick = ()=>{
       p.readTimeLine = readTimeResultText(finishReadTimer());
       p.i = 1;
       renderFluencyRead();
     };
+    if(completed) bindTimedReRead('fluency-reread', 'fluency-reread-result', 'fluency', read.id);
     return;
   }
   if(p.i === 1){
@@ -12686,10 +13030,12 @@ function nextGenericQ(){
   setProg(Math.round(100*p.i/p.qs.length));
 	    if(p.i >= p.qs.length){
 	    setProg(100);
-	    const d = ensureDay();
-	    if(p.opts.checkpoint == null && !p.opts.letters42 && !p.opts.retention && !p.opts.phase1Completion) markDailyDepth('practice');
-	    else saveState();
-    const streakMoment = bumpStreakExtended();
+	    const d = p.opts.toneSprint ? null : ensureDay();
+	    if(!p.opts.toneSprint){
+	      if(p.opts.checkpoint == null && !p.opts.letters42 && !p.opts.retention && !p.opts.phase1Completion) markDailyDepth('practice');
+	      else saveState();
+	    }
+    const streakMoment = p.opts.toneSprint ? null : bumpStreakExtended();
     const pct = Math.round(100*p.correct/p.qs.length);
     let subline = pct>=80 ? 'Strong.' : 'Review the missed items.';
     let classSprintPaceLine = '';
@@ -12699,6 +13045,9 @@ function nextGenericQ(){
     }
     if(p.opts.classSprint && pct >= 85){
       award(3); subline = 'Class sprint passed · +3💎' + (classSprintPaceLine ? ' · ' + classSprintPaceLine : '');
+    }
+    if(p.opts.toneSprint){
+      subline = toneSprintPaceText(recordToneSprintPace(p.toneSprintTimes)) || 'Tone sprint complete.';
     }
     if(p.opts.boss){
       const u = p.opts.boss;
@@ -13147,6 +13496,7 @@ function renderStoryList(){
 }
 function renderStory(s){
   setProg(50);
+  const alreadyRead = !!((state.stories || {})[s.id]);
   el('stage').innerHTML = `
     <div class="center"><h2>${s.title}</h2></div>
     ${s.lines.map((line,li)=>`
@@ -13155,10 +13505,11 @@ function renderStory(s){
       </div>`).join('')}
     <div class="stage-actions">
       <button class="btn ghost" id="story-play">🔊 Read to me</button>
-      <button class="btn" id="story-done">${(state.stories||{})[s.id] ? 'Read again ✓' : 'I read it · +3💎'}</button>
+      <button class="btn" id="story-done">${alreadyRead ? 'Read again ✓' : 'I read it · +3💎'}</button>
     </div>
+    ${alreadyRead ? `<div class="stage-actions"><button class="btn ghost" id="story-reread">Timed re-read</button></div><div class="result-sub meta-mini" id="story-reread-result"></div>` : ''}
     <div class="q-feedback" id="q-fb">Tap any word for its meaning</div>`;
-  beginReadTimer(readTimerKey('story', s.id));
+  if(!alreadyRead) beginReadTimer(readTimerKey('story', s.id));
   el('stage').querySelectorAll('.sw').forEach(sp=>{
     sp.addEventListener('click', ()=>{
       const w = s.lines[+sp.dataset.li][+sp.dataset.wi];
@@ -13170,6 +13521,7 @@ function renderStory(s){
     const full = s.lines.map(l=>l.map(w=>w.t).join('')).join(' ');
     speak(full);
   };
+  if(alreadyRead) bindTimedReRead('story-reread', 'story-reread-result', 'story', s.id);
   el('story-done').onclick = ()=>{
     const timing = readTimeResultText(finishReadTimer());
     if(!state.stories) state.stories = {};
@@ -13294,7 +13646,8 @@ function runFullStartupValidators(){
     validateV70OnboardingContracts,
     validateV71VisualSoundContracts,
     validateThemeContracts,
-    validateV72ShopContracts
+    validateV72ShopContracts,
+    validateV73ReadingMileageContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

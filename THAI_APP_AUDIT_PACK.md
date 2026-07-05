@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-04
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.2.0`
+Current app version: `v7.3.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -95,7 +95,7 @@ v6.3.0 is an automaticity pass over v6.2.0:
 
 - Fluency reads and Reading room stories log reliable cold-read time samples in bounded `readTimes` entries; backgrounding or device voice support discards the sample.
 - Class sprint records best/last seconds-per-answer after the session, without adding time pressure during questions.
-- Decode Gym adds 60 gate-checked self-review word reps, all listed in the generated audit with tone-grid verification.
+- Decode Gym adds gate-checked self-review word reps, all listed in the generated audit with tone-grid verification; v7.3.0 expands the corpus to 63 for cluster mileage.
 - All automaticity surfaces remain optional and outside lesson blockers, checkpoints, SRS due load, review-governor load, network behaviour and dependencies.
 - `validateAutomaticityContracts()` guards the pass.
 
@@ -111,7 +111,7 @@ v6.4.1 is a Decode Gym mileage and Write it feedback fix:
 
 - Write it correct answers show a green `Correct` panel with the revealed glyph before auto-advance.
 - Write it and Capture Thai inputs accept the Thai keyboard return key.
-- Decode Gym uses 60 new non-lesson monosyllables, tone-verified and gate-spread through taught tone patterns.
+- Decode Gym uses tone-verified non-lesson monosyllables, gate-spread through taught tone patterns.
 
 v6.5.0/v6.5.1 are presentational feedback releases:
 
@@ -169,6 +169,25 @@ v7.2.0 is the shop expansion and economy pass:
 - Documents the weekly token economy in `docs/economy_notes.md`; earn rates stay unchanged and the normal mid-course/completed week remains around 60-80 tokens.
 - `validateV72ShopContracts()` guards shop ids, owned/active states, paid story visibility, import shape and purchase simulations that must not mutate SRS, completed lessons, checks or blockers.
 
+v7.2.1 is the post-review cleanup and identity bump:
+
+- Sets the runtime identity to `Phase 1 · 1.0 beta (v7.2.1)`.
+- Keeps the new theme `--muted` CSS values aligned with the contrast map.
+- Hides paid story Course Map and earnings-board surfaces until owned.
+- Extends the in-progress exit guard to unit boss quizzes.
+- Removes stray prompt artifacts.
+
+v7.3.0 is the reading mileage and automaticity pass:
+
+- Adds eight free decodable Reading-room stories at Lessons 8, 10, 12, 14, 16, 18, 20 and 22.
+- Adds a generated story/fluency word-recurrence table to `docs/phase1_audit.*`.
+- Adds display-only Progress Reading mileage from existing `stories` and `readTimes`.
+- Adds optional Timed re-read for completed stories and fluency reads, reusing bounded `readTimes`.
+- Adds gated Tone sprint using existing tone-rule questions, `toneStats.rule`, `errorProfile` and `drillLog['tone-sprint']`.
+- Expands Decode Gym to 63 entries and guarantees cluster reps after Lesson 18 when available.
+- Adds Wild deck Drill this for route-eligible captures, updating only capture-local `lastSeen` / `n`.
+- Adds `validateV73ReadingMileageContracts()`. No SRS, blocker, economy, audio asset, network, service-worker cache or required-state-schema change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -204,9 +223,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.2.0`
+- app version `v7.3.0`
 - 24 lessons
-- 50 validators passing
+- 51 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
