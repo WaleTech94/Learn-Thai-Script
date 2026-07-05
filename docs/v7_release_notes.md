@@ -12,11 +12,21 @@
 
 `v7.3.0` adds reading mileage and automaticity practice inside the existing Phase 1 beta: eight more decodable Reading-room stories, word-recurrence audit evidence, optional timed re-reads, a gated Tone sprint, Decode Gym cluster boosting and Wild deck Drill this.
 
+`v7.4.0` adds street-read automaticity inside completed Reading-room stories: the learner can switch a completed story from spaced words to edge-to-edge running Thai, time that unspaced pass under a distinct `street:` `readTimes` key, and read three new free LOW-tail stories without changing the curriculum, gates or review load.
+
 What beta means here:
 
 - Phase 1 reading, consonant class, tone logic, final jobs, controlled reads, review, backup/export and maintenance routing are complete enough for owner testing and public self-release preparation.
 - The release is still a beta because final iPhone/PWA checks, live deployment propagation and real learner-device use can surface small bugs.
 - Until public self-release, changes should be bug fixes, copy clarifications, release safety fixes, validator/doc corrections or explicitly scoped optional-practice mileage only.
+
+## v7.4.0 scope
+
+- Street read mode: completed Reading-room stories show a Street read / Spaced switch; Street read removes visual gaps between word spans while keeping tap-for-meaning, class colouring and line breaks.
+- Street timing: the existing timed re-read button records `street:` samples when Street read mode is active, separate from `story:` and `fluency:` samples, with no tokens, SRS cards, streak/daily-depth effect or first-read flow change.
+- LOW-tail stories: three new free stories unlock at Lessons 17, 19 and 23 and lift the targeted recurrence words คน, ใน, พา, ไฟฟ้า, รอ, ไหน, ถุง, ทางเข้า, ทางออก and ครับ to OK in the generated audit.
+- Validation: `validateV74StreetReadContracts()` guards the street timer key, completed-story gating, 25-story count, new-story gates/shape/prerequisites/tone readings, recurrence lift, no one-off story words and current v7.4.0 identity.
+- Scope boundary: no curriculum, SRS, grading, economy, audio/font asset, network, service-worker cache or required state-schema change.
 
 ## v7.3.0 scope
 

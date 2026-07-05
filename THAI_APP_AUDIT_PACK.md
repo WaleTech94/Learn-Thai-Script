@@ -1,8 +1,8 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-07-04
+Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.3.0`
+Current app version: `v7.4.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -188,6 +188,14 @@ v7.3.0 is the reading mileage and automaticity pass:
 - Adds Wild deck Drill this for route-eligible captures, updating only capture-local `lastSeen` / `n`.
 - Adds `validateV73ReadingMileageContracts()`. No SRS, blocker, economy, audio asset, network, service-worker cache or required-state-schema change.
 
+v7.4.0 is the street reads and recurrence-tail pass:
+
+- Adds a completed-story Street read / Spaced switch in Reading room. Street read removes visual word gaps while keeping class-coloured tappable word spans and line breaks.
+- Reuses the existing timed read helpers with a distinct `street:` `readTimes` prefix, separate from `story:` and `fluency:` samples.
+- Adds three free decodable stories at Lessons 17, 19 and 23 to lift the targeted LOW recurrence tail: คน, ใน, พา, ไฟฟ้า, รอ, ไหน, ถุง, ทางเข้า, ทางออก and ครับ.
+- Allows Course Map to show multiple visible stories at one lesson gate so free and owned paid stories can coexist.
+- Adds `validateV74StreetReadContracts()`. No SRS, blocker, economy, audio/font asset, network, service-worker cache or required-state-schema change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -223,9 +231,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.3.0`
+- app version `v7.4.0`
 - 24 lessons
-- 51 validators passing
+- 52 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

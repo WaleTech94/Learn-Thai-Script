@@ -1036,7 +1036,10 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .ltile:disabled{opacity:.25}
 .story-line{font-family:var(--font-display);font-size:27px;line-height:2;text-align:center}
 .story-line .sw{padding:2px 4px;border-radius:8px}
+.story-line.street-line .sw{padding:0;border-radius:0}
 .story-line .sw:active{background:var(--surface2)}
+.read-mode-toggle{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.read-mode-toggle .active{border-color:var(--ui-reading);background:var(--surface2);color:var(--text)}
 .story-card{padding:16px 18px;text-align:left}
 .story-card.locked{opacity:.45}
 .chunk-word{font-family:var(--font-display);font-size:48px;line-height:1.35;text-align:center;margin:12px 0}
@@ -1205,7 +1208,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.3.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.4.0)</span>
       </div>
     </header>
 
@@ -1321,7 +1324,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.3.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.4.0)</div>
     </div>
   </section>
 
@@ -2580,6 +2583,26 @@ const STORIES = [
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"เอา",tr:"ao",en:"take"},{t:"ถุง",tr:"thǔng",en:"a bag"}],
    [{t:"ผม",tr:"phǒm",en:"I"},{t:"พูด",tr:"phûut",en:"say"},{t:"ครับ",tr:"khráp",en:"ครับ"}]
  ]},
+ {id:"s19", gate:"l17", title:"รอไฟฟ้า - Waiting for the train", lines:[
+   [{t:"คน",tr:"khon",en:"people"},{t:"รอ",tr:"ror",en:"wait"},{t:"ไฟฟ้า",tr:"fai-fáa",en:"electric train"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"รอ",tr:"ror",en:"wait"},{t:"ใน",tr:"nai",en:"in"},{t:"นา",tr:"naa",en:"the field"}],
+   [{t:"พา",tr:"phaa",en:"bring"},{t:"หมา",tr:"mǎa",en:"the dog"},{t:"มา",tr:"maa",en:"here"}],
+   [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยู่",tr:"yùu",en:"is"},{t:"ไหน",tr:"nǎi",en:"where?"}],
+   [{t:"รถ",tr:"rót",en:"vehicle"},{t:"ไฟฟ้า",tr:"fai-fáa",en:"electric train"},{t:"มา",tr:"maa",en:"comes"}]
+ ]},
+ {id:"s20", gate:"l19", title:"รอในร้าน - Waiting in the shop", lines:[
+   [{t:"คน",tr:"khon",en:"people"},{t:"รอ",tr:"ror",en:"wait"},{t:"ใน",tr:"nai",en:"in"},{t:"ร้าน",tr:"ráan",en:"the shop"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"รอ",tr:"ror",en:"wait"},{t:"ไฟฟ้า",tr:"fai-fáa",en:"electric train"},{t:"ครับ",tr:"khráp",en:"ครับ"}],
+   [{t:"ไม่",tr:"mâi",en:"not"},{t:"เอา",tr:"ao",en:"take"},{t:"ถุง",tr:"thǔng",en:"a bag"},{t:"ครับ",tr:"khráp",en:"ครับ"}],
+   [{t:"พา",tr:"phaa",en:"bring"},{t:"หมา",tr:"mǎa",en:"the dog"},{t:"มา",tr:"maa",en:"here"},{t:"ครับ",tr:"khráp",en:"ครับ"}],
+   [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยู่",tr:"yùu",en:"is"},{t:"ไหน",tr:"nǎi",en:"where?"},{t:"ครับ",tr:"khráp",en:"ครับ"}]
+ ]},
+ {id:"s21", gate:"l23", title:"ทางเข้า - The entrance", lines:[
+   [{t:"คน",tr:"khon",en:"people"},{t:"รอ",tr:"ror",en:"wait"},{t:"ทางเข้า",tr:"thaang-khâo",en:"the entrance"}],
+   [{t:"ผม",tr:"phǒm",en:"I"},{t:"ไป",tr:"bpai",en:"go"},{t:"ทางออก",tr:"thaang-òrk",en:"the exit"}],
+   [{t:"หมา",tr:"mǎa",en:"the dog"},{t:"อยู่",tr:"yùu",en:"is"},{t:"ทางเข้า",tr:"thaang-khâo",en:"the entrance"}],
+   [{t:"เรา",tr:"rao",en:"we"},{t:"พา",tr:"phaa",en:"bring"},{t:"หมา",tr:"mǎa",en:"the dog"},{t:"ทางออก",tr:"thaang-òrk",en:"the exit"}]
+ ]},
  {id:"bk1", pack:"reads1", gate:"l17", title:"รถไฟฟ้า - BTS ride", lines:[
    [{t:"รถ",tr:"rót",en:"vehicle"},{t:"ไฟฟ้า",tr:"fai-fáa",en:"electric train"}],
    [{t:"รถ",tr:"rót",en:"train"},{t:"มา",tr:"maa",en:"comes"}],
@@ -2901,8 +2924,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.3.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.3.0)';
+const APP_VERSION = 'v7.4.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.4.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3787,24 +3810,34 @@ function readTimeResultText(result){
   if(!result || !result.sample) return '';
   return formatSeconds(result.sample.secs) + (result.fastest ? ' - your fastest yet.' : '.');
 }
-function bindTimedReRead(buttonId, resultId, kind, id){
+function bindTimedReRead(buttonId, resultId, kind, id, label){
   const btn = el(buttonId), out = el(resultId);
   if(!btn) return;
   let running = false;
-  const key = readTimerKey(kind, id);
+  let activeKey = null;
+  const currentKind = ()=> typeof kind === 'function' ? kind() : kind;
+  const idleLabel = ()=> typeof label === 'function' ? label() : (label || 'Timed re-read');
+  btn.textContent = idleLabel();
+  btn.dataset.timerRunning = '0';
   btn.onclick = ()=>{
     if(!running){
+      const key = readTimerKey(currentKind(), id);
       clearReadTimer();
       beginReadTimer(key);
+      activeKey = key;
       running = true;
+      btn.dataset.timerRunning = '1';
       btn.textContent = 'Reading... tap when done';
       if(out) out.textContent = '';
       return;
     }
     const result = finishReadTimer();
     running = false;
-    btn.textContent = 'Timed re-read';
+    btn.dataset.timerRunning = '0';
+    btn.textContent = idleLabel();
     const resultText = readTimeResultText(result);
+    const key = activeKey || readTimerKey(currentKind(), id);
+    activeKey = null;
     const summary = readTimeSummaryText(key);
     if(out) out.textContent = resultText ? [resultText, summary].filter(Boolean).join(' · ') : 'Timing not recorded.';
   };
@@ -8043,8 +8076,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.3.0') errors.push('internal app version should be v7.3.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.3.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.3.0)');
+  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8216,9 +8249,104 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.3.0') errors.push('internal app version should be v7.3.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.3.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.3.0)');
+  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV74StreetReadContracts(){
+  const errors = [];
+  if(readTimerKey('street', 's1') === readTimerKey('story', 's1')) errors.push('street timer key must differ from story key');
+  if(readTimerKey('street', 's1') === readTimerKey('fluency', 's1')) errors.push('street timer key must differ from fluency key');
+  const handlerSource = [bindTimedReRead, bindStoryReadModeControls].map(fn=>String(fn)).join('\n');
+  if(!handlerSource.includes('beginReadTimer') || !handlerSource.includes('finishReadTimer') || /baht|srs|days/.test(handlerSource)) errors.push('Street read handlers should write only through read timing helpers');
+  const renderSource = String(renderStory);
+  if(!renderSource.includes('storyStreetReadAvailable(s)') || !renderSource.includes("'street'")) errors.push('Street read controls must be gated by story completion and use the street timer kind');
+  const sampleStory = STORIES.find(s=>s.id === 's19') || STORIES[0];
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, stories:{}}, ()=>{
+    if(storyStreetReadAvailable(sampleStory)) errors.push('Street read should not be available before the story is read');
+  });
+  withTemporaryState({done:LESSONS.map(L=>L.id), srs:{}, days:{}, stories:{[sampleStory.id]:todayStr()}}, ()=>{
+    if(!storyStreetReadAvailable(sampleStory)) errors.push('Street read should be available after the story is read');
+  });
+  const newIds = ['s19','s20','s21'];
+  const gateById = {s19:'l17', s20:'l19', s21:'l23'};
+  const newStories = newIds.map(id=>STORIES.find(s=>s.id === id));
+  if(STORIES.length !== 25) errors.push('Reading room should contain exactly 25 stories');
+  if(newStories.some(s=>!s)) errors.push('v7.4 story ids missing');
+  function firstTrTone(tr){
+    const first = String(tr || '').normalize('NFD').split(/[\s·-]+/).filter(Boolean)[0] || '';
+    if(first.includes('\u030C')) return 'Rising';
+    if(first.includes('\u0302')) return 'Falling';
+    if(first.includes('\u0301')) return 'High';
+    if(first.includes('\u0300')) return 'Low';
+    return 'Mid';
+  }
+  function firstToneThaiUnit(thai){
+    const t = String(thai || '').normalize('NFC');
+    if(t.startsWith('ไฟฟ้า')) return 'ไฟ';
+    if(t.startsWith('ทางเข้า') || t.startsWith('ทางออก')) return 'ทาง';
+    return t;
+  }
+  function firstToneRoute(item, doneIds){
+    const thai = firstToneThaiUnit(item && item.t);
+    const tr = String(item && item.tr || '').split(/[\s·-]+/).filter(Boolean)[0] || '';
+    return captureRouteForThai(thai, doneIds) || toneRouteForWord({thai, tr}, doneIds);
+  }
+  newStories.filter(Boolean).forEach(story=>{
+    if(story.gate !== gateById[story.id]) errors.push(story.id + ' should be gated at ' + gateById[story.id]);
+    if(!Array.isArray(story.lines) || story.lines.length < 3 || story.lines.length > 5) errors.push(story.id + ' should have 3-5 lines');
+    const doneIds = lessonIdsThroughGate(story.gate);
+    (story.lines || []).forEach((line, li)=>{
+      if(!Array.isArray(line) || line.length < 2 || line.length > 4) errors.push(story.id + ' line ' + (li+1) + ' should have 2-4 words');
+      (line || []).forEach(item=>{
+        if(!item || !item.t || !item.tr || !item.en) errors.push(story.id + ' item missing t/tr/en');
+        const thai = item && item.t;
+        if(thai && String(thai).normalize('NFC') !== thai) errors.push(story.id + ' item not NFC: ' + thai);
+        prerequisiteIssuesForThai(thai, doneIds, 'story/' + story.id, wordFrame(findWord(thai))).forEach(i=>{
+          errors.push(story.id + ':' + thai + ' missing ' + (i.missing || []).join(','));
+        });
+        const route = firstToneRoute(item, doneIds);
+        const firstTone = firstTrTone(item && item.tr);
+        if(route && route.tone !== firstTone) errors.push(story.id + ':' + thai + ' tr tone mismatch, expected ' + route.tone + ' got ' + firstTone);
+      });
+    });
+  });
+  function recurrenceRows(stories){
+    const rows = {};
+    const add = item=>{
+      if(!item || !item.t) return;
+      const word = String(item.t).normalize('NFC');
+      const row = rows[word] || {word, total:0, isCluster:trueClusterWord(word)};
+      row.total += 1;
+      rows[word] = row;
+    };
+    stories.forEach(story=>(story.lines || []).flat().forEach(add));
+    FLUENCY_READS.forEach(read=>(read.lines || []).flat().forEach(add));
+    Object.keys(rows).forEach(word=>{
+      const row = rows[word];
+      row.status = row.total >= (row.isCluster ? 6 : 4) ? 'OK' : 'LOW';
+    });
+    return rows;
+  }
+  const oldRows = recurrenceRows(STORIES.filter(story=>!newIds.includes(story.id)));
+  const newRows = recurrenceRows(STORIES);
+  ['คน','ใน','พา','ไฟฟ้า','รอ','ไหน','ถุง','ทางเข้า','ทางออก','ครับ'].forEach(word=>{
+    if(!newRows[word] || newRows[word].status !== 'OK') errors.push('targeted recurrence word should be OK: ' + word);
+  });
+  const oldWords = new Set(Object.keys(oldRows));
+  const newStoryWords = new Set();
+  newStories.filter(Boolean).forEach(story=>(story.lines || []).flat().forEach(item=>newStoryWords.add(String(item.t || '').normalize('NFC'))));
+  const introducedSingles = [...newStoryWords].filter(word=>!oldWords.has(word) && (!newRows[word] || newRows[word].total < 2));
+  if(introducedSingles.length) errors.push('new story words must not be one-offs: ' + introducedSingles.join(', '));
+  const fresh = {done:[], srs:{}};
+  ensureStateCollections(fresh);
+  ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
+    if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
+  });
+  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
+  if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -9042,8 +9170,9 @@ function buildPath(){
 		    N.push({type:'lesson', label:'Lesson: '+L.title, sub:L.sub, id:'L:'+L.id, lesson:L});
     const pool = i<3 ? W_START : i<12 ? W_MID : W_LATE, w = pool[i % pool.length];
     N.push({type:w.t, label:w.l, sub:w.s, id:'p:w'+i, lessonScope:L.id, go:w.go});
-    const story = STORIES.find(s=>s.gate===L.id && storyVisible(s));
-    if(story) N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, lessonScope:L.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
+    STORIES.filter(s=>s.gate===L.id && storyVisible(s)).forEach(story=>{
+      N.push({type:'read', label:'Read: '+story.title.split('-').pop().trim(), sub:'a tiny decodable story', id:'p:'+story.id, lessonScope:L.id, go:()=>{ gotoView('practice'); setTimeout(()=>el('cta-read').click(), 60); }});
+    });
     if(isCheckpointIndex(i)) N.push({type:'checkpoint', label:'Mastery check', sub:'80% script check on sounds, class, finals and tone logic', id:checkpointId(i), checkpoint:i});
   });
   N.push({type:'checkpoint', label:'Letters boss: class of all 42', sub:'Phase 1 script capstone · 90% class recall', id:'letters42', letters42:true});
@@ -13459,6 +13588,11 @@ function renderGhost(){
    READING ROOM - decodable stories
 ===================================================== */
 function storyVisible(s){ return !s.pack || ownsPack(s.pack); }
+function storyAlreadyRead(s, target){
+  const records = (target || state).stories || {};
+  return !!(s && records[s.id]);
+}
+function storyStreetReadAvailable(s, target){ return storyAlreadyRead(s, target); }
 function storyUnlocked(s){
   if(!storyVisible(s)) return false;
   const gi = LESSONS.findIndex(L=>L.id===s.gate);
@@ -13494,15 +13628,48 @@ function renderStoryList(){
   const packShop = el('story-pack-shop');
   if(packShop) packShop.addEventListener('click', renderShop);
 }
+function storyLinesHtml(s, streetMode){
+  return s.lines.map((line,li)=>`
+      <div class="story-line ${streetMode ? 'street-line' : ''}" data-li="${escAttr(li)}">
+        ${line.map((w,wi)=>`<span class="sw" data-li="${escAttr(li)}" data-wi="${escAttr(wi)}">${classColourThaiHtml(w.t)}</span>`).join(streetMode ? '' : ' ')}
+      </div>`).join('');
+}
+function bindStoryWordTaps(host, s){
+  (host || el('stage')).querySelectorAll('.sw').forEach(sp=>{
+    sp.addEventListener('click', ()=>{
+      const w = s.lines[+sp.dataset.li][+sp.dataset.wi];
+      speak(w.t);
+      toast(w.t + ' · ' + w.tr + ' · ' + w.en);
+    });
+  });
+}
+function bindStoryReadModeControls(s, mode){
+  const spaced = el('story-mode-spaced');
+  const street = el('story-mode-street');
+  const textHost = el('story-lines');
+  const reread = el('story-reread');
+  function refresh(){
+    if(textHost) textHost.innerHTML = storyLinesHtml(s, mode.street);
+    bindStoryWordTaps(textHost, s);
+    if(spaced) spaced.classList.toggle('active', !mode.street);
+    if(street) street.classList.toggle('active', mode.street);
+    if(reread && reread.dataset.timerRunning !== '1') reread.textContent = mode.street ? 'Timed street read' : 'Timed re-read';
+  }
+  if(spaced) spaced.onclick = ()=>{ mode.street = false; refresh(); };
+  if(street) street.onclick = ()=>{ mode.street = true; refresh(); };
+  refresh();
+}
 function renderStory(s){
   setProg(50);
-  const alreadyRead = !!((state.stories || {})[s.id]);
+  const alreadyRead = storyAlreadyRead(s);
+  const mode = {street:false};
   el('stage').innerHTML = `
     <div class="center"><h2>${s.title}</h2></div>
-    ${s.lines.map((line,li)=>`
-      <div class="story-line" data-li="${escAttr(li)}">
-        ${line.map((w,wi)=>`<span class="sw" data-li="${escAttr(li)}" data-wi="${escAttr(wi)}">${classColourThaiHtml(w.t)}</span>`).join(' ')}
-      </div>`).join('')}
+    ${storyStreetReadAvailable(s) ? `<div class="read-mode-toggle" role="group" aria-label="Reading spacing">
+      <button class="btn small ghost active" id="story-mode-spaced">Spaced</button>
+      <button class="btn small ghost" id="story-mode-street">Street read</button>
+    </div>` : ''}
+    <div id="story-lines"></div>
     <div class="stage-actions">
       <button class="btn ghost" id="story-play">🔊 Read to me</button>
       <button class="btn" id="story-done">${alreadyRead ? 'Read again ✓' : 'I read it · +3💎'}</button>
@@ -13510,18 +13677,12 @@ function renderStory(s){
     ${alreadyRead ? `<div class="stage-actions"><button class="btn ghost" id="story-reread">Timed re-read</button></div><div class="result-sub meta-mini" id="story-reread-result"></div>` : ''}
     <div class="q-feedback" id="q-fb">Tap any word for its meaning</div>`;
   if(!alreadyRead) beginReadTimer(readTimerKey('story', s.id));
-  el('stage').querySelectorAll('.sw').forEach(sp=>{
-    sp.addEventListener('click', ()=>{
-      const w = s.lines[+sp.dataset.li][+sp.dataset.wi];
-      speak(w.t);
-      toast(w.t + ' · ' + w.tr + ' · ' + w.en);
-    });
-  });
+  bindStoryReadModeControls(s, mode);
   el('story-play').onclick = ()=>{
     const full = s.lines.map(l=>l.map(w=>w.t).join('')).join(' ');
     speak(full);
   };
-  if(alreadyRead) bindTimedReRead('story-reread', 'story-reread-result', 'story', s.id);
+  if(alreadyRead) bindTimedReRead('story-reread', 'story-reread-result', ()=>mode.street ? 'street' : 'story', s.id, ()=>mode.street ? 'Timed street read' : 'Timed re-read');
   el('story-done').onclick = ()=>{
     const timing = readTimeResultText(finishReadTimer());
     if(!state.stories) state.stories = {};
@@ -13647,7 +13808,8 @@ function runFullStartupValidators(){
     validateV71VisualSoundContracts,
     validateThemeContracts,
     validateV72ShopContracts,
-    validateV73ReadingMileageContracts
+    validateV73ReadingMileageContracts,
+    validateV74StreetReadContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

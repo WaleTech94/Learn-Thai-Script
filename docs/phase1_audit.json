@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-05T03:44:08.143Z",
-  "appVersion": "v7.3.0",
+  "generatedAt": "2026-07-05T09:54:28.769Z",
+  "appVersion": "v7.4.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -255,6 +255,11 @@
     },
     {
       "name": "v73ReadingMileage",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v74StreetRead",
       "ok": true,
       "issues": []
     }
@@ -816,7 +821,7 @@
       "word": "ไป",
       "tr": "bpai",
       "earliestGate": "l4",
-      "total": 9,
+      "total": 10,
       "isCluster": false,
       "status": "OK"
     },
@@ -824,7 +829,7 @@
       "word": "มา",
       "tr": "maa",
       "earliestGate": "l4",
-      "total": 13,
+      "total": 16,
       "isCluster": false,
       "status": "OK"
     },
@@ -856,7 +861,7 @@
       "word": "นา",
       "tr": "naa",
       "earliestGate": "l6",
-      "total": 5,
+      "total": 6,
       "isCluster": false,
       "status": "OK"
     },
@@ -872,7 +877,7 @@
       "word": "ไม่",
       "tr": "mâi",
       "earliestGate": "l6",
-      "total": 9,
+      "total": 10,
       "isCluster": false,
       "status": "OK"
     },
@@ -904,7 +909,7 @@
       "word": "ผม",
       "tr": "phǒm",
       "earliestGate": "l9",
-      "total": 14,
+      "total": 16,
       "isCluster": false,
       "status": "OK"
     },
@@ -928,7 +933,7 @@
       "word": "เรา",
       "tr": "rao",
       "earliestGate": "l9",
-      "total": 22,
+      "total": 24,
       "isCluster": false,
       "status": "OK"
     },
@@ -1008,39 +1013,39 @@
       "word": "คน",
       "tr": "khon",
       "earliestGate": "l17",
-      "total": 3,
+      "total": 6,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "ใน",
       "tr": "nai",
       "earliestGate": "l17",
-      "total": 2,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "พา",
       "tr": "phaa",
       "earliestGate": "l17",
-      "total": 1,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "ไฟฟ้า",
       "tr": "fai-fáa",
       "earliestGate": "l17",
-      "total": 1,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "รถ",
       "tr": "rót",
       "earliestGate": "l17",
-      "total": 4,
+      "total": 5,
       "isCluster": false,
       "status": "OK"
     },
@@ -1048,15 +1053,15 @@
       "word": "รอ",
       "tr": "ror",
       "earliestGate": "l17",
-      "total": 1,
+      "total": 6,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "หมา",
       "tr": "mǎa",
       "earliestGate": "l17",
-      "total": 8,
+      "total": 14,
       "isCluster": false,
       "status": "OK"
     },
@@ -1064,9 +1069,9 @@
       "word": "ไหน",
       "tr": "nǎi",
       "earliestGate": "l17",
-      "total": 2,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "อยาก",
@@ -1080,7 +1085,7 @@
       "word": "อยู่",
       "tr": "yùu",
       "earliestGate": "l17",
-      "total": 9,
+      "total": 12,
       "isCluster": false,
       "status": "OK"
     },
@@ -1088,9 +1093,9 @@
       "word": "ครับ",
       "tr": "khráp",
       "earliestGate": "l18",
-      "total": 3,
+      "total": 7,
       "isCluster": true,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "ครู",
@@ -1120,9 +1125,9 @@
       "word": "ถุง",
       "tr": "thǔng",
       "earliestGate": "l19",
-      "total": 3,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "น้ำ",
@@ -1144,7 +1149,7 @@
       "word": "ร้าน",
       "tr": "ráan",
       "earliestGate": "l19",
-      "total": 4,
+      "total": 5,
       "isCluster": false,
       "status": "OK"
     },
@@ -1152,7 +1157,7 @@
       "word": "เอา",
       "tr": "ao",
       "earliestGate": "l19",
-      "total": 5,
+      "total": 6,
       "isCluster": false,
       "status": "OK"
     },
@@ -1160,17 +1165,17 @@
       "word": "ทางเข้า",
       "tr": "thaang-khâo",
       "earliestGate": "l23",
-      "total": 2,
+      "total": 4,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "ทางออก",
       "tr": "thaang-òrk",
       "earliestGate": "l23",
-      "total": 3,
+      "total": 5,
       "isCluster": false,
-      "status": "LOW"
+      "status": "OK"
     },
     {
       "word": "ระวัง",
@@ -17265,6 +17270,7 @@
           "s13",
           "s14",
           "s15",
+          "s19",
           "bk1"
         ],
         "unlockedFluencyReads": [
@@ -17477,7 +17483,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 11,
+          "availableItemCount": 12,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -17769,7 +17775,7 @@
           "toneItems": 11,
           "twinSets": 10,
           "echoItems": 93,
-          "stories": 11,
+          "stories": 12,
           "fluencyReads": 4,
           "chunks": 0,
           "signs": 0,
@@ -18326,6 +18332,7 @@
           "s14",
           "s15",
           "s16",
+          "s19",
           "bk1"
         ],
         "unlockedFluencyReads": [
@@ -18538,7 +18545,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 13,
+          "availableItemCount": 14,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -18830,7 +18837,7 @@
           "toneItems": 11,
           "twinSets": 10,
           "echoItems": 97,
-          "stories": 13,
+          "stories": 14,
           "fluencyReads": 4,
           "chunks": 0,
           "signs": 0,
@@ -19402,6 +19409,8 @@
           "s14",
           "s15",
           "s16",
+          "s19",
+          "s20",
           "bk1",
           "bk2"
         ],
@@ -19615,7 +19624,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 14,
+          "availableItemCount": 16,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -19907,7 +19916,7 @@
           "toneItems": 11,
           "twinSets": 10,
           "echoItems": 101,
-          "stories": 14,
+          "stories": 16,
           "fluencyReads": 4,
           "chunks": 0,
           "signs": 0,
@@ -20634,6 +20643,8 @@
           "s15",
           "s16",
           "s17",
+          "s19",
+          "s20",
           "bk1",
           "bk2"
         ],
@@ -20847,7 +20858,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 15,
+          "availableItemCount": 17,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -21139,7 +21150,7 @@
           "toneItems": 11,
           "twinSets": 10,
           "echoItems": 105,
-          "stories": 15,
+          "stories": 17,
           "fluencyReads": 4,
           "chunks": 3,
           "signs": 0,
@@ -21773,6 +21784,8 @@
           "s15",
           "s16",
           "s17",
+          "s19",
+          "s20",
           "bk1",
           "bk2"
         ],
@@ -21986,7 +21999,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 15,
+          "availableItemCount": 17,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -22278,7 +22291,7 @@
           "toneItems": 11,
           "twinSets": 10,
           "echoItems": 109,
-          "stories": 15,
+          "stories": 17,
           "fluencyReads": 4,
           "chunks": 3,
           "signs": 0,
@@ -22884,6 +22897,8 @@
           "s16",
           "s17",
           "s18",
+          "s19",
+          "s20",
           "bk1",
           "bk2"
         ],
@@ -23097,7 +23112,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 16,
+          "availableItemCount": 18,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -23389,7 +23404,7 @@
           "toneItems": 11,
           "twinSets": 11,
           "echoItems": 115,
-          "stories": 16,
+          "stories": 18,
           "fluencyReads": 4,
           "chunks": 4,
           "signs": 0,
@@ -23999,6 +24014,9 @@
           "s16",
           "s17",
           "s18",
+          "s19",
+          "s20",
+          "s21",
           "bk1",
           "bk2"
         ],
@@ -24213,7 +24231,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 16,
+          "availableItemCount": 19,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -24505,7 +24523,7 @@
           "toneItems": 11,
           "twinSets": 11,
           "echoItems": 119,
-          "stories": 16,
+          "stories": 19,
           "fluencyReads": 5,
           "chunks": 8,
           "signs": 4,
@@ -25147,6 +25165,9 @@
           "s16",
           "s17",
           "s18",
+          "s19",
+          "s20",
+          "s21",
           "bk1",
           "bk2",
           "bk3",
@@ -25364,7 +25385,7 @@
           "id": "reading-stories",
           "name": "Reading/stories",
           "unit": "stories",
-          "availableItemCount": 22,
+          "availableItemCount": 25,
           "servedCount": 1,
           "cap": 1,
           "blockedExcludedCount": 0,
@@ -25656,7 +25677,7 @@
           "toneItems": 11,
           "twinSets": 11,
           "echoItems": 123,
-          "stories": 22,
+          "stories": 25,
           "fluencyReads": 6,
           "chunks": 11,
           "signs": 10,

@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.4.0 - 2026-07-05
+
+- Added Street read mode for completed Reading-room stories. It switches the story lines from spaced word-by-word reading to edge-to-edge running Thai while keeping each word tappable for meaning and preserving class colouring.
+- Reused the existing timed re-read machinery with a distinct `street:` `readTimes` key prefix, so street samples never mix with first-read or spaced re-read samples. Street timing does not award tokens, create SRS/review cards, affect streak/daily-depth or change the first-read flow.
+- Added three free decodable Reading-room stories at Lessons 17, 19 and 23: `s19`, `s20` and `s21`. They reuse the targeted LOW-tail words คน, ใน, พา, ไฟฟ้า, รอ, ไหน, ถุง, ทางเข้า, ทางออก and ครับ without adding one-off story words.
+- Updated Course Map story nodes to allow multiple visible stories at the same lesson gate, preserving the paid Bangkok reads ownership boundary while adding the new free stories.
+- Added `validateV74StreetReadContracts()`, registered it in startup validation and `tools/phase1-audit.js`, and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`. Audit now reports app version `v7.4.0`, 52 validators passing, 25 stories readable at gate and all targeted recurrence words at OK.
+- v7.4.0 adds no new required learner state key; street reads reuse `readTimes` with a `street:` id prefix. No curriculum, SRS, grading, leech, blocker, lesson-gate, token-economy, audio/font-asset, runtime-network or service-worker-cache change.
+
 ## v7.3.0 - 2026-07-05
 
 - Added the Reading mileage ladder: eight new decodable Reading-room stories gated at Lessons 8, 10, 12, 14, 16, 18, 20 and 22, written from the recurrence audit to lift underexposed controlled words without changing the curriculum order.

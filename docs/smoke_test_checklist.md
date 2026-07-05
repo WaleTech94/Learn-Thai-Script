@@ -1,4 +1,4 @@
-# v7.3.0 Smoke-Test Checklist
+# v7.4.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -7,9 +7,9 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js`.
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v7.3.0`, 51 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.3.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.json` reports app version `v7.4.0`, 52 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.4.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -38,8 +38,8 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.3.0)`.
-- Confirm exported backup JSON uses `appVersion: "v7.3.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.4.0)`.
+- Confirm exported backup JSON uses `appVersion: "v7.4.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## Dialog Accessibility Polish
@@ -103,7 +103,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.3.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.4.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -188,10 +188,20 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Wild deck with a route-eligible taught capture: tap `Drill this`. Pass: the route is hidden first, reveal shows the existing tone-route tiles, and only the capture practice count/date changes.
 - Import a pre-v7.3 backup with no `readTimes` or `drillLog`. Pass: import succeeds, Progress opens, and the new surfaces remain optional.
 
+## v7.4 Street Reads And LOW-Tail Stories
+
+- Lesson 17 state with no completed story: open Read and start the Lesson 17 free stories. Pass: first reads are spaced by default, no Street read toggle appears before the story is completed, and the first-read +3 reward path is unchanged.
+- Complete a story, reopen it, then switch `Street read`. Pass: words render edge-to-edge on each line, line breaks remain, class colouring remains, and tapping an unspaced word still speaks/shows its reading and meaning.
+- In Street read mode, tap `Timed street read`, finish the pass, and inspect progress state. Pass: the sample stores under `readTimes["street:<storyId>"]`, while spaced re-read samples stay under `readTimes["story:<storyId>"]`.
+- Switch back to `Spaced`. Pass: the original word spacing returns in place and the timed button returns to `Timed re-read`.
+- Lesson 17, 19 and 23 states: confirm free stories `s19`, `s20` and `s21` are visible at their gates, not pack-gated, and first reads still award only the existing +3 story reward.
+- Confirm the generated recurrence table marks คน, ใน, พา, ไฟฟ้า, รอ, ไหน, ถุง, ทางเข้า, ทางออก and ครับ as OK.
+- Confirm completed fluency reads do not offer Street read mode in this release.
+
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 · 1.0 beta (v7.3.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 · 1.0 beta (v7.4.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 
