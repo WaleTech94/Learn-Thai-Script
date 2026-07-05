@@ -14,11 +14,21 @@
 
 `v7.4.0` adds street-read automaticity inside completed Reading-room stories: the learner can switch a completed story from spaced words to edge-to-edge running Thai, time that unspaced pass under a distinct `street:` `readTimes` key, and read three new free LOW-tail stories without changing the curriculum, gates or review load.
 
+`v7.5.0` adds a time-aware Today fill layer: the app counts active seconds only inside real learning surfaces, shows one skippable keep-going suggestion after the required route while measured time is below the 30/45-minute target, and keeps time display-only.
+
 What beta means here:
 
 - Phase 1 reading, consonant class, tone logic, final jobs, controlled reads, review, backup/export and maintenance routing are complete enough for owner testing and public self-release preparation.
 - The release is still a beta because final iPhone/PWA checks, live deployment propagation and real learner-device use can surface small bugs.
 - Until public self-release, changes should be bug fixes, copy clarifications, release safety fixes, validator/doc corrections or explicitly scoped optional-practice mileage only.
+
+## v7.5.0 scope
+
+- Active-time tally: optional `days[date].secs` is created lazily only after real active learning time is measured, with idle/background/device-voice guards.
+- Today fill layer: after the required route is complete, Today can suggest one unlocked existing practice surface, completed-story Street/timed re-read, completed fluency re-read, maintenance rematch or next lesson when normal blockers are clear.
+- Runway display: the existing route runway uses measured minutes when present and keeps the older estimate display for legacy/no-sample days.
+- Validation: `validateTimeAwareRouteContracts()` guards lazy state creation, idle/lifecycle coverage, display-only scope, locked-surface suppression and current v7.5.0 identity.
+- Scope boundary: no curriculum, SRS, grading, economy, rewards, streaks, audio/font asset, network, service-worker cache or required state-schema change.
 
 ## v7.4.0 scope
 

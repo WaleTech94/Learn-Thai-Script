@@ -448,6 +448,17 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 		.daily-win-card::after{content:"";position:absolute;right:14px;top:12px;width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.28),transparent 65%);opacity:.55}
 		.daily-win-card h2{font-size:20px;margin:0 0 2px}
 		.daily-win-actions{display:flex;gap:8px;flex-wrap:wrap}
+		.time-fill-card{
+		  margin-top:12px;border:1px solid rgba(34,211,238,.34);border-top-color:rgba(255,255,255,.18);border-radius:18px;background:
+		    radial-gradient(circle at 88% 0%, rgba(34,211,238,.18), transparent 9rem),
+		    linear-gradient(160deg,rgba(34,211,238,.1),rgba(255,255,255,.026));
+		  padding:16px;display:grid;gap:10px;box-shadow:var(--shadow-card);position:relative;overflow:hidden;
+		}
+		.time-fill-card[hidden]{display:none}
+		.time-fill-card.done{border-color:rgba(52,211,153,.4);background:linear-gradient(160deg,rgba(52,211,153,.1),rgba(255,255,255,.026))}
+		.time-fill-card h2{font-size:20px;margin:0 0 2px}
+		.time-fill-line{font-size:12px;color:var(--ui-cyan);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+		.time-fill-actions{display:flex;gap:8px;flex-wrap:wrap}
 		.daily-section{margin-bottom:16px}
 	.practice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
 	.practice-chip{
@@ -1208,7 +1219,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.4.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.5.0)</span>
       </div>
     </header>
 
@@ -1265,6 +1276,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
         </button>
       </div>
       <div class="daily-win-card" id="daily-win-card" hidden></div>
+      <div class="time-fill-card" id="time-fill-card" hidden></div>
       <div class="section-card backup-card today-backup-hint is-hidden" id="backup-today-hint"></div>
     </section>
 
@@ -1324,7 +1336,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.4.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.5.0)</div>
     </div>
   </section>
 
@@ -2924,8 +2936,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.4.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.4.0)';
+const APP_VERSION = 'v7.5.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.5.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3515,6 +3527,7 @@ function ensureDay(){
 	    state.days[t] = {r:0, l:0, d:0, m:0, ret:0, due, paid:false, type, bridge:{}};
     saveState();
   }
+  normaliseDayActiveSecs(state.days[t]);
   if(!state.days[t].bridge) state.days[t].bridge = {};
   if(state.days[t].ret == null) state.days[t].ret = 0;
   return state.days[t];
@@ -3841,6 +3854,126 @@ function bindTimedReRead(buttonId, resultId, kind, id, label){
     const summary = readTimeSummaryText(key);
     if(out) out.textContent = resultText ? [resultText, summary].filter(Boolean).join(' · ') : 'Timing not recorded.';
   };
+}
+const DAY_ACTIVE_IDLE_LIMIT_MS = 60000;
+const ACTIVE_TIME_LIFECYCLE_EVENTS = 'visibilitychange pagehide blur focus';
+const ACTIVE_TIME_SURFACE_TYPES = new Set([
+  'class-primer','lesson','quiz','flash','foundation-refresh','contrast','missions',
+  'decode-gym','spell','ghost','echo','write-it','route-talk','wild-deck','story','fluency-read'
+]);
+let activeTime = {surface:null, running:false, startedAt:0, lastInteractionAt:0, pendingMs:0, audio:false};
+function normaliseDayActiveSecs(day){
+  if(!day || typeof day !== 'object' || !Object.prototype.hasOwnProperty.call(day, 'secs')) return day;
+  const n = Number(day.secs);
+  if(Number.isFinite(n) && n >= 0) day.secs = Math.floor(n);
+  else delete day.secs;
+  return day;
+}
+function dayActiveSecs(target, date){
+  const s = target || state, d = s.days && s.days[date || todayStr()];
+  normaliseDayActiveSecs(d);
+  return d && Number.isFinite(d.secs) ? Math.max(0, Math.floor(d.secs)) : 0;
+}
+function dayHasActiveSecs(target, date){
+  const s = target || state, d = s.days && s.days[date || todayStr()];
+  return !!(d && Object.prototype.hasOwnProperty.call(d, 'secs') && Number.isFinite(d.secs));
+}
+function accumulateDayActiveSeconds(seconds, target, date){
+  const n = Math.floor(Number(seconds));
+  if(!Number.isFinite(n) || n <= 0) return false;
+  const s = target || state, key = date || todayStr();
+  if(!s.days) s.days = {};
+  if(!s.days[key]) s.days[key] = {r:0,l:0,d:0,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}};
+  normaliseDayActiveSecs(s.days[key]);
+  s.days[key].secs = dayActiveSecs(s, key) + n;
+  return true;
+}
+function activeTimeSurfaceFromPlayer(){
+  const type = player && player.type;
+  return ACTIVE_TIME_SURFACE_TYPES.has(type) ? type : null;
+}
+function activeTimeCanRun(){
+  if(!activeTime.surface) return false;
+  const visible = typeof document === 'undefined' || document.visibilityState !== 'hidden';
+  const focused = typeof document === 'undefined' || typeof document.hasFocus !== 'function' || document.hasFocus();
+  return visible && (focused || activeTime.audio);
+}
+function activeTimeAccumulate(now){
+  const t = now || Date.now();
+  if(!activeTime.running || !activeTime.startedAt) return;
+  const idleStop = activeTime.audio ? t : Math.min(t, activeTime.lastInteractionAt + DAY_ACTIVE_IDLE_LIMIT_MS);
+  if(idleStop > activeTime.startedAt) activeTime.pendingMs += idleStop - activeTime.startedAt;
+  if(!activeTime.audio && t >= activeTime.lastInteractionAt + DAY_ACTIVE_IDLE_LIMIT_MS){
+    activeTime.running = false;
+    activeTime.startedAt = 0;
+  } else {
+    activeTime.startedAt = t;
+  }
+}
+function activeTimeFlush(sync){
+  activeTimeAccumulate();
+  const secs = Math.floor(activeTime.pendingMs / 1000);
+  if(secs <= 0) return false;
+  activeTime.pendingMs -= secs * 1000;
+  const changed = accumulateDayActiveSeconds(secs);
+  if(changed && !sync) saveState();
+  return changed;
+}
+function activeTimeResume(){
+  if(!activeTime.surface || !activeTimeCanRun() || activeTime.running) return;
+  const now = Date.now();
+  activeTime.running = true;
+  activeTime.startedAt = now;
+  activeTime.lastInteractionAt = now;
+}
+function activeTimePause(sync){
+  activeTimeFlush(sync);
+  activeTime.running = false;
+  activeTime.startedAt = 0;
+}
+function activeTimeSetSurface(surface){
+  const next = surface && ACTIVE_TIME_SURFACE_TYPES.has(surface) ? surface : null;
+  if(activeTime.surface === next){
+    activeTimeResume();
+    return;
+  }
+  activeTimePause(false);
+  activeTime.surface = next;
+  activeTime.pendingMs = 0;
+  activeTime.audio = false;
+  if(next){
+    ensureDay();
+    activeTimeResume();
+  }
+}
+function activeTimeSyncSurface(){
+  activeTimeSetSurface(activeTimeSurfaceFromPlayer());
+}
+function activeTimeStop(){
+  activeTimePause(false);
+  activeTime.surface = null;
+  activeTime.pendingMs = 0;
+  activeTime.audio = false;
+}
+function activeTimeInteraction(){
+  if(!activeTime.surface) return;
+  activeTimeAccumulate();
+  activeTime.lastInteractionAt = Date.now();
+  if(!activeTime.running) activeTimeResume();
+}
+function activeTimeAudioStart(){
+  activeTime.audio = true;
+  activeTimeInteraction();
+}
+function activeTimeAudioEnd(){
+  activeTimeInteraction();
+  activeTime.audio = false;
+}
+if(typeof document !== 'undefined' && document.addEventListener){
+  document.addEventListener('pointerdown', activeTimeInteraction, {passive:true});
+  document.addEventListener('keydown', activeTimeInteraction);
+  document.addEventListener('thai-audio-start', activeTimeAudioStart);
+  document.addEventListener('thai-audio-end', activeTimeAudioEnd);
 }
 function dailyBridgeMissing(d){
   const day = d || ensureDay();
@@ -4390,6 +4523,151 @@ function renderDailyWinCard(){
     triggerRewardBurst('daily');
   }
 }
+const timeFillMemory = {skipped:{}, started:{}};
+function todayTargetMinutes(){
+  return earlyFoundationWindow() ? 30 : 45;
+}
+function timeFillLine(target){
+  const targetMin = todayTargetMinutes();
+  const secs = dayActiveSecs(target || state);
+  const shown = Math.min(targetMin, Math.floor(secs / 60));
+  return shown + ' of ' + targetMin + ' min';
+}
+function timeFillAtTarget(target){
+  return dayActiveSecs(target || state) >= todayTargetMinutes() * 60;
+}
+function timeFillMemorySet(kind){
+  const key = todayStr();
+  const bucket = timeFillMemory[kind] = timeFillMemory[kind] || {};
+  bucket[key] = bucket[key] || {};
+  return bucket[key];
+}
+function timeFillWasTouched(key){
+  return !!(timeFillMemorySet('skipped')[key] || timeFillMemorySet('started')[key]);
+}
+function markTimeFillTouched(kind, key){
+  if(!key) return;
+  timeFillMemorySet(kind)[key] = true;
+}
+function timeFillSuggestion(key, title, reason, label, go){
+  return {key, title, reason, label:label || 'Start', go};
+}
+function completedStoryForTimedRead(){
+  return STORIES.find(s=>storyUnlocked(s) && storyAlreadyRead(s) && !timeFillWasTouched('street:' + s.id)) || null;
+}
+function completedFluencyForTimedRead(){
+  return FLUENCY_READS.find(read=>fluencyReadDone(read) && fluencyReadUnlocked(read) && !fluencyReadPrereqIssues(read).length && !timeFillWasTouched('fluency:' + read.id)) || null;
+}
+function nextTimeFillSuggestion(){
+  const blocked = item=>!item || timeFillWasTouched(item.key);
+  const focus = weaknessFocus();
+  if(focus){
+    const drill = DRILLS.find(d=>d.id === focus.drillId);
+    const item = drill && drillUnlocked(drill) ? timeFillSuggestion('drill:' + drill.id, drill.title, 'Weakest area right now.', 'Practice', ()=>launchDrill(drill.id)) : null;
+    if(!blocked(item)) return item;
+  }
+  const unread = STORIES.find(s=>storyUnlocked(s) && !(state.stories||{})[s.id] && !timeFillWasTouched('story:' + s.id)) || null;
+  if(unread){
+    const item = timeFillSuggestion('story:' + unread.id, 'Reading room', 'Unread story: ' + unread.title, 'Read', ()=>startStoryDepth(unread));
+    if(!blocked(item)) return item;
+  }
+  const street = completedStoryForTimedRead();
+  if(street){
+    const item = timeFillSuggestion('street:' + street.id, 'Street read', street.title, 'Open', ()=>{
+      player = {type:'read'};
+      openOverlay();
+      renderStory(street, {street:true});
+    });
+    if(!blocked(item)) return item;
+  }
+  const fluency = completedFluencyForTimedRead();
+  if(fluency){
+    const item = timeFillSuggestion('fluency:' + fluency.id, 'Timed re-read', fluency.title, 'Open', ()=>startFluencyRead(fluency));
+    if(!blocked(item)) return item;
+  }
+  const decode = DRILLS.find(d=>d.id === 'decode-gym');
+  if(decode && drillUnlocked(decode)){
+    const item = timeFillSuggestion('drill:decode-gym', 'Decode Gym', 'Extra reading mileage.', 'Practice', ()=>launchDrill('decode-gym'));
+    if(!blocked(item)) return item;
+  }
+  if(toneSprintReady()){
+    const item = timeFillSuggestion('sprint:tone', 'Tone sprint', 'Fast tone-route practice.', 'Sprint', startToneSprint);
+    if(!blocked(item)) return item;
+  }
+  const sprint = DRILLS.find(d=>d.id === 'sprint');
+  if(sprint && drillUnlocked(sprint)){
+    const item = timeFillSuggestion('drill:sprint', 'Class sprint', 'Class recall at speed.', 'Sprint', ()=>launchDrill('sprint'));
+    if(!blocked(item)) return item;
+  }
+  if(phase1CompletionPassed()){
+    const rematch = maintenanceRematchItem();
+    const item = rematch ? timeFillSuggestion('maintenance:' + rematch.id, rematch.label, 'Optional rematch. No extra tokens.', 'Rematch', rematch.go) : null;
+    if(!blocked(item)) return item;
+  }
+  const d = ensureDay(), next = nextLesson(), recovery = returnGapRecoveryMode();
+  if(next && srsDue().length === 0 && !getLessonBlocker(next.id) && d.type !== 'C' && !d.lite && !recovery){
+    const item = timeFillSuggestion('lesson:' + next.id, 'Next lesson', 'Review clear.', 'Lesson ' + lessonNum(next.id), ()=>startLessonFromUser(next));
+    if(!blocked(item)) return item;
+  }
+  return null;
+}
+function timeFillStatus(){
+  const d = ensureDay();
+  const complete = !foundationRefreshRequired() && !dailyMissingStep();
+  if(!complete) return {show:false};
+  if(d.lite) return {show:false, suppressed:true};
+  if(timeFillAtTarget()) return {show:true, done:true, line:timeFillLine()};
+  const suggestion = nextTimeFillSuggestion();
+  return suggestion ? {show:true, done:false, line:timeFillLine(), suggestion} : {show:false};
+}
+function startTimeFillSuggestion(key){
+  const status = timeFillStatus();
+  const item = status && status.suggestion && status.suggestion.key === key ? status.suggestion : null;
+  if(!item) return;
+  markTimeFillTouched('started', key);
+  item.go();
+}
+function renderTimeFillCard(){
+  const card = el('time-fill-card');
+  if(!card) return;
+  const status = timeFillStatus();
+  if(!status.show){
+    card.hidden = true;
+    card.innerHTML = '';
+    card.className = 'time-fill-card';
+    return;
+  }
+  card.hidden = false;
+  card.className = 'time-fill-card' + (status.done ? ' done' : '');
+  if(status.done){
+    card.innerHTML = `
+      <div>
+        <div class="eyebrow">Daily time</div>
+        <h2>Target met</h2>
+        <p class="sub">Good place to stop.</p>
+        <div class="time-fill-line">${esc(status.line)}</div>
+      </div>
+      <div class="time-fill-actions"><button class="btn small ghost" id="time-fill-stop">Stop for today</button></div>`;
+    const stop = el('time-fill-stop');
+    if(stop) stop.onclick = showEndDayModal;
+    return;
+  }
+  const item = status.suggestion;
+  card.innerHTML = `
+    <div>
+      <div class="eyebrow">Keep going</div>
+      <h2>${esc(item.title)}</h2>
+      <p class="sub">${esc(item.reason)}</p>
+      <div class="time-fill-line">${esc(status.line)}</div>
+    </div>
+    <div class="time-fill-actions">
+      <button class="btn small" id="time-fill-start">${esc(item.label)}</button>
+      <button class="btn small ghost" id="time-fill-skip">Skip</button>
+    </div>`;
+  const start = el('time-fill-start'), skip = el('time-fill-skip');
+  if(start) start.onclick = ()=>startTimeFillSuggestion(item.key);
+  if(skip) skip.onclick = ()=>{ markTimeFillTouched('skipped', item.key); renderTimeFillCard(); };
+}
 function activeDepthTask(){
   return dailyMissingStep() === 'depth' ? todayDepthTask() : null;
 }
@@ -4536,12 +4814,15 @@ function bindDialogDismissal(wrap, close, opts){
 function showEndDayModal(){
   const missing = dailyMissingStep();
   const focusTarget = currentFocusTarget();
+  const routeDay = !missing ? ensureDay() : null;
+  const timeLine = routeDay && !routeDay.lite && !timeFillAtTarget() ? `<p class="sub">Time today: ${esc(timeFillLine())}.</p>` : '';
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="end-day-title">
     <div class="eyebrow">${missing ? 'Stop for today' : 'Day complete'}</div>
     <h2 id="end-day-title">Mastery beats breadth.</h2>
     <p class="sub">${missing ? 'You can stop here. The route will keep the recommended work ready when you return.' : "You have cleared today's required work. Extra study can stay on review, stories or drills, or you can start the next lesson if no true blocker exists."}</p>
+    ${timeLine}
     <div class="confirm-actions">
       <button class="btn ghost" id="end-more">Bonus practice</button>
       <button class="btn" id="end-close">Done for today</button>
@@ -4791,6 +5072,7 @@ function renderTodayActions(){
 	    }
 	    renderTodayRouteSummary();
 	    renderDailyWinCard();
+	    renderTimeFillCard();
 	    syncTabRecommendations();
 	    return;
 	  }
@@ -4850,6 +5132,7 @@ function renderTodayActions(){
 		  }
 	  renderTodayRouteSummary();
 	  renderDailyWinCard();
+	  renderTimeFillCard();
 	  syncTabRecommendations();
 		}
 const DAILY_PRACTICE = [
@@ -5009,13 +5292,23 @@ function renderRunway(){
   const reviewShape = todayReviewShape();
   const calibrated = (state.paceN||0) >= 3;
   const COL = {srs:'var(--blue)', lesson:'var(--accent1)', drill:'var(--muted)'};
+  const targetMin = todayTargetMinutes();
+  if(dayHasActiveSecs()){
+    const pct = Math.min(100, Math.round(100 * dayActiveSecs() / Math.max(1, targetMin * 60)));
+    host.style.display = '';
+    host.innerHTML = `
+      <div class="spread" style="font-size:12px"><span class="eyebrow" style="margin:0">Today's runway</span><span class="sub">${esc(timeFillLine())}</span></div>
+      <div class="runway-bar"><span class="runway-seg" style="width:${pct}%;background:var(--ui-cyan)"></span></div>
+      <div class="runway-legend"><span><i style="background:var(--ui-cyan)"></i>active time</span></div>
+      ${d.lite ? `<div class="sub" style="font-size:11px;margin-top:7px">Lighter day on. Optional drill moved to tomorrow. Streak stays safe.</div>` : ''}`;
+    return;
+  }
   const srsMin = Math.min(15, Math.round(reviewShape.target * paceSecs() / 60));
   const bonus = earlyBonusLessonCandidate();
   const earlyPace = earlyFoundationWindow();
   const retention = nextRetentionCheck();
   const lessonMin = retention ? 8 : (isL && nextLesson() && (d.l === 0 || bonus)) ? (bonus ? 15 : 20) : 0;          // includes hear-first + read-aloud compare
   const mainDone = isL ? (d.l > 0 || (d.m||0) > 0 || (d.ret||0) > 0) : (d.d > 0 || (d.m||0) > 0 || (d.ret||0) > 0);
-  const targetMin = earlyPace ? 30 : 45;
   const minDrill = isL ? (earlyPace ? 10 : 15) : 25;
   const drillMin = d.lite || bonus ? 0 : (mainDone ? minDrill : Math.max(minDrill, targetMin - srsMin - lessonMin));
   const segDefs = [
@@ -8076,8 +8369,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
+  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8249,8 +8542,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
+  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8344,9 +8637,79 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v7.4.0') errors.push('internal app version should be v7.4.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.4.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.4.0)');
+  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateTimeAwareRouteContracts(){
+  const errors = [];
+  const dayKey = todayStr();
+  const fresh = {done:[], checks:{}, srs:{}, days:{}, retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}};
+  ensureStateCollections(fresh);
+  if(fresh.days[dayKey] && Object.prototype.hasOwnProperty.call(fresh.days[dayKey], 'secs')) errors.push('fresh untouched day should not gain secs');
+  const legacy = {done:['l1'], checks:{}, srs:{}, days:{[dayKey]:{r:0,l:0,d:0,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}}}, retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}};
+  ensureStateCollections(legacy);
+  if(Object.prototype.hasOwnProperty.call(legacy.days[dayKey], 'secs')) errors.push('legacy day should not gain secs during migration');
+  accumulateDayActiveSeconds(75, legacy, dayKey);
+  if(legacy.days[dayKey].secs !== 75) errors.push('active seconds should lazily accumulate on the existing day record');
+  legacy.days[dayKey].secs = Infinity;
+  normaliseDayActiveSecs(legacy.days[dayKey]);
+  if(Object.prototype.hasOwnProperty.call(legacy.days[dayKey], 'secs')) errors.push('invalid secs should be removed');
+  const timingSource = [activeTimeAccumulate, activeTimePause, activeTimeResume, activeTimeFlush].map(fn=>String(fn)).join('\n');
+  const eventSource = ACTIVE_TIME_LIFECYCLE_EVENTS + ' ' + String(DAY_ACTIVE_IDLE_LIMIT_MS);
+  if(!/60000|DAY_ACTIVE_IDLE_LIMIT_MS/.test(timingSource + eventSource)) errors.push('active-time source must include the 60s idle cap');
+  if(!/visibilitychange/.test(eventSource) || !String(flushState).includes('activeTimeFlush')) errors.push('active-time source must flush with existing save path on visibilitychange');
+  if(!/pagehide/.test(eventSource) || !String(flushState).includes('activeTimeFlush')) errors.push('active-time source must account for pagehide');
+  if(/(?:srs|baht|streak|checks|freeze)\s*(?:=|\[|\.)/.test(String(accumulateDayActiveSeconds) + timingSource)) errors.push('active-time accumulator must not write progression, rewards or review fields');
+  const completeBase = secs=>({
+    done:['l1'], checks:{}, srs:{}, baht:0, days:{[dayKey]:Object.assign({r:0,l:1,d:1,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}}, secs == null ? {} : {secs})},
+    retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, pathDone:{'p:class':true}
+  });
+  const questOutcomes = [null, 0, 3600].map(secs=>{
+    const s = completeBase(secs);
+    withTemporaryState(s, ()=>questCheck());
+    return {paid:s.days[dayKey].paid, baht:s.baht};
+  });
+  if(new Set(questOutcomes.map(x=>x.paid + ':' + x.baht)).size !== 1) errors.push('secs must not change daily quest reward outcomes');
+  withTemporaryState({done:[], checks:{}, srs:{}, days:{[dayKey]:{r:0,l:0,d:0,m:0,ret:0,due:0,paid:false,type:'L',bridge:{}}}, retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}}, ()=>{
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && /tone|decode|street|fluency/.test(sugg.key)) errors.push('time-fill suggestion should not return locked or uncovered drills for a fresh state');
+  });
+  const dueCard = n=>['test-due-' + n, {iv:0, due:todayStr(), lapses:0, sameDayMisses:0}];
+  const withDue = (count, extra)=>{
+    const s = Object.assign({done:['l1'], checks:{}, srs:{}, days:{[dayKey]:{r:0,l:1,d:1,m:0,ret:0,due:count,paid:true,type:'L',bridge:{},secs:60}}, retention:{}, foundationRefresh:{required:false, complete:false, quarantinedFinals:[]}, pathDone:{'p:class':true}}, extra||{});
+    for(let i=0;i<count;i++){ const [id, card] = dueCard(i); s.srs[id] = card; }
+    return s;
+  };
+  withTemporaryState(withDue(1), ()=>{
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && sugg.key.startsWith('lesson:')) errors.push('next lesson suggestion must be absent while review is due');
+  });
+  withTemporaryState(withDue(45), ()=>{
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && sugg.key.startsWith('lesson:')) errors.push('next lesson suggestion must be absent while getLessonBlocker blocks');
+  });
+  withTemporaryState(withDue(0, {days:{[dayKey]:{r:0,l:1,d:1,m:0,ret:0,due:0,paid:true,type:'L',bridge:{},lite:true,secs:60}}}), ()=>{
+    if(timeFillStatus().show) errors.push('lite day should suppress fill layer after quest completion');
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && sugg.key.startsWith('lesson:')) errors.push('next lesson suggestion must be absent on lite day');
+  });
+  withTemporaryState(withDue(0, {days:{[dayKey]:{r:0,l:0,d:2,m:0,ret:0,due:0,paid:true,type:'C',bridge:{},secs:60}}}), ()=>{
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && sugg.key.startsWith('lesson:')) errors.push('next lesson suggestion must be absent on consolidation day');
+  });
+  withTemporaryState(withDue(0, {streak:{count:5,last:isoPlusDays(todayStr(), -3)}, days:{[isoPlusDays(todayStr(), -3)]:{r:8,l:0,d:1,m:0,ret:0,due:0,paid:true,type:'L',bridge:{}}, [dayKey]:{r:18,l:1,d:1,m:0,ret:0,due:0,paid:true,type:'L',bridge:{},secs:60}}}), ()=>{
+    const sugg = nextTimeFillSuggestion();
+    if(sugg && sugg.key.startsWith('lesson:')) errors.push('next lesson suggestion must be absent on recovery day');
+  });
+  withTemporaryState(withDue(0, {days:{[dayKey]:{r:0,l:1,d:1,m:0,ret:0,due:0,paid:true,type:'L',bridge:{},secs:todayTargetMinutes()*60}}}), ()=>{
+    if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
+  });
+  if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
+  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
+  if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -9126,6 +9489,7 @@ const PATH_ICONS = {tone:'🎧', speak:'🗣️', lesson:'📖', drill:'🎯', r
 /* class primer (v2.27) - surfaced as an early path node, BEFORE the lessons pile up letters.
    Teaches the cheat-code AND the why: class is the dial that sets a syllable's tone. */
 function showClassPrimer(){
+  player = {type:'class-primer'};
   openOverlay(); setProg(100);
   el('stage').innerHTML = `
     <div class="center"><h2>The three classes</h2></div>
@@ -10278,8 +10642,9 @@ let player = null;
 function openOverlay(){
   el('overlay').classList.add('open'); document.body.style.overflow='hidden';
   const c = el('combo-chip'); if(c){ c.classList.remove('show','milestone'); }
+  activeTimeSyncSurface();
 }
-function closeOverlay(){ el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer(); player=null; }
+function closeOverlay(){ activeTimeStop(); el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer(); player=null; }
 function lessonExitWouldDiscard(p){
   return !!(p && p.type === 'lesson' && p.i > 0 && p.i < (p.steps || 0) - 1);
 }
@@ -12729,6 +13094,7 @@ function fluencyReadStatus(read){
 function showFluencyReadList(focusId){
   player = {type:'fluency-list'};
   openOverlay();
+  activeTimeSetSurface(null);
   setProg(0);
   const focus = focusId || (nextFluencyRead() || fluencyReadsAvailable().slice(-1)[0] || {}).id;
   el('stage').innerHTML = `
@@ -13603,6 +13969,7 @@ el('cta-read').addEventListener('click', ()=>{
   openOverlay(); renderStoryList();
 });
 function renderStoryList(){
+  activeTimeSetSurface(null);
   setProg(0);
   const visibleStories = STORIES.filter(storyVisible);
   el('stage').innerHTML = `
@@ -13659,10 +14026,11 @@ function bindStoryReadModeControls(s, mode){
   if(street) street.onclick = ()=>{ mode.street = true; refresh(); };
   refresh();
 }
-function renderStory(s){
+function renderStory(s, opts){
+  activeTimeSetSurface('story');
   setProg(50);
   const alreadyRead = storyAlreadyRead(s);
-  const mode = {street:false};
+  const mode = {street:!!(opts && opts.street && alreadyRead)};
   el('stage').innerHTML = `
     <div class="center"><h2>${s.title}</h2></div>
     ${storyStreetReadAvailable(s) ? `<div class="read-mode-toggle" role="group" aria-label="Reading spacing">
@@ -13700,22 +14068,30 @@ function renderStory(s){
 /* flush pending save synchronously when app is backgrounded or closed */
 function flushState(){
   clearTimeout(saveTimer);
+  activeTimeFlush(true);
   try{ localStorage.setItem(SKEY, JSON.stringify(state)); }catch(e){}
   try{ if(window.storage) window.storage.set(SKEY, JSON.stringify(state)); }catch(e){}
 }
 document.addEventListener('visibilitychange', ()=>{
   if(document.visibilityState === 'hidden'){
+    activeTimePause(true);
     markReadTimerUnreliable();
     pauseReadTimer();
     flushState();
   }
-  else if('speechSynthesis' in window) speechSynthesis.resume();
+  else {
+    if('speechSynthesis' in window) speechSynthesis.resume();
+    activeTimeResume();
+  }
 });
 window.addEventListener('pagehide', ()=>{
+  activeTimePause(true);
   markReadTimerUnreliable();
   pauseReadTimer();
   flushState();
 });
+window.addEventListener('blur', ()=>activeTimePause(false));
+window.addEventListener('focus', activeTimeResume);
 
 /* iOS requires a user gesture before speechSynthesis works - prime it once */
 let speechPrimed = false;
@@ -13809,7 +14185,8 @@ function runFullStartupValidators(){
     validateThemeContracts,
     validateV72ShopContracts,
     validateV73ReadingMileageContracts,
-    validateV74StreetReadContracts
+    validateV74StreetReadContracts,
+    validateTimeAwareRouteContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

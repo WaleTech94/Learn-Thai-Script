@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-05T09:54:28.769Z",
-  "appVersion": "v7.4.0",
+  "generatedAt": "2026-07-05T17:01:18.478Z",
+  "appVersion": "v7.5.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -260,6 +260,11 @@
     },
     {
       "name": "v74StreetRead",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "timeAwareRoute",
       "ok": true,
       "issues": []
     }

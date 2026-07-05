@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.4.0`
+Current app version: `v7.5.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -196,6 +196,14 @@ v7.4.0 is the street reads and recurrence-tail pass:
 - Allows Course Map to show multiple visible stories at one lesson gate so free and owned paid stories can coexist.
 - Adds `validateV74StreetReadContracts()`. No SRS, blocker, economy, audio/font asset, network, service-worker cache or required-state-schema change.
 
+v7.5.0 is the time-aware daily-route pass:
+
+- Counts active seconds only inside real learning surfaces, with idle/background/device-voice guards, and stores them lazily under optional `days[date].secs`.
+- Adds one skippable keep-going suggestion after the required Today route while measured time remains below the 30/45-minute target.
+- Chooses only existing unlocked practice, completed-story Street/timed re-reads, completed fluency re-reads, maintenance rematches or a next lesson when normal blockers are clear.
+- Keeps time display-only: no rewards, SRS, intervals, grading, leech rules, blockers, lesson gates, streaks, token economy, audio/font assets, runtime network features or service-worker cache changes.
+- Adds `validateTimeAwareRouteContracts()`.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -231,9 +239,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.4.0`
+- app version `v7.5.0`
 - 24 lessons
-- 52 validators passing
+- 53 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -258,6 +266,7 @@ High-value review areas:
 - automaticity pass: read timing discards unreliable samples, Class sprint pace appears only after the session, and Decode Gym seed words remain gate-checked, tone-verified and outside SRS
 - capture loop: typed input sanitisation, local-only captures, no route tiles for untaught/unsafe captures, Wild deck spacing staying capture-local and outside SRS
 - data safety: corrupt-state quarantine, save-failure export warning, versioned backup envelope, envelope/legacy import compatibility, backup nudges staying non-blocking, and update-ready reload prompt without auto-reload
+- time-aware route: `days[date].secs` stays optional/lazy, idle/background time is capped, keep-going suggestions are unlocked-only and skippable, and measured time never changes rewards, SRS, blockers, streaks or tokens
 - completion journey: post-Phase 1 maintenance route, once-only celebration, dashboard counts, fair freeze-gap consumption, surfaced optional drills and capture copy export staying outside SRS/blockers
 - v7 beta surface: fresh-only onboarding, About page, beta footer string, safe Escape/focus dialog behaviour and no impact on route blockers or Today copy
 

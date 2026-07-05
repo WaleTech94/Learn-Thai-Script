@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.5.0 - 2026-07-05
+
+- Added active learning time tallying for real app learning surfaces only. Measured seconds are stored lazily under optional `days[date].secs`, capped for idle/background time and flushed before progress saves.
+- Added a post-route Today fill layer: once the required route is complete and measured time is still below the 30/45-minute target, Today can show one skippable keep-going suggestion from existing unlocked practice, completed-story or fluency re-reads, maintenance rematches, or a next lesson only when the normal lesson blockers are clear.
+- Updated the Today runway to show measured active minutes when available, while preserving the previous estimate-only display for states with no active-time sample yet.
+- Added `validateTimeAwareRouteContracts()`, registered it in startup validation and `tools/phase1-audit.js`, and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json`. Audit now reports app version `v7.5.0`, 53 validators passing and unchanged prerequisite issue counts.
+- v7.5.0 adds optional `days[date].secs` only. Time is display-only and does not affect SRS, intervals, grading, leech rules, blockers, lesson gates, rewards, streaks, token economy, audio/font assets, runtime network features or service-worker cache naming.
+
 ## v7.4.0 - 2026-07-05
 
 - Added Street read mode for completed Reading-room stories. It switches the story lines from spaced word-by-word reading to edge-to-edge running Thai while keeping each word tappable for meaning and preserving class colouring.
