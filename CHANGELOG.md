@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.6.0 - 2026-07-09
+
+- Added fresh-decode transfer testing so objective surfaces certify decoding of never-taught words, not word memory. Two reserved corpora ship as source data: `FRESH_DECODE` (120 real monosyllables, gates l4-l24) and the sealed `ASSESSMENT_BANK` (56 words, >=8 per checkpoint window) - zero overlap with lesson words, Decode Gym, stories or any other Thai token in the app.
+- Lesson quizzes from Lesson 4 add three fresh words as four questions: an adjacent mechanism-first route-chain pair (tone / live-dead / vowel-length, then the full reading), one full-reading MCQ with misconception distractors, and one single-axis check. Prompts keep class colours; fresh tone questions wait for the Lesson 13 grid.
+- Mastery checkpoints add three sealed assessment-bank words (route chain plus two readings) and the Phase 1 completion checkpoint adds five (including at least one true-cluster and one silent-leader word) - all with neutral prompts, class colour appearing only in the post-answer route explanation. The learner's first sight of a bank word is the gate itself; the >=80%/85% bars are unchanged.
+- Added a Fresh decode block (five words, six questions) to the completed-course maintenance rotation; checkpoint and boss rematches pick up bank questions automatically with no repeat rewards.
+- Fresh-decode misses feed the existing bounded `errorProfile` buckets; no SRS cards, blockers, tokens, streak effects or state keys are created.
+- Added `validateFreshDecodeContracts()` (counts, tone routes, decodability, freshness, sealing, supply floors, serving mixture, pair adjacency, pre-l13 tone gating), registered it in startup validation and `tools/phase1-audit.js`, and added `tools/fresh-decode-check.js` - a standalone gate that re-verifies both corpora against the app's own gating code plus a whole-file Thai-token freshness scan; `tools/precommit-check.js` now runs it and also walks both corpora through the tone-grid check. Regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json` (54 validators passing, new v7.6 corpora section).
+- v7.6.0 adds no new required learner state key and does not change curriculum, SRS intervals, grading, leech rules, lesson-gate thresholds, token economy, audio/font assets, runtime network features or service-worker cache naming. Expected effect: first-attempt gate pass rates may dip because gates now test genuine transfer; remediation and free retries absorb it.
+
 ## v7.5.0 - 2026-07-05
 
 - Added active learning time tallying for real app learning surfaces only. Measured seconds are stored lazily under optional `days[date].secs`, capped for idle/background time and flushed before progress saves.

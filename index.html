@@ -1219,7 +1219,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.5.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.6.0)</span>
       </div>
     </header>
 
@@ -2726,6 +2726,58 @@ const DECODE_GYM = [
   {gate:'l24', thai:'เดิน', tr:'dern'}, {gate:'l24', thai:'เกิด', tr:'gèrt'}, {gate:'l24', thai:'เงิน', tr:'ngern'}, {gate:'l24', thai:'เพิ่ม', tr:'phêrm'}
 ];
 
+/* v7.6.0 fresh-decode transfer corpora. FRESH_DECODE feeds lesson quizzes (l4+) and the
+   completed-course maintenance block; ASSESSMENT_BANK is sealed for mastery checkpoints and
+   the Phase 1 completion checkpoint only - the learner's first sight of a bank word is the gate.
+   Every entry is a real common Thai monosyllable, decode-only (meaning never shown or tested),
+   tone-verified against the grid, decodable at its gate, and absent from every other app surface.
+   tools/fresh-decode-check.js re-verifies freshness, tone routes and supply floors per commit. */
+const FRESH_DECODE = [
+  {gate:'l4', thai:'กี่', tr:'gìi'}, {gate:'l4', thai:'ก้าน', tr:'gâan'}, {gate:'l4', thai:'ดิบ', tr:'dìp'}, {gate:'l4', thai:'ด่า', tr:'dàa'}, {gate:'l4', thai:'ทา', tr:'thaa'}, {gate:'l4', thai:'นาม', tr:'naam'}, {gate:'l4', thai:'บาน', tr:'baan'}, {gate:'l4', thai:'ปีน', tr:'bpiin'}, {gate:'l4', thai:'ปู', tr:'bpuu'}, {gate:'l4', thai:'ปูน', tr:'bpuun'}, {gate:'l4', thai:'หาม', tr:'hǎam'},
+  {gate:'l5', thai:'ราย', tr:'raai'}, {gate:'l5', thai:'ราว', tr:'raao'}, {gate:'l5', thai:'ริม', tr:'rim'}, {gate:'l5', thai:'รีบ', tr:'rîip'}, {gate:'l5', thai:'ลา', tr:'laa'}, {gate:'l5', thai:'เดา', tr:'dao'}, {gate:'l5', thai:'เบา', tr:'bao'}, {gate:'l5', thai:'เมา', tr:'mao'},
+  {gate:'l6', thai:'ขี่', tr:'khìi'}, {gate:'l6', thai:'ขูด', tr:'khùut'}, {gate:'l6', thai:'ล่า', tr:'lâa'}, {gate:'l6', thai:'สาย', tr:'sǎai'}, {gate:'l6', thai:'สู้', tr:'sûu'}, {gate:'l6', thai:'เสา', tr:'sǎo'},
+  {gate:'l7', thai:'กัด', tr:'gàt'}, {gate:'l7', thai:'จัด', tr:'jàt'}, {gate:'l7', thai:'จับ', tr:'jàp'}, {gate:'l7', thai:'ชัด', tr:'chát'}, {gate:'l7', thai:'ดัง', tr:'dang'}, {gate:'l7', thai:'นั่ง', tr:'nâng'}, {gate:'l7', thai:'ปั้น', tr:'bpân'}, {gate:'l7', thai:'วัด', tr:'wát'},
+  {gate:'l8', thai:'ตัด', tr:'dtàt'}, {gate:'l8', thai:'ตาม', tr:'dtaam'}, {gate:'l8', thai:'ตี', tr:'dtii'}, {gate:'l8', thai:'ต่อ', tr:'dtòr'}, {gate:'l8', thai:'ถัง', tr:'thǎng'}, {gate:'l8', thai:'ไถ', tr:'thǎi'},
+  {gate:'l9', thai:'ขน', tr:'khǒn'}, {gate:'l9', thai:'คัน', tr:'khan'}, {gate:'l9', thai:'คาง', tr:'khaang'}, {gate:'l9', thai:'ซอง', tr:'sorng'}, {gate:'l9', thai:'ซัก', tr:'sák'}, {gate:'l9', thai:'ผอม', tr:'phǒrm'}, {gate:'l9', thai:'ฝาก', tr:'fàak'},
+  {gate:'l10', thai:'คืน', tr:'khuuen'}, {gate:'l10', thai:'ตื่น', tr:'dtùuen'}, {gate:'l10', thai:'มืด', tr:'mûuet'}, {gate:'l10', thai:'ลืม', tr:'luuem'}, {gate:'l10', thai:'แก่', tr:'gàae'}, {gate:'l10', thai:'แก้', tr:'gâae'}, {gate:'l10', thai:'แขก', tr:'khàaek'}, {gate:'l10', thai:'แบบ', tr:'bàaep'},
+  {gate:'l11', thai:'กะ', tr:'gà'}, {gate:'l11', thai:'ดุ', tr:'dù'}, {gate:'l11', thai:'พุง', tr:'phung'}, {gate:'l11', thai:'ละ', tr:'lá'}, {gate:'l11', thai:'สุก', tr:'sùk'}, {gate:'l11', thai:'หุง', tr:'hǔng'},
+  {gate:'l12', thai:'คำ', tr:'kham'}, {gate:'l12', thai:'ตำ', tr:'dtam'}, {gate:'l12', thai:'ถ้ำ', tr:'thâm'}, {gate:'l12', thai:'ใด', tr:'dai'}, {gate:'l12', thai:'ใต้', tr:'dtâi'}, {gate:'l12', thai:'ใบ', tr:'bai'},
+  {gate:'l13', thai:'ผ้า', tr:'phâa'}, {gate:'l13', thai:'ยิ้ม', tr:'yím'}, {gate:'l13', thai:'ลาย', tr:'laai'}, {gate:'l13', thai:'ล้าน', tr:'láan'},
+  {gate:'l14', thai:'ป๋า', tr:'bpǎa'}, {gate:'l14', thai:'เก๋', tr:'gěe'}, {gate:'l14', thai:'โจ๊ก', tr:'jóhk'},
+  {gate:'l15', thai:'งา', tr:'ngaa'}, {gate:'l15', thai:'ชา', tr:'chaa'}, {gate:'l15', thai:'ลัง', tr:'lang'},
+  {gate:'l16', thai:'เก็บ', tr:'gèp'}, {gate:'l16', thai:'เข็ม', tr:'khěm'}, {gate:'l16', thai:'เจ็บ', tr:'jèp'}, {gate:'l16', thai:'เช็ด', tr:'chét'}, {gate:'l16', thai:'เต็ม', tr:'dtem'},
+  {gate:'l17', thai:'หนา', tr:'nǎa'}, {gate:'l17', thai:'หมอก', tr:'mòrk'}, {gate:'l17', thai:'หมาย', tr:'mǎai'}, {gate:'l17', thai:'หมึก', tr:'mùek'}, {gate:'l17', thai:'หยิบ', tr:'yìp'}, {gate:'l17', thai:'หวี', tr:'wǐi'},
+  {gate:'l18', thai:'กราบ', tr:'gràap'}, {gate:'l18', thai:'กลอง', tr:'glorng'}, {gate:'l18', thai:'คลอง', tr:'khlorng'}, {gate:'l18', thai:'ปลูก', tr:'bplùuk'}, {gate:'l18', thai:'พลาด', tr:'phlâat'},
+  {gate:'l19', thai:'กลืน', tr:'gluuen'}, {gate:'l19', thai:'ขวาง', tr:'khwǎang'}, {gate:'l19', thai:'ปลอม', tr:'bplorm'}, {gate:'l19', thai:'ปลาย', tr:'bplaai'},
+  {gate:'l20', thai:'ธูป', tr:'thûup'}, {gate:'l20', thai:'ศาล', tr:'sǎan'}, {gate:'l20', thai:'หญ้า', tr:'yâa'}, {gate:'l20', thai:'ฮา', tr:'haa'}, {gate:'l20', thai:'เจอ', tr:'jer'},
+  {gate:'l21', thai:'ฉาบ', tr:'chàap'}, {gate:'l21', thai:'ฉีก', tr:'chìik'}, {gate:'l21', thai:'ฉุน', tr:'chǔn'},
+  {gate:'l22', thai:'บัว', tr:'bua'}, {gate:'l22', thai:'รั่ว', tr:'rûa'}, {gate:'l22', thai:'เชือก', tr:'chûeak'}, {gate:'l22', thai:'เตียง', tr:'dtiang'}, {gate:'l22', thai:'เลี้ยง', tr:'líang'}, {gate:'l22', thai:'เลือด', tr:'lûeat'},
+  {gate:'l23', thai:'อื่น', tr:'ùuen'}, {gate:'l23', thai:'แจก', tr:'jàaek'}, {gate:'l23', thai:'แถว', tr:'thǎaeo'}, {gate:'l23', thai:'โชค', tr:'chôhk'},
+  {gate:'l24', thai:'เชิง', tr:'cherng'}, {gate:'l24', thai:'เดิม', tr:'derm'}, {gate:'l24', thai:'เติม', tr:'dterm'}, {gate:'l24', thai:'เนิน', tr:'nern'}, {gate:'l24', thai:'เบิก', tr:'bèrk'}, {gate:'l24', thai:'เพลิน', tr:'phlern'}
+];
+const ASSESSMENT_BANK = [
+  {gate:'l4', thai:'ที', tr:'thii'}, {gate:'l4', thai:'น้า', tr:'náa'}, {gate:'l4', thai:'บ่า', tr:'bàa'}, {gate:'l4', thai:'มีด', tr:'mîit'}, {gate:'l4', thai:'หู', tr:'hǔu'}, {gate:'l4', thai:'อิ่ม', tr:'ìm'},
+  {gate:'l5', thai:'ยาม', tr:'yaam'},
+  {gate:'l6', thai:'สาว', tr:'sǎao'},
+  {gate:'l7', thai:'งัด', tr:'ngát'}, {gate:'l7', thai:'ชิม', tr:'chim'}, {gate:'l7', thai:'สั่ง', tr:'sàng'}, {gate:'l7', thai:'หั่น', tr:'hàn'},
+  {gate:'l8', thai:'ตับ', tr:'dtàp'}, {gate:'l8', thai:'พัด', tr:'phát'}, {gate:'l8', thai:'เตา', tr:'dtao'},
+  {gate:'l9', thai:'ผ่า', tr:'phàa'},
+  {gate:'l10', thai:'ถึง', tr:'thǔeng'}, {gate:'l10', thai:'นึก', tr:'núek'}, {gate:'l10', thai:'ยืน', tr:'yuuen'},
+  {gate:'l11', thai:'จุด', tr:'jùt'}, {gate:'l11', thai:'มุม', tr:'mum'}, {gate:'l11', thai:'ลุก', tr:'lúk'},
+  {gate:'l12', thai:'จำ', tr:'jam'}, {gate:'l12', thai:'ใส', tr:'sǎi'},
+  {gate:'l13', thai:'คม', tr:'khom'}, {gate:'l13', thai:'ปีก', tr:'bpìik'}, {gate:'l13', thai:'ยำ', tr:'yam'}, {gate:'l13', thai:'ลำ', tr:'lam'},
+  {gate:'l14', thai:'ซ้อม', tr:'sórm'}, {gate:'l14', thai:'แยก', tr:'yâaek'},
+  {gate:'l15', thai:'ค้าง', tr:'kháang'}, {gate:'l15', thai:'แห้ง', tr:'hâaeng'},
+  {gate:'l16', thai:'เย็บ', tr:'yép'}, {gate:'l16', thai:'เห็น', tr:'hěn'},
+  {gate:'l17', thai:'หนัก', tr:'nàk'}, {gate:'l17', thai:'หนาว', tr:'nǎao'}, {gate:'l17', thai:'หยอด', tr:'yòrt'},
+  {gate:'l18', thai:'กลม', tr:'glom'}, {gate:'l18', thai:'ขวา', tr:'khwǎa'}, {gate:'l18', thai:'พริก', tr:'phrík'},
+  {gate:'l19', thai:'คลาน', tr:'khlaan'}, {gate:'l19', thai:'หวัง', tr:'wǎng'}, {gate:'l19', thai:'ไหว', tr:'wǎi'},
+  {gate:'l20', thai:'ภาพ', tr:'phâap'}, {gate:'l20', thai:'ศอก', tr:'sòrk'}, {gate:'l20', thai:'ศึก', tr:'sùek'},
+  {gate:'l21', thai:'ฉาย', tr:'chǎai'}, {gate:'l21', thai:'ฉีด', tr:'chìit'},
+  {gate:'l22', thai:'ชั่ว', tr:'chûa'}, {gate:'l22', thai:'มัว', tr:'mua'}, {gate:'l22', thai:'เกลียด', tr:'glìat'}, {gate:'l22', thai:'เดือด', tr:'dùeat'}, {gate:'l22', thai:'เปลือก', tr:'bplùeak'}, {gate:'l22', thai:'เพียง', tr:'phiang'},
+  {gate:'l24', thai:'เกิน', tr:'gern'}, {gate:'l24', thai:'เชิญ', tr:'chern'}
+];
+
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
 const MID_CLASS_SET = ['ก','จ','ฎ','ฏ','ด','ต','บ','ป','อ'];
 const HIGH_CLASS_SET = ['ข','ฃ','ฉ','ฐ','ถ','ผ','ฝ','ศ','ษ','ส','ห'];
@@ -2936,8 +2988,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.5.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.5.0)';
+const APP_VERSION = 'v7.6.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.6.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -4155,6 +4207,9 @@ function maintenanceMainTask(target){
   }
   if((s.captures || []).length){
     options.push({type:'maintenance', label:'Wild deck', sub:'Re-read saved Thai from Bangkok', id:'maintenance-wild', go:()=>startWildDeck()});
+  }
+  if(freshPoolAtGate(FRESH_DECODE, 24).length >= 3){
+    options.push({type:'maintenance', label:'Fresh decode', sub:'Five never-taught words · work the route', id:'maintenance-fresh', go:()=>startFreshDecodeBlock()});
   }
   const rematch = maintenanceRematchItem(s);
   const finalOption = rematch && stableDayIndex(2)
@@ -8090,7 +8145,7 @@ function validateV67CompletionJourneyContracts(){
   });
   withTemporaryState(completedBase({captures:[normaliseCapture({thai:'บ้าน', note:'station', d:todayStr()}, 0)]}), ()=>{
     const task = maintenanceMainTask();
-    const allowed = ['maintenance-fluency','maintenance-wild','maintenance-readiness','maintenance-rematch'];
+    const allowed = ['maintenance-fluency','maintenance-wild','maintenance-fresh','maintenance-readiness','maintenance-rematch'];
     if(!task || !allowed.includes(task.id)) errors.push('maintenance rotation targeted an unknown surface: ' + (task && task.id));
   });
   const celebrate = completedBase();
@@ -8369,8 +8424,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
+  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8542,8 +8597,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
+  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8637,8 +8692,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
+  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8707,9 +8762,65 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v7.5.0') errors.push('internal app version should be v7.5.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.5.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.5.0)');
+  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
+  return true;
+}
+/* v7.6.0: fresh-decode corpora stay verified, sealed and served with the specced mixture. */
+function validateFreshDecodeContracts(){
+  const errors = [];
+  if(FRESH_DECODE.length !== 120) errors.push('FRESH_DECODE should have 120 entries, has ' + FRESH_DECODE.length);
+  if(ASSESSMENT_BANK.length !== 56) errors.push('ASSESSMENT_BANK should have 56 entries, has ' + ASSESSMENT_BANK.length);
+  const seen = new Set();
+  FRESH_DECODE.concat(ASSESSMENT_BANK).forEach(item=>{
+    if(seen.has(item.thai)) errors.push('fresh corpus duplicate: ' + item.thai);
+    seen.add(item.thai);
+    if(item.thai.normalize('NFC') !== item.thai) errors.push(item.thai + ' is not NFC');
+    if(!freshDecodeRoute(item)) errors.push(item.thai + ' fails tone-route verification against its tr');
+    if(isLessonWord(item.thai)) errors.push(item.thai + ' duplicates a lesson word');
+    if(DECODE_GYM.some(g=>g.thai === item.thai)) errors.push(item.thai + ' duplicates a Decode Gym word');
+    const ids = LESSONS.filter(L=>lessonNum(L.id) <= lessonNum(item.gate)).map(L=>L.id);
+    if(!thaiTextReadable(item.thai, taughtGlyphSet(ids))) errors.push(item.thai + ' is not decodable at ' + item.gate);
+    if(!thaiItemPrereqsMet(item.thai, ids, null)) errors.push(item.thai + ' has a prerequisite leak at ' + item.gate);
+  });
+  if(FRESH_DECODE.filter(x=>lessonNum(x.gate) === 4).length < 10) errors.push('FRESH_DECODE needs at least 10 words at gate l4');
+  for(let n=4;n<=24;n++){
+    if(freshPoolAtGate(FRESH_DECODE, n).length < Math.min(120, 10 + (n-4)*4)) errors.push('FRESH_DECODE supply is thin at l' + n);
+  }
+  for(let w=0;w<7;w++){
+    const lo = 4 + w*3, hi = Math.min(24, lo + 2);
+    if(ASSESSMENT_BANK.filter(x=>lessonNum(x.gate) >= lo && lessonNum(x.gate) <= hi).length < 8) errors.push('ASSESSMENT_BANK window l' + lo + '-l' + hi + ' is below 8 words');
+  }
+  LESSONS.forEach(L=>{
+    const n = lessonNum(L.id);
+    const qs = buildLessonQuiz(L);
+    const fresh = qs.filter(q=>q._fresh);
+    if(n >= 4 && fresh.length !== 4) errors.push(L.id + ' lesson quiz should serve 4 fresh-decode questions, has ' + fresh.length);
+    if(n < 4 && fresh.length) errors.push(L.id + ' lesson quiz should not serve fresh decode before Lesson 4');
+    if(fresh.some(q=>!q.colourPrompt)) errors.push(L.id + ' lesson fresh prompts should keep class colours');
+    if(n < 13 && fresh.some(q=>q._choice === 'fresh-tone')) errors.push(L.id + ' asks a fresh tone question before the full grid is taught');
+    for(let i=0;i<qs.length;i++){
+      const q = qs[i];
+      if(q._pairFirst && (!qs[i+1] || qs[i+1]._pair !== q._pair)) errors.push(L.id + ' fresh route-chain pair was split by the shuffle');
+      if(q._pairFirst && q._choice === 'word-reading') errors.push(L.id + ' fresh route-chain should ask the mechanism before the reading');
+    }
+  });
+  const ck = buildCheckpointQuiz(5);
+  const ckFresh = ck.filter(q=>q._fresh);
+  if(ckFresh.length !== 4) errors.push('mastery checkpoints should serve 4 assessment-bank questions, got ' + ckFresh.length);
+  if(ckFresh.some(q=>q.colourPrompt)) errors.push('checkpoint bank prompts must be neutral');
+  if(buildCheckpointQuiz(2).some(q=>q._fresh)) errors.push('the l1-3 checkpoint precedes the bank gates and should serve none');
+  const finFresh = buildPhase1CompletionQuiz().filter(q=>q._fresh);
+  if(finFresh.length !== 6) errors.push('the final checkpoint should serve 6 assessment-bank questions, got ' + finFresh.length);
+  if(finFresh.some(q=>q.colourPrompt)) errors.push('final checkpoint bank prompts must be neutral');
+  if(!finFresh.some(q=>trueClusterWord(q.prompt))) errors.push('final checkpoint fresh set should include a cluster word');
+  if(!finFresh.some(q=>hasSilentH(q.prompt))) errors.push('final checkpoint fresh set should include a silent-leader word');
+  const bank = new Set(ASSESSMENT_BANK.map(x=>x.thai));
+  if(decodeGymPool(LESSONS.map(L=>L.id)).some(item=>bank.has(item.thai))) errors.push('assessment bank leaked into Decode Gym');
+  if(freshDecodeQuestions(FRESH_DECODE, 24, {mix:'maintenance'}).some(q=>bank.has(q.prompt))) errors.push('assessment bank leaked into the maintenance fresh block');
+  if(/FRESH_DECODE|ASSESSMENT_BANK/.test(String(srsDue)) || /ASSESSMENT_BANK/.test(String(startDecodeGym))) errors.push('fresh corpora must stay outside SRS and Decode Gym');
+  if(errors.length) throw new Error('Fresh-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10473,7 +10584,8 @@ function buildCheckpointQuiz(upTo){
   const types = qs.filter(q=>q.kind==='type'), others = qs.filter(q=>q.kind!=='type');
   const nType = Math.min(types.length, 6);
   const nOther = Math.min(others.length, 12 - nType);
-  return shuffle(sample(types, nType).concat(sample(others, nOther)));
+  const bankQs = freshDecodeQuestions(ASSESSMENT_BANK, upToLessonNum, {mix:'checkpoint', neutral:true});
+  return shuffleWithPairs(sample(types, nType).concat(sample(others, nOther)).concat(bankQs));
 }
 function startCheckpoint(i, opts){
   const extra = opts || {};
@@ -10539,7 +10651,7 @@ function buildPhase1CompletionQuiz(){
     thaiMechanismChoice('In ศูนย์, what does ์ do?', 'Silences the marked letter', ['Silences the marked letter','Makes a high tone','Repeats the word','Makes the vowel short'], 'In ศูนย์, ย์ is written but not pronounced; น is the ending sound.', 'ศูนย์', 'gaaran'),
     thaiMechanismChoice('Pick the word with the เ◌ิ pattern.', 'เปิด', ['เปิด','ปิด','อาหาร','ภาษา'], 'เปิด uses เ before the consonant plus ิ over it.', 'เปิด', 'vowel-order')
   ].filter(Boolean);
-  return qs;
+  return qs.concat(freshDecodeQuestions(ASSESSMENT_BANK, 24, {mix:'final', neutral:true}));
 }
 function startPhase1CompletionCheckpoint(rematch){
   const blockers = phase1CompletionBlockers();
@@ -11024,6 +11136,150 @@ function miniDecodeQuestion(w, pool){
   return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:'Mini decode: how does this read?',
     answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
 }
+/* v7.6.0 fresh-decode transfer testing: never-taught words decoded with the letter → class → tone
+   machine. Lesson quizzes (l4+) and the maintenance block draw from FRESH_DECODE with class colours;
+   mastery checkpoints and the Phase 1 completion checkpoint draw from the sealed ASSESSMENT_BANK with
+   neutral prompts - class colour appears only in the post-answer route explanation. */
+function freshDecodeRoute(item){
+  const w = Object.assign({}, item);
+  if(!monoSyllable(w)) return null;
+  const cls = firstConsonantClass(w.thai);
+  const initial = firstConsonantChar(w.thai);
+  const mark = (w.thai.match(/[่้๊๋]/) || [''])[0];
+  const liveDead = inferLiveDeadForDecode(w.thai, null);
+  const needsLength = !mark && cls === 'low' && liveDead === 'Dead';
+  const length = needsLength ? (/[ะัิึุ็]/.test(w.thai) ? 'Short' : 'Long') : 'not needed';
+  const tone = toneOf(item.tr);
+  const expected = expectedToneFromRoute(cls, mark, liveDead, length);
+  if(!initial || !cls || !expected || expected !== tone) return null;
+  return {word:w, initial, cls, mark, liveDead, length, tone};
+}
+function freshPoolAtGate(pool, upToLessonNum){
+  return (pool || []).filter(item=>lessonNum(item.gate) <= upToLessonNum && !!freshDecodeRoute(item));
+}
+function freshVowelLengthCall(thai){
+  const t = String(thai || '');
+  if(/[าีูื]/.test(t) && !/[ะัิึุ็]/.test(t)) return 'Long';
+  if(/[ะัิึุ็]/.test(t) && !/[าีูืเแโไใ]/.test(t)) return 'Short';
+  return null;
+}
+function freshRuleKey(route){
+  return route.cls + '|' + (route.mark || 'none') + '|' + route.liveDead.toLowerCase() + '|' + String(route.length).toLowerCase();
+}
+function freshRouteExplain(item, route){
+  const markText = route.mark ? toneMarkName(route.mark) : 'no mark';
+  return route.initial + ' is ' + CLS_LABEL[route.cls].toLowerCase() + ' · ' + markText + ' · ' + route.liveDead.toLowerCase() + ' syllable → ' + route.tone.toLowerCase() + ' tone. ' + item.thai + ' reads ' + item.tr + '.';
+}
+function freshPromptFields(item, opts){
+  const neutral = !!(opts && opts.neutral);
+  return {prompt:item.thai, promptBig:true, colourPrompt:!neutral, _fresh:true, axis:'fresh-decode'};
+}
+function freshReadingQuestion(item, pool, opts){
+  const route = freshDecodeRoute(item);
+  if(!route) return null;
+  const wrong = wordReadingDistractors(item, pool, 3);
+  if(wrong.length < 2) return null;
+  return Object.assign(freshPromptFields(item, opts), {
+    kind:'mcq', text:'Fresh decode: how does this read?',
+    answer:item.tr, options:shuffle([item.tr, ...wrong]),
+    _choice:'word-reading', _err:{kind:'tone', key:freshRuleKey(route)},
+    explain:freshRouteExplain(item, route)});
+}
+function freshToneQuestion(item, opts){
+  const route = freshDecodeRoute(item);
+  if(!route) return null;
+  return Object.assign(freshPromptFields(item, opts), {
+    kind:'mcq', text:'New word. Work the route: which tone?',
+    answer:route.tone, options:shuffle(TONE_NAMES.slice()),
+    _choice:'fresh-tone', _err:{kind:'tone', key:freshRuleKey(route)},
+    explain:freshRouteExplain(item, route)});
+}
+function freshLiveDeadQuestion(item, opts){
+  const route = freshDecodeRoute(item);
+  if(!route) return null;
+  return Object.assign(freshPromptFields(item, opts), {
+    kind:'mcq', text:'New word. Sound feel: live or dead?',
+    answer:route.liveDead, options:shuffle(['Live','Dead']),
+    _choice:'fresh-live-dead',
+    explain:(route.liveDead === 'Live' ? 'It rings on, so it is live. ' : 'It is cut short, so it is dead. ') + freshRouteExplain(item, route)});
+}
+function freshLengthQuestion(item, opts){
+  const answer = freshVowelLengthCall(item.thai);
+  const route = freshDecodeRoute(item);
+  if(!answer || !route) return null;
+  return Object.assign(freshPromptFields(item, opts), {
+    kind:'mcq', text:'New word. Vowel length: short or long?',
+    answer, options:shuffle(['Short','Long']),
+    _choice:'fresh-length',
+    explain:answer + ' vowel. ' + freshRouteExplain(item, route)});
+}
+function freshMechanismQuestion(item, upToLessonNum, opts){
+  const kinds = ['live-dead'];
+  if(upToLessonNum >= 13) kinds.push('tone');
+  if(freshVowelLengthCall(item.thai)) kinds.push('length');
+  const pick = sample(kinds, 1)[0];
+  if(pick === 'tone') return freshToneQuestion(item, opts);
+  if(pick === 'length') return freshLengthQuestion(item, opts);
+  return freshLiveDeadQuestion(item, opts);
+}
+/* Mixture per surface: lesson = route chain + full reading + single axis; checkpoint = chain + 2
+   readings; final = chain + 4 readings forcing >=1 cluster and >=1 silent-leader word when available;
+   maintenance = chain + 2 readings + 2 single-axis. Chain pairs stay adjacent, mechanism first. */
+function freshDecodeQuestions(pool, upToLessonNum, opts){
+  opts = opts || {};
+  const mix = opts.mix || 'lesson';
+  const avail = freshPoolAtGate(pool, upToLessonNum);
+  if(avail.length < 3) return [];
+  const want = (mix === 'final' || mix === 'maintenance') ? 5 : 3;
+  let picked;
+  if(mix === 'final'){
+    picked = [];
+    const clusters = avail.filter(x=>trueClusterWord(x.thai));
+    if(clusters.length) picked.push(sample(clusters, 1)[0]);
+    const leaders = avail.filter(x=>hasSilentH(x.thai) && !picked.includes(x));
+    if(leaders.length) picked.push(sample(leaders, 1)[0]);
+    picked = picked.concat(sample(avail.filter(x=>!picked.includes(x)), Math.max(0, want - picked.length)));
+  } else {
+    picked = sample(avail, Math.min(want, avail.length));
+  }
+  const qs = [];
+  picked.forEach((item, i)=>{
+    if(i === 0){
+      const mech = freshMechanismQuestion(item, upToLessonNum, opts);
+      const read = freshReadingQuestion(item, avail, opts);
+      if(mech && read){
+        qs.push(Object.assign({_pair:item.thai, _pairFirst:true}, mech));
+        qs.push(Object.assign({_pair:item.thai}, read));
+        return;
+      }
+    }
+    const singleAxis = (mix === 'lesson' && i === 2) || (mix === 'maintenance' && i >= 3);
+    if(singleAxis){
+      const mech = freshMechanismQuestion(item, upToLessonNum, opts);
+      if(mech){ qs.push(mech); return; }
+    }
+    const read = freshReadingQuestion(item, avail, opts);
+    if(read) qs.push(read);
+  });
+  return qs;
+}
+function shuffleWithPairs(qs){
+  const units = [];
+  for(let i=0;i<qs.length;i++){
+    const q = qs[i];
+    if(q && q._pair && q._pairFirst && qs[i+1] && qs[i+1]._pair === q._pair){ units.push([q, qs[i+1]]); i++; }
+    else units.push([q]);
+  }
+  const out = [];
+  shuffle(units).forEach(u=>u.forEach(q=>out.push(q)));
+  return out;
+}
+function startFreshDecodeBlock(){
+  const upTo = (state.done || []).reduce((m,id)=>Math.max(m, lessonNum(id)), 0);
+  const qs = freshDecodeQuestions(FRESH_DECODE, upTo, {mix:'maintenance'});
+  if(qs.length < 3){ toast('Fresh decode opens from Lesson 4.'); return; }
+  startGenericQuiz(shuffleWithPairs(qs), 'Fresh decode');
+}
 /* build per-lesson quiz: script spine + objective core-word listening; routine definitions stay out */
 function buildLessonQuiz(L){
   const glyphQs = [], classQs = [], classPickQs = [], spotQs = [];
@@ -11068,7 +11324,8 @@ function buildLessonQuiz(L){
     .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs);
   const fill = Math.max(0, 10 - guaranteed.length);
   let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
-  return shuffle(guaranteed.concat(fillers));
+  const freshQs = upToLessonNum >= 4 ? freshDecodeQuestions(FRESH_DECODE, upToLessonNum, {mix:'lesson'}) : [];
+  return shuffleWithPairs(guaranteed.concat(fillers).concat(freshQs));
 }
 function validateVocabularyContracts(){
   const roles = new Set(['core','recognition','decode']);
@@ -14186,7 +14443,8 @@ function runFullStartupValidators(){
     validateV72ShopContracts,
     validateV73ReadingMileageContracts,
     validateV74StreetReadContracts,
-    validateTimeAwareRouteContracts
+    validateTimeAwareRouteContracts,
+    validateFreshDecodeContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

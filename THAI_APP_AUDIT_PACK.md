@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.5.0`
+Current app version: `v7.6.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -204,6 +204,13 @@ v7.5.0 is the time-aware daily-route pass:
 - Keeps time display-only: no rewards, SRS, intervals, grading, leech rules, blockers, lesson gates, streaks, token economy, audio/font assets, runtime network features or service-worker cache changes.
 - Adds `validateTimeAwareRouteContracts()`.
 
+v7.6.0 is the fresh-decode transfer pass:
+
+- Ships two reserved corpora of never-taught, tone-verified real words: `FRESH_DECODE` (120, lesson quizzes l4+ and the maintenance Fresh decode block, class-coloured prompts) and the sealed `ASSESSMENT_BANK` (56, mastery checkpoints and the final completion checkpoint only, neutral prompts).
+- Serves fresh words as mechanism-first route-chain pairs, full-reading MCQs with misconception distractors, and single-axis checks; fresh tone questions wait for the Lesson 13 grid.
+- Keeps corpora outside SRS, blockers, tokens and learner state; wrong answers reuse bounded `errorProfile` buckets.
+- Adds `validateFreshDecodeContracts()` and `tools/fresh-decode-check.js`; `tools/precommit-check.js` now verifies both corpora per commit including a whole-file Thai-token freshness scan.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -211,6 +218,7 @@ v7.5.0 is the time-aware daily-route pass:
 - `icon-180.png`, `icon-192.png`, `icon-512.png` - install icons.
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
 - `tools/phase1-audit.js` - deterministic audit extractor.
+- `tools/fresh-decode-check.js` - fresh-decode corpora verifier (tone routes, decodability, freshness, supply floors).
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
@@ -239,9 +247,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.5.0`
+- app version `v7.6.0`
 - 24 lessons
-- 53 validators passing
+- 54 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

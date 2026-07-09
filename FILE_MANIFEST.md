@@ -18,7 +18,8 @@ Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v7.5.0 be
 - `CHANGELOG.md` - release and stabilisation history.
 - `README.md` - concise project summary and local/deploy instructions.
 - `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
-- `tools/precommit-check.js` - committed release gate for embedded script syntax, NFC, particle/currency policy, tone-grid transliteration and Reading-room story decodability.
+- `tools/precommit-check.js` - committed release gate for embedded script syntax, NFC, particle/currency policy, tone-grid transliteration, Reading-room story decodability and the fresh-decode corpora.
+- `tools/fresh-decode-check.js` - standalone verifier for the v7.6.0 `FRESH_DECODE` / `ASSESSMENT_BANK` corpora: tone routes, gate decodability, prerequisites, whole-file freshness scan and supply floors.
 - `tools/make-release-zip.sh` - dependency-free helper that packages tracked source from `HEAD` with `git archive`.
 - `.gitignore` - keeps generated zips and local-only artifacts out of source review.
 
@@ -85,6 +86,7 @@ For a clean current-source audit, include:
 - `README.md`
 - `tools/phase1-audit.js`
 - `tools/precommit-check.js`
+- `tools/fresh-decode-check.js`
 - `tools/make-release-zip.sh`
 - `docs/phase1_audit.md`
 - `docs/phase1_audit.json`

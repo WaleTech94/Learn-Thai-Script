@@ -1,15 +1,15 @@
-# v7.5.0 Smoke-Test Checklist
+# v7.6.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
 ## Validation Gate
 
-- Run `node tools/precommit-check.js`.
+- Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v7.5.0`, 53 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.5.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.json` reports app version `v7.6.0`, 54 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.6.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -38,8 +38,8 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.5.0)`.
-- Confirm exported backup JSON uses `appVersion: "v7.5.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.6.0)`.
+- Confirm exported backup JSON uses `appVersion: "v7.6.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## Dialog Accessibility Polish
@@ -103,7 +103,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.5.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.6.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -210,7 +210,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 · 1.0 beta (v7.5.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 · 1.0 beta (v7.6.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 
@@ -222,6 +222,15 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Write it accepts Thai keyboard return, shows the green `Correct` panel with revealed glyph, then auto-advances.
 - Capture Thai accepts Thai keyboard return and saves typed local captures only.
 - Decode Gym shows non-lesson word-reading reps, reading reveal only and no SRS creation.
+
+## Fresh Decode (v7.6.0)
+
+- Open a Lesson 4+ lesson quiz. Pass: it contains never-taught words - a two-question route chain (mechanism first, then the reading), one full reading MCQ and one single-axis check - all with class colours.
+- Answer a fresh question wrong. Pass: the rose panel explains the route (class · mark · live/dead → tone) and waits for Continue; grading behaves like any other quiz question.
+- Open a mastery checkpoint. Pass: its fresh words render in plain glyphs (no class colours) and colour appears only in the post-answer explanation.
+- Confirm no fresh word ever shows an English meaning, creates a review card or appears in Decode Gym.
+- On a completed-course state, confirm the maintenance rotation can land on `Fresh decode` and serves five words with mixed question shapes.
+- Before Lesson 13, confirm fresh questions ask live/dead, vowel length or reading - never the tone name.
 
 ## Offline And Weak Network
 
