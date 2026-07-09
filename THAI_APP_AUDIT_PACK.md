@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.6.0`
+Current app version: `v7.7.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -211,6 +211,13 @@ v7.6.0 is the fresh-decode transfer pass:
 - Keeps corpora outside SRS, blockers, tokens and learner state; wrong answers reuse bounded `errorProfile` buckets.
 - Adds `validateFreshDecodeContracts()` and `tools/fresh-decode-check.js`; `tools/precommit-check.js` now verifies both corpora per commit including a whole-file Thai-token freshness scan.
 
+v7.7.0 is the tone colour-fade pass:
+
+- Fades taught-word tone prompts to plain glyphs in lesson quizzes, checkpoints, bosses and the final checkpoint from Unit C; colour returns in post-answer feedback; the class badge stays behind `TONE_FADE_KEEPS_BADGE`.
+- Adds a lesson-quiz-only colour-return second attempt (recovery counts for the lesson score; gates one-shot; first miss always logs diagnostics).
+- Guarantees one tone question per Unit C+ lesson quiz build.
+- Leaves review cards, tone drills, mixed review, Quick decode and all v7.6.0 fresh/bank behaviour unchanged; adds `validateV77ColourFadeContracts()`.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -247,9 +254,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.6.0`
+- app version `v7.7.0`
 - 24 lessons
-- 54 validators passing
+- 55 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.7.0 - 2026-07-10
+
+- Added the tone colour fade: from Unit C (Lesson 13) taught-word tone questions in lesson quizzes, mastery checkpoints, unit bosses and the Phase 1 completion checkpoint render plain uncoloured Thai prompts via a new `neutralPrompt` render flag; class colours return in the post-answer feedback (`revealClassPrompt` recolours the settled prompt). Pre-Unit-C surfaces keep colours.
+- Kept the class badge chip on faded tone prompts by owner decision, behind a single `TONE_FADE_KEEPS_BADGE` flip constant (contract-guarded) so a future badge-drop pass is a one-line change.
+- Added the colour-return retry, lesson quizzes only: a wrong first attempt on a faded tone question plays the wrong sound, resets the combo, logs `errorProfile`/`confs` diagnostics, then re-presents the same question once with class colours restored and the missed option disabled. A second-attempt correct counts for the lesson score (owner decision: lessons lenient); a second miss resolves as a normal wrong. Checkpoints, bosses and the final stay one-shot per question.
+- Guaranteed one tone question per Unit C+ lesson quiz build. Previously tone questions were filler-sampled and appeared in 0 of 100 builds for most l13+ lessons, which would have made the fade and retry invisible; the guarantee replaces one filler slot, keeping quiz length unchanged.
+- Out of scope and unchanged: daily SRS review cards and `a:` tone axis cards, Leech clinic, tone-rule trainer, Tone sprint, tone listening, mixed review, Quick decode, and all v7.6.0 fresh/bank question behaviour. v7.6.0 assessment-bank prompts now share the `neutralPrompt` flag so they also regain colour after answering.
+- Added `validateV77ColourFadeContracts()` (fade boundaries per surface, retry flags, per-build tone-question guarantee, badge presence, drill/review exclusions, renderer wiring), registered it in startup validation and `tools/phase1-audit.js`, and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json` (55 validators passing).
+- v7.7.0 adds no new required learner state key; the fade and retry are prompt presentation and in-session quiz-player state only. No curriculum, SRS-interval, grading-elsewhere, leech, blocker, lesson-gate-threshold, token-economy, audio/font, runtime-network or service-worker-cache change.
+
 ## v7.6.0 - 2026-07-09
 
 - Added fresh-decode transfer testing so objective surfaces certify decoding of never-taught words, not word memory. Two reserved corpora ship as source data: `FRESH_DECODE` (120 real monosyllables, gates l4-l24) and the sealed `ASSESSMENT_BANK` (56 words, >=8 per checkpoint window) - zero overlap with lesson words, Decode Gym, stories or any other Thai token in the app.

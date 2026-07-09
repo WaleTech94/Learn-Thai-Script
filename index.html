@@ -1219,7 +1219,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.6.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.7.0)</span>
       </div>
     </header>
 
@@ -2988,8 +2988,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.6.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.6.0)';
+const APP_VERSION = 'v7.7.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.7.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -6491,6 +6491,7 @@ function classColourPromptHtml(q){
   if(q.fontShockPrompt) return `<span class="font-sample ${fontShockClass(q.prompt)}">${classColourThaiHtml(q.prompt)}</span>`;
   const text = String(q.text||'');
   if(!q.prompt || /Which class\?/.test(text) || /^Pick the .* class consonant/.test(text)) return q.prompt ? esc(q.prompt) : '';
+  if(q.neutralPrompt) return esc(q.prompt);   // v7.7.0 colour fade: plain glyphs before answer; colour returns in feedback
   if(q.colourPrompt || (/[ก-ฮ]/.test(String(q.prompt)) && !q._choice)) return classColourThaiHtml(q.prompt);
   return esc(q.prompt);
 }
@@ -6751,10 +6752,13 @@ const EARLY_TONE_GATES = {
 };
 function toneGate(w){ return EARLY_TONE_GATES[w.thai] || 13; }
 function toneTaughtBy(w, upToLessonNum){ return monoSyllable(w) && toneGate(w) <= upToLessonNum; }
-function toneQuestionText(w){
+/* v7.7.0 owner decision: the class badge chip stays visible on faded tone prompts. Flip to false
+   to drop the badge post-fade and make class recall fully load-bearing (one-line change + contract). */
+const TONE_FADE_KEEPS_BADGE = true;
+function toneQuestionText(w, noBadge){
   const gate = toneGate(w), tone = toneOf(w.tr);
   const marked = /[่้๊๋]/.test(w.thai);
-  const badge = wordClassBadgeHtml(w);
+  const badge = noBadge ? '' : wordClassBadgeHtml(w);
   if(gate <= 2 && tone === 'Mid') return (badge ? badge + ' ' : '') + w.thai + ' has no tone mark. What tone do we read here?';
   if(gate === 3 && tone === 'Low') return (badge || 'Mid class') + ' + dead syllable: which tone?';
   if(gate === 6 && tone === 'Rising') return (badge || 'High class') + ' + plain live: which tone?';
@@ -6784,11 +6788,19 @@ function toneQuestionExplain(w){
   if(gate === 11 && tone === 'High') return (initial ? initial + ' is ' + classText + '. ' : '') + (liveDead ? w.thai + ' is ' + liveDead.toLowerCase() + '. ' : '') + classText + ' + dead-short gives high tone.';
   return (initial ? initial + ' is ' + classText + '. ' : '') + (finalText ? w.thai + ' is dead because ' + finalText + '. ' : '') + lengthText + ' Use class + live/dead to get ' + tone.toLowerCase() + ' tone.';
 }
-function toneQuestion(w, upToLessonNum){
+function toneQuestion(w, upToLessonNum, opts){
   if(!toneTaughtBy(w, upToLessonNum)) return null;
-  return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:toneQuestionText(w), answer:toneOf(w.tr),
+  opts = opts || {};
+  const fade = !!opts.fade;   // v7.7.0 colour fade: plain prompt, colour returns in feedback (and on the lesson retry)
+  const q = {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:!fade,
+    text:toneQuestionText(w, fade && !TONE_FADE_KEEPS_BADGE), answer:toneOf(w.tr),
     options:shuffle(TONE_NAMES.slice()), explain:toneQuestionExplain(w),
     _err:{kind:'tone', key:ruleCellKey(w)}};
+  if(fade){
+    q.neutralPrompt = true;
+    if(opts.retry) q.retryWithColour = true;   // lesson quizzes only: one colour-assisted second attempt
+  }
+  return q;
 }
 function toneMarkName(mark){
   return {'่':'mai ek ่','้':'mai tho ้','๊':'mai tri ๊','๋':'mai chattawa ๋'}[mark] || 'no mark';
@@ -8424,8 +8436,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
+  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8597,8 +8609,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
+  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8692,8 +8704,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
+  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8762,8 +8774,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v7.6.0') errors.push('internal app version should be v7.6.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.6.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.6.0)');
+  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8821,6 +8833,54 @@ function validateFreshDecodeContracts(){
   if(freshDecodeQuestions(FRESH_DECODE, 24, {mix:'maintenance'}).some(q=>bank.has(q.prompt))) errors.push('assessment bank leaked into the maintenance fresh block');
   if(/FRESH_DECODE|ASSESSMENT_BANK/.test(String(srsDue)) || /ASSESSMENT_BANK/.test(String(startDecodeGym))) errors.push('fresh corpora must stay outside SRS and Decode Gym');
   if(errors.length) throw new Error('Fresh-decode contract failed:\n' + errors.join('\n'));
+  return true;
+}
+/* v7.7.0: taught-word tone questions fade to plain glyphs in quizzes/gates from Unit C; lesson
+   quizzes give one colour-assisted retry; review cards and drills keep colours. */
+function validateV77ColourFadeContracts(){
+  const errors = [];
+  const sampleWord = findWord('ครับ');
+  const plain = toneQuestion(sampleWord, 24);
+  if(!plain || !plain.colourPrompt || plain.neutralPrompt || plain.retryWithColour) errors.push('default tone questions (review/drills) must stay class-coloured with no retry');
+  const faded = toneQuestion(sampleWord, 24, {fade:true});
+  if(!faded || faded.colourPrompt || !faded.neutralPrompt || faded.retryWithColour) errors.push('faded tone questions must be neutral, colourPrompt off, no retry unless asked');
+  const retry = toneQuestion(sampleWord, 24, {fade:true, retry:true});
+  if(!retry || !retry.neutralPrompt || !retry.retryWithColour) errors.push('lesson faded tone questions must carry the colour-return retry flag');
+  if(TONE_FADE_KEEPS_BADGE !== true) errors.push('TONE_FADE_KEEPS_BADGE flipped: update this contract and the badge copy deliberately, not by accident');
+  if(TONE_FADE_KEEPS_BADGE && !/classchip/.test(String(faded.text))) errors.push('owner decision: the class badge chip stays visible on faded tone prompts');
+  const isTaughtToneQ = q=>q && !q._fresh && q._err && q._err.kind === 'tone' && (q.options||[]).length === TONE_NAMES.length && TONE_NAMES.includes(q.answer);
+  LESSONS.forEach(L=>{
+    const n = lessonNum(L.id);
+    const eligible = L.words.some(w=>toneQuestion(w, n));
+    for(let t=0;t<6;t++){
+      const toneQs = buildLessonQuiz(L).filter(isTaughtToneQ);
+      if(n >= 13 && eligible && !toneQs.length) errors.push(L.id + ' Unit C+ lesson quiz should guarantee a faded tone question');
+      toneQs.forEach(q=>{
+        if(n >= 13 && (!q.neutralPrompt || !q.retryWithColour)) errors.push(L.id + ' tone question should be faded with retry from Unit C');
+        if(n < 13 && (q.neutralPrompt || q.retryWithColour || !q.colourPrompt)) errors.push(L.id + ' tone question should keep colours before Unit C');
+      });
+    }
+  });
+  for(let t=0;t<20;t++){
+    buildCheckpointQuiz(14).filter(isTaughtToneQ).forEach(q=>{
+      if(!q.neutralPrompt || q.retryWithColour) errors.push('l13+ checkpoint tone questions must be neutral and one-shot');
+    });
+    buildCheckpointQuiz(5).filter(isTaughtToneQ).forEach(q=>{
+      if(q.neutralPrompt || !q.colourPrompt) errors.push('pre-Unit-C checkpoint tone questions must keep colours');
+    });
+    buildBossQuiz('D').filter(isTaughtToneQ).forEach(q=>{
+      if(!q.neutralPrompt || q.retryWithColour) errors.push('Unit D boss tone questions must be neutral and one-shot');
+    });
+  }
+  const finTone = buildPhase1CompletionQuiz().filter(isTaughtToneQ);
+  if(!finTone.length || finTone.some(q=>!q.neutralPrompt || q.retryWithColour)) errors.push('final checkpoint tone questions must be neutral and one-shot');
+  toneRuleTrainerPool(LESSONS.map(L=>L.id)).slice(0, 8).forEach(q=>{
+    if(q.neutralPrompt || q.retryWithColour || !q.colourPrompt) errors.push('tone-rule trainer questions must keep colours (drills are out of scope)');
+  });
+  if(!String(renderQuizQ).includes('retryWithColour') || !String(renderQuizQ).includes('_retryWrongPick')) errors.push('renderQuizQ should implement the colour-return retry');
+  if(!String(revealClassPrompt).includes('neutralPrompt')) errors.push('settled neutral prompts should regain class colour in feedback');
+  if(!String(classColourPromptHtml).includes('neutralPrompt')) errors.push('prompt renderer should honour neutralPrompt over auto-colouring');
+  if(errors.length) throw new Error('V7.7 colour-fade contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10541,7 +10601,7 @@ function buildBossQuiz(u){
   words.forEach(w=>{
     const wrong = wordReadingDistractors(w, allWordsPool, 3);
     qs.push({kind:'mcq', prompt:w.thai, colourPrompt:true, text:'How does this read?', answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading'});
-    const tq = toneQuestion(w, upToLessonNum);
+    const tq = toneQuestion(w, upToLessonNum, upToLessonNum >= 13 ? {fade:true} : null);
     if(tq) qs.push(tq);
   });
   return sample(qs, Math.min(12, qs.length));
@@ -10577,7 +10637,7 @@ function buildCheckpointQuiz(upTo){
   });
   words.forEach(w=>{
     // pure letters (v2.27): no word-meaning recall - keep the read-the-tone check (the letter→class→tone payoff)
-    const tq = toneQuestion(w, upToLessonNum);
+    const tq = toneQuestion(w, upToLessonNum, upToLessonNum >= 13 ? {fade:true} : null);   // v7.7.0: gates go neutral from Unit C, one-shot
     if(tq) qs.push(tq);
   });
   // gate certifies READING the script: sound-recall (type it) is the backbone - up to half the 12 - with class + tone MCQ filling out
@@ -10640,9 +10700,9 @@ function buildPhase1CompletionQuiz(){
     finalSoundQuestion(findWord('พูด')),
     liveDeadQuestion(findWord('มาก')),
     vowelLengthQuestion(findWord('รัก')),
-    taggedQuestion(toneQuestion(findWord('ได้'), 24), 'tone-mark'),
-    taggedQuestion(toneQuestion(findWord('ครับ'), 24), 'tone'),
-    taggedQuestion(toneQuestion(findWord('หมา'), 24), 'tone'),
+    taggedQuestion(toneQuestion(findWord('ได้'), 24, {fade:true}), 'tone-mark'),
+    taggedQuestion(toneQuestion(findWord('ครับ'), 24, {fade:true}), 'tone'),
+    taggedQuestion(toneQuestion(findWord('หมา'), 24, {fade:true}), 'tone'),
     silentLeaderClassQuestion(),
     clusterQuestion(findWord('ครับ')),
     clusterQuestion(findWord('จริง')),
@@ -11172,7 +11232,7 @@ function freshRouteExplain(item, route){
 }
 function freshPromptFields(item, opts){
   const neutral = !!(opts && opts.neutral);
-  return {prompt:item.thai, promptBig:true, colourPrompt:!neutral, _fresh:true, axis:'fresh-decode'};
+  return {prompt:item.thai, promptBig:true, colourPrompt:!neutral, neutralPrompt:neutral, _fresh:true, axis:'fresh-decode'};
 }
 function freshReadingQuestion(item, pool, opts){
   const route = freshDecodeRoute(item);
@@ -11308,7 +11368,7 @@ function buildLessonQuiz(L){
   const liveDeadQs = L.words.map(w=>liveDeadQuestion(w)).filter(Boolean);
   const lengthQs = L.words.map(w=>vowelLengthQuestion(w)).filter(Boolean);
   const clusterQs = L.words.map(w=>clusterQuestion(w)).filter(Boolean);
-  const toneQs = L.words.map(w=>toneQuestion(w, upToLessonNum)).filter(Boolean);
+  const toneQs = L.words.map(w=>toneQuestion(w, upToLessonNum, upToLessonNum >= 13 ? {fade:true, retry:true} : null)).filter(Boolean);
   // Two objective listening checks per lesson: core vocabulary only, heard word → Thai script.
   // These feed separate listening evidence without turning the lesson quiz into a definition test.
   const core = lessonCoreWords(L);
@@ -11318,10 +11378,13 @@ function buildLessonQuiz(L){
       answer:w.thai, options:shuffle([w.thai,...wrong]), thaiOpts:true, colourThaiOpts:true, _choice:'word-thai', explain:w.tr, axis:'listen'};
   });
   const structureQs = [hiddenQs[0], orderQs[0], liveDeadQs[0], lengthQs[0], clusterQs[0]].filter(Boolean);
-  const guaranteed = classQs.concat(finalJobQs).concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(L.extraQuiz||[]);
+  // v7.7.0: from Unit C one faded tone question is guaranteed per quiz - the colour fade and its
+  // lesson retry must actually surface, not depend on filler sampling luck.
+  const guaranteedTone = upToLessonNum >= 13 && toneQs.length ? sample(toneQs, 1) : [];
+  const guaranteed = classQs.concat(finalJobQs).concat(listenQs).concat(finalQs.slice(0,1)).concat(structureQs).concat(guaranteedTone).concat(L.extraQuiz||[]);
   const scriptQs = glyphQs.concat(spotQs).concat(readQs).concat(classPickQs)
     .concat(finalQs.slice(1)).concat(hiddenQs.slice(1)).concat(orderQs.slice(1)).concat(liveDeadQs.slice(1))
-    .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs);
+    .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs.filter(q=>!guaranteedTone.includes(q)));
   const fill = Math.max(0, 10 - guaranteed.length);
   let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
   const freshQs = upToLessonNum >= 4 ? freshDecodeQuestions(FRESH_DECODE, upToLessonNum, {mix:'lesson'}) : [];
@@ -11840,6 +11903,10 @@ function revealClassPrompt(q, stage){
   const cls = isClassFeedbackQuestion(q) ? classKeyFromLabel(q.answer) : null;
   const big = cls && stage ? stage.querySelector('.q-big') : null;
   if(big) big.classList.add('class-revealed', cls);
+  if(q.neutralPrompt && stage){
+    const neutralBig = stage.querySelector('.q-big');
+    if(neutralBig) neutralBig.innerHTML = classColourThaiHtml(q.prompt);   // colour returns once the answer is settled
+  }
 }
 function renderQuizQ(q, onDone, counterLabel, timedSecs){
   const stage = el('stage');
@@ -11849,10 +11916,11 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
       <div class="eyebrow">${counterLabel||''}</div>
       ${q.prompt ? `<div class="q-big">${classColourPromptHtml(q)}</div>` : ''}
       <div class="q-text">${q.text}</div>
+      ${q._retryNote ? `<div class="q-text sub">${esc(q._retryNote)}</div>` : ''}
       ${q.say ? `<div class="audio-inline">${speakBtn(q.say, q.sayLabel || ('Hear: ' + q.say))}${q.sayLabel?`<span class="audio-caption">${esc(q.sayLabel)}</span>`:''}</div>` : ''}
     </div>
     <div class="q-options${useSingleColumnQuizOptions(q) ? ' single-col' : ''}">
-      ${q.options.map(o=>`<button class="${quizOptionClass(q, String(o))}">${quizOptionHtml(q, String(o))}</button>`).join('')}
+      ${q.options.map(o=>`<button class="${quizOptionClass(q, String(o))}${q._retryWrongPick===String(o) ? ' wrong' : ''}"${q._retryWrongPick===String(o) ? ' disabled' : ''}>${quizOptionHtml(q, String(o))}</button>`).join('')}
     </div>
     <div class="q-feedback" id="q-fb"></div>`;
   if(q.autoplay && q.say) setTimeout(()=>speak(q.say), 350);
@@ -11881,6 +11949,24 @@ function renderQuizQ(q, onDone, counterLabel, timedSecs){
       saveState();
     }
     if(!ok) recordQuizError(q);
+    /* v7.7.0 colour-return retry (lesson quizzes only): a wrong first attempt on a faded tone
+       question restores class colours and re-presents the same question once before revealing.
+       The first miss is logged for diagnostics; a second-attempt correct counts for the quiz score
+       (owner decision: lessons lenient, gates one-shot). */
+    if(!ok && q.retryWithColour && !q._retryUsed && !timedOut){
+      comboTrack(player, false);
+      renderComboChip();
+      sfxWrong();
+      opts.forEach(x=>{ x.disabled = true; });
+      if(pickedBtn) pickedBtn.classList.add('wrong');
+      const retryQ = Object.assign({}, q, {
+        neutralPrompt:false, colourPrompt:true, _retryUsed:true,
+        _retryWrongPick:pickedBtn ? String(pickedBtn.textContent) : '',
+        _retryNote:'Not yet. Here is the class colour — read the route once more.'
+      });
+      setTimeout(()=>renderQuizQ(retryQ, onDone, counterLabel, timedSecs), 700);
+      return;
+    }
     const combo = comboTrack(player, ok);
     renderComboChip();
     if(ok){ sfxCorrect(combo); if(comboMilestone(combo)) sfxMilestone(); } else sfxWrong();
@@ -14444,7 +14530,8 @@ function runFullStartupValidators(){
     validateV73ReadingMileageContracts,
     validateV74StreetReadContracts,
     validateTimeAwareRouteContracts,
-    validateFreshDecodeContracts
+    validateFreshDecodeContracts,
+    validateV77ColourFadeContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
