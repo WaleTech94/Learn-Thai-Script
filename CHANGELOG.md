@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v7.8.0 - 2026-07-10
+
+- Added the lesson-quiz miss loop: first-attempt misses now cycle at the end of the session ("Clear your misses · x of N") until each is answered correctly once. Quiz score, listening evidence and lesson completion still come from the first pass; re-encounters are resolution practice only. Gates, review sessions and drills are unchanged and stay one-shot.
+- Added anti-guess structure chains to gates. Mastery checkpoints and unit bosses each gain one atomic pair per build - a 2-option live/dead or vowel-length question first, then "so which tone?" on the same word where the tone rule is taught (respecting the v7.7 fade; never the lesson retry), else the full reading MCQ. The final completion checkpoint's two standalone 2-option singles (มาก live/dead, รัก length) become route chains, leaving no standalone coin-flip questions in the final. Pairs stay atomic through shuffling and sampling.
+- Spent the v6.1 weakness diagnostics on required surfaces: one lesson-quiz filler slot per build is now selected weakness-first from `errorProfile`/lapse/confusion scores (empty profiles degrade to plain random), and the maintenance Fresh decode block weights its five-word sample by `glyphWeaknessSum`, mirroring Decode Gym.
+- Added `validateV78RequiredLoopContracts()` (loop present in lesson player only, chain atomicity and mechanism-first ordering across all gate builds, tone-link gating, no standalone 2-option singles in the final, no retry leakage into gates, weakness wiring, empty-profile robustness), registered it in startup validation and `tools/phase1-audit.js`, and regenerated `docs/phase1_audit.md` / `docs/phase1_audit.json` (56 validators passing).
+- v7.8.0 adds no new required learner state key; the miss loop is in-session player state, chains are quiz generation only, and weakness slots re-rank already-eligible questions. No curriculum, SRS-interval, grading, leech, blocker, lesson-gate-threshold, token-economy, audio/font, runtime-network or service-worker-cache change.
+
 ## v7.7.0 - 2026-07-10
 
 - Added the tone colour fade: from Unit C (Lesson 13) taught-word tone questions in lesson quizzes, mastery checkpoints, unit bosses and the Phase 1 completion checkpoint render plain uncoloured Thai prompts via a new `neutralPrompt` render flag; class colours return in the post-answer feedback (`revealClassPrompt` recolours the settled prompt). Pre-Unit-C surfaces keep colours.

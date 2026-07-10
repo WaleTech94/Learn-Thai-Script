@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.7.0`
+Current app version: `v7.8.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -218,6 +218,13 @@ v7.7.0 is the tone colour-fade pass:
 - Guarantees one tone question per Unit C+ lesson quiz build.
 - Leaves review cards, tone drills, mixed review, Quick decode and all v7.6.0 fresh/bank behaviour unchanged; adds `validateV77ColourFadeContracts()`.
 
+v7.8.0 is the required-surface mastery-loop pass:
+
+- Lesson quizzes cycle first-attempt misses until each resolves correctly once; scoring stays first-attempt; gates/review/drills unchanged.
+- Checkpoints and bosses gain one atomic structure chain per build; the final checkpoint's 2-option singles become chains; pairs survive shuffling and sampling.
+- One lesson-quiz filler slot and the maintenance Fresh decode sample are weakness-first from existing diagnostics; empty profiles degrade to random.
+- Adds `validateV78RequiredLoopContracts()`.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -254,9 +261,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.7.0`
+- app version `v7.8.0`
 - 24 lessons
-- 55 validators passing
+- 56 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

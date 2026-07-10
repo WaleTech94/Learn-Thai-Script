@@ -1219,7 +1219,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.7.0)</span>
+        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.8.0)</span>
       </div>
     </header>
 
@@ -2988,8 +2988,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.7.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.7.0)';
+const APP_VERSION = 'v7.8.0';
+const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.8.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -8436,8 +8436,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
+  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8609,8 +8609,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
+  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8704,8 +8704,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
+  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8774,8 +8774,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v7.7.0') errors.push('internal app version should be v7.7.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.7.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.7.0)');
+  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8881,6 +8881,56 @@ function validateV77ColourFadeContracts(){
   if(!String(revealClassPrompt).includes('neutralPrompt')) errors.push('settled neutral prompts should regain class colour in feedback');
   if(!String(classColourPromptHtml).includes('neutralPrompt')) errors.push('prompt renderer should honour neutralPrompt over auto-colouring');
   if(errors.length) throw new Error('V7.7 colour-fade contract failed:\n' + errors.join('\n'));
+  return true;
+}
+/* v7.8.0: lesson quizzes resolve their own misses, gate structure checks resist coin-flip guessing
+   via chained pairs, and required surfaces spend the weakness diagnostics they collect. */
+function validateV78RequiredLoopContracts(){
+  const errors = [];
+  const lessonStep = String(renderLessonStep);
+  if(!lessonStep.includes('missLoop') || !lessonStep.includes('Clear your misses')) errors.push('lesson quizzes should cycle first-attempt misses until resolved');
+  if(String(nextGenericQ).includes('missLoop')) errors.push('the miss loop is lesson-quiz only; gates, review and drills stay one-shot');
+  const isChainQ = q=>String(q._pair||'').startsWith('chain:');
+  const checkPairs = (qs, label, expectPair)=>{
+    const chain = qs.filter(isChainQ);
+    if(expectPair && chain.length !== 2) errors.push(label + ' should contain exactly one structure chain pair, found ' + chain.length + ' questions');
+    for(let i=0;i<qs.length;i++){
+      const q = qs[i];
+      if(q._pairFirst && isChainQ(q)){
+        const follow = qs[i+1];
+        if(!follow || follow._pair !== q._pair) errors.push(label + ' chain pair split by shuffle/sampling');
+        if((q.options||[]).length !== 2) errors.push(label + ' chain should ask the 2-option mechanism first');
+        if(follow && follow.retryWithColour) errors.push(label + ' gate chain must stay one-shot (no colour retry)');
+        if(follow && TONE_NAMES.includes(follow.answer)){
+          const w = findWord(follow.prompt);
+          if(w && !toneTaughtBy(w, 24)) errors.push(label + ' chain tone link on an untaught tone word');
+        } else if(follow && follow._choice !== 'word-reading'){
+          errors.push(label + ' chain second link should be tone or the full reading');
+        }
+      }
+    }
+  };
+  [2,5,8,11,14,17,20,23].forEach(idx=>{
+    for(let t=0;t<4;t++) checkPairs(buildCheckpointQuiz(idx), 'checkpoint ' + idx, true);
+  });
+  ['A','B','C','D'].forEach(u=>{
+    for(let t=0;t<3;t++) checkPairs(buildBossQuiz(u), 'boss ' + u, true);
+  });
+  const fin = buildPhase1CompletionQuiz();
+  const finChain = fin.filter(isChainQ);
+  if(finChain.length !== 4) errors.push('final checkpoint should carry two structure chains (live/dead and length), found ' + finChain.length + ' questions');
+  checkPairs(fin, 'final checkpoint', false);
+  if(fin.some(q=>(q.options||[]).length === 2 && !q._pair && ['Live','Dead','Short','Long'].includes(q.answer))) errors.push('final checkpoint should have no standalone 2-option structure singles');
+  // second-link tone gating per checkpoint stage: pre-l13 gates must never serve a neutral tone link
+  buildCheckpointQuiz(5).filter(isChainQ).forEach(q=>{
+    if(TONE_NAMES.includes(q.answer) && q.neutralPrompt) errors.push('pre-Unit-C gate chain tone link should keep colours');
+  });
+  if(!String(buildLessonQuiz).includes('weightedWeakSample')) errors.push('lesson quizzes should spend errorProfile diagnostics on one revenge filler slot');
+  if(!String(freshDecodeQuestions).includes('glyphWeaknessSum')) errors.push('the maintenance fresh block should weight sampling by glyph weakness');
+  LESSONS.slice(0, 3).forEach(L=>{
+    if(!buildLessonQuiz(L).length) errors.push(L.id + ' quiz should still build with an empty error profile');
+  });
+  if(errors.length) throw new Error('V7.8 required-loop contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10604,7 +10654,8 @@ function buildBossQuiz(u){
     const tq = toneQuestion(w, upToLessonNum, upToLessonNum >= 13 ? {fade:true} : null);
     if(tq) qs.push(tq);
   });
-  return sample(qs, Math.min(12, qs.length));
+  const chain = gateStructureChain(words, upToLessonNum);   // v7.8: added after sampling so the pair stays atomic
+  return shuffleWithPairs(sample(qs, Math.min(12, qs.length)).concat(chain));
 }
 function startBoss(u){
   state.boss[u] = state.boss[u] || {};
@@ -10645,7 +10696,8 @@ function buildCheckpointQuiz(upTo){
   const nType = Math.min(types.length, 6);
   const nOther = Math.min(others.length, 12 - nType);
   const bankQs = freshDecodeQuestions(ASSESSMENT_BANK, upToLessonNum, {mix:'checkpoint', neutral:true});
-  return shuffleWithPairs(sample(types, nType).concat(sample(others, nOther)).concat(bankQs));
+  const chain = gateStructureChain(words, upToLessonNum);   // v7.8: one anti-guess structure chain per gate
+  return shuffleWithPairs(sample(types, nType).concat(sample(others, nOther)).concat(bankQs).concat(chain));
 }
 function startCheckpoint(i, opts){
   const extra = opts || {};
@@ -10698,8 +10750,9 @@ function buildPhase1CompletionQuiz(){
     taggedQuestion(classFromMemoryQuestion('ก'), 'class'),
     finalJobQuestion('บ'),
     finalSoundQuestion(findWord('พูด')),
-    liveDeadQuestion(findWord('มาก')),
-    vowelLengthQuestion(findWord('รัก')),
+    // v7.8: the two 2-option structure singles become route chains - mechanism, then the tone it produces
+    ...(structureChainPair(findWord('มาก'), 24, LESSONS.flatMap(L=>L.words), 'live-dead') || []),
+    ...(structureChainPair(findWord('รัก'), 24, LESSONS.flatMap(L=>L.words), 'length') || []),
     taggedQuestion(toneQuestion(findWord('ได้'), 24, {fade:true}), 'tone-mark'),
     taggedQuestion(toneQuestion(findWord('ครับ'), 24, {fade:true}), 'tone'),
     taggedQuestion(toneQuestion(findWord('หมา'), 24, {fade:true}), 'tone'),
@@ -11101,10 +11154,24 @@ function renderLessonStep(){
     const q = p.quiz[p.qIdx];
     renderQuizQ(q, (ok)=>{
       if(ok) p.correct++;
+      else (p.missLoop = p.missLoop || []).push(q);   // v7.8: first-attempt misses resolve before the lesson ends
       if(q.axis === 'listen') pushSkillListen(ok);
       p.qIdx++; p.i++;
       renderLessonStep();
     }, `Question ${p.qIdx+1} of ${p.quiz.length}`);
+    return;
+  }
+  // v7.8 miss loop (lesson quizzes only): cycle first-attempt misses until each is answered
+  // correctly once. Score, listening evidence and lesson completion come from the first pass;
+  // these re-encounters are resolution practice, not grading.
+  else if(p.missLoop && p.missLoop.length){
+    p.missLoopTotal = p.missLoopTotal || p.missLoop.length;
+    const q = p.missLoop[0];
+    renderQuizQ(q, (ok)=>{
+      if(ok) p.missLoop.shift();
+      else p.missLoop.push(p.missLoop.shift());
+      renderLessonStep();
+    }, `Clear your misses · ${p.missLoopTotal - p.missLoop.length + 1} of ${p.missLoopTotal}`);
     return;
   }
   // result
@@ -11195,6 +11262,34 @@ function miniDecodeQuestion(w, pool){
   if(wrong.length < 2) return null;
   return {kind:'mcq', prompt:w.thai, promptBig:true, colourPrompt:true, text:'Mini decode: how does this read?',
     answer:w.tr, options:shuffle([w.tr,...wrong]), _choice:'word-reading', explain:w.tr};
+}
+/* v7.8.0 gate structure chains: a 2-option mechanism question (live/dead or vowel length) is a 50%
+   coin flip on its own, so in gates it chains into its consequence on the same word - "so which
+   tone?" where the tone rule is taught, else the full reading. Pairs are atomic and mechanism-first. */
+function structureChainPair(w, upToLessonNum, pool, forceKind){
+  if(!w) return null;
+  const mechs = [];
+  if(forceKind !== 'length'){ const ld = liveDeadQuestion(w); if(ld) mechs.push(ld); }
+  if(forceKind !== 'live-dead'){ const vl = vowelLengthQuestion(w); if(vl) mechs.push(vl); }
+  const mech = mechs.length ? sample(mechs, 1)[0] : null;
+  if(!mech) return null;
+  let follow = null;
+  if(toneTaughtBy(w, upToLessonNum)){
+    follow = toneQuestion(w, upToLessonNum, upToLessonNum >= 13 ? {fade:true} : null);
+  }
+  if(!follow) follow = miniDecodeQuestion(w, pool || []);
+  if(!follow) return null;
+  return [
+    Object.assign({_pair:'chain:' + w.thai, _pairFirst:true, axis:'structure-chain'}, mech),
+    Object.assign({_pair:'chain:' + w.thai, axis:'structure-chain'}, follow)
+  ];
+}
+function gateStructureChain(words, upToLessonNum){
+  for(const w of shuffle((words || []).slice())){
+    const pair = structureChainPair(w, upToLessonNum, words);
+    if(pair) return pair;
+  }
+  return [];
 }
 /* v7.6.0 fresh-decode transfer testing: never-taught words decoded with the letter → class → tone
    machine. Lesson quizzes (l4+) and the maintenance block draw from FRESH_DECODE with class colours;
@@ -11299,6 +11394,9 @@ function freshDecodeQuestions(pool, upToLessonNum, opts){
     const leaders = avail.filter(x=>hasSilentH(x.thai) && !picked.includes(x));
     if(leaders.length) picked.push(sample(leaders, 1)[0]);
     picked = picked.concat(sample(avail.filter(x=>!picked.includes(x)), Math.max(0, want - picked.length)));
+  } else if(mix === 'maintenance'){
+    // v7.8: the daily maintenance block surfaces the learner's shakiest letters first (Decode Gym precedent)
+    picked = weightedWeakSample(avail, Math.min(want, avail.length), item=>glyphWeaknessSum(item.thai));
   } else {
     picked = sample(avail, Math.min(want, avail.length));
   }
@@ -11387,6 +11485,15 @@ function buildLessonQuiz(L){
     .concat(lengthQs.slice(1)).concat(clusterQs.slice(1)).concat(toneQs.filter(q=>!guaranteedTone.includes(q)));
   const fill = Math.max(0, 10 - guaranteed.length);
   let fillers = sample(scriptQs, Math.min(fill, scriptQs.length));
+  // v7.8 revenge slot: one filler targets the learner's weakest eligible item from errorProfile
+  // diagnostics (v6.1 machinery). Empty profiles score 0 everywhere and degrade to plain random.
+  if(fillers.length){
+    const revenge = weightedWeakSample(scriptQs, 1, q=>{
+      const tag = quizErrorTag(q);
+      return tag ? weaknessScore(tag.kind, tag.key) : 0;
+    })[0];
+    if(revenge && !fillers.includes(revenge)) fillers[0] = revenge;
+  }
   const freshQs = upToLessonNum >= 4 ? freshDecodeQuestions(FRESH_DECODE, upToLessonNum, {mix:'lesson'}) : [];
   return shuffleWithPairs(guaranteed.concat(fillers).concat(freshQs));
 }
@@ -14531,7 +14638,8 @@ function runFullStartupValidators(){
     validateV74StreetReadContracts,
     validateTimeAwareRouteContracts,
     validateFreshDecodeContracts,
-    validateV77ColourFadeContracts
+    validateV77ColourFadeContracts,
+    validateV78RequiredLoopContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
