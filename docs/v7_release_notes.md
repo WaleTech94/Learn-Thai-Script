@@ -1,4 +1,12 @@
-# v7 Release Notes
+# Phase 1 Release Notes (v7-v8)
+
+## Phase 1 complete · v8.0.0
+
+`v8.0.0` promotes the completed Phase 1 course out of its generic beta presentation with the Bangkok Street Atlas identity. Today is a printed route ticket and transit line; Practice, Tones, Read and Progress become recognisable workbook, mechanism-board, signboard and collectible-map spaces; lessons use a ruled sheet; and the shop shows theme swatches. All visuals remain code-native and offline.
+
+The retention and learning machine underneath is still v7.9.0: the same letter → class → tone curriculum, sealed fresh/assessment/retention corpora, SRS, delayed checks, lesson miss loop, mastery chains, completion checkpoint and maintenance route. v8 adds no learner state, reward, token, blocker, network request, audio/font asset or service-worker cache change.
+
+`validateV8VisualContracts()` brings the generated audit to 58 validators and guards the Street Atlas tokens, solid-surface/glass-retirement boundary, Today rail, lesson sheet, shop swatches, class-colour isolation, accessibility markers, masthead and current v8 identity. Detailed visual notes live in `docs/v8_visual_overhaul_notes.md`.
 
 ## Phase 1 · 1.0 beta
 
@@ -16,11 +24,25 @@
 
 `v7.5.0` adds a time-aware Today fill layer: the app counts active seconds only inside real learning surfaces, shows one skippable keep-going suggestion after the required route while measured time is below the 30/45-minute target, and keeps time display-only.
 
+`v7.6.0` adds fresh-decode transfer corpora for lesson/maintenance practice and sealed mastery gates; `v7.7.0` removes class-colour scaffolding from later tone questions; `v7.8.0` resolves lesson misses and replaces gate coin flips with structure chains.
+
+`v7.9.0` seals delayed retention too: 96 additional never-taught real words belong only to +1-day, +7-day or post-completion +30-day recall. The existing +1/+7 check sizes stay fixed, first-attempt transfer evidence is preserved, and the new month check cannot revoke completion.
+
 What beta means here:
 
 - Phase 1 reading, consonant class, tone logic, final jobs, controlled reads, review, backup/export and maintenance routing are complete enough for owner testing and public self-release preparation.
 - The release is still a beta because final iPhone/PWA checks, live deployment propagation and real learner-device use can surface small bugs.
 - Until public self-release, changes should be bug fixes, copy clarifications, release safety fixes, validator/doc corrections or explicitly scoped optional-practice mileage only.
+
+## v7.9.0 scope
+
+- Retention corpus: `RETENTION_DECODE_BANK` contains 96 tone-verified, gate-safe monosyllables with zero overlap across lesson/maintenance, assessment or any other app content.
+- +1/+7 recall: Lessons 4–24 receive two fixed words per stage; three neutral transfer questions replace familiar-axis slots inside the existing 6/8-question checks at the unchanged 80% bar.
+- Day-30 cold decode: thirty days after the first Phase 1 pass, Today serves all twelve reserved `cold30` words as fourteen neutral questions at 85%; due SRS review still leads and failure never removes completion.
+- Evidence and repair: first-attempt percentages stay immutable; retry is remediation, and the month-check repair button uses the separate maintenance Fresh-decode pool.
+- State/migration: optional `retention[lesson].firstPct`, `phase1Completion.firstPassedAt` and `phase1Completion.retention30` only; existing completed learners are scheduled safely by `repairStateForV79()`.
+- Validation: `validateV79RetentionDecodeContracts()`, the generated 57-validator audit, the standalone three-corpus checker and the precommit tone walk guard isolation, counts, decodability, routes, serving, migration and Today priority.
+- Scope boundary: no curriculum, SRS interval, lesson blocker, ordinary workload, reward, economy, audio/font asset, runtime network or service-worker cache change.
 
 ## v7.5.0 scope
 

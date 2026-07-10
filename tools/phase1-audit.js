@@ -126,6 +126,19 @@ globalThis.__phase1Audit = (function(){
     try{ fn(); return {name, ok:true, issues:[]}; }
     catch(e){ return {name, ok:false, issues:String(e.message||e).split('\\n').slice(1).filter(Boolean)}; }
   }
+  function isolatedValidatorResult(name, fn){
+    const priorRandom = Math.random;
+    let seed = 0x79c01d;
+    Math.random = function(){
+      seed = (seed + 0x6D2B79F5) >>> 0;
+      let t = seed;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    try{ return validatorResult(name, fn); }
+    finally{ Math.random = priorRandom; }
+  }
   const TRUE_CLUSTER_ONSETS = ['กร','กล','กว','ขร','ขล','ขว','คร','คล','คว','ปร','ปล','พร','พล','ตร'];
   function trueClusterWord(word){
     const t = String(word || '').normalize('NFC');
@@ -837,7 +850,9 @@ globalThis.__phase1Audit = (function(){
     validatorResult('timeAwareRoute', validateTimeAwareRouteContracts),
     validatorResult('freshDecode', validateFreshDecodeContracts),
     validatorResult('v77ColourFade', validateV77ColourFadeContracts),
-    validatorResult('v78RequiredLoop', validateV78RequiredLoopContracts)
+    validatorResult('v78RequiredLoop', validateV78RequiredLoopContracts),
+    isolatedValidatorResult('v79RetentionDecode', validateV79RetentionDecodeContracts),
+    validatorResult('v8Visual', validateV8VisualContracts)
   ];
   return {
     generatedAt:new Date().toISOString(),
@@ -896,7 +911,17 @@ globalThis.__phase1Audit = (function(){
       axes:countBy(buildPhase1CompletionQuiz(), q=>q.axis || q._choice || q.kind || 'other'),
       pass:'85% quiz plus smooth or slow-but-correct final controlled read'
     },
-    lessons:LESSONS.map(lessonAudit)
+    lessons:LESSONS.map(lessonAudit),
+    retentionDecode:{
+      bank:RETENTION_DECODE_BANK.map(item=>({gate:item.gate, stage:item.stage, thai:item.thai, tr:item.tr, tone:toneOf(item.tr), verified:!!freshDecodeRoute(item)})),
+      served:{
+        retained:'+1 day: 2 sealed words / 3 neutral transfer questions inside the existing 6-question check from l4',
+        stabilised:'+7 day: 2 different sealed words / 3 neutral transfer questions inside the existing 8-question check from l4',
+        cold30:'+30 day after Phase 1: all 12 reserved words / 14 neutral questions at 85%; failure keeps completion and routes to Fresh decode repair'
+      },
+      cold30QuestionCount:buildRetention30Quiz().length,
+      state:'optional phase1Completion.firstPassedAt + phase1Completion.retention30; per-lesson firstPct stored under existing retention records'
+    }
   };
 })();
 `;
@@ -935,7 +960,7 @@ function renderMarkdown(audit){
   lines.push('');
   lines.push('Lesson payload is the content added if that lesson is taken. Today governor route is the daily serving plan: review is capped by SRS, axis review cards are staged into the due deck, due 25-44 recommends review without blocking a lesson, due >= 45 creates a consolidation day, and Lessons 1-3 remain shorter foundation days.');
   lines.push('');
-  lines.push("v7.8.0 is the required-surface mastery-loop pass: lesson quizzes cycle first-attempt misses until each is answered correctly once with scoring from the first pass only, mastery checkpoints and unit bosses gain one atomic live-dead/vowel-length-then-tone structure chain per build, the final completion checkpoint replaces its standalone 2-option structure singles with route chains, one lesson-quiz filler slot and the maintenance Fresh decode sample are weakness-first from existing errorProfile diagnostics with empty profiles degrading to random, and no SRS, blocker, economy, audio, network, service-worker or learner-state-schema change is made. v7.7.0 is the tone colour-fade pass: from Unit C, taught-word tone questions in lesson quizzes, mastery checkpoints, unit bosses and the final completion checkpoint render plain uncoloured Thai prompts with the class badge kept behind the TONE_FADE_KEEPS_BADGE constant and colour restored in post-answer feedback; lesson quizzes add a colour-assisted second attempt whose recovery counts for the lesson score while gates stay one-shot; one tone question is guaranteed per Unit C+ lesson quiz; review cards, tone drills, mixed review and Quick decode keep colours; no SRS, blocker, economy, audio, network, service-worker or learner-state-schema change. v7.6.0 is the fresh-decode transfer pass: two reserved tone-verified corpora of never-taught real words (FRESH_DECODE 120, ASSESSMENT_BANK 56) certify decoding transfer instead of word memory; lesson quizzes from Lesson 4 add three fresh words as a route chain plus reading plus single-axis questions with class colours, mastery checkpoints and the Phase 1 completion checkpoint add sealed assessment-bank words with neutral prompts and route explanations after answering, the completed-course maintenance rotation gains a five-word Fresh decode block, fresh tone questions wait for the Lesson 13 grid, wrong answers feed the existing errorProfile buckets, and no SRS card, lesson blocker, token or state-schema change is made. v7.5.0 is the time-aware daily-route pass: active seconds accumulate only inside active learning surfaces under `days[date].secs`, Today shows one skippable keep-going suggestion after the required route when measured time is still under the 30/45 minute target, and time never grants rewards, blocks lessons, changes SRS, changes streaks or alters the service worker. v7.4.0 is the street reads pass: completed Reading-room stories gain an optional Street read rendering that joins words edge-to-edge while keeping word spans tappable, timed street samples store under the distinct readTimes key kind `street`, and three new free stories at Lessons 17, 19 and 23 lift the remaining LOW recurrence tail for คน, ใน, พา, ไฟฟ้า, รอ, ไหน, ถุง, ทางเข้า, ทางออก and ครับ. It adds no curriculum gate, SRS card, economy path, audio/font asset, runtime network feature, service-worker cache change or required learner state key. v7.3.0 is the reading mileage and automaticity pass: eight new decodable Reading-room stories at Lessons 8, 10, 12, 14, 16, 18, 20 and 22 raise underexposed words through the recurrence audit; completed stories and fluency reads gain optional timed re-read using existing readTimes; Tone sprint reuses tone-rule trainer questions after 85% rule accuracy; Decode Gym grows to 63 items with a post-L18 cluster booster; Wild deck adds Drill this for route-eligible captures; no curriculum, SRS, economy, audio asset, network, service-worker or required-state-schema change. v7.2.1 is the post-review cleanup and identity bump: the runtime label moves to v7.2.1, the new theme --muted CSS values match the contrast map, paid Bangkok reads Course Map and earnings-board surfaces stay ownership-aware, unit boss quizzes share the mastery-stakes exit guard, and stray prompt artifacts are removed. v7.2.0 is the shop expansion and economy pass over the Phase 1 1.0 beta: Temple gold, Monsoon and Loy Krathong add paid dark visual identities, Ranat adds a second synthesized SFX voice, Bangkok reads adds four paid Reading-room stories, Taxi & Grab and Market bargaining add 24 optional phrases, shop rows are grouped by Phrase & story packs / Sounds / Themes / Titles, theme contrast and shop purchase boundaries are validator-guarded, and the economy notes document a normal 60-80 token week without changing earn rates. v7.1.0 remains the visual and sound repair pass: Day market uses light-safe semantic fills, Skytrain and Songkran get palette-specific surface tokens, reading accents move to cyan instead of the reserved mid-class teal, objective Write it/Spell it/Glyph Ghost/Contrast Block/Quick decode answers play SFX, completion/wrong sounds are more distinct, and in-progress lessons/mastery checks confirm before close discards the memory-only attempt. v7.0.0 remains the Phase 1 1.0 beta identity pass: genuinely fresh learners see a one-time skippable onboarding overlay for the reading-first scope, letter -> class -> tone engine, Today route and Thai voice/backup setup; Progress gains a static About this app entry; the footer and export version moved to v7.0.0; existing learners, saved blank states, SRS cards and completed lessons never receive onboarding. v6.7.0 remains the completion-journey and maintenance pass: completed learners land on a maintenance Today route, Progress shows the Phase 1 dashboard, optional drills are surfaced, fair freeze gaps are preserved, and Capture Thai has count/export affordances. v6.6.0 remains the data-safety and release-harness pass: corrupt local progress is quarantined before defaults can overwrite it, save failures and runtime/update faults show non-blocking recovery banners, export downloads a versioned backup envelope while legacy raw imports still work, backup nudges are display-only, and the committed precommit gate covers script syntax, NFC, particle/currency policy, tone-grid transliteration and story decodability. v6.5.0/v6.5.1 remain presentational feedback releases only: Web Audio feedback sounds, combo chips, completion/streak moments and the Progress sound toggle do not change SRS, grading, blockers, tokens, curriculum, network behaviour or audio assets. v6.4.1 keeps Decode Gym as non-lesson tone-verified mileage plus the Write it feedback/Enter-key fix; v6.4.0 keeps local Capture Thai and Wild deck outside SRS and blockers. v6.3.0 remains the automaticity pass, v6.2.0 remains the production-practice pass, and v6.1.0 remains weakness-first optional-drill targeting. These v6.1-v7.0 surfaces do not add lesson blockers, SRS cards, review-governor load changes or route-type changes. v5.4.6 keeps the curriculum/review model: Lesson 1 frames the tone route as preview, Unit C repeats one Tone route, rare-letter class rows get active recognition practice before the Letters boss, the phrasebook is optional opt-in vocabulary, and the final checkpoint samples late mechanisms such as silent leaders, three-piece vowels, public-sign chunking and gaaran. Browser Thai speechSynthesis remains device voice support for rough practice, not a reliable assessment source for tone, vowel length, aspiration or final-stop mastery. Fluency reads stay self-rated and non-blocking for ordinary lesson progress; return-after-gap recovery still takes priority. The final checkpoint checks observable script-reading behaviours without claiming free conversation, broad vocabulary or full speaking ability.");
+  lines.push("v8.0.0 is the Bangkok Street Atlas visual-completion pass: the generic aurora/glass/gradient layer is replaced by a code-native route-map shell, printed Today ticket and transit rail, compact practice field guide, workbook panels, six-stop tone board, reading signboards, collectible letter wall, coloured progress stamps, ruled lesson sheet, solid navigation and real theme swatches; existing progress becomes more visible without changing rewards, retention or route logic; decorative Thai marks are aria-hidden, class colours remain reserved for class meaning, all themes keep their atmosphere and validateV8VisualContracts guards the identity with no learner-state, curriculum, SRS, blocker, grading, economy, audio/font asset, runtime-network or service-worker change. v7.9.0 is the sealed retention-transfer pass: RETENTION_DECODE_BANK adds 96 real, tone-verified words that never appear outside delayed recall; Lessons 4-24 each have two +1-day words and two different +7-day words, contributing three neutral transfer questions while the existing 6/8-question size and 80% bar stay fixed; twelve further words are reserved for a 14-question 30-day cold decode at 85% after Phase 1; first-attempt percentages remain recorded, failure never removes completion and repair uses the separate maintenance Fresh decode pool; only optional nested phase1Completion retention fields and firstPct fields inside existing retention records are added. v7.8.0 is the required-surface mastery-loop pass: lesson quizzes cycle first-attempt misses until each is answered correctly once with scoring from the first pass only, mastery checkpoints and unit bosses gain one atomic live-dead/vowel-length-then-tone structure chain per build, the final completion checkpoint replaces its standalone 2-option structure singles with route chains, one lesson-quiz filler slot and the maintenance Fresh decode sample are weakness-first from existing errorProfile diagnostics with empty profiles degrading to random, and no SRS, blocker, economy, audio, network, service-worker or learner-state-schema change is made. v7.7.0 is the tone colour-fade pass: from Unit C, taught-word tone questions in lesson quizzes, mastery checkpoints, unit bosses and the final completion checkpoint render plain uncoloured Thai prompts with the class badge kept behind the TONE_FADE_KEEPS_BADGE constant and colour restored in post-answer feedback; lesson quizzes add a colour-assisted second attempt whose recovery counts for the lesson score while gates stay one-shot; one tone question is guaranteed per Unit C+ lesson quiz; review cards, tone drills, mixed review and Quick decode keep colours; no SRS, blocker, economy, audio, network or learner-state-schema change. v7.6.0 is the fresh-decode transfer pass: two reserved tone-verified corpora of never-taught real words (FRESH_DECODE 120, ASSESSMENT_BANK 56) certify decoding transfer instead of word memory; lesson quizzes from Lesson 4 add fresh route/read questions, mastery checkpoints and the Phase 1 completion checkpoint add sealed assessment-bank words, and completed-course maintenance gains Fresh decode. The remaining v7 release chain stays in place without changing curriculum, SRS intervals, lesson blockers, economy, audio/font assets, runtime network features or service-worker cache naming.");
   lines.push('');
   lines.push(`- Today review default max: ${audit.workload.srsCap} cards`);
   lines.push(`- Manual Review catch-up cap: ${audit.workload.manualReviewCap} cards`);
@@ -997,6 +1022,20 @@ function renderMarkdown(audit){
     });
     lines.push('');
   });
+  lines.push('## v7.9 Sealed retention-decode corpus');
+  lines.push('');
+  lines.push('These real words appear only in delayed retention. Lesson-stage assignments are fixed: a +1 word cannot reappear at +7 or in another lesson check. The 30-day subset is isolated from all earlier surfaces.');
+  lines.push('');
+  const retentionServed = (audit.retentionDecode||{}).served || {};
+  Object.keys(retentionServed).forEach(key=>lines.push(`- ${safeCell(key)}: ${safeCell(retentionServed[key])}`));
+  lines.push(`- state: ${safeCell((audit.retentionDecode||{}).state || '')}`);
+  lines.push('');
+  lines.push('| Gate | Stage | Thai | Reading | Tone | Verified |');
+  lines.push('| --- | --- | --- | --- | --- | --- |');
+  ((audit.retentionDecode||{}).bank||[]).forEach(item=>{
+    lines.push(`| ${safeCell(item.gate)} | ${safeCell(item.stage)} | ${safeCell(item.thai)} | ${safeCell(item.tr)} | ${safeCell(item.tone)} | ${item.verified ? 'yes' : 'NO'} |`);
+  });
+  lines.push('');
   lines.push('## v6.4 Capture Loop');
   lines.push('');
   lines.push(`Wild captures use local typed input only. State key: ${safeCell((audit.captureLoop||{}).stateKey)}; cap: ${safeCell((audit.captureLoop||{}).cap)}.`);

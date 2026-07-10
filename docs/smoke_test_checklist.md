@@ -1,4 +1,4 @@
-# v7.8.0 Smoke-Test Checklist
+# v8.0.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -7,9 +7,9 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v7.8.0`, 56 validators passing and 0 lesson/pool/role prerequisite issues.
-- Confirm `docs/phase1_audit.md` includes `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v7.8.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.json` reports app version `v8.0.0`, 58 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.0.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -34,13 +34,24 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Pass: onboarding never appears.
 - Confirm no legacy Phase 1 progress-kept modal appears for a blank first-ever state.
 
-## About And Beta Identity
+## About And Phase 1 Complete Identity
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 · 1.0 beta (v7.8.0)`.
-- Confirm exported backup JSON uses `appVersion: "v7.8.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 complete (v8.0.0)`.
+- Confirm exported backup JSON uses `appVersion: "v8.0.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
+
+## v8.0.0 Bangkok Street Atlas Visual Pass
+
+- At 390 x 844, pass: Today shows the อ่าน / ÀAN masthead, printed next-action ticket, transit rail with task stops, compact two-column optional practice and the solid route-strip navigation with no horizontal overflow.
+- At 360px and 430px widths, pass: version/streak controls fit, route CTA remains tappable, optional practice keeps two columns, and bottom labels remain readable above the safe area.
+- Open Practice, Tones, Read and Progress. Pass: each has a distinct workbook / tone-board / signboard / collectible-map identity while the same controls and routes remain available.
+- Open a lesson and an objective quiz. Pass: the ruled lesson sheet, class-coloured Thai, answer choices, correct/wrong feedback and Continue flow fit without clipping or hidden controls.
+- Open the shop. Pass: all eleven themes show a visual swatch; selecting each owned/free theme preserves the Street Atlas structure and the Thai mid/high/low colours.
+- Select Day market in a test profile. Pass: text, muted text, ticket surfaces, buttons, class tiles and bottom navigation remain readable.
+- With reduced motion enabled, pass: card entrances, tile movement, combo/reward pieces and transitions collapse without hiding final state.
+- Inspect the accessibility tree. Pass: the four screen marks and five reading-card marks do not enter button names or reading order; tab `aria-current` and 44pt targets remain intact.
 
 ## Dialog Accessibility Polish
 
@@ -103,7 +114,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v7.8.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.0.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -210,7 +221,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 · 1.0 beta (v7.8.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 complete (v8.0.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 
@@ -251,6 +262,19 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Open the Phase 1 completion checkpoint. Pass: มาก and รัก appear as chained pairs and no standalone Live/Dead or Short/Long question exists.
 - With existing wrong-answer history, open a lesson quiz repeatedly. Pass: quizzes lean toward previously-missed territory in one filler slot; with a fresh profile they behave as before.
 - On a completed-course state, open the maintenance Fresh decode block. Pass: five words serve normally; over several days the words containing your weakest letters recur more often.
+
+## Sealed Retention Transfer (v7.9.0)
+
+- Complete a Lesson 4+ lesson and open its +1-day check when due. Pass: the check still has 6 questions; exactly 3 are neutral unseen-word questions built from two words assigned only to that lesson's `retained` stage.
+- Open the same lesson's +7-day check when due. Pass: it still has 8 questions and uses two different neutral words assigned only to `stabilised`; no +1 word repeats.
+- Confirm Lessons 1–3 retain the existing familiar-only delayed check because the sealed real-word bank opens at Lesson 4.
+- Miss a delayed check, then retry. Pass: the original first-attempt percentage remains in `retention[lesson].firstPct`; the retry is remediation and cannot overwrite it.
+- Inspect `docs/phase1_audit.md`. Pass: the v7.9 table contains exactly 96 verified entries: 42 `retained`, 42 `stabilised`, and 12 `cold30`, with no overlap against the other corpora.
+- On a completed state whose `phase1Completion.firstPassedAt` is 30 days ago and whose SRS due list is empty, open Today. Pass: `30-day cold decode` is the main maintenance task.
+- Start it. Pass: 14 neutral questions use all 12 reserved `cold30` words, with two mechanism-first/read pairs kept adjacent; 85% is required.
+- Fail it. Pass: Phase 1 remains complete, the first percentage is retained, End today is not blocked by the failure, and `Repair with Fresh decode` opens the separate maintenance corpus rather than any `cold30` word.
+- Pass it. Pass: the Progress dashboard shows the `30-day cold decode` tile as complete and the task does not recur.
+- Import a legacy completed state. Pass: `repairStateForV79()` adds only nested `firstPassedAt` / `retention30` fields and preserves lessons, reviews, rewards, completion and all prior dates.
 
 ## Offline And Weak Network
 

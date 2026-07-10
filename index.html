@@ -1092,7 +1092,7 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 	.rematch-card .d{font-size:11px;color:var(--muted);margin-top:4px}
 	.rematch-card.locked{opacity:.55}
 	.phase1-dashboard{width:100%;text-align:left;color:var(--text);cursor:pointer;border-color:rgba(34,211,238,.28);background:linear-gradient(160deg,rgba(34,211,238,.08),rgba(255,255,255,.025)),var(--surface-glass)}
-	.phase1-dashboard-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+	.phase1-dashboard-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}
 	.phase1-dashboard-metric{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:10px;min-height:74px}
 	.phase1-dashboard-metric b{display:block;font-family:var(--font-display);font-size:19px;line-height:1.1}
 	.phase1-dashboard-metric span{display:block;color:var(--muted);font-size:11px;margin-top:5px}
@@ -1203,6 +1203,364 @@ body[data-theme="bangkok"] .streak, body[data-theme="bangkok"] #token-chip, body
 .quick-final-meaning{display:block;margin-top:2px;color:var(--muted);font-family:var(--font-ui);font-size:12px;font-weight:400}
 .drawer-chevron{font-family:var(--font-display);font-size:24px;line-height:1;color:var(--muted);transition:transform .16s ease}
 details[open] .drawer-chevron{transform:rotate(90deg)}
+
+/* =====================================================
+   V8.0.0 · BANGKOK STREET ATLAS
+   Presentation only: the class palette and learning state stay untouched.
+===================================================== */
+:root{
+  --atlas-panel:var(--surface);
+  --atlas-panel-2:var(--surface2);
+  --atlas-ticket:#FFF0CE;
+  --atlas-ticket-ink:#18213A;
+  --atlas-ticket-muted:#596176;
+  --atlas-route:#FF6B4A;
+  --atlas-sky:#53C7E8;
+  --atlas-sun:#FFD166;
+  --atlas-violet:#9B7BFF;
+  --atlas-hard-shadow:rgba(0,0,0,.46);
+  --atlas-grid:rgba(102,217,244,.075);
+  --atlas-cut:6px 20px 6px 20px;
+}
+body[data-theme="day"]{
+  --atlas-ticket:#202943;
+  --atlas-ticket-ink:#FFF7E7;
+  --atlas-ticket-muted:#CFD5E4;
+  --atlas-route:#C7432D;
+  --atlas-sky:#007E92;
+  --atlas-sun:#E5A823;
+  --atlas-violet:#6D45C7;
+  --atlas-hard-shadow:rgba(63,48,25,.2);
+  --atlas-grid:rgba(36,95,199,.07);
+}
+body[data-theme="bts"]{--atlas-ticket:#DDF4FF;--atlas-route:#E85D3F;--atlas-sky:#4DC7ED;--atlas-sun:#F5C85A}
+body[data-theme="songkran"]{--atlas-ticket:#F2E9FF;--atlas-route:#F06595;--atlas-sky:#57D4F0;--atlas-sun:#FFD166}
+body[data-theme="temple"]{--atlas-ticket:#F2D79B;--atlas-route:#B86A31;--atlas-sky:#7DD3FC;--atlas-sun:#D8B36A}
+body[data-theme="monsoon"]{--atlas-ticket:#DCEFF8;--atlas-route:#D9694F;--atlas-sky:#8BD3FF;--atlas-sun:#D5B46A}
+body[data-theme="krathong"]{--atlas-ticket:#EEE6FF;--atlas-route:#D56A45;--atlas-sky:#67E8F9;--atlas-sun:#E4AE5C}
+
+body{
+  background-color:var(--bg-0);
+  background-image:
+    linear-gradient(90deg,transparent 49.6%,var(--atlas-grid) 49.7% 50.3%,transparent 50.4%),
+    linear-gradient(0deg,transparent 49.6%,var(--atlas-grid) 49.7% 50.3%,transparent 50.4%);
+  background-size:72px 72px;
+  font-weight:400;
+}
+body::before{
+  z-index:0;
+  background:
+    linear-gradient(118deg,transparent 0 18%,var(--atlas-grid) 18.2% 18.8%,transparent 19% 72%,var(--atlas-grid) 72.2% 72.8%,transparent 73%),
+    linear-gradient(26deg,transparent 0 58%,rgba(255,107,74,.055) 58.2% 58.8%,transparent 59%);
+}
+#app{isolation:isolate}
+main{position:relative;z-index:1}
+h1,h2,h3,.display{letter-spacing:-.025em}
+
+.glass-card,
+.card,
+.section-card,
+.review-panel,
+.course-block,
+.review-drawer,
+.course-drawer{
+  background:var(--atlas-panel);
+  border:2px solid var(--line-bright);
+  border-top-color:var(--line-bright);
+  border-radius:var(--atlas-cut);
+  box-shadow:5px 5px 0 var(--atlas-hard-shadow);
+  backdrop-filter:none;
+}
+.card,.section-card{padding:18px}
+.screen-head{
+  position:relative;overflow:hidden;
+  min-height:112px;padding:4px 88px 15px 0;margin-bottom:20px;
+  border-bottom:4px solid var(--atlas-route);
+}
+.screen-mark{
+  position:absolute;right:0;bottom:-25px;
+  font-family:var(--font-display);font-size:88px;font-weight:700;line-height:1;
+  color:var(--atlas-sky);opacity:.12;pointer-events:none;
+}
+.screen-kicker,.eyebrow,.card-kicker{
+  color:var(--atlas-sky);font-family:Tahoma,Arial,sans-serif;font-weight:800;letter-spacing:.16em;
+}
+.screen-title{font-size:32px;font-weight:800}
+
+.btn,.primary-cta{
+  background:var(--atlas-route);color:#fff;border:2px solid rgba(255,255,255,.32);
+  border-radius:6px 14px 6px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow);
+  font-weight:800;
+}
+.btn.ghost,.secondary-cta{
+  background:var(--atlas-panel-2);color:var(--text);border:2px solid var(--line-bright);
+  box-shadow:3px 3px 0 var(--atlas-hard-shadow);
+}
+.btn:active,.action-card:active,.task-button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--atlas-hard-shadow)}
+.status-pill,.classchip,.optional-pill{border-radius:4px 10px 4px 10px;font-weight:800}
+
+/* masthead */
+.today-header{position:relative;padding-bottom:13px;border-bottom:4px solid var(--atlas-sky);align-items:center}
+.brand-lockup{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-thai{
+  display:inline-flex;align-items:center;font-family:var(--font-display);font-size:38px;font-weight:800;line-height:1;
+  letter-spacing:-.05em;color:var(--text);
+}
+.brand-thai .thai-accent{color:var(--atlas-route)}
+.brand-sign{display:flex;flex-direction:column;line-height:1.05;border-left:3px solid var(--atlas-sun);padding-left:9px}
+.brand-sign b{font:800 11px/1 Tahoma,Arial,sans-serif;letter-spacing:.18em;color:var(--atlas-sun)}
+.brand-sign small{margin-top:4px;color:var(--muted);font-size:10px;white-space:nowrap}
+.today-header-meta{gap:7px}
+.today-streak{
+  min-width:46px;min-height:46px;padding:6px;border:2px solid var(--line-bright);border-radius:50%;
+  background:var(--atlas-panel);box-shadow:3px 3px 0 var(--atlas-hard-shadow);justify-content:center;
+}
+.version-pill{
+  border:2px solid var(--line-bright);border-radius:4px 10px 4px 10px;padding:6px 8px;
+  background:var(--atlas-panel);box-shadow:3px 3px 0 var(--atlas-hard-shadow);font-weight:700;
+}
+.progress-divider{
+  display:inline-flex;padding:4px 8px;margin-bottom:8px;border:2px solid var(--atlas-sun);border-radius:3px;
+  color:var(--atlas-sun);font-weight:900;letter-spacing:.13em;background:var(--atlas-panel);
+}
+.today-focus h1{font-size:34px;font-weight:850}
+
+/* today's ticket and route */
+.route-summary.hero-card{
+  background:var(--atlas-ticket);color:var(--atlas-ticket-ink);border:0;border-radius:4px 24px 4px 24px;
+  box-shadow:8px 8px 0 var(--atlas-hard-shadow);padding:20px 22px 20px 20px;
+}
+.route-summary.hero-card::before{
+  inset:0 12px 0 auto;width:2px;height:auto;
+  background:repeating-linear-gradient(180deg,var(--atlas-ticket-ink) 0 4px,transparent 4px 9px);opacity:.22;
+}
+.route-summary.hero-card::after{
+  content:"";position:absolute;right:-38px;bottom:-52px;width:132px;height:132px;
+  border:18px solid var(--atlas-ticket-ink);border-radius:50%;opacity:.045;
+}
+.route-summary .route-label{color:var(--atlas-ticket-muted);font-weight:800}
+.route-summary .route-value{font-size:23px;font-weight:850}
+.route-summary .route-reason,.route-summary .route-optional{color:var(--atlas-ticket-muted)}
+.route-summary .route-step-pip{background:transparent;border:2px solid var(--atlas-ticket-muted);box-shadow:none}
+.route-summary .route-step-pip.done{background:var(--route-accent);border-color:var(--route-accent);box-shadow:none}
+.route-summary .route-step-pip.current{border-color:var(--route-accent);box-shadow:0 0 0 3px rgba(24,33,58,.12)}
+.route-summary .route-progress-bar{height:7px;background:rgba(24,33,58,.12);border:0;border-radius:0}
+.route-summary .route-progress-bar i{background:var(--route-accent);border-radius:0;box-shadow:none}
+.route-summary .route-optional::before{border-radius:2px;box-shadow:none}
+.route-summary .btn{background:var(--atlas-route);color:#fff;border-color:rgba(24,33,58,.18)}
+
+.today-task-list{position:relative;gap:11px;padding-left:25px;margin-top:18px}
+.today-task-list::before{
+  content:"";position:absolute;left:8px;top:13px;bottom:13px;width:5px;
+  background:repeating-linear-gradient(180deg,var(--atlas-sky) 0 13px,transparent 13px 18px);
+}
+.task-button{
+  position:relative;display:grid;grid-template-columns:1fr;gap:2px;width:100%;min-height:80px;
+  background:var(--atlas-panel);border:2px solid var(--line-bright);border-radius:4px 16px 4px 16px;
+  padding:14px 16px;box-shadow:4px 4px 0 var(--atlas-hard-shadow);
+}
+.task-button::before{
+  content:"";position:absolute;left:-25px;top:50%;width:14px;height:14px;transform:translateY(-50%);
+  border-radius:50%;background:var(--bg-0);border:4px solid var(--atlas-sky);box-shadow:0 0 0 3px var(--bg-0);
+}
+.task-button.primary{background:var(--atlas-sun);color:var(--atlas-ticket-ink);border-color:var(--atlas-sun);box-shadow:5px 5px 0 var(--atlas-hard-shadow)}
+.task-button.primary::before{background:var(--atlas-route);border-color:var(--atlas-route)}
+.task-button.done::before{background:var(--ui-success);border-color:var(--ui-success)}
+.task-button.end{border-style:dashed}
+.task-kicker{
+  grid-column:1;grid-row:1;display:block;min-width:0;min-height:0;padding:0;background:transparent;border-radius:0;
+  color:var(--atlas-sky);text-align:left;font-size:10px;font-weight:900;letter-spacing:.14em;
+}
+.task-button.primary .task-kicker{background:transparent;color:var(--atlas-ticket-ink);box-shadow:none}
+.task-button.done .task-kicker{background:transparent;color:var(--ui-success)}
+.task-title{grid-column:1;grid-row:2;font-size:19px;font-weight:800}
+.task-detail{grid-column:1;grid-row:3}
+.task-button.primary .task-detail{color:var(--atlas-ticket-muted)}
+
+.practice-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.practice-chip{
+  min-height:82px;background:var(--atlas-panel);border:2px solid var(--line-bright);border-left:7px solid var(--chip-accent);
+  border-radius:4px 14px 4px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow);padding:12px;
+}
+.practice-chip::before{display:none}
+.practice-chip .p-title{font-weight:800}
+
+/* practice workbook */
+.section-card.practice-review,.section-card.practice-reading,.section-card.practice-tone,.section-card.practice-transfer{
+  background:var(--atlas-panel);border:2px solid var(--line-bright);border-top:9px solid var(--panel-accent);
+  border-radius:3px 18px 3px 18px;box-shadow:6px 6px 0 var(--atlas-hard-shadow);padding:18px;
+}
+.section-card.practice-review::before,.section-card.practice-reading::before,.section-card.practice-tone::before,.section-card.practice-transfer::before{display:none}
+.section-head h2,.review-head h2{font-size:23px;font-weight:850}
+.action-card{
+  min-height:80px;background:var(--atlas-panel-2);border:2px solid var(--line-bright);border-left:7px solid var(--card-accent,var(--panel-accent,var(--atlas-sky)));
+  border-radius:4px 14px 4px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow);padding:13px 14px;
+}
+.action-card::before,.action-card::after{display:none}
+.action-card.primary{background:var(--atlas-panel-2);border-color:var(--line-bright);border-left-color:var(--atlas-sky)}
+.action-card .t{font-weight:850}
+.icon-right,.icon-bubble{
+  width:38px;height:38px;border:2px solid currentColor;border-radius:3px 10px 3px 10px;
+  background:transparent;box-shadow:none;font-size:20px;font-weight:900;
+}
+
+/* tone route board */
+.tone-lab-card{
+  background:var(--atlas-ticket);color:var(--atlas-ticket-ink);border:0;border-radius:4px 22px 4px 22px;
+  box-shadow:7px 7px 0 var(--atlas-hard-shadow);padding:20px;
+}
+.tone-lab-card::before{height:8px;background:var(--atlas-violet)}
+.tone-lab-card .eyebrow{color:var(--atlas-violet)}
+.tone-lab-card .helper-copy{color:var(--atlas-ticket-muted)}
+.tone-stepper{gap:8px}
+.tone-step{
+  min-height:68px;background:transparent;border:2px solid var(--atlas-ticket-muted);border-radius:3px 12px 3px 12px;
+}
+.tone-step b{color:var(--atlas-violet);font-size:20px;font-weight:900}
+.tone-step span{color:var(--atlas-ticket-muted);font-weight:700}
+.tone-step.class-step{background:var(--atlas-violet);border-color:var(--atlas-violet)}
+.tone-step.class-step b,.tone-step.class-step span{color:#fff}
+.review-panel.tones,.tone-badge-card{
+  background:var(--atlas-panel);border:2px solid var(--line-bright);border-top:8px solid var(--atlas-violet);box-shadow:6px 6px 0 var(--atlas-hard-shadow);
+}
+.review-panel::before{display:none}
+.tone-button-grid{grid-template-columns:repeat(2,1fr)}
+.tone-button-grid .btn{background:var(--atlas-violet);border-color:rgba(255,255,255,.25)}
+.tone-button-grid .btn:nth-child(2n){background:var(--atlas-sky);color:var(--atlas-ticket-ink)}
+.tone-button-grid .btn:nth-child(3n){background:var(--atlas-sun);color:var(--atlas-ticket-ink)}
+.lab-note{background:var(--atlas-panel-2);border:2px dashed var(--atlas-sky);border-radius:3px 12px 3px 12px}
+
+/* reading signboards */
+.reading-card{min-height:100px;border-left-width:9px}
+.reading-card .t::after{display:none}
+.reading-mark{
+  position:absolute;right:40px;bottom:-44px;font-family:var(--font-display);font-size:84px;font-weight:850;
+  line-height:1;color:var(--card-accent,var(--atlas-sky));opacity:.12;pointer-events:none;
+}
+#view-phrases .read-stack .reading-card:nth-child(1){--card-accent:var(--atlas-route)}
+#view-phrases .read-stack .reading-card:nth-child(2){--card-accent:var(--atlas-sky)}
+#view-phrases .read-stack .reading-card:nth-child(3){--card-accent:var(--atlas-violet)}
+#view-phrases .read-stack .reading-card:nth-child(4){--card-accent:var(--atlas-sun)}
+#view-phrases .read-stack .reading-card:nth-child(5){--card-accent:var(--ui-reading)}
+#view-phrases .read-stack .reading-card:nth-child(6){--card-accent:var(--ui-review)}
+.phrase-bonus-card{background:var(--atlas-panel);border:2px solid var(--line-bright);border-top:8px solid var(--atlas-route)}
+.phrase,.tone-row{background:var(--atlas-panel);border:2px solid var(--line-bright);border-radius:3px 14px 3px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow)}
+.cat-tab{border:2px solid var(--line-bright);border-radius:3px 12px 3px 12px;box-shadow:2px 2px 0 var(--atlas-hard-shadow);font-weight:800}
+
+/* collectible progress wall */
+.phase1-dashboard{
+  background:var(--atlas-ticket);color:var(--atlas-ticket-ink);border:0;border-radius:4px 22px 4px 22px;
+  box-shadow:7px 7px 0 var(--atlas-hard-shadow);padding:20px;
+}
+.phase1-dashboard .eyebrow{color:var(--atlas-route)}
+.phase1-dashboard .sub,.phase1-dashboard .phase1-dashboard-metric span,.phase1-dashboard .evidence-value{color:var(--atlas-ticket-muted)}
+.phase1-dashboard-metric{background:transparent;border:2px dashed var(--atlas-ticket-muted);border-radius:3px 10px 3px 10px}
+.phase1-dashboard-metric b{font-size:22px;font-weight:900}
+.streak-kpis{gap:10px}
+.streak-kpis .kpi-chip{
+  min-height:86px;border:2px solid var(--line-bright);border-radius:3px 14px 3px 14px;box-shadow:4px 4px 0 var(--atlas-hard-shadow);
+}
+.streak-kpis #token-chip{background:var(--atlas-sun);color:var(--atlas-ticket-ink);border-color:var(--atlas-sun)}
+.streak-kpis #streak-chip{background:var(--atlas-route);color:#fff;border-color:var(--atlas-route)}
+.streak-kpis .freeze-buy-chip{background:var(--atlas-violet);color:#fff;border-color:var(--atlas-violet)}
+.streak-kpis .kpi-chip:last-child{background:var(--atlas-sky);color:var(--atlas-ticket-ink);border-color:var(--atlas-sky)}
+.streak-kpis .kpi-label{color:inherit;font-weight:900}
+.wall{gap:8px}
+.tile{
+  border:2px solid var(--line-bright);border-radius:3px;background:var(--atlas-panel-2);box-shadow:2px 2px 0 var(--atlas-hard-shadow);
+  font-size:21px;font-weight:800;transition:transform .14s ease,box-shadow .14s ease;
+}
+.tile:active{transform:translate(2px,2px);box-shadow:none}
+.tile.growing{transform:rotate(-1deg)}
+.tile.mastered{box-shadow:3px 3px 0 var(--atlas-hard-shadow);transform:rotate(1deg)}
+.constel-card,.progress-tools-card,.extras-card{background:var(--atlas-panel)}
+.heatmap{gap:4px}.hm{border-radius:1px;border:1px solid var(--line-soft)}
+
+/* lesson sheet, quizzes and completion moments */
+#overlay{
+  background-color:var(--bg-0);
+  background-image:
+    linear-gradient(90deg,transparent 49.6%,var(--atlas-grid) 49.7% 50.3%,transparent 50.4%),
+    linear-gradient(0deg,transparent 49.6%,var(--atlas-grid) 49.7% 50.3%,transparent 50.4%);
+  background-size:64px 64px;
+}
+.xbtn{border:2px solid var(--line-bright);border-radius:3px 12px 3px 12px;background:var(--atlas-panel);box-shadow:3px 3px 0 var(--atlas-hard-shadow)}
+.progressbar{height:7px;border:0;border-radius:0;background:var(--atlas-panel-2)}
+.progressbar i{background:var(--atlas-route);border-radius:0;box-shadow:none}
+.stage{
+  background:
+    repeating-linear-gradient(180deg,transparent 0 31px,var(--atlas-grid) 31px 32px),
+    var(--atlas-panel);
+  border:3px solid var(--atlas-sky);border-radius:4px 24px 4px 24px;
+  box-shadow:8px 8px 0 var(--atlas-hard-shadow);backdrop-filter:none;
+}
+.notebox{
+  background:var(--atlas-panel-2);border:0;border-left:8px solid var(--atlas-sky);border-bottom:2px solid var(--line-bright);
+  border-radius:0 14px 0 0;padding:16px;box-shadow:4px 4px 0 var(--atlas-hard-shadow);
+}
+.class-banner,.tone-rule-tile,.word-line,.final-job{
+  border-width:2px;border-radius:4px 14px 4px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow);
+}
+.q-opt,.flashcard .fc-face,.sound-row,.compare-box,.build-area,.ltile,.ghost-opt{
+  background:var(--atlas-panel-2);border:2px solid var(--line-bright);border-radius:4px 14px 4px 14px;
+  box-shadow:3px 3px 0 var(--atlas-hard-shadow);
+}
+.flashcard .fc-face{border-top:8px solid var(--atlas-sky)}
+.empty{background:var(--atlas-panel);border:2px dashed var(--line-bright);border-radius:4px 16px 4px 16px;box-shadow:4px 4px 0 var(--atlas-hard-shadow)}
+.reward-burst i{width:9px;height:14px;border-radius:2px;box-shadow:none;transform:rotate(15deg)}
+.reward-burst i:nth-child(even){border-radius:50%;transform:rotate(-20deg)}
+.combo-chip{border:2px solid var(--atlas-sun);border-radius:3px 10px 3px 10px;background:var(--atlas-panel);box-shadow:3px 3px 0 var(--atlas-hard-shadow)}
+
+/* onboarding and shop */
+.onboarding-modal,.confirm-modal,.audio-setup-modal,.postcard-modal{background:rgba(8,12,24,.9);backdrop-filter:none}
+.onboarding-card,.confirm-card,.audio-setup-card,.pc-card{
+  background:var(--atlas-panel);border:3px solid var(--atlas-sky);border-radius:4px 22px 4px 22px;box-shadow:8px 8px 0 rgba(0,0,0,.62);
+}
+.onboarding-card{border-top:10px solid var(--atlas-route)}
+.onboarding-dot{border-radius:2px}.onboarding-dot.active{background:var(--atlas-route)}
+.shop-row{position:relative;padding:14px 0;border-bottom:2px dashed var(--line)}
+.shop-row .s-t{font-weight:850}
+.theme-swatch{width:34px;height:34px;flex:none;border:2px solid rgba(255,255,255,.34);border-radius:3px 10px 3px 10px;box-shadow:2px 2px 0 var(--atlas-hard-shadow)}
+.theme-swatch[data-swatch="night"]{background:linear-gradient(135deg,#111827 0 55%,#FF6B4A 55%)}
+.theme-swatch[data-swatch="depth"]{background:linear-gradient(135deg,#232838 0 55%,#53C7E8 55%)}
+.theme-swatch[data-swatch="accent"]{background:linear-gradient(135deg,#232838 0 55%,#9B7BFF 55%)}
+.theme-swatch[data-swatch="bangkok"]{background:linear-gradient(135deg,#1C1140 0 55%,#FF6B4A 55%)}
+.theme-swatch[data-swatch="full"]{background:linear-gradient(135deg,#0B1E2C 0 50%,#53C7E8 50% 75%,#FF6B4A 75%)}
+.theme-swatch[data-swatch="day"]{background:linear-gradient(135deg,#F4F1E8 0 55%,#C7432D 55%)}
+.theme-swatch[data-swatch="bts"]{background:linear-gradient(135deg,#13222F 0 55%,#4DC7ED 55%)}
+.theme-swatch[data-swatch="songkran"]{background:linear-gradient(135deg,#1B1834 0 50%,#F06595 50% 75%,#57D4F0 75%)}
+.theme-swatch[data-swatch="temple"]{background:linear-gradient(135deg,#17100B 0 55%,#D8B36A 55%)}
+.theme-swatch[data-swatch="monsoon"]{background:linear-gradient(135deg,#0D1B28 0 55%,#8BD3FF 55%)}
+.theme-swatch[data-swatch="krathong"]{background:linear-gradient(135deg,#0D1230 0 50%,#A78BFA 50% 75%,#D49A48 75%)}
+
+/* route-strip navigation */
+#tabbar{
+  background:var(--atlas-panel);border-top:4px solid var(--atlas-sky);box-shadow:0 -7px 0 rgba(0,0,0,.22);
+  backdrop-filter:none;
+}
+.tabbar-inner{gap:2px;padding:0 4px}
+.tab{font-weight:800;letter-spacing:.02em;overflow:visible}
+.tab::before{inset:6px 2px 5px;border:2px solid transparent;border-radius:3px 10px 3px 10px;background:var(--atlas-panel-2)}
+.tab::after{left:18%;right:18%;top:-4px;height:5px;border-radius:0;background:var(--tab-accent);box-shadow:none}
+.tab.active::before{border-color:var(--tab-accent)}
+.tab .tab-glyph{font-size:20px;font-weight:850;filter:none}
+.tab.active .tab-glyph,.tab.recommended .tab-glyph{filter:none}
+.tab-due-badge{top:3px;right:7px;box-shadow:2px 2px 0 var(--atlas-hard-shadow)}
+#toast{border:2px solid var(--atlas-sun);border-radius:3px 12px 3px 12px;background:var(--atlas-panel);box-shadow:4px 4px 0 var(--atlas-hard-shadow);font-weight:700}
+
+@media(max-width:420px){
+  .brand-sign small{display:none}
+  .brand-thai{font-size:34px}
+  .version-pill{max-width:126px;font-size:10px}
+  .route-summary-main{grid-template-columns:1fr auto;align-items:center}
+  .route-step-pips{grid-column:1 / -1}
+  .route-summary .btn{min-width:96px}
+  .practice-grid{grid-template-columns:repeat(2,1fr)}
+  .tone-button-grid{grid-template-columns:repeat(2,1fr)}
+  .streak-kpis{grid-template-columns:repeat(2,1fr)}
+  .task-button{grid-template-columns:1fr}
+  .task-kicker{grid-row:1;min-height:0;justify-content:flex-start}
+}
 	</style>
 </head>
 <body>
@@ -1214,12 +1572,15 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
   <section class="view active" id="view-home">
     <header class="today-header">
       <div>
-        <div class="brand">อ่าน<span class="thai-accent">.</span> <span class="brand-tagline">àan means to read</span></div>
+        <div class="brand brand-lockup">
+          <span class="brand-thai">อ่าน<span class="thai-accent">.</span></span>
+          <span class="brand-sign"><b>ÀAN</b><small>àan means to read</small></span>
+        </div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 &middot; 1.0 beta (v7.8.0)</span>
+        <span class="version-pill">Phase 1 complete (v8.0.0)</span>
       </div>
     </header>
 
@@ -1336,7 +1697,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 &middot; 1.0 beta (v7.5.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 complete (v8.0.0)</div>
     </div>
   </section>
 
@@ -1346,6 +1707,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       <div class="screen-kicker">Progress</div>
       <h1 class="screen-title">Progress &amp; settings</h1>
       <p class="screen-sub">Track script progress, streaks, saved progress, and optional extras.</p>
+      <span class="screen-mark" aria-hidden="true">๔๒</span>
     </div>
     <button class="section-card phase1-dashboard" id="phase1-dashboard-card">
       <div class="spread">
@@ -1449,27 +1811,33 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       <div class="screen-kicker">Read</div>
       <h1 class="screen-title">Reading library</h1>
       <p class="screen-sub">Controlled reads and signs from taught patterns. Bonus phrases are optional.</p>
+      <span class="screen-mark" aria-hidden="true">อ่าน</span>
     </div>
     <div class="action-stack read-stack">
       <button class="action-card primary reading-card recommended" id="library-read">
         <div><div class="t">Reading room</div><div class="d">Micro-stories from letters you know</div></div>
         <span class="icon-right">→</span>
+        <span class="reading-mark" aria-hidden="true">อ่าน</span>
       </button>
       <button class="action-card primary reading-card" id="library-capture">
         <div><div class="t">Capture Thai</div><div class="d">Type Thai you noticed in Bangkok</div></div>
         <span class="icon-right">→</span>
+        <span class="reading-mark" aria-hidden="true">อ่าน</span>
       </button>
       <button class="action-card reading-card" id="library-wild-deck">
         <div><div class="t">Wild deck</div><div class="d">Review your saved Thai</div></div>
         <span class="icon-right">→</span>
+        <span class="reading-mark" aria-hidden="true">อ่าน</span>
       </button>
       <button class="action-card primary reading-card" id="library-fluency">
         <div><div class="t">Fluency reads</div><div class="d">Controlled Thai from taught patterns</div></div>
         <span class="icon-right">→</span>
+        <span class="reading-mark" aria-hidden="true">อ่าน</span>
       </button>
       <button class="action-card reading-card" id="library-signs">
         <div><div class="t">Seen in the wild</div><div class="d">Tick off real signs you can read</div></div>
         <span class="icon-right">→</span>
+        <span class="reading-mark" aria-hidden="true">อ่าน</span>
       </button>
       <button class="action-card readiness-card" id="library-readiness">
         <div><div class="t">Readiness report</div><div class="d">What you can do so far</div></div>
@@ -1502,6 +1870,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       <div class="screen-kicker">Practice</div>
       <h1 class="screen-title">Keep it fresh</h1>
       <p class="screen-sub">Quick practice for letters, reading and words you have already met.</p>
+      <span class="screen-mark" aria-hidden="true">ซ้ำ</span>
     </div>
     <div class="review-layout">
       <section class="section-card practice-review">
@@ -1617,6 +1986,7 @@ details[open] .drawer-chevron{transform:rotate(90deg)}
       <div class="screen-kicker">Tone &amp; class</div>
       <h1 class="screen-title">Tone route</h1>
       <p class="screen-sub">Start with the written route: class, mark, live/dead, length, tone.</p>
+      <span class="screen-mark" aria-hidden="true">เสียง</span>
     </div>
     <section class="section-card tone-lab-card">
       <div class="eyebrow">Tone route</div>
@@ -2778,6 +3148,61 @@ const ASSESSMENT_BANK = [
   {gate:'l24', thai:'เกิน', tr:'gern'}, {gate:'l24', thai:'เชิญ', tr:'chern'}
 ];
 
+/* v7.9.0 sealed retention-transfer corpus. RETENTION_DECODE_BANK is used nowhere except
+   the +1 day, +7 day and post-completion +30 day cold checks. Lesson-stage assignments
+   are fixed so a word cannot migrate into another delayed check, and the two lesson
+   stages never share a word. Meanings are never shown or tested. */
+const RETENTION_DECODE_BANK = [
+  {gate:'l4', stage:'retained', thai:'ดาม', tr:'daam'}, {gate:'l4', stage:'retained', thai:'บูด', tr:'bùut'},
+  {gate:'l4', stage:'stabilised', thai:'โบก', tr:'bòhk'}, {gate:'l4', stage:'stabilised', thai:'นิ่ม', tr:'nîm'},
+  {gate:'l5', stage:'retained', thai:'รอด', tr:'rôrt'}, {gate:'l5', stage:'retained', thai:'ลอย', tr:'loi'},
+  {gate:'l5', stage:'stabilised', thai:'ราบ', tr:'râap'}, {gate:'l5', stage:'stabilised', thai:'ลาม', tr:'laam'},
+  {gate:'l6', stage:'retained', thai:'ขาด', tr:'khàat'}, {gate:'l6', stage:'retained', thai:'สาน', tr:'sǎan'},
+  {gate:'l6', stage:'stabilised', thai:'สาด', tr:'sàat'}, {gate:'l6', stage:'stabilised', thai:'สอย', tr:'sǒi'},
+  {gate:'l7', stage:'retained', thai:'จาม', tr:'jaam'}, {gate:'l7', stage:'retained', thai:'จูบ', tr:'jùup'},
+  {gate:'l7', stage:'stabilised', thai:'ชิง', tr:'ching'}, {gate:'l7', stage:'stabilised', thai:'งาม', tr:'ngaam'},
+  {gate:'l8', stage:'retained', thai:'ต้อน', tr:'dtôn'}, {gate:'l8', stage:'retained', thai:'ถีบ', tr:'thìip'},
+  {gate:'l8', stage:'stabilised', thai:'พัง', tr:'phang'}, {gate:'l8', stage:'stabilised', thai:'ฟาด', tr:'fâat'},
+  {gate:'l9', stage:'retained', thai:'คาบ', tr:'khâap'}, {gate:'l9', stage:'retained', thai:'คอย', tr:'khoi'},
+  {gate:'l9', stage:'stabilised', thai:'ผูก', tr:'phùuk'}, {gate:'l9', stage:'stabilised', thai:'ซน', tr:'son'},
+  {gate:'l10', stage:'retained', thai:'ขืน', tr:'khǔuen'}, {gate:'l10', stage:'retained', thai:'ตึก', tr:'dtùek'},
+  {gate:'l10', stage:'stabilised', thai:'ผืน', tr:'phǔuen'}, {gate:'l10', stage:'stabilised', thai:'ซึม', tr:'suem'},
+  {gate:'l11', stage:'retained', thai:'จุก', tr:'jùk'}, {gate:'l11', stage:'retained', thai:'บุก', tr:'bùk'},
+  {gate:'l11', stage:'stabilised', thai:'มุก', tr:'múk'}, {gate:'l11', stage:'stabilised', thai:'ทุบ', tr:'thúp'},
+  {gate:'l12', stage:'retained', thai:'งำ', tr:'ngam'}, {gate:'l12', stage:'retained', thai:'รำ', tr:'ram'},
+  {gate:'l12', stage:'stabilised', thai:'ย้ำ', tr:'yám'}, {gate:'l12', stage:'stabilised', thai:'ช้ำ', tr:'chám'},
+  {gate:'l13', stage:'retained', thai:'ค้ำ', tr:'kháam'}, {gate:'l13', stage:'retained', thai:'งับ', tr:'ngáp'},
+  {gate:'l13', stage:'stabilised', thai:'ซัด', tr:'sát'}, {gate:'l13', stage:'stabilised', thai:'ข่ม', tr:'khòm'},
+  {gate:'l14', stage:'retained', thai:'จ๊ะ', tr:'já'}, {gate:'l14', stage:'retained', thai:'โป๊ะ', tr:'bpó'},
+  {gate:'l14', stage:'stabilised', thai:'เป๊ะ', tr:'bpé'}, {gate:'l14', stage:'stabilised', thai:'ก๊อก', tr:'gók'},
+  {gate:'l15', stage:'retained', thai:'ชื่น', tr:'chûuen'}, {gate:'l15', stage:'retained', thai:'แช่', tr:'châae'},
+  {gate:'l15', stage:'stabilised', thai:'งอน', tr:'ngorn'}, {gate:'l15', stage:'stabilised', thai:'ง้อ', tr:'ngór'},
+  {gate:'l16', stage:'retained', thai:'เข็ด', tr:'khèt'}, {gate:'l16', stage:'retained', thai:'เล็บ', tr:'lép'},
+  {gate:'l16', stage:'stabilised', thai:'เม็ด', tr:'mét'}, {gate:'l16', stage:'stabilised', thai:'เป็น', tr:'bpen'},
+  {gate:'l17', stage:'retained', thai:'หนี', tr:'nǐi'}, {gate:'l17', stage:'retained', thai:'หนุ่ม', tr:'nùm'},
+  {gate:'l17', stage:'stabilised', thai:'หม้อ', tr:'môr'}, {gate:'l17', stage:'stabilised', thai:'หลง', tr:'lǒng'},
+  {gate:'l18', stage:'retained', thai:'กรง', tr:'grong'}, {gate:'l18', stage:'retained', thai:'กรีด', tr:'grìit'},
+  {gate:'l18', stage:'stabilised', thai:'ครอง', tr:'khrorng'}, {gate:'l18', stage:'stabilised', thai:'ปรุง', tr:'bprung'},
+  {gate:'l19', stage:'retained', thai:'ทราม', tr:'saam'}, {gate:'l19', stage:'retained', thai:'ทราย', tr:'saai'},
+  {gate:'l19', stage:'stabilised', thai:'ทรุด', tr:'sút'}, {gate:'l19', stage:'stabilised', thai:'ทรง', tr:'song'},
+  {gate:'l20', stage:'retained', thai:'เฮง', tr:'heng'}, {gate:'l20', stage:'retained', thai:'ฮิต', tr:'hít'},
+  {gate:'l20', stage:'stabilised', thai:'ศพ', tr:'sòp'}, {gate:'l20', stage:'stabilised', thai:'ภาค', tr:'phâak'},
+  {gate:'l21', stage:'retained', thai:'ฉิว', tr:'chǐo'}, {gate:'l21', stage:'retained', thai:'เฉา', tr:'chǎo'},
+  {gate:'l21', stage:'stabilised', thai:'ฆ้อง', tr:'khóng'}, {gate:'l21', stage:'stabilised', thai:'กฎ', tr:'gòt'},
+  {gate:'l22', stage:'retained', thai:'เสีย', tr:'sǐa'}, {gate:'l22', stage:'retained', thai:'เมีย', tr:'mia'},
+  {gate:'l22', stage:'stabilised', thai:'เบื่อ', tr:'bùea'}, {gate:'l22', stage:'stabilised', thai:'ช่วย', tr:'chûai'},
+  {gate:'l23', stage:'retained', thai:'บ่อย', tr:'bòi'}, {gate:'l23', stage:'retained', thai:'น้อย', tr:'nói'},
+  {gate:'l23', stage:'stabilised', thai:'ค่อย', tr:'khôi'}, {gate:'l23', stage:'stabilised', thai:'คุย', tr:'khui'},
+  {gate:'l24', stage:'retained', thai:'เจิม', tr:'jerm'}, {gate:'l24', stage:'retained', thai:'เริง', tr:'rerng'},
+  {gate:'l24', stage:'stabilised', thai:'เพิ่ง', tr:'phôeng'}, {gate:'l24', stage:'stabilised', thai:'เสริม', tr:'sǒerm'},
+  {gate:'l24', stage:'cold30', thai:'เฉิด', tr:'chòert'}, {gate:'l24', stage:'cold30', thai:'ลุ', tr:'lú'},
+  {gate:'l24', stage:'cold30', thai:'เฉือน', tr:'chǔean'}, {gate:'l24', stage:'cold30', thai:'กลบ', tr:'glòp'},
+  {gate:'l24', stage:'cold30', thai:'พรุน', tr:'phrun'}, {gate:'l24', stage:'cold30', thai:'สวม', tr:'sǔam'},
+  {gate:'l24', stage:'cold30', thai:'แขวน', tr:'khwǎaen'}, {gate:'l24', stage:'cold30', thai:'ตรึง', tr:'dtrueng'},
+  {gate:'l24', stage:'cold30', thai:'ปลอบ', tr:'bplòrp'}, {gate:'l24', stage:'cold30', thai:'ครีบ', tr:'khrîip'},
+  {gate:'l24', stage:'cold30', thai:'เผลอ', tr:'phlǒr'}, {gate:'l24', stage:'cold30', thai:'เหิน', tr:'hǒern'}
+];
+
 const CLS_LABEL = {mid:"Mid class", high:"High class", low:"Low class"};
 const MID_CLASS_SET = ['ก','จ','ฎ','ฏ','ด','ต','บ','ป','อ'];
 const HIGH_CLASS_SET = ['ข','ฃ','ฉ','ฐ','ถ','ผ','ฝ','ศ','ษ','ส','ห'];
@@ -2988,8 +3413,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v7.8.0';
-const APP_VERSION_LABEL = 'Phase 1 · 1.0 beta (v7.8.0)';
+const APP_VERSION = 'v8.0.0';
+const APP_VERSION_LABEL = 'Phase 1 complete (v8.0.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3217,8 +3642,9 @@ function importProgressState(s){
   const migrated = repairStateForV5(next);
   const migrated501 = repairStateForV501(next);
   const migrated54 = repairStateForV54(next);
+  const migrated79 = repairStateForV79(next);
   validateStateDeckForDone(next, 'imported progress');
-  return {state:next, migrated, migrated501, migrated54};
+  return {state:next, migrated, migrated501, migrated54, migrated79};
 }
 function unwrapProgressImport(obj){
   if(!plainObject(obj)) throw new Error('progress import must be an object');
@@ -4193,12 +4619,23 @@ function startMaintenanceReadinessReport(){
   saveState();
   showReadinessReport();
 }
+function retention30Due(target){
+  const s = target || state;
+  if(!phase1CompletionPassed(s)) return null;
+  const pc = s.phase1Completion;
+  const rec = pc && pc.retention30;
+  if(!rec || rec.passed || !rec.due || rec.due > todayStr()) return null;
+  return rec;
+}
 function maintenanceMainTask(target){
   const s = target || state;
   if(!phase1CompletionPassed(s)) return null;
   const due = srsDueFor(s).length;
   if(due){
     return {type:'maintenance', label:'Maintenance review', sub:'Keep old material warm.', id:'maintenance-review', go:()=>goTodayReviewTask()};
+  }
+  if(retention30Due(s)){
+    return {type:'maintenance', label:'30-day cold decode', sub:'Sealed words · prove the reading skill still transfers', id:'maintenance-retention30', go:()=>startRetention30Check()};
   }
   const options = [];
   const read = maintenanceFluencyRead(s);
@@ -6649,7 +7086,8 @@ function phase1DashboardCounts(target){
     lettersBoss:!!checks.letters42,
     fluency:fluencyDone,
     fluencyTotal:FLUENCY_READS.length,
-    final:!!checks.phase1Completion
+    final:!!checks.phase1Completion,
+    retention30:s.phase1Completion && s.phase1Completion.retention30 ? s.phase1Completion.retention30 : null
   };
 }
 function medianNumber(values){
@@ -6687,7 +7125,8 @@ function renderPhase1Dashboard(){
     metric('mastery checkpoints', c.checkpoints + '/' + c.checkpointTotal, ''),
     metric('Letters boss', c.lettersBoss ? '✓' : '-', ''),
     metric('fluency reads', c.fluency + '/' + c.fluencyTotal, ''),
-    metric('final checkpoint', c.final ? '✓' : '-', '')
+    metric('final checkpoint', c.final ? '✓' : '-', ''),
+    metric('30-day cold decode', c.retention30 && c.retention30.passed ? '✓' : c.final ? (c.retention30 && c.retention30.due <= todayStr() ? 'due' : 'day 30') : '-', c.retention30 && !c.retention30.passed ? c.retention30.due : '')
   ].join('');
   const mileage = el('reading-mileage-row');
   if(mileage){
@@ -7167,6 +7606,53 @@ function axisCardLabel(id){
   const labels = {glyph:'letter shape', class:'class from memory', initial:'start sound', final:'ending job', live:'live or dead', tone:'tone rule', listen:'listen and pick Thai', say:'read aloud', transfer:'outside the app'};
   return labels[p.axis] || p.axis;
 }
+function retentionDecodeItems(lessonId, stage){
+  return RETENTION_DECODE_BANK.filter(item=>item.gate === lessonId && item.stage === stage);
+}
+function retentionDecodeQuestionFields(q, item, stage){
+  return Object.assign(q, {_retentionFresh:true, _retentionStage:stage, _retentionThai:item.thai});
+}
+function buildRetentionDecodeQuestions(item){
+  const words = retentionDecodeItems(item.lessonId, item.stage);
+  if(words.length !== 2) return [];
+  const upTo = lessonNum(item.lessonId);
+  const distractorPool = RETENTION_DECODE_BANK.filter(x=>x.stage !== 'cold30' && lessonNum(x.gate) <= upTo);
+  const first = words[0], second = words[1];
+  const mech = freshMechanismQuestion(first, upTo, {neutral:true});
+  const readFirst = freshReadingQuestion(first, distractorPool, {neutral:true});
+  const readSecond = freshReadingQuestion(second, distractorPool, {neutral:true});
+  if(!mech || !readFirst || !readSecond) return [];
+  const pair = 'retention:' + item.stage + ':' + item.lessonId + ':' + first.thai;
+  return [
+    retentionDecodeQuestionFields(Object.assign({_pair:pair, _pairFirst:true}, mech), first, item.stage),
+    retentionDecodeQuestionFields(Object.assign({_pair:pair}, readFirst), first, item.stage),
+    retentionDecodeQuestionFields(readSecond, second, item.stage)
+  ];
+}
+function buildRetention30Quiz(){
+  const words = RETENTION_DECODE_BANK.filter(item=>item.stage === 'cold30');
+  if(words.length !== 12) return [];
+  const qs = [];
+  words.forEach((item, i)=>{
+    const read = freshReadingQuestion(item, words, {neutral:true});
+    if(i < 2){
+      const mech = freshMechanismQuestion(item, 24, {neutral:true});
+      if(mech && read){
+        const pair = 'retention:cold30:' + item.thai;
+        qs.push(retentionDecodeQuestionFields(Object.assign({_pair:pair, _pairFirst:true}, mech), item, 'cold30'));
+        qs.push(retentionDecodeQuestionFields(Object.assign({_pair:pair}, read), item, 'cold30'));
+      }
+    } else if(read){
+      qs.push(retentionDecodeQuestionFields(read, item, 'cold30'));
+    }
+  });
+  return shuffleWithPairs(qs);
+}
+function startRetention30Check(){
+  const qs = buildRetention30Quiz();
+  if(qs.length !== 14){ toast('The 30-day cold check is not ready.'); return; }
+  startGenericQuiz(qs, '30-day cold decode', {retention30:true});
+}
 function buildRetentionQuiz(item){
   const L = lessonById(item.lessonId);
   if(!L) return [];
@@ -7187,7 +7673,10 @@ function buildRetentionQuiz(item){
       if(q) qs.push(Object.assign({_axisId:id}, q));
     });
   }
-  return sample(qs, Math.min(item.stage === 'stabilised' ? 8 : 6, qs.length));
+  const target = item.stage === 'stabilised' ? 8 : 6;
+  const transfer = lessonNum(item.lessonId) >= 4 ? buildRetentionDecodeQuestions(item) : [];
+  const familiar = sample(qs, Math.min(Math.max(0, target - transfer.length), qs.length));
+  return shuffleWithPairs(familiar.concat(transfer));
 }
 function startRetentionCheck(item){
   const L = lessonById(item.lessonId);
@@ -7411,6 +7900,38 @@ function repairStateForV54(target){
       finalCheckpointReady:report.finalCheckpointReady,
       finalCheckpointAutoPassed:false
     };
+    report.changed = true;
+  }
+  return report;
+}
+function ensureRetention30ForCompletion(target){
+  const s = target || state;
+  if(!(s.checks && s.checks.phase1Completion)) return false;
+  if(!s.phase1Completion || typeof s.phase1Completion !== 'object' || Array.isArray(s.phase1Completion)) s.phase1Completion = {};
+  const pc = s.phase1Completion;
+  let changed = false;
+  if(!pc.firstPassedAt){ pc.firstPassedAt = pc.date || todayStr(); changed = true; }
+  if(!pc.retention30 || typeof pc.retention30 !== 'object' || Array.isArray(pc.retention30)){
+    pc.retention30 = {due:isoPlusDays(pc.firstPassedAt, 30), attempts:0, firstPct:null, passed:false};
+    changed = true;
+  } else {
+    if(!pc.retention30.due){ pc.retention30.due = isoPlusDays(pc.firstPassedAt, 30); changed = true; }
+    if(pc.retention30.attempts == null){ pc.retention30.attempts = 0; changed = true; }
+    if(pc.retention30.firstPct == null && !Object.prototype.hasOwnProperty.call(pc.retention30, 'firstPct')){ pc.retention30.firstPct = null; changed = true; }
+    if(pc.retention30.passed == null){ pc.retention30.passed = false; changed = true; }
+  }
+  return changed;
+}
+function repairStateForV79(target){
+  const s = target || state;
+  ensureStateCollections(s);
+  const report = {changed:false, retention30Scheduled:false};
+  if(ensureRetention30ForCompletion(s)){
+    report.changed = true;
+    report.retention30Scheduled = true;
+  }
+  if(!s.migrations.v79){
+    s.migrations.v79 = {date:todayStr(), retention30Scheduled:report.retention30Scheduled};
     report.changed = true;
   }
   return report;
@@ -8236,8 +8757,8 @@ function validateV70OnboardingContracts(){
   if(!/touchstart/.test(onboardingSource) || !/touchend/.test(onboardingSource)) errors.push('onboarding should support swipe gestures');
   const aboutSource = String(showAboutApp);
   if(!/About this app/.test(aboutSource) || !/device voice support/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
-  if(!/^v7\.\d+\.\d+$/.test(APP_VERSION)) errors.push('internal app version should stay on the v7 beta line');
-  if(!/1\.0 beta/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain 1.0 beta and the current app version');
+  if(!/^v(?:7\.\d+\.\d+|8\.0\.0)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
+  if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
   if(errors.length) throw new Error('V7.0 onboarding contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8337,8 +8858,8 @@ function validateV71VisualSoundContracts(){
   const guardSource = String(requestOverlayClose) + String(showOverlayExitConfirm) + String(overlayExitWouldDiscard) + String(lessonExitWouldDiscard) + String(masteryQuizExitWouldDiscard);
   if(!guardSource.includes('overlayExitWouldDiscard') || !guardSource.includes('bindDialogDismissal') || !guardSource.includes('closeOverlay()')) errors.push('overlay close button should route through the v7.1 discard guard');
   if(!String(lessonExitWouldDiscard).includes('p.i > 0') || !String(masteryQuizExitWouldDiscard).includes('p.opts.boss') || !String(masteryQuizExitWouldDiscard).includes('p.opts.checkpoint') || !String(masteryQuizExitWouldDiscard).includes('p.opts.letters42') || !String(masteryQuizExitWouldDiscard).includes('p.opts.phase1Completion')) errors.push('discard guard should cover progressed lessons and mastery-stakes quizzes only');
-  if(!/^v7\.\d+\.\d+$/.test(APP_VERSION)) errors.push('internal app version should stay on the v7 beta line');
-  if(!/1\.0 beta/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain 1.0 beta and the current app version');
+  if(!/^v(?:7\.\d+\.\d+|8\.0\.0)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
+  if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
   if(errors.length) throw new Error('V7.1 visual/sound contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8436,8 +8957,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
+  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -8609,8 +9130,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
+  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8704,8 +9225,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
+  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8774,8 +9295,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v7.8.0') errors.push('internal app version should be v7.8.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 · 1.0 beta (v7.8.0)') errors.push('footer label should be Phase 1 · 1.0 beta (v7.8.0)');
+  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -8784,8 +9305,9 @@ function validateFreshDecodeContracts(){
   const errors = [];
   if(FRESH_DECODE.length !== 120) errors.push('FRESH_DECODE should have 120 entries, has ' + FRESH_DECODE.length);
   if(ASSESSMENT_BANK.length !== 56) errors.push('ASSESSMENT_BANK should have 56 entries, has ' + ASSESSMENT_BANK.length);
+  if(RETENTION_DECODE_BANK.length !== 96) errors.push('RETENTION_DECODE_BANK should have 96 entries, has ' + RETENTION_DECODE_BANK.length);
   const seen = new Set();
-  FRESH_DECODE.concat(ASSESSMENT_BANK).forEach(item=>{
+  FRESH_DECODE.concat(ASSESSMENT_BANK, RETENTION_DECODE_BANK).forEach(item=>{
     if(seen.has(item.thai)) errors.push('fresh corpus duplicate: ' + item.thai);
     seen.add(item.thai);
     if(item.thai.normalize('NFC') !== item.thai) errors.push(item.thai + ' is not NFC');
@@ -8931,6 +9453,102 @@ function validateV78RequiredLoopContracts(){
     if(!buildLessonQuiz(L).length) errors.push(L.id + ' quiz should still build with an empty error profile');
   });
   if(errors.length) throw new Error('V7.8 required-loop contract failed:\n' + errors.join('\n'));
+  return true;
+}
+/* v7.9.0: delayed recall uses a third sealed corpus. +1/+7 checks mix three neutral transfer
+   questions with familiar lesson axes, while the post-completion day-30 check uses only its
+   own 12 never-served words. First-attempt evidence is retained even when remediation follows. */
+function validateV79RetentionDecodeContracts(){
+  const errors = [];
+  if(RETENTION_DECODE_BANK.length !== 96) errors.push('retention bank should contain 96 words');
+  const bankThai = new Set(RETENTION_DECODE_BANK.map(x=>x.thai));
+  for(let n=4;n<=24;n++){
+    const lessonId = 'l' + n;
+    const retained = retentionDecodeItems(lessonId, 'retained');
+    const stabilised = retentionDecodeItems(lessonId, 'stabilised');
+    if(retained.length !== 2 || stabilised.length !== 2) errors.push(lessonId + ' needs two distinct words per delayed stage');
+    if(retained.some(x=>stabilised.some(y=>y.thai === x.thai))) errors.push(lessonId + ' +1/+7 retention words overlap');
+    ['retained','stabilised'].forEach(stage=>{
+      const fake = {done:LESSONS.slice(0,n).map(L=>L.id), srs:{}, days:{}, retention:{}, checks:{}};
+      const qs = withTemporaryState(fake, ()=>buildRetentionQuiz({lessonId, stage}));
+      const transfer = qs.filter(q=>q._retentionFresh);
+      const expectedTotal = stage === 'stabilised' ? 8 : 6;
+      if(qs.length !== expectedTotal) errors.push(lessonId + ' ' + stage + ' should stay at ' + expectedTotal + ' questions');
+      if(transfer.length !== 3) errors.push(lessonId + ' ' + stage + ' should serve three retention-bank questions');
+      if(transfer.some(q=>!q.neutralPrompt || q.colourPrompt)) errors.push(lessonId + ' ' + stage + ' bank prompts must be neutral');
+      if(transfer.some(q=>q._retentionStage !== stage || !retentionDecodeItems(lessonId, stage).some(x=>x.thai === q.prompt))) errors.push(lessonId + ' ' + stage + ' served a word outside its sealed assignment');
+      for(let i=0;i<qs.length;i++){
+        const q = qs[i];
+        if(q._retentionFresh && q._pairFirst && (!qs[i+1] || qs[i+1]._pair !== q._pair)) errors.push(lessonId + ' ' + stage + ' transfer chain was split');
+      }
+    });
+  }
+  LESSONS.slice(0,3).forEach((L,i)=>{
+    const fake = {done:LESSONS.slice(0,i+1).map(x=>x.id), srs:{}, days:{}, retention:{}, checks:{}};
+    const qs = withTemporaryState(fake, ()=>buildRetentionQuiz({lessonId:L.id, stage:'retained'}));
+    if(qs.some(q=>q._retentionFresh)) errors.push(L.id + ' should stay familiar-only before the real-word bank opens');
+  });
+  const cold = buildRetention30Quiz();
+  const coldThai = RETENTION_DECODE_BANK.filter(x=>x.stage === 'cold30').map(x=>x.thai);
+  if(cold.length !== 14) errors.push('30-day cold check should contain 14 questions');
+  if(new Set(cold.map(q=>q.prompt)).size !== 12 || coldThai.some(thai=>!cold.some(q=>q.prompt === thai))) errors.push('30-day cold check should use all 12 reserved words');
+  if(cold.some(q=>!q._retentionFresh || q._retentionStage !== 'cold30' || !q.neutralPrompt || q.colourPrompt)) errors.push('30-day questions must be neutral and retention-only');
+  for(let i=0;i<cold.length;i++) if(cold[i]._pairFirst && (!cold[i+1] || cold[i+1]._pair !== cold[i]._pair)) errors.push('30-day route chain was split');
+  const otherPrompts = [];
+  LESSONS.forEach(L=>otherPrompts.push(...buildLessonQuiz(L).map(q=>q.prompt)));
+  [2,5,8,11,14,17,20,23].forEach(i=>otherPrompts.push(...buildCheckpointQuiz(i).map(q=>q.prompt)));
+  ['A','B','C','D'].forEach(u=>otherPrompts.push(...buildBossQuiz(u).map(q=>q.prompt)));
+  otherPrompts.push(...buildPhase1CompletionQuiz().map(q=>q.prompt));
+  otherPrompts.push(...freshDecodeQuestions(FRESH_DECODE, 24, {mix:'maintenance'}).map(q=>q.prompt));
+  if(otherPrompts.some(prompt=>bankThai.has(prompt))) errors.push('retention bank leaked into a non-retention surface');
+  const completed = {done:LESSONS.map(L=>L.id), checks:{phase1Completion:true, letters42:true}, phase1Completion:{date:isoPlusDays(todayStr(), -30), passed:true}, srs:{}, days:{}, retention:{}, fluencyReads:{}};
+  repairStateForV79(completed);
+  if(!completed.phase1Completion.retention30 || completed.phase1Completion.retention30.due !== todayStr() || !retention30Due(completed)) errors.push('completed learners should receive the day-30 cold check on schedule');
+  withTemporaryState(completed, ()=>{
+    const task = maintenanceMainTask();
+    if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
+  });
+  if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
+  if(APP_VERSION !== 'v8.0.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('v8.0.0 identity mismatch');
+  if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
+  return true;
+}
+/* v8.0.0: presentation-only Bangkok Street Atlas identity. The contract keeps the new shell
+   solid, themeable and class-colour-safe without adding learner state or changing route logic. */
+function validateV8VisualContracts(){
+  const errors = [];
+  const css = appStyleText();
+  const marker = 'V8.0.0 · BANGKOK STREET ATLAS';
+  const markerIndex = css.indexOf(marker);
+  const atlasCss = markerIndex >= 0 ? css.slice(markerIndex) : '';
+  if(!atlasCss) errors.push('Bangkok Street Atlas CSS marker missing');
+  [
+    '--atlas-panel','--atlas-ticket','--atlas-ticket-ink','--atlas-route','--atlas-sky','--atlas-sun','--atlas-hard-shadow'
+  ].forEach(token=>{ if(!atlasCss.includes(token)) errors.push('atlas token missing ' + token); });
+  [
+    ['solid shared surfaces','background:var(--atlas-panel)'],
+    ['glass retirement','backdrop-filter:none'],
+    ['Today ticket','background:var(--atlas-ticket)'],
+    ['Today route rail','.today-task-list::before'],
+    ['route stop marker','.task-button::before'],
+    ['lesson ruled sheet','repeating-linear-gradient(180deg'],
+    ['solid route CTA','background:var(--atlas-route)'],
+    ['solid bottom navigation','#tabbar{']
+  ].forEach(([label,term])=>{ if(!atlasCss.includes(term)) errors.push(label + ' missing from atlas CSS'); });
+  if(/--(?:mid|high|low)\s*:/.test(atlasCss)) errors.push('v8 generic identity must not redefine Thai class colours');
+  if(!String(renderShop).includes('theme-swatch') || !String(renderShop).includes('data-swatch')) errors.push('theme shop should show code-native swatches');
+  if(typeof document !== 'undefined' && document.querySelectorAll){
+    const screenMarks = document.querySelectorAll('.screen-mark[aria-hidden="true"]');
+    const readingMarks = document.querySelectorAll('.reading-mark[aria-hidden="true"]');
+    if(screenMarks.length && screenMarks.length !== 4) errors.push('four decorative screen marks should stay hidden from assistive technology');
+    if(readingMarks.length && readingMarks.length !== 5) errors.push('five reading-card marks should stay hidden from assistive technology');
+    if(document.querySelectorAll('.brand-lockup').length && (!document.querySelector('.brand-lockup .brand-thai') || !document.querySelector('.brand-lockup .brand-sign'))) errors.push('ÀAN masthead lockup missing');
+  }
+  const fresh = {done:[], srs:{}};
+  ensureStateCollections(fresh);
+  ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
+  if(APP_VERSION !== 'v8.0.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('v8.0.0 identity mismatch');
+  if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10064,6 +10682,7 @@ function renderShop(){
       ${THEMES.map(t=>{
         const owned = ownsTheme(t.id), active = (state.theme||'night')===t.id;
         return `<div class="shop-row">
+          <span class="theme-swatch" data-swatch="${escAttr(t.id)}" aria-hidden="true"></span>
           <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'default colours':'class colours stay the same'}</div></div>
           <button class="btn small ${owned?'ghost':''}" data-theme-id="${escAttr(t.id)}" data-price="${escAttr(t.price)}">${active?'● active':owned?'use':t.price+' 💎'}</button>
         </div>`;
@@ -10809,6 +11428,8 @@ function finishPhase1CompletionCheckpoint(pct, ratingId, rematch){
     const first = !state.checks.phase1Completion;
     firstPass = first && !rematch;
     state.checks.phase1Completion = true;
+    if(!state.phase1Completion.firstPassedAt) state.phase1Completion.firstPassedAt = todayStr();
+    ensureRetention30ForCompletion(state);
     if(!rematch) d.m = (d.m||0) + 1;
     state.lastCapability = {date:todayStr(), text:'You passed the Phase 1 controlled reading checkpoint.'};
     if(firstPass) award(20);
@@ -10876,7 +11497,7 @@ function lessonExitWouldDiscard(p){
 function masteryQuizExitWouldDiscard(p){
   if(!p || p.type !== 'quiz' || !p.opts) return false;
   const progress = p.qIdx != null ? p.qIdx : p.i;
-  const stakes = p.opts.boss || p.opts.checkpoint != null || p.opts.letters42 || p.opts.phase1Completion;
+  const stakes = p.opts.boss || p.opts.checkpoint != null || p.opts.letters42 || p.opts.phase1Completion || p.opts.retention30;
   return !!(stakes && progress > 0 && progress < (p.qs || []).length);
 }
 function overlayExitWouldDiscard(){
@@ -14057,12 +14678,51 @@ function nextGenericQ(){
       el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
       return;
     }
+    if(p.opts.retention30){
+      const pc = ensurePhase1CompletionRecord();
+      if(!pc.retention30) ensureRetention30ForCompletion(state);
+      const rec = pc.retention30;
+      const passed = pct >= 85;
+      if(rec){
+        if(!rec.attempts) rec.firstPct = pct;
+        rec.attempts = (rec.attempts || 0) + 1;
+        rec.lastPct = pct;
+        rec.lastAttempt = todayStr();
+      }
+      if(passed && rec){
+        rec.passed = todayStr();
+        state.lastCapability = {date:todayStr(), text:'You still decoded unseen Thai after 30 days.'};
+        saveState(); questCheck(); sfxComplete();
+        el('stage').innerHTML = `
+          <div class="result-big">${p.correct} / ${p.qs.length}</div>
+          <div class="result-sub">30-day cold decode passed. The reading skill still transfers to unseen Thai.</div>
+          ${sessionStreakMomentHtml(streakMoment)}
+          <div class="stage-actions"><button class="btn full" id="st-done">Continue →</button></div>`;
+        triggerRewardBurst('retention');
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
+      } else {
+        saveState(); questCheck();
+        el('stage').innerHTML = `
+          <div class="result-big">${pct}%</div>
+          <div class="result-sub">The cold check needs 85%. Your first-attempt result stays recorded; repair now uses a different word pool.</div>
+          <div class="stage-actions">
+            <button class="btn full" id="retention30-repair">Repair with Fresh decode →</button>
+            <button class="btn full ghost" id="st-done" style="margin-top:8px">Later</button>
+          </div>`;
+        el('retention30-repair').onclick = ()=>startFreshDecodeBlock();
+        el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderLearn(); renderReviewTab(); };
+      }
+      return;
+    }
     if(p.opts.retention){
       const item = p.opts.retention, L = lessonById(item.lessonId), passed = pct >= 80;
       const rec = retentionRecord(state, item.lessonId);
       if(rec){
         rec.attempts = rec.attempts || {retained:0, stabilised:0};
-        rec.attempts[retentionStageKey(item.stage)] = (rec.attempts[retentionStageKey(item.stage)] || 0) + 1;
+        rec.firstPct = rec.firstPct || {};
+        const key = retentionStageKey(item.stage);
+        if(!rec.attempts[key] && rec.firstPct[key] == null) rec.firstPct[key] = pct;
+        rec.attempts[key] = (rec.attempts[key] || 0) + 1;
       }
       if(passed && rec){
         rec[retentionStageKey(item.stage)] = todayStr();
@@ -14639,7 +15299,9 @@ function runFullStartupValidators(){
     validateTimeAwareRouteContracts,
     validateFreshDecodeContracts,
     validateV77ColourFadeContracts,
-    validateV78RequiredLoopContracts
+    validateV78RequiredLoopContracts,
+    validateV79RetentionDecodeContracts,
+    validateV8VisualContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -14665,7 +15327,8 @@ window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
     const migrated = repairStateForV5(state);
     const migrated501 = repairStateForV501(state);
     const migrated54 = repairStateForV54(state);
-    if(migrated.changed || migrated501.changed || migrated54.changed) saveState();
+    const migrated79 = repairStateForV79(state);
+    if(migrated.changed || migrated501.changed || migrated54.changed || migrated79.changed) saveState();
     applyTheme(); renderTitle();
     renderHome(); renderLearn(); renderReviewTab();
     showV5NoticeIfNeeded(hadProgressBeforeRepair);

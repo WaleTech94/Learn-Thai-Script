@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-/* Fresh-decode corpus validator (v7.6.0).
+/* Fresh-decode corpus validator (v7.6.0/v7.9.0).
    Loads the app script in a VM sandbox (same harness idea as phase1-audit.js) and
-   validates FRESH_DECODE / ASSESSMENT_BANK entries with the app's own gating code:
+   validates FRESH_DECODE / ASSESSMENT_BANK / RETENTION_DECODE_BANK entries with the app's own gating code:
    - NFC + monosyllable + gate range l4-l24
    - decodable + prerequisite-safe at its own gate (visible glyphs, vowel patterns, mechanisms)
    - tone verified by route derivation (class x mark x live/dead x length) against the tr diacritic
-   - zero overlap with ANY Thai token already present in index.html outside the two corpora
+   - zero overlap with ANY Thai token already present in index.html outside the three corpora
    - per-gate supply floors and pool sizes
    Modes:
      node tools/fresh-decode-check.js                 -> validate embedded corpora in index.html
      node tools/fresh-decode-check.js --inventory     -> dump per-lesson taught glyph/pattern inventory
-     node tools/fresh-decode-check.js --candidates f  -> validate candidate JSON {A:[...],B:[...]} before embedding */
+     node tools/fresh-decode-check.js --candidates f  -> validate candidate JSON {A:[...],B:[...],C:[...]} before embedding */
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
@@ -55,11 +55,12 @@ function sandbox(){
   return box;
 }
 
-/* Thai tokens present anywhere in the file OUTSIDE the two corpus arrays. */
+/* Thai tokens present anywhere in the file OUTSIDE the three corpus arrays. */
 function corpusStrippedHtml(html){
   return html
     .replace(/const FRESH_DECODE = \[[\s\S]*?\n\];/, 'const FRESH_DECODE = [];')
-    .replace(/const ASSESSMENT_BANK = \[[\s\S]*?\n\];/, 'const ASSESSMENT_BANK = [];');
+    .replace(/const ASSESSMENT_BANK = \[[\s\S]*?\n\];/, 'const ASSESSMENT_BANK = [];')
+    .replace(/const RETENTION_DECODE_BANK = \[[\s\S]*?\n\];/, 'const RETENTION_DECODE_BANK = [];');
 }
 function thaiTokensIn(text){
   return [...new Set(String(text).normalize('NFC').match(/[฀-๿]+/g) || [])];
@@ -116,10 +117,11 @@ globalThis.__freshCheck = function(mode, payload){
   }
   const A = payload.A != null ? payload.A : (typeof FRESH_DECODE !== 'undefined' ? FRESH_DECODE : null);
   const B = payload.B != null ? payload.B : (typeof ASSESSMENT_BANK !== 'undefined' ? ASSESSMENT_BANK : null);
-  if(!A || !B) return {errors:['FRESH_DECODE / ASSESSMENT_BANK not found; pass --candidates file.json']};
+  const C = payload.C != null ? payload.C : (typeof RETENTION_DECODE_BANK !== 'undefined' ? RETENTION_DECODE_BANK : null);
+  if(!A || !B || !C) return {errors:['FRESH_DECODE / ASSESSMENT_BANK / RETENTION_DECODE_BANK not found; pass --candidates file.json']};
   const errors = [];
   const all = new Map();
-  [['FRESH_DECODE', A], ['ASSESSMENT_BANK', B]].forEach(pair=>{
+  [['FRESH_DECODE', A], ['ASSESSMENT_BANK', B], ['RETENTION_DECODE_BANK', C]].forEach(pair=>{
     const name = pair[0], pool = pair[1];
     pool.forEach(item=>{
       const key = String(item.thai).normalize('NFC');
@@ -130,6 +132,7 @@ globalThis.__freshCheck = function(mode, payload){
   });
   if(A.length !== 120) errors.push('FRESH_DECODE should have exactly 120 entries, has ' + A.length);
   if(B.length !== 56) errors.push('ASSESSMENT_BANK should have exactly 56 entries, has ' + B.length);
+  if(C.length !== 96) errors.push('RETENTION_DECODE_BANK should have exactly 96 entries, has ' + C.length);
   const aAtGate = n=>A.filter(x=>lessonNum(x.gate) <= n).length;
   if(A.filter(x=>lessonNum(x.gate) === 4).length < 10) errors.push('FRESH_DECODE needs >=10 words at gate l4');
   for(let n=4;n<=24;n++){
@@ -141,7 +144,16 @@ globalThis.__freshCheck = function(mode, payload){
     const count = B.filter(x=>{ const n = lessonNum(x.gate); return n >= lo && n <= hi; }).length;
     if(count < 8) errors.push('ASSESSMENT_BANK window l' + lo + '-l' + hi + ' has ' + count + ' words, needs >=8');
   }
-  return {errors, counts:{A:A.length, B:B.length}};
+  for(let n=4;n<=24;n++){
+    ['retained','stabilised'].forEach(stage=>{
+      const count = C.filter(x=>lessonNum(x.gate) === n && x.stage === stage).length;
+      if(count !== 2) errors.push('RETENTION_DECODE_BANK l' + n + ' ' + stage + ' needs exactly 2 words, has ' + count);
+    });
+  }
+  const cold = C.filter(x=>x.stage === 'cold30');
+  if(cold.length !== 12 || cold.some(x=>lessonNum(x.gate) !== 24)) errors.push('RETENTION_DECODE_BANK needs exactly 12 l24 cold30 words');
+  if(C.some(x=>!['retained','stabilised','cold30'].includes(x.stage))) errors.push('RETENTION_DECODE_BANK has an invalid stage');
+  return {errors, counts:{A:A.length, B:B.length, C:C.length}};
 };
 `;
 
@@ -158,7 +170,7 @@ function main(){
   const cIdx = process.argv.indexOf('--candidates');
   if(cIdx > -1){
     const data = JSON.parse(fs.readFileSync(process.argv[cIdx+1], 'utf8'));
-    payload.A = data.A; payload.B = data.B;
+    payload.A = data.A; payload.B = data.B; payload.C = data.C;
   }
   const result = box.__freshCheck('validate', payload);
   if(result.errors.length){
@@ -166,6 +178,6 @@ function main(){
     result.errors.forEach(e=>console.error('  ' + e));
     process.exit(1);
   }
-  console.log('fresh-decode corpus check OK: ' + result.counts.A + ' fresh + ' + result.counts.B + ' bank words verified (tone route, decodability, prerequisites, freshness, supply floors).');
+  console.log('fresh-decode corpus check OK: ' + result.counts.A + ' fresh + ' + result.counts.B + ' assessment + ' + result.counts.C + ' retention words verified (tone route, decodability, prerequisites, freshness, supply floors).');
 }
 main();

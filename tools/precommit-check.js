@@ -220,7 +220,7 @@ globalThis.__precommitTone = (function(){
   function routeTone(item){
     const thai = item.thai || item.t || '';
     if(/^(SLANG|PHRASES|TEACHER|FOOD2|TAXI_GRAB|MARKET_BARGAIN)/.test(item.path || '') && item.path !== 'PHRASES[0]') return null;
-    if(/^(FRESH_DECODE|ASSESSMENT_BANK)/.test(item.path || '')){
+    if(/^(FRESH_DECODE|ASSESSMENT_BANK|RETENTION_DECODE_BANK)/.test(item.path || '')){
       const freshRoute = freshDecodeRoute({thai, tr:item.tr});
       return freshRoute ? freshRoute.tone : 'unverifiable fresh-decode entry';
     }
@@ -243,7 +243,7 @@ globalThis.__precommitTone = (function(){
       Object.keys(value).forEach(key=>collect(value[key], path + '.' + key, out, seen));
     }
   }
-  const roots = {LESSONS, TONES, TONES2, TONE_SETS, LENGTH_PAIRS, SLANG, PHRASES, TEACHER, FOOD2, TAXI_GRAB, MARKET_BARGAIN, POSTCARDS, STORIES, FLUENCY_READS, DECODE_GYM, FRESH_DECODE, ASSESSMENT_BANK, CHUNK_ITEMS, SIGN_SAFARI_ITEMS, FONT_SHOCK_ITEMS, MOUTH_COACH_CARDS, CONTRAST_BLOCKS, BANGKOK_MISSIONS, LESSON_PAYOFFS};
+  const roots = {LESSONS, TONES, TONES2, TONE_SETS, LENGTH_PAIRS, SLANG, PHRASES, TEACHER, FOOD2, TAXI_GRAB, MARKET_BARGAIN, POSTCARDS, STORIES, FLUENCY_READS, DECODE_GYM, FRESH_DECODE, ASSESSMENT_BANK, RETENTION_DECODE_BANK, CHUNK_ITEMS, SIGN_SAFARI_ITEMS, FONT_SHOCK_ITEMS, MOUTH_COACH_CARDS, CONTRAST_BLOCKS, BANGKOK_MISSIONS, LESSON_PAYOFFS};
   const items = [];
   Object.keys(roots).forEach(key=>collect(roots[key], key, items, new Set()));
   const issues = [];

@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v7.8.0`
+Current app version: `v8.0.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -225,6 +225,22 @@ v7.8.0 is the required-surface mastery-loop pass:
 - One lesson-quiz filler slot and the maintenance Fresh decode sample are weakness-first from existing diagnostics; empty profiles degrade to random.
 - Adds `validateV78RequiredLoopContracts()`.
 
+v7.9.0 is the sealed retention-transfer pass:
+
+- Adds `RETENTION_DECODE_BANK` with 96 real words used only by delayed recall: two `retained` and two different `stabilised` words for every Lesson 4–24 check, plus twelve `cold30` words.
+- Keeps +1/+7 checks at 6/8 questions and 80%; three familiar-axis slots become neutral transfer questions, while Lessons 1–3 stay familiar-only.
+- Schedules a 14-question, 85% day-30 cold decode after the first Phase 1 pass; failure preserves completion and repair uses the separate maintenance corpus.
+- Stores optional nested first-attempt and month-check evidence, migrates existing completed states, and exposes month-check status in the Progress dashboard.
+- Extends the standalone corpus gate, precommit tone walk and generated audit; adds `validateV79RetentionDecodeContracts()`.
+
+v8.0.0 is the Bangkok Street Atlas visual-completion pass:
+
+- Replaces the aurora/glass/gradient template language with code-native route-map, printed-ticket, workbook, tone-board, signboard, stamp and collectible-letter surfaces.
+- Makes existing progress more visible through the Today transit rail, shaped task states, collected letter wall, coloured progress stamps and meaningful completion pieces without changing rewards or retention logic.
+- Adds real theme swatches and theme-aware atlas tokens across the default, free and paid appearances while preserving the reserved Thai class palette.
+- Keeps decorative Thai marks out of assistive names with `aria-hidden`, preserves reduced motion and mobile safe areas, and adds no runtime asset/request.
+- Adds `validateV8VisualContracts()` and the 58th generated validator; no curriculum, SRS, blocker, grading, retention, economy, state or service-worker change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -232,11 +248,12 @@ v7.8.0 is the required-surface mastery-loop pass:
 - `icon-180.png`, `icon-192.png`, `icon-512.png` - install icons.
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
 - `tools/phase1-audit.js` - deterministic audit extractor.
-- `tools/fresh-decode-check.js` - fresh-decode corpora verifier (tone routes, decodability, freshness, supply floors).
+- `tools/fresh-decode-check.js` - three-corpus verifier for lesson/maintenance, assessment and retention words (tone routes, stage supply, decodability, freshness, isolation).
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
-- `docs/v7_release_notes.md` - Phase 1 1.0 beta release notes and post-1.0 backlog.
+- `docs/v7_release_notes.md` - Phase 1 v7-v8 release notes and post-Phase-1 backlog.
+- `docs/v8_visual_overhaul_notes.md` - approved visual direction, learner-facing changes, accessibility boundaries and v8 visual contract.
 - `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
@@ -261,9 +278,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v7.8.0`
+- app version `v8.0.0`
 - 24 lessons
-- 56 validators passing
+- 58 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

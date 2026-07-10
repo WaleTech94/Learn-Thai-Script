@@ -2,9 +2,9 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v7.5.0`.
-Verified current footer string: `Phase 1 · 1.0 beta (v7.5.0)`.
-Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v7.5.0 because cached asset filenames did not change).
+Verified current app version: `v8.0.0`.
+Verified current footer string: `Phase 1 complete (v8.0.0)`.
+Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v8.0.0 because cached asset filenames did not change).
 
 ## Tracked Source For Review/Deploy Packages
 
@@ -19,7 +19,7 @@ Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v7.5.0 be
 - `README.md` - concise project summary and local/deploy instructions.
 - `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
 - `tools/precommit-check.js` - committed release gate for embedded script syntax, NFC, particle/currency policy, tone-grid transliteration, Reading-room story decodability and the fresh-decode corpora.
-- `tools/fresh-decode-check.js` - standalone verifier for the v7.6.0 `FRESH_DECODE` / `ASSESSMENT_BANK` corpora: tone routes, gate decodability, prerequisites, whole-file freshness scan and supply floors.
+- `tools/fresh-decode-check.js` - standalone verifier for `FRESH_DECODE`, `ASSESSMENT_BANK` and `RETENTION_DECODE_BANK`: tone routes, gate decodability, prerequisites, whole-file freshness, stage isolation and supply floors.
 - `tools/make-release-zip.sh` - dependency-free helper that packages tracked source from `HEAD` with `git archive`.
 - `.gitignore` - keeps generated zips and local-only artifacts out of source review.
 
@@ -31,12 +31,13 @@ Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v7.5.0 be
 - `docs/phase1_content_pedagogy_notes.md` - notes from the v5.4.6 content/pedagogy hardening pass.
 - `docs/content_pedagogy_checklist.md` - future Phase 1 curriculum safety checklist.
 - `docs/v6_ui_pass_notes.md` - notes from the v6.0.0 UI hierarchy, accessibility and scope-separation pass.
-- `docs/v7_release_notes.md` - final Phase 1 1.0 beta release notes and post-1.0 backlog.
+- `docs/v7_release_notes.md` - Phase 1 v7-v8 release notes and post-Phase-1 backlog.
+- `docs/v8_visual_overhaul_notes.md` - Bangkok Street Atlas direction, learner-facing changes, accessibility/theme rules and validation contract.
 - `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v7.5.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v8.0.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -67,7 +68,7 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v7.5.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v8.0.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
@@ -95,6 +96,7 @@ For a clean current-source audit, include:
 - `docs/content_pedagogy_checklist.md`
 - `docs/v6_ui_pass_notes.md`
 - `docs/v7_release_notes.md`
+- `docs/v8_visual_overhaul_notes.md`
 - `docs/economy_notes.md`
 - `docs/phase2_refactor_plan.md`
 - `THAI_APP_AUDIT_PACK.md`
