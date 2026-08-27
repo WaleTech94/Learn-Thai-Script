@@ -1,4 +1,10 @@
-# Phase 1 and Conversation Pilot Release Notes (v7-v8.2)
+# Phase 1 and Conversation-First Release Notes (v7-v8.2.1)
+
+## Conversation-first front door · v8.2.1
+
+`v8.2.1` makes usable conversational Thai for daily Bangkok life the app's actual front door. The masthead, first-run onboarding, Today order, About screen and install description now lead with speaking. A fresh learner finishes onboarding with `Start speaking` and enters the food-ordering scene; its recommended card appears above an explicitly optional Phase 1 reading companion.
+
+The complete reading course and the v8.2.0 pilot remain technically intact. Reading progress never gates the spoken scene, and conversation completion still cannot alter lessons, SRS, mastery, required literacy work, streaks, tokens, active-time credit or phrase-review cards. `validateV821ConversationFrontDoorContracts()` brings the generated audit to 61 validators. The cache advances to `aan-thai-v8-2-1` solely to refresh the changed cache-first manifest on installed copies.
 
 ## Conversation-first field test · v8.2.0
 

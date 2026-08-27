@@ -120,6 +120,26 @@ function checkCurrency(html){
   return 'only Lesson 3 บาท uses ฿';
 }
 
+function checkConversationFrontDoor(html){
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
+  const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+  const onboardingStart = html.indexOf('const ONBOARDING_STEPS = [');
+  const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
+  if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
+  const onboardingSource = html.slice(onboardingStart, onboardingEnd);
+  if(!html.includes("const APP_VERSION = 'v8.2.1'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
+    throw new Error('v8.2.1 conversation-first onboarding identity is incomplete');
+  }
+  if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
+    throw new Error('retired reading-first onboarding copy remains');
+  }
+  if(!/usable conversational Thai/i.test(manifest.description || '') || !/reading as a gradual companion/i.test(manifest.description || '')){
+    throw new Error('manifest must describe conversation first and gradual reading');
+  }
+  if(!sw.includes("const CACHE = 'aan-thai-v8-2-1'")) throw new Error('service-worker cache must refresh the changed manifest');
+  return 'spoken goal, gradual-reading manifest and cache refresh aligned';
+}
+
 function toneSnippet(){
   return `
 globalThis.__precommitTone = (function(){
@@ -315,6 +335,7 @@ const results = [
   runCheck('NFC normalization', ()=>checkNfc(html)),
   runCheck('male-particle policy', ()=>checkParticle(html)),
   runCheck('currency policy', ()=>checkCurrency(html)),
+  runCheck('conversation-first front door', ()=>checkConversationFrontDoor(html)),
   runCheck('tone-grid transliteration', checkToneGrid),
   runCheck('reading-story decodability', checkStories),
   runCheck('fresh-decode corpora', checkFreshDecode)

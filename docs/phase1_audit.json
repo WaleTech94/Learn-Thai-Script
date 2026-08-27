@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-27T15:09:22.065Z",
-  "appVersion": "v8.2.0",
+  "generatedAt": "2026-08-27T15:31:06.090Z",
+  "appVersion": "v8.2.1",
   "lessonCount": 24,
   "validators": [
     {
@@ -300,10 +300,13 @@
     },
     {
       "name": "v82ConversationPilot",
-      "ok": false,
-      "issues": [
-        "pilot card must stay visibly optional rather than compete with the required route"
-      ]
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v821ConversationFrontDoor",
+      "ok": true,
+      "issues": []
     }
   ],
   "prerequisites": {

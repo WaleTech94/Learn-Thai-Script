@@ -2,14 +2,14 @@
 
 Prepared: 2026-08-27
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.2.0`
+Current app version: `v8.2.1`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Phase 1 script mastery is complete. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
+Usable conversational Thai for daily Bangkok life is now the app's stated primary goal. One food-ordering scene is the recommended first action, while the complete Phase 1 script-mastery course remains available as an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -258,6 +258,14 @@ v8.2.0 is the isolated conversation-first field test:
 - Labels device TTS a rough preview and the authored Thai as teacher-review pending; it makes no native-listening or pronunciation-assessment claim.
 - Adds `validateV82ConversationPilotContracts()` and the 60th generated validator. Detailed boundaries and expansion criteria live in `docs/v8_2_conversation_pilot_notes.md`.
 
+v8.2.1 corrects the product front door:
+
+- The masthead, first-run onboarding, Today hierarchy, About screen and manifest lead with usable spoken Thai for Bangkok rather than learning to read.
+- Finishing onboarding launches the food-ordering scene, whose recommended card appears before the literacy route.
+- Phase 1 is labelled an optional reading companion; it remains complete and unchanged, but reading progress never gates speaking.
+- The conversation-state and progression-isolation boundary from v8.2.0 is unchanged.
+- Adds `validateV821ConversationFrontDoorContracts()` and the 61st generated validator. The service-worker cache advances to `aan-thai-v8-2-1` so installed copies refresh the changed cache-first manifest.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -297,9 +305,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.2.0`
+- app version `v8.2.1`
 - 24 lessons
-- 60 validators passing
+- 61 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -313,7 +321,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v6-4-1`
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-2-1`, including refresh of the changed manifest description
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording

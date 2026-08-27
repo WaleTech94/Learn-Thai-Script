@@ -1,10 +1,16 @@
-# v8.2.0 Conversation Pilot Notes
+# v8.2.0–v8.2.1 Conversation Pilot Notes
+
+## v8.2.1 front-door correction
+
+v8.2.1 promotes this field test to the recommended first action without coupling it to the literacy progression system. The masthead, onboarding, Today hierarchy, About copy and manifest now say that usable conversational Thai for Bangkok is primary. Finishing onboarding launches the scene; the complete Phase 1 course appears underneath as an optional gradual reading companion.
+
+This is a product-hierarchy change, not a claim that one scene is already a complete conversation curriculum. The separate state, privacy, teacher-review, device-voice and no-progression-mutation boundaries below remain unchanged.
 
 ## Purpose
 
-v8.2.0 is the first implementation step from the conversation-first curriculum audit. It does not replace or restructure Phase 1 yet. It places one isolated field-test scene on Today so the owner can judge whether the proposed interaction loop is useful before the app gains a new main route, conversational SRS or eight weeks of content.
+v8.2.0 was the first implementation step from the conversation-first curriculum audit. It placed one isolated field-test scene on Today so the owner could judge whether the proposed interaction loop was useful before the app gained conversational SRS or eight weeks of content.
 
-The pilot is optional, available from a fresh state and designed for an 8–12 minute run. The frozen v8.1.0 reading course remains fully usable and unchanged underneath it.
+The scene is recommended first, available from a fresh state and designed for an 8–12 minute run. It remains optional in the progression sense: skipping it blocks nothing. The frozen v8.1.0 reading course remains fully usable and unchanged underneath it.
 
 ## Scene
 
@@ -80,7 +86,9 @@ Pilot completion cannot write SRS cards, completed lessons, checks, tokens, stre
 - repair, future-field preservation, import acceptance/rejection and run aggregation;
 - no use of literacy progression, reward, streak, daily or SRS mutation calls;
 - exclusion from active-time types and phrase-review pools;
-- reset copy, Today-card placement and v8.2 identity.
+- reset copy, Today-card placement and v8.2.1 identity.
+
+`validateV821ConversationFrontDoorContracts()` separately checks the speaking-first onboarding, automatic launch, masthead/About/manifest identity, Today DOM order and explicit reading-companion boundary.
 
 The normal precommit, generated audit, arcade smoke, embedded-script syntax and browser walkthrough remain release gates.
 
@@ -92,7 +100,7 @@ Only after Thai-teacher review and owner field use should the project decide whe
 
 - keep the loop and commission native audio;
 - revise its step order or support fade;
-- promote conversation into the compulsory Today route;
+- decide whether conversation needs its own compulsory route or should remain a recommended independent scene;
 - add conversational spaced retrieval; or
 - build the proposed eight-week scene sequence.
 

@@ -1,4 +1,4 @@
-# v8.2.0 Smoke-Test Checklist
+# v8.2.1 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -8,14 +8,14 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v8.2.0`, 60 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v8.2.1`, 61 validators passing and 0 lesson/pool/role prerequisite issues.
 - Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `docs/phase1_audit.md` includes `PASS v82ConversationPilot`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.2.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.md` includes `PASS v82ConversationPilot` and `PASS v821ConversationFrontDoor`.
+- Confirm `sw.js` cache marker is `aan-thai-v8-2-1`; this refreshes the changed cache-first manifest on installed copies.
 
-## v8.2.0 Conversation Pilot
+## v8.2.1 Conversation-First Front Door And Pilot
 
-- On a fresh state at 390 x 844, confirm Today shows one optional `Order food in Bangkok` card without hiding or changing the required route.
+- On a fresh state at 390 x 844, confirm `Order food in Bangkok` is the first, primary recommended card and appears before an `Optional reading companion` section.
 - Open the pilot. Pass: the boundary copy says Thai-teacher review is pending and device voice is a rough preview rather than native listening or pronunciation evidence.
 - Complete the gist, all six learner moves, four vendor-response choices, recording screen, substitution and four-turn supported role-play. Pass: controls fit without horizontal overflow and wrong response feedback can continue.
 - On the recording screen, pass: recording begins only after a user tap, playback remains local, and leaving the screen clears the temporary recording rather than persisting audio.
@@ -32,11 +32,11 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Clear `localStorage["thai_state_v1"]` and any Codex/browser artifact storage for the app origin, then open the app online.
 - Pass: the first-run onboarding overlay appears once with Skip visible.
-- Step through the screens. Pass: it explains reading Thai from zero, letter → class → tone, Today's Review → Main task → Practice route, and setup basics.
-- On the engine screen, pass: mid/high/low examples use the existing teal/pink/marigold class colours.
+- Step through the screens. Pass: it starts with usable conversational Thai for Bangkok, explains the Listen → Respond → Vary it scene loop, then positions reading as a gradual companion rather than a prerequisite.
+- On the reading-companion screen, pass: letter → class → tone is preserved as optional support and the copy does not imply it gates speaking.
 - On the setup screen, tap `Test Thai voice`.
 - Pass: no audio autoplays before the tap. If no Thai voice exists, the existing Audio setup panel opens; if one exists, the sample plays from device voice support.
-- Finish onboarding. Pass: Today remains available, first lesson/review routing is unchanged, and `state.notices.onboarded` is true.
+- Finish with `Start speaking`. Pass: the food-ordering scene opens immediately and `state.notices.onboarded` is true.
 - Reload. Pass: onboarding does not repeat.
 
 ## Onboarding Skip And Existing Learners
@@ -51,13 +51,13 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Pass: onboarding never appears.
 - Confirm no legacy Phase 1 progress-kept modal appears for a blank first-ever state.
 
-## About And Phase 1 Complete Identity
+## About And Conversation-First Identity
 
 - Open Progress → Progress tools → About this app.
-- Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, the optional teacher-review-pending conversation pilot, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 + conversation pilot (v8.2.0)`.
-- Confirm exported backup JSON uses `appVersion: "v8.2.0"`.
-- Confirm `manifest.json` description foregrounds learning to read Thai script.
+- Pass: About states usable conversational Thai for Bangkok as the primary goal, describes Phase 1 as the optional reading companion, discloses teacher-review/device-voice limits, and explains that neither track alters the other's evidence.
+- Confirm the masthead says `Bangkok Thai for real life` and the header version pill and Today footer both read `Conversation first + reading (v8.2.1)`.
+- Confirm exported backup JSON uses `appVersion: "v8.2.1"`.
+- Confirm `manifest.json` foregrounds conversational Thai and describes reading as a gradual companion.
 
 ## v8.0.0 Bangkok Street Atlas Visual Pass
 
@@ -145,7 +145,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.2.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.2.1"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -252,7 +252,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 + conversation pilot (v8.2.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Conversation first + reading (v8.2.1)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

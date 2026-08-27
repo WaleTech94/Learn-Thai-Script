@@ -2,6 +2,14 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.2.1 - 2026-08-27
+
+- Corrected the product front door so usable conversational Thai for daily Bangkok life is visibly primary. The masthead, first-run onboarding, Today hierarchy, About screen and PWA manifest no longer introduce the app as a learn-to-read course.
+- Moved `Order food in Bangkok` above the literacy route as the clear recommended first action. Finishing onboarding now launches that scene; the complete Phase 1 route sits below an explicit optional reading-companion introduction and never gates speaking.
+- Kept the v8.2.0 learning/state boundary intact: the scene still records only bounded run/self-rating evidence and cannot alter lessons, SRS, mastery, blockers, required literacy work, rewards, streaks, active-time credit or phrase-review cards.
+- Added `validateV821ConversationFrontDoorContracts()` plus a precommit front-door/manifest/cache gate. The generated audit now reports v8.2.1 with 61/61 validators passing and zero lesson, pool or role prerequisite issues.
+- Advanced the service-worker cache to `aan-thai-v8-2-1` because `manifest.json` is cache-first and its product description changed. No runtime network feature, audio/font asset or learner-state key was added.
+
 ## v8.2.0 - 2026-08-27
 
 - Added one isolated, optional 8–12 minute conversation-first pilot on Today: a Bangkok food-stall exchange that moves through first-listen gist, six male-polite learner chunks, four vendor-response choices, local record/playback, one food substitution, supported role-play and a private self-rating.

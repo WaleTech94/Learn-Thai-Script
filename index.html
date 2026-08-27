@@ -384,6 +384,11 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.version-pill{flex:none;border:1px solid var(--line);border-radius:99px;padding:6px 9px;color:var(--muted);font-size:11px;line-height:1.2;background:var(--surface);max-width:150px;text-align:center;white-space:normal}
 	.today-focus{margin-bottom:16px;padding:4px 0 2px}
 	.today-focus h1{font-size:32px;margin-bottom:6px}
+	.conversation-front-door{margin-bottom:22px;padding:4px 0 2px}
+	.conversation-front-door h1{font-size:34px;margin-bottom:6px}
+	.conversation-front-door .cta-card{margin-top:14px}
+	.reading-companion-intro{margin:0 0 14px;padding:14px 16px;border-left:3px solid var(--ui-reading);background:var(--surface);border-radius:4px 14px 4px 14px}
+	.reading-companion-intro h2{margin:3px 0 5px;font-size:21px}
 	.hero-card{position:relative;overflow:hidden;border-radius:22px}
 	.route-summary.hero-card{
 	  --route-accent:var(--ui-primary-2);
@@ -1673,20 +1678,39 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       <div>
         <div class="brand brand-lockup">
           <span class="brand-thai">อ่าน<span class="thai-accent">.</span></span>
-          <span class="brand-sign"><b>ÀAN</b><small>àan means to read</small></span>
+          <span class="brand-sign"><b>ÀAN</b><small>Bangkok Thai for real life</small></span>
         </div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 + conversation pilot (v8.2.0)</span>
+        <span class="version-pill">Conversation first + reading (v8.2.1)</span>
       </div>
     </header>
 
+    <section class="conversation-front-door">
+      <div class="progress-divider">SPEAK FIRST</div>
+      <h1>Use Thai in Bangkok</h1>
+      <p class="sub">Start with one short real-life exchange. Listen for the situation, answer aloud and compare—reading grows alongside it.</p>
+      <button class="card cta-card action-card primary recommended" id="conversation-pilot-card">
+        <div>
+          <div class="eyebrow">Start here · conversation</div>
+          <div class="t">Order food in Bangkok</div>
+          <div class="d" id="conversation-pilot-status">8–12 min · listen, respond, speak and compare</div>
+        </div>
+        <span class="icon-right">→</span>
+      </button>
+    </section>
+
     <section class="today-focus">
+      <div class="reading-companion-intro">
+        <div class="eyebrow">Optional reading companion</div>
+        <h2>Build the script gradually</h2>
+        <p class="sub">Phase 1 keeps its full letter → class → tone course. Use it when you have time; it does not gate the spoken scene above.</p>
+      </div>
       <div class="progress-divider" id="course-day-label">COURSE DAY</div>
       <h1 id="today-heading">Today's route</h1>
-      <p class="sub" id="today-brief">Start with the highlighted action. Required work unlocks End today. Optional practice can wait.</p>
+      <p class="sub" id="today-brief">If you choose the reading track today, follow its highlighted action. It never blocks the spoken scene above.</p>
       <div class="section-card route-summary hero-card route-hero route-course" id="today-route-summary">
         <div class="route-summary-grid">
           <div class="route-summary-main">
@@ -1739,15 +1763,6 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       <div class="time-fill-card" id="time-fill-card" hidden></div>
       <div class="section-card backup-card today-backup-hint is-hidden" id="backup-today-hint"></div>
     </section>
-
-    <button class="card cta-card action-card optional" id="conversation-pilot-card">
-      <div>
-        <div class="eyebrow">Optional conversation pilot</div>
-        <div class="t">Order food in Bangkok</div>
-        <div class="d" id="conversation-pilot-status">8–12 min · listen, respond, speak and compare</div>
-      </div>
-      <span class="icon-right">→</span>
-    </button>
 
     <button class="card cta-card action-card recommended is-hidden" id="wai-banner">
       <div><div class="t">Morning warm-up</div><div class="d" id="wai-sub">Replay your trickiest cards</div></div>
@@ -1805,7 +1820,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 + conversation pilot (v8.2.0)</div>
+      <div class="sub meta-tiny meta-top">Conversation first + reading (v8.2.1)</div>
     </div>
   </section>
 
@@ -3588,8 +3603,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.2.0';
-const APP_VERSION_LABEL = 'Phase 1 + conversation pilot (v8.2.0)';
+const APP_VERSION = 'v8.2.1';
+const APP_VERSION_LABEL = 'Conversation first + reading (v8.2.1)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -5687,32 +5702,33 @@ function completeOnboarding(mode, target){
 }
 const ONBOARDING_STEPS = [
   {
-    title:'Read Thai from zero',
-    body:`<p class="sub">อ่าน teaches you to read Thai script from the letters up. This is letters, not phrase memorising. Normal course days are built around about 45 minutes, with Bangkok life as the target context.</p>`
+    title:'Speak useful Thai first',
+    body:`<p class="sub">อ่าน is for usable conversational Thai in daily Bangkok life. Start with a short exchange you can actually try outside; the first scene is ordering food.</p>
+    <div class="notebox"><b>Your minimum day:</b> 8–12 minutes of listening, responding aloud and comparing. Reading is a gradual companion, not a prerequisite.</div>`
   },
   {
-    title:'The reading engine',
+    title:'How a scene works',
+    body:`<div class="onboarding-route-list">
+      <div><b>Listen</b><br><span class="sub">Catch the situation before reading every word.</span></div>
+      <div><b>Respond</b><br><span class="sub">Choose, then say a useful male-polite reply aloud.</span></div>
+      <div><b>Vary it</b><br><span class="sub">Swap one detail and answer the partner again.</span></div>
+    </div>
+    <p class="sub">Prompts stay supportive in this pilot. Future scenes should fade help only after the response feels familiar.</p>`
+  },
+  {
+    title:'Reading grows alongside speaking',
     body:`<div class="onboarding-class-row" aria-label="Thai consonant class colours">
       <div class="onboarding-class-tile mid"><div><div class="glyph">ก</div><div class="label">Mid</div></div></div>
       <div class="onboarding-class-tile high"><div><div class="glyph">ข</div><div class="label">High</div></div></div>
       <div class="onboarding-class-tile low"><div><div class="glyph">น</div><div class="label">Low</div></div></div>
     </div>
-    <p class="sub">The class is the dial that sets the tone. Phase 1 keeps coming back to letter → class → tone until it is automatic.</p>`
+    <p class="sub">The complete Phase 1 letter → class → tone course is preserved below the spoken scene. Use it gradually when you have time; you do not need to finish it before speaking.</p>`
   },
   {
-    title:'Use Today first',
-    body:`<div class="onboarding-route-list">
-      <div><b>Review</b><br><span class="sub">Warm up cards that are due.</span></div>
-      <div><b>Main task</b><br><span class="sub">The next lesson, check or recovery block.</span></div>
-      <div><b>Practice</b><br><span class="sub">One useful extra when the main route is done.</span></div>
-    </div>
-    <p class="sub">End today wraps up. Streaks and 💎 are encouragement, not the point.</p>`
-  },
-  {
-    title:'Set up the basics',
-    body:`<p class="sub">Thai audio uses device voice support: a rough model for practice, not assessment evidence. Test it after this tap; if no Thai voice is found, the setup panel opens.</p>
+    title:'Audio, privacy and backup',
+    body:`<p class="sub">Thai audio uses device voice support: a rough preview, not native listening evidence or pronunciation scoring. Pilot wording still needs Thai-teacher review.</p>
     <button class="btn full ghost" id="onboard-test-voice">Test Thai voice</button>
-    <p class="sub">Progress → Progress tools has backup/export and the Sounds toggle.</p>`
+    <p class="sub">Your optional recording is temporary and stays on this device. Progress → Progress tools has backup/export and the Sounds toggle.</p>`
   }
 ];
 function onboardingStepHtml(i){
@@ -5729,7 +5745,7 @@ function onboardingStepHtml(i){
     </div>
     <div class="onboarding-actions">
       <button class="btn ghost" id="onboard-back" ${i===0?'disabled':''}>Back</button>
-      <button class="btn" id="onboard-next">${i===ONBOARDING_STEPS.length-1?'Start reading':'Next'}</button>
+      <button class="btn" id="onboard-next">${i===ONBOARDING_STEPS.length-1?'Start speaking':'Next'}</button>
     </div>
     <button class="btn ghost onboarding-skip" id="onboard-skip">Skip</button>`;
 }
@@ -5757,7 +5773,7 @@ function showOnboarding(){
     const skip = wrap.querySelector('#onboard-skip');
     const test = wrap.querySelector('#onboard-test-voice');
     if(back) back.onclick = ()=>{ if(i > 0){ i--; render(); } };
-    if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completeOnboarding('finish'); dismiss(); } };
+    if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completeOnboarding('finish'); dismiss(); setTimeout(startConversationPilot, 0); } };
     if(skip) skip.onclick = dismiss;
     if(test) test.onclick = ()=>testOnboardingThaiVoice(test);
   };
@@ -5786,13 +5802,13 @@ function showAboutApp(){
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="about-app-title">
     <div class="eyebrow">About this app</div>
-    <h2 id="about-app-title">อ่าน means to read</h2>
+    <h2 id="about-app-title">Thai for real life in Bangkok</h2>
     <div class="about-list">
-      <div>อ่าน is a self-contained Learn Thai PWA for learning to read Thai script from zero.</div>
-      <div>Phase 1 covers script reading, consonant class, tone logic, live/dead syllables, final jobs, vowel length and controlled reading.</div>
-      <div>v8.2 adds one optional food-ordering conversation pilot outside Phase 1 mastery; its Thai-teacher review is still pending.</div>
-      <div>Phase 1 completion does not claim real-world listening mastery, speaking mastery, broad vocabulary or free conversation.</div>
-      <div>Audio is device voice support: a rough model for practice, not assessment evidence.</div>
+      <div>อ่าน’s primary goal is usable conversational Thai for daily Bangkok life.</div>
+      <div>The current food-ordering scene is the first conversation-first pilot: listen for meaning, answer aloud, vary one detail and compare.</div>
+      <div>Phase 1 is the optional reading companion. It preserves the complete script, consonant-class, tone, final, vowel-length and controlled-reading course.</div>
+      <div>Reading progress never gates the spoken pilot. Conversation completion also does not alter literacy mastery, SRS, tokens or streaks.</div>
+      <div>Audio is device voice support: a rough preview for practice, not native listening or pronunciation-assessment evidence. Pilot Thai-teacher review is still pending.</div>
       <div>Current version: ${esc(APP_VERSION_LABEL)}.</div>
       <div>Backups live in Progress → Progress tools. Export before resetting or changing devices.</div>
     </div>
@@ -5834,7 +5850,7 @@ function renderTodayActions(){
   if(refreshRequired){
     if(el('course-day-label')) el('course-day-label').textContent = 'UPDATED FOUNDATIONS';
     el('today-heading').textContent = 'Refresh';
-    el('today-brief').textContent = 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
+    el('today-brief').textContent = 'If you choose the reading track today, finish this repair first. It never blocks the spoken scene above.';
     setTaskButton('today-review-btn', {
       state:'Locked',
       title:'Review',
@@ -5867,7 +5883,7 @@ function renderTodayActions(){
 	  }
   if(el('course-day-label')) el('course-day-label').textContent = maintenance ? 'MAINTENANCE' : recovery ? 'RECOVERY DAY' : d.type === 'C' ? 'CONSOLIDATION DAY' : early ? 'FOUNDATION DAY' : '45-MINUTE COURSE DAY';
   el('today-heading').textContent = maintenance ? 'Phase 1 complete · Maintenance' : recovery ? 'Recovery' : d.type === 'C' ? 'Consolidate' : early ? 'Foundation' : 'Today';
-  el('today-brief').textContent = maintenance ? 'Review is now the whole job; the pile naturally thins as intervals grow.' : 'Start with the highlighted action. Required work unlocks End today. Optional practice can wait.';
+  el('today-brief').textContent = maintenance ? 'Keep the optional reading track warm when useful; the spoken scene remains available.' : 'If you choose the reading track today, follow its highlighted action. It never blocks the spoken scene above.';
 	  setTaskButton('today-review-btn', {
 	    state: reviewDone ? 'Done' : band === 'hard' ? 'Required' : recoveryStillDue ? 'Recovery' : band === 'recommend' ? 'Recommended' : 'Due',
 	    title: reviewDone ? 'Review clear' : recovery ? 'Recovery review' : 'Review',
@@ -9057,7 +9073,7 @@ function validateV70OnboardingContracts(){
   const aboutSource = String(showAboutApp);
   if(!/About this app/.test(aboutSource) || !/device voice support/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
   if(!/^v(?:7\.\d+\.\d+|8\.\d+\.\d+)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
-  if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
+  if(!APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain the current app version');
   if(errors.length) throw new Error('V7.0 onboarding contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9158,7 +9174,7 @@ function validateV71VisualSoundContracts(){
   if(!guardSource.includes('overlayExitWouldDiscard') || !guardSource.includes('bindDialogDismissal') || !guardSource.includes('closeOverlay()')) errors.push('overlay close button should route through the v7.1 discard guard');
   if(!String(lessonExitWouldDiscard).includes('p.i > 0') || !String(masteryQuizExitWouldDiscard).includes('p.opts.boss') || !String(masteryQuizExitWouldDiscard).includes('p.opts.checkpoint') || !String(masteryQuizExitWouldDiscard).includes('p.opts.letters42') || !String(masteryQuizExitWouldDiscard).includes('p.opts.phase1Completion')) errors.push('discard guard should cover progressed lessons and mastery-stakes quizzes only');
   if(!/^v(?:7\.\d+\.\d+|8\.\d+\.\d+)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
-  if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
+  if(!APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain the current app version');
   if(errors.length) throw new Error('V7.1 visual/sound contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9257,8 +9273,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
+  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9430,8 +9446,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
+  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9525,8 +9541,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
+  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9595,8 +9611,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
+  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9809,7 +9825,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9847,7 +9863,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9916,7 +9932,7 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9987,14 +10003,39 @@ function validateV82ConversationPilotContracts(){
   if(!String(scheduleConversationSpeech).includes('player !== p') || !String(scheduleConversationSpeech).includes('p.phase !== phase')) errors.push('pilot autoplay must not survive close or fast navigation');
   if(!String(renderConversationPilot).includes('stopConversationSpeech') || !String(finishConversationPilot).includes('stopConversationSpeech')) errors.push('pilot navigation and completion must cancel in-flight device speech');
   if(!String(resetProgressNow).includes('conversation:freshConversationState()')) errors.push('reset must clear conversation runs explicitly');
-  if(!String(showAboutApp).includes('conversation pilot') || !String(showAboutApp).includes('teacher review')) errors.push('About must disclose the optional unreviewed pilot boundary');
-  if(typeof document !== 'undefined' && document.getElementById){
+  if(!String(showAboutApp).includes('conversation-first pilot') || !String(showAboutApp).includes('teacher review')) errors.push('About must disclose the unreviewed pilot boundary');
+  if(typeof document !== 'undefined' && document.getElementById && document.querySelector && document.documentElement && typeof document.documentElement.contains === 'function'){
     const card = document.getElementById('conversation-pilot-card');
     if(!card) errors.push('Today pilot card missing');
-    else if(!card.classList.contains('optional') || card.classList.contains('recommended')) errors.push('pilot card must stay visibly optional rather than compete with the required route');
   }
-  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
   if(errors.length) throw new Error('V8.2 conversation pilot contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV821ConversationFrontDoorContracts(){
+  const errors = [];
+  const onboarding = JSON.stringify(ONBOARDING_STEPS);
+  if(!onboarding.includes('Speak useful Thai first') || !onboarding.includes('usable conversational Thai') || !onboarding.includes('Reading is a gradual companion')) errors.push('onboarding must lead with useful spoken Bangkok Thai');
+  if(/Read Thai from zero|letters, not phrase memorising|Start reading/.test(onboarding + String(onboardingStepHtml))) errors.push('reading-first onboarding language must stay retired');
+  if(!String(onboardingStepHtml).includes('Start speaking') || !String(showOnboarding).includes('startConversationPilot')) errors.push('finished onboarding must launch the spoken scene');
+  const about = String(showAboutApp);
+  if(!about.includes('primary goal is usable conversational Thai') || !about.includes('optional reading companion') || !about.includes('Reading progress never gates')) errors.push('About must describe conversation as primary and reading as companion');
+  if(!String(renderConversationPilotIntro).includes("Today's spoken Thai")) errors.push('pilot intro must present itself as the spoken starting point');
+  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(typeof document !== 'undefined' && document.getElementById && document.querySelector && document.documentElement && typeof document.documentElement.contains === 'function'){
+    const card = document.getElementById('conversation-pilot-card');
+    const front = document.querySelector('.conversation-front-door');
+    const reading = document.querySelector('.today-focus');
+    const readingIntro = document.querySelector('.reading-companion-intro');
+    const brandLine = document.querySelector('.brand-sign small');
+    if(!card || !front || !reading || !readingIntro) errors.push('conversation-first Today hierarchy is incomplete');
+    else {
+      if(!(front.compareDocumentPosition(reading) & 4)) errors.push('spoken scene must appear before the reading companion');
+      if(!card.classList.contains('primary') || !card.classList.contains('recommended') || card.classList.contains('optional')) errors.push('spoken scene must be the clear primary recommendation');
+    }
+    if(!brandLine || !brandLine.textContent.includes('Bangkok Thai for real life')) errors.push('masthead must state the real-life Thai goal');
+  }
+  if(errors.length) throw new Error('V8.2.1 conversation-first front-door contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -13659,7 +13700,7 @@ function renderConversationPilotIntro(){
   const scene = player.scene;
   el('stage').innerHTML = `
     <div class="center">
-      <div class="eyebrow">Optional conversation pilot · 8–12 min</div>
+      <div class="eyebrow">Today's spoken Thai · 8–12 min</div>
       <h2>${esc(scene.title)}</h2>
       <p class="sub">${esc(scene.setting)}</p>
     </div>
@@ -16308,7 +16349,8 @@ function runFullStartupValidators(){
     validateV79RetentionDecodeContracts,
     validateV8VisualContracts,
     validateV81ArcadeContracts,
-    validateV82ConversationPilotContracts
+    validateV82ConversationPilotContracts,
+    validateV821ConversationFrontDoorContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

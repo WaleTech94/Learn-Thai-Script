@@ -2,9 +2,9 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v8.2.0`.
-Verified current footer string: `Phase 1 + conversation pilot (v8.2.0)`.
-Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v8.2.0 because cached asset filenames did not change).
+Verified current app version: `v8.2.1`.
+Verified current footer string: `Conversation first + reading (v8.2.1)`.
+Verified current service-worker cache: `aan-thai-v8-2-1` (advanced so installed copies refresh the changed cache-first manifest description).
 
 ## Tracked Source For Review/Deploy Packages
 
@@ -40,7 +40,7 @@ Verified current service-worker cache: `aan-thai-v6-4-1` (unchanged in v8.2.0 be
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v8.2.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v8.2.1-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -71,7 +71,7 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v8.2.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v8.2.1-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
