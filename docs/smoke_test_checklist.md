@@ -1,15 +1,16 @@
-# v8.0.0 Smoke-Test Checklist
+# v8.1.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
 ## Validation Gate
 
+- Run `node tools/arcade-smoke.js` and confirm all three games, theme preview and sound paths pass.
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v8.0.0`, 58 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v8.1.0`, 59 validators passing and 0 lesson/pool/role prerequisite issues.
 - Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.0.0 does not change cached asset filenames.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.1.0 does not change cached asset filenames.
 
 ## Fresh-State Onboarding
 
@@ -38,8 +39,8 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Open Progress → Progress tools → About this app.
 - Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 complete (v8.0.0)`.
-- Confirm exported backup JSON uses `appVersion: "v8.0.0"`.
+- Confirm the header version pill and Today footer both read `Phase 1 complete (v8.1.0)`.
+- Confirm exported backup JSON uses `appVersion: "v8.1.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## v8.0.0 Bangkok Street Atlas Visual Pass
@@ -48,10 +49,24 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - At 360px and 430px widths, pass: version/streak controls fit, route CTA remains tappable, optional practice keeps two columns, and bottom labels remain readable above the safe area.
 - Open Practice, Tones, Read and Progress. Pass: each has a distinct workbook / tone-board / signboard / collectible-map identity while the same controls and routes remain available.
 - Open a lesson and an objective quiz. Pass: the ruled lesson sheet, class-coloured Thai, answer choices, correct/wrong feedback and Continue flow fit without clipping or hidden controls.
-- Open the shop. Pass: all eleven themes show a visual swatch; selecting each owned/free theme preserves the Street Atlas structure and the Thai mid/high/low colours.
+- Open the shop. Pass: all fourteen themes show a visual swatch; selecting each owned/free theme preserves the Street Atlas structure and the Thai mid/high/low colours.
 - Select Day market in a test profile. Pass: text, muted text, ticket surfaces, buttons, class tiles and bottom navigation remain readable.
 - With reduced motion enabled, pass: card entrances, tile movement, combo/reward pieces and transitions collapse without hiding final state.
 - Inspect the accessibility tree. Pass: the four screen marks and five reading-card marks do not enter button names or reading order; tab `aria-current` and 44pt targets remain intact.
+
+## v8.1.0 Street Arcade and Theme Expansion
+
+- On a fresh state, open Practice and the shop. Pass: all three cabinet silhouettes show their exact lesson gate; none can be opened or purchased early.
+- Complete Lesson 2. Pass: Parcel Sort becomes free and playable; its neutral Thai prompt gains class colour only after answering.
+- At Lesson 4 with Night Market Hunt unowned, pass: Practice links to the shop rather than starting the cabinet. Buy it for 50 tokens; the purchase changes only `packs[]`/token balance and the cabinet then opens.
+- In Night Market Hunt, pass: all four Thai signs use covered words, Replay speaks the same target, wrong feedback reveals the reading, and the copy says device voice is practice rather than listening proof.
+- Before Lesson 13, pass: Tuk-Tuk Tone Run remains locked even if an imported state contains its pack id. At Lesson 13, pass: its five tone lanes become playable and every answer reveals a valid six-step tone route.
+- Finish each cabinet. Pass: score, best combo and 0-3 stars save under `drillLog`; no SRS card, lesson/check flag, required Today step, streak or repeatable token reward changes.
+- Check Today before and after required work. Pass: no arcade cabinet appears before required work is clear; afterwards at most one owned, lesson-eligible featured cabinet appears as optional practice.
+- Open the shop and preview Ekkamai Sunset, Yaowarat Neon and Tuk-Tuk Chrome. Pass: the whole shell changes temporarily, a clear Stop preview control appears, the owned/active theme remains unchanged, and closing the shop restores it.
+- Run correct/wrong/combo/completion paths with Default and Ranat selected, then turn Sounds off. Pass: arcade sorting, market, engine and completion cues are distinct when enabled and silent when disabled.
+- At 390 x 844 and 430px widths, pass: cabinet cards, sign buttons, parcel conveyors, five tone lanes, feedback route and result ticket remain tappable with no horizontal overflow.
+- With reduced motion enabled, pass: game state remains clear without relying on animated movement.
 
 ## Dialog Accessibility Polish
 
@@ -114,7 +129,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.0.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.1.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -221,7 +236,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 complete (v8.0.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 complete (v8.1.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

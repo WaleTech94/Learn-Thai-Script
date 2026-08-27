@@ -29,3 +29,14 @@ Completed maintenance learner: the maintenance Today route still uses the same c
 - Bangkok reads story pack: 80.
 
 Existing earn rates were left unchanged. The v7.2 pricing uses new-item prices to absorb the added shop surface rather than punishing the routine.
+
+## v8.1 Street Arcade additions
+
+- Parcel Sort: free milestone unlock after Lesson 2.
+- Night Market Hunt: 50 tokens after Lesson 4.
+- Tuk-Tuk Tone Run: 60 tokens after Lesson 13.
+- Ekkamai Sunset: 40 tokens.
+- Yaowarat Neon: 50 tokens.
+- Tuk-Tuk Chrome: 60 tokens.
+
+Cabinets do not pay repeatable tokens, so they cannot become a farming loop. Their underlying learning equivalents stay free; the purchase buys the optional game presentation. At the established 70-80 token normal week, a learner can generally choose one new cabinet or one theme per focused week without changing earn rates.

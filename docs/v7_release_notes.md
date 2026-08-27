@@ -1,4 +1,12 @@
-# Phase 1 Release Notes (v7-v8)
+# Phase 1 Release Notes (v7-v8.1)
+
+## Street Arcade · v8.1.0
+
+`v8.1.0` adds optional short games to the completed Phase 1 course without turning them into a second progression system. Parcel Sort opens free after Lesson 2; Night Market Hunt can be bought after Lesson 4; and Tuk-Tuk Tone Run can be bought after Lesson 13. Each cabinet rebuilds its round pool from completed lessons and the existing prerequisite engine, weights some choices by known weaknesses, and records only personal best, combo and stars.
+
+The three sealed transfer corpora never enter arcade play. Games do not create SRS cards, complete required Today depth, change mastery, extend streaks or pay repeatable tokens. Underlying Class Sprint, Hear & Pick Thai and Tone Trainer practice remains free.
+
+Ekkamai Sunset, Yaowarat Neon and Tuk-Tuk Chrome join the shop, all themes can be previewed without saving, and existing paid themes receive stronger code-native motifs. Arcade sounds are synthesized locally and follow the existing sound toggle plus Default/Ranat voice. `validateV81ArcadeContracts()` brings the generated audit to 59 validators; detailed boundaries live in `docs/v8_1_street_arcade_notes.md`.
 
 ## Phase 1 complete · v8.0.0
 

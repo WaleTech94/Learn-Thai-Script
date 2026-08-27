@@ -2,6 +2,17 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.1.0 - 2026-07-11
+
+- Added Street Arcade to Practice with three short optional cabinets: Parcel Sort unlocks free after Lesson 2, Night Market Hunt costs 50 tokens after Lesson 4, and Tuk-Tuk Tone Run costs 60 tokens after Lesson 13. Games record best score, combo and three-star cabinet ratings under the existing `drillLog` container and award no repeatable tokens.
+- Locked every game session to current course coverage. Rounds rebuild from completed lessons through the existing taught-glyph, mechanism and prerequisite checks; neutral class prompts do not reveal answers; and the fresh, assessment and delayed-retention decode banks never enter arcade pools.
+- Added weakness-weighted round selection and one optional featured owned cabinet after required Today work is clear. Arcade play never writes SRS, completes required daily depth, extends streaks, changes lesson blockers or changes mastery evidence.
+- Added distinct synthesized arcade sound design: sorting clicks, market bells, tuk-tuk engine sweeps, combo lift and cabinet-completion stings. Sounds remain local Web Audio, respect the existing sound toggle and Default/Ranat selection, and add no media asset or network dependency.
+- Added Ekkamai Sunset (40💎), Yaowarat Neon (50💎) and Tuk-Tuk Chrome (60💎). All purchasable themes can be previewed temporarily without writing state, existing paid themes gain code-native atmosphere motifs, and class colours remain reserved for Thai class meaning.
+- Added specific accessible labels, reduced-motion arcade treatment, mobile cabinet layouts and `validateV81ArcadeContracts()`. The generated audit now reports v8.1.0 with 59/59 validators passing.
+- Added `tools/arcade-smoke.js`, a deterministic full-session harness covering the exact unlock gates, advertised round counts, correct/wrong feedback, saved records, progression isolation, theme preview/restore, distinct game cues, Ranat voice and mute. The Lesson 2 pool now repeats one covered prompt when necessary so Parcel Sort delivers its promised ten rounds without reaching ahead.
+- v8.1.0 changes no curriculum, SRS interval, lesson blocker, mastery gate, required daily workload, retention evidence, ordinary reward rate, service-worker cache name or required learner-state key. Game ownership reuses `packs[]`; optional records reuse `drillLog`.
+
 ## v8.0.0 - 2026-07-10
 
 - Replaced the generic dark aurora, glass-card and violet-to-cyan gradient language with the code-native Bangkok Street Atlas identity. The shell now uses a subtle route-map grid, hard-edged printed surfaces, an อ่าน / ÀAN masthead, solid colour controls and shaped shadows while remaining a self-contained offline single-file PWA.

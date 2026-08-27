@@ -901,7 +901,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 }
 .tab.due-overload .tab-due-badge{background:var(--ui-danger);color:#fff;box-shadow:0 0 12px rgba(251,113,133,.42)}
 .tab.has-due .tab-due-badge{display:flex}
-.tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible,.action-card:focus-visible,.practice-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.tab:focus-visible,.btn:focus-visible,.q-opt:focus-visible,.speak:focus-visible,.action-card:focus-visible,.practice-chip:focus-visible,.arcade-card:focus-visible,.arcade-option:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 .result-big{text-align:center;font-family:var(--font-display);font-size:54px;font-weight:600;line-height:1.2}
 .result-sub{text-align:center;color:var(--muted);font-size:15px}
@@ -982,6 +982,33 @@ body[data-theme="krathong"]{
   --overlay-bg:radial-gradient(circle at 16% 0%, rgba(167,139,250,.22), transparent 28rem),radial-gradient(circle at 88% 8%, rgba(103,232,249,.14), transparent 26rem),radial-gradient(circle at 50% 92%, rgba(212,154,72,.16), transparent 18rem),linear-gradient(180deg,rgba(7,10,27,.98),rgba(13,18,48,.98));
   --safety-banner-bg:linear-gradient(160deg,rgba(13,18,48,.98),rgba(7,10,27,.96));
   --glow-primary:0 0 32px rgba(167,139,250,.3); --glow-cyan:0 0 32px rgba(103,232,249,.22); --glow-reward:0 0 32px rgba(212,154,72,.2);
+}
+body[data-theme="ekkamai"]{
+  --bg-0:#16142B; --bg-1:#231E3F; --bg-2:#30264D; --bg:#16142B;
+  --surface:#231E3F; --surface2:#30264D; --surface-glass:rgba(35,30,63,.84); --surface-glass-strong:rgba(35,30,63,.95); --surface-raised:rgba(48,38,77,.95); --surface-soft:rgba(255,155,123,.075); --surface-soft-strong:rgba(255,155,123,.11);
+  --muted:#B7B0CF; --line:#43385E; --line-soft:rgba(255,155,123,.14); --line-bright:rgba(255,155,123,.27); --line-hot:rgba(255,155,123,.38);
+  --ui-primary:#A996FF; --ui-primary-2:#7BDCF2; --ui-info:#7BDCF2; --ui-reading:#7BDCF2; --ui-reward:#FF8C69; --ui-translit:#D7C8FF;
+  --tabbar-bg:linear-gradient(180deg,rgba(22,20,43,.74),rgba(22,20,43,.98));
+  --overlay-bg:linear-gradient(180deg,rgba(22,20,43,.98),rgba(35,30,63,.98));
+  --safety-banner-bg:linear-gradient(160deg,rgba(35,30,63,.98),rgba(22,20,43,.97));
+}
+body[data-theme="yaowarat"]{
+  --bg-0:#130B12; --bg-1:#24121F; --bg-2:#351A2B; --bg:#130B12;
+  --surface:#24121F; --surface2:#351A2B; --surface-glass:rgba(36,18,31,.84); --surface-glass-strong:rgba(36,18,31,.95); --surface-raised:rgba(53,26,43,.95); --surface-soft:rgba(95,224,183,.07); --surface-soft-strong:rgba(95,224,183,.105);
+  --muted:#C7AFC1; --line:#4D243E; --line-soft:rgba(95,224,183,.13); --line-bright:rgba(95,224,183,.25); --line-hot:rgba(95,224,183,.36);
+  --ui-primary:#E85B55; --ui-primary-2:#5FE0B7; --ui-info:#5FE0B7; --ui-reading:#74E8C3; --ui-reward:#F2A04B; --ui-translit:#F0B8CA;
+  --tabbar-bg:linear-gradient(180deg,rgba(19,11,18,.74),rgba(19,11,18,.98));
+  --overlay-bg:linear-gradient(180deg,rgba(19,11,18,.98),rgba(36,18,31,.98));
+  --safety-banner-bg:linear-gradient(160deg,rgba(36,18,31,.98),rgba(19,11,18,.97));
+}
+body[data-theme="tuktuk"]{
+  --bg-0:#090B10; --bg-1:#151922; --bg-2:#222834; --bg:#090B10;
+  --surface:#151922; --surface2:#222834; --surface-glass:rgba(21,25,34,.86); --surface-glass-strong:rgba(21,25,34,.96); --surface-raised:rgba(34,40,52,.96); --surface-soft:rgba(255,122,61,.075); --surface-soft-strong:rgba(255,122,61,.11);
+  --muted:#B8C0CB; --line:#343B48; --line-soft:rgba(214,224,235,.13); --line-bright:rgba(214,224,235,.26); --line-hot:rgba(255,122,61,.38);
+  --ui-primary:#FF7A3D; --ui-primary-2:#74D9EE; --ui-info:#74D9EE; --ui-reading:#74D9EE; --ui-reward:#FF7A3D; --ui-translit:#C8D1DC;
+  --tabbar-bg:linear-gradient(180deg,rgba(9,11,16,.76),rgba(9,11,16,.99));
+  --overlay-bg:linear-gradient(180deg,rgba(9,11,16,.99),rgba(21,25,34,.98));
+  --safety-banner-bg:linear-gradient(160deg,rgba(34,40,52,.98),rgba(9,11,16,.97));
 }
 /* free appearance looks (v2.13) - class colours (mid/high/low) deliberately untouched */
 body[data-theme="depth"]{ background:radial-gradient(1100px 560px at 50% -8%, #1e2434, #14161D 70%); }
@@ -1238,6 +1265,17 @@ body[data-theme="songkran"]{--atlas-ticket:#F2E9FF;--atlas-route:#F06595;--atlas
 body[data-theme="temple"]{--atlas-ticket:#F2D79B;--atlas-route:#B86A31;--atlas-sky:#7DD3FC;--atlas-sun:#D8B36A}
 body[data-theme="monsoon"]{--atlas-ticket:#DCEFF8;--atlas-route:#D9694F;--atlas-sky:#8BD3FF;--atlas-sun:#D5B46A}
 body[data-theme="krathong"]{--atlas-ticket:#EEE6FF;--atlas-route:#D56A45;--atlas-sky:#67E8F9;--atlas-sun:#E4AE5C}
+body[data-theme="ekkamai"]{--atlas-ticket:#FFE0CB;--atlas-ticket-ink:#25203B;--atlas-ticket-muted:#675F78;--atlas-route:#FF7C63;--atlas-sky:#7BDCF2;--atlas-sun:#FFD166;--atlas-violet:#A996FF;--atlas-grid:rgba(123,220,242,.075)}
+body[data-theme="yaowarat"]{--atlas-ticket:#F5D9C9;--atlas-ticket-ink:#29151F;--atlas-ticket-muted:#745361;--atlas-route:#E85B55;--atlas-sky:#5FE0B7;--atlas-sun:#F2A04B;--atlas-violet:#C77DFF;--atlas-grid:rgba(95,224,183,.07)}
+body[data-theme="tuktuk"]{--atlas-ticket:#DDE4EB;--atlas-ticket-ink:#161B22;--atlas-ticket-muted:#59616B;--atlas-route:#FF7A3D;--atlas-sky:#74D9EE;--atlas-sun:#F6C85F;--atlas-violet:#A996FF;--atlas-grid:rgba(214,224,235,.06)}
+body[data-theme="bts"]::before{background:repeating-linear-gradient(118deg,transparent 0 74px,rgba(77,199,237,.09) 74px 80px,transparent 80px 150px),linear-gradient(26deg,transparent 0 58%,rgba(232,93,63,.08) 58.2% 59%,transparent 59.2%)}
+body[data-theme="songkran"]::before{background:radial-gradient(circle at 18% 18%,rgba(87,212,240,.12) 0 18px,transparent 19px),radial-gradient(circle at 82% 36%,rgba(240,101,149,.11) 0 26px,transparent 27px),radial-gradient(circle at 48% 78%,rgba(255,209,102,.08) 0 14px,transparent 15px)}
+body[data-theme="temple"]::before{background:repeating-linear-gradient(45deg,transparent 0 46px,rgba(216,179,106,.07) 46px 49px,transparent 49px 92px),radial-gradient(circle at 50% 12%,rgba(216,179,106,.09),transparent 16rem)}
+body[data-theme="monsoon"]::before{background:repeating-linear-gradient(106deg,transparent 0 34px,rgba(139,211,255,.08) 34px 36px,transparent 36px 70px),linear-gradient(180deg,rgba(93,173,236,.05),transparent 55%)}
+body[data-theme="krathong"]::before{background:radial-gradient(circle at 15% 26%,rgba(212,154,72,.13) 0 5px,transparent 6px),radial-gradient(circle at 72% 16%,rgba(167,139,250,.12) 0 7px,transparent 8px),radial-gradient(circle at 45% 76%,rgba(103,232,249,.09) 0 5px,transparent 6px);background-size:150px 150px,190px 190px,130px 130px}
+body[data-theme="ekkamai"]::before{background:linear-gradient(164deg,transparent 0 42%,rgba(255,124,99,.09) 42.3% 43%,transparent 43.3%),radial-gradient(circle at 80% 12%,rgba(255,209,102,.12),transparent 13rem)}
+body[data-theme="yaowarat"]::before{background:radial-gradient(circle at 20% 15%,rgba(232,91,85,.13) 0 14px,transparent 15px),radial-gradient(circle at 80% 38%,rgba(95,224,183,.1) 0 9px,transparent 10px),repeating-linear-gradient(90deg,transparent 0 62px,rgba(232,91,85,.045) 62px 65px)}
+body[data-theme="tuktuk"]::before{background:repeating-linear-gradient(135deg,transparent 0 42px,rgba(214,224,235,.055) 42px 45px,transparent 45px 84px),linear-gradient(90deg,transparent 0 72%,rgba(255,122,61,.07) 72.3% 73%,transparent 73.3%)}
 
 body{
   background-color:var(--bg-0);
@@ -1532,6 +1570,67 @@ h1,h2,h3,.display{letter-spacing:-.025em}
 .theme-swatch[data-swatch="temple"]{background:linear-gradient(135deg,#17100B 0 55%,#D8B36A 55%)}
 .theme-swatch[data-swatch="monsoon"]{background:linear-gradient(135deg,#0D1B28 0 55%,#8BD3FF 55%)}
 .theme-swatch[data-swatch="krathong"]{background:linear-gradient(135deg,#0D1230 0 50%,#A78BFA 50% 75%,#D49A48 75%)}
+.theme-swatch[data-swatch="ekkamai"]{background:linear-gradient(135deg,#231E3F 0 48%,#FF7C63 48% 74%,#7BDCF2 74%)}
+.theme-swatch[data-swatch="yaowarat"]{background:linear-gradient(135deg,#24121F 0 48%,#E85B55 48% 74%,#5FE0B7 74%)}
+.theme-swatch[data-swatch="tuktuk"]{background:linear-gradient(135deg,#151922 0 48%,#DDE4EB 48% 70%,#FF7A3D 70%)}
+
+/* =====================================================
+   V8.1.0 · STREET ARCADE
+   Optional cabinets reuse taught pools, existing packs and drillLog.
+===================================================== */
+.section-card.practice-arcade{
+  --panel-accent:var(--atlas-sun);position:relative;overflow:hidden;
+  background:var(--atlas-panel);border:2px solid var(--line-bright);border-top:9px solid var(--atlas-sun);
+  border-radius:3px 18px 3px 18px;box-shadow:6px 6px 0 var(--atlas-hard-shadow);padding:18px;
+}
+.arcade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}
+.arcade-card{
+  --cabinet:var(--atlas-sky);min-height:166px;position:relative;overflow:hidden;text-align:left;
+  display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:14px;
+  color:var(--text);background:var(--atlas-panel-2);border:3px solid var(--cabinet);border-bottom-width:9px;
+  border-radius:8px 8px 18px 18px;box-shadow:4px 4px 0 var(--atlas-hard-shadow);
+}
+.arcade-card::before{content:"";position:absolute;inset:7px 8px auto;height:6px;background:repeating-linear-gradient(90deg,var(--cabinet) 0 13px,transparent 13px 18px);opacity:.65}
+.arcade-card[data-arcade-id="arcade-parcel"]{--cabinet:var(--atlas-sun)}
+.arcade-card[data-arcade-id="arcade-market"]{--cabinet:var(--atlas-route)}
+.arcade-card[data-arcade-id="arcade-tuktuk"]{--cabinet:var(--atlas-sky)}
+.arcade-card.locked{filter:saturate(.42);opacity:.7}
+.arcade-icon{font-size:34px;line-height:1;margin-top:10px}
+.arcade-title{display:block;font-family:var(--font-display);font-weight:850;font-size:17px}
+.arcade-copy{display:block;font-size:11.5px;line-height:1.35;color:var(--muted)}
+.arcade-record{font-size:11px;font-weight:850;color:var(--cabinet)}
+.arcade-stars{letter-spacing:.08em;color:var(--atlas-sun)}
+.arcade-stage{position:relative;min-height:450px;display:flex;flex-direction:column;gap:16px}
+.arcade-stage::before{content:"";position:absolute;inset:-20px -18px auto;height:116px;background:linear-gradient(135deg,var(--atlas-route),var(--atlas-violet));opacity:.16;pointer-events:none}
+.arcade-stage[data-game="arcade-parcel"]::before{background:repeating-linear-gradient(135deg,var(--atlas-sun) 0 18px,var(--atlas-route) 18px 36px)}
+.arcade-stage[data-game="arcade-market"]::before{background:radial-gradient(circle at 20% 50%,var(--atlas-sun) 0 7px,transparent 8px),linear-gradient(135deg,var(--atlas-route),var(--atlas-violet));background-size:52px 52px,auto}
+.arcade-stage[data-game="arcade-tuktuk"]::before{background:repeating-linear-gradient(90deg,transparent 0 42px,var(--atlas-sky) 42px 47px),linear-gradient(180deg,var(--atlas-violet),transparent)}
+.arcade-hud{position:relative;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:10px 12px;background:var(--atlas-panel-2);border:2px solid var(--line-bright);border-radius:4px 14px 4px 14px;box-shadow:3px 3px 0 var(--atlas-hard-shadow)}
+.arcade-hud b{font-family:var(--font-display);font-size:16px}.arcade-hud span{font-size:12px;font-weight:850}
+.arcade-dots{grid-column:1 / -1;display:flex;gap:4px}.arcade-dots i{width:10px;height:10px;border:2px solid var(--line-bright);border-radius:2px}.arcade-dots i.done{background:var(--atlas-sun);border-color:var(--atlas-sun)}.arcade-dots i.now{border-color:var(--atlas-route)}
+.arcade-prompt{text-align:center;position:relative;padding-top:8px}
+.arcade-prompt .arcade-thai{font-family:var(--font-display);font-size:76px;font-weight:800;line-height:1.15;color:var(--text)}
+.arcade-prompt h2{font-size:22px;margin:8px 0 2px}.arcade-prompt p{color:var(--muted);font-size:13px}
+.parcel-box{width:150px;margin:0 auto;padding:18px 12px;background:var(--atlas-ticket);color:var(--atlas-ticket-ink);border:4px solid var(--atlas-ticket-ink);box-shadow:8px 8px 0 var(--atlas-hard-shadow);transform:rotate(-1deg)}
+.market-awning{height:18px;margin:0 auto 12px;max-width:330px;background:repeating-linear-gradient(90deg,var(--atlas-route) 0 34px,var(--atlas-ticket) 34px 68px);border:2px solid var(--line-bright)}
+.tuktuk-road{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:8px;background:repeating-linear-gradient(180deg,#2A2F38 0 30px,#333944 30px 60px);border:3px solid var(--atlas-sky);box-shadow:5px 5px 0 var(--atlas-hard-shadow)}
+.arcade-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.arcade-options.three{grid-template-columns:repeat(3,1fr)}
+.arcade-option{min-height:64px;padding:11px;border:2px solid var(--line-bright);border-radius:4px 13px 4px 13px;background:var(--atlas-panel-2);color:var(--text);box-shadow:3px 3px 0 var(--atlas-hard-shadow);font-weight:850;text-align:center}
+.arcade-option.thai{font-family:var(--font-display);font-size:28px}
+.arcade-option.tone-lane{min-height:92px;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.36);color:#fff;box-shadow:none;font-size:11px;padding:8px 3px}
+.arcade-option:active{transform:translate(2px,2px);box-shadow:none}
+.arcade-listen{align-self:center;min-width:150px}
+.arcade-feedback{padding:14px;border:3px solid var(--ui-success);background:var(--atlas-panel-2);border-radius:4px 15px 4px 15px;box-shadow:4px 4px 0 var(--atlas-hard-shadow)}
+.arcade-feedback.wrong{border-color:var(--ui-danger)}
+.arcade-feedback strong{display:block;font-size:17px;margin-bottom:5px}.arcade-feedback .thai-answer{font-family:var(--font-display);font-size:28px}
+.arcade-result-ticket{background:var(--atlas-ticket);color:var(--atlas-ticket-ink);padding:24px;border-radius:4px 22px 4px 22px;box-shadow:8px 8px 0 var(--atlas-hard-shadow);text-align:center}
+.arcade-result-ticket .result-sub{color:var(--atlas-ticket-muted)}
+.arcade-result-stars{font-size:36px;letter-spacing:.14em;color:#D99400;text-shadow:1px 1px 0 rgba(0,0,0,.2)}
+.theme-row-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.theme-preview-banner{border:2px dashed var(--atlas-sun);padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--atlas-panel-2)}
+.shop-row.arcade-shop-row .s-t::before{content:"▣ ";color:var(--atlas-sun)}
+@media(max-width:560px){.arcade-grid{grid-template-columns:1fr}.arcade-card{min-height:118px}.arcade-options.three{grid-template-columns:1fr}.tuktuk-road{grid-template-columns:repeat(5,1fr)}.arcade-option.tone-lane{writing-mode:vertical-rl;min-height:105px}}
+@media(prefers-reduced-motion:reduce){.arcade-card,.arcade-option{transition:none!important}.arcade-stage::before{animation:none!important}}
 
 /* route-strip navigation */
 #tabbar{
@@ -1580,7 +1679,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 complete (v8.0.0)</span>
+        <span class="version-pill">Phase 1 complete (v8.1.0)</span>
       </div>
     </header>
 
@@ -1697,7 +1796,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 complete (v8.0.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 complete (v8.1.0)</div>
     </div>
   </section>
 
@@ -1953,6 +2052,17 @@ h1,h2,h3,.display{letter-spacing:-.025em}
             <span class="icon-right">→</span>
           </button>
         </div>
+      </section>
+      <section class="section-card practice-arcade">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Street Arcade</div>
+            <h2>Play what you have learned</h2>
+            <p class="section-sub">Short games. Every round stays inside your completed lessons.</p>
+          </div>
+        </div>
+        <div class="arcade-grid" id="arcade-grid"></div>
+        <p class="sub meta-mini mt-10">Games are optional, give no repeatable tokens and never affect lesson access.</p>
       </section>
       <section class="section-card practice-transfer">
         <div class="section-head">
@@ -2796,7 +2906,15 @@ const THEMES = [
  {id:"songkran", name:"Songkran", price:40},
  {id:"temple", name:"Temple gold", price:60},
  {id:"monsoon", name:"Monsoon", price:40},
- {id:"krathong", name:"Loy Krathong", price:60}
+ {id:"krathong", name:"Loy Krathong", price:60},
+ {id:"ekkamai", name:"Ekkamai Sunset", price:40},
+ {id:"yaowarat", name:"Yaowarat Neon", price:50},
+ {id:"tuktuk", name:"Tuk-Tuk Chrome", price:60}
+];
+const ARCADE_GAMES = [
+ {id:"arcade-parcel", name:"Parcel Sort", icon:"📦", gate:"l2", price:0, rounds:10, desc:"Sort class and ending jobs"},
+ {id:"arcade-market", name:"Night Market Hunt", icon:"🏮", gate:"l4", price:50, rounds:8, desc:"Hear it and tap the Thai sign"},
+ {id:"arcade-tuktuk", name:"Tuk-Tuk Tone Run", icon:"🛺", gate:"l13", price:60, rounds:10, desc:"Steer into the correct tone lane"}
 ];
 const BASE_THEME_CONTRAST = {
   dark:true, bg:"#070916", surface:"#111827", text:"#F2EFE6", muted:"#A9B0C2", tabbar:"#070916", active:"#22D3EE",
@@ -2809,7 +2927,10 @@ const THEME_CONTRAST_OVERRIDES = {
   songkran:{bg:"#121024", surface:"#1B1834", tabbar:"#121024", active:"#67E8F9"},
   temple:{bg:"#0F0B08", surface:"#17100B", muted:"#B8A988", tabbar:"#0F0B08", active:"#D8B36A"},
   monsoon:{bg:"#07121C", surface:"#0D1B28", muted:"#A7B9C8", tabbar:"#07121C", active:"#8BD3FF"},
-  krathong:{bg:"#070A1B", surface:"#0D1230", muted:"#B8B3D4", tabbar:"#070A1B", active:"#67E8F9"}
+  krathong:{bg:"#070A1B", surface:"#0D1230", muted:"#B8B3D4", tabbar:"#070A1B", active:"#67E8F9"},
+  ekkamai:{bg:"#16142B", surface:"#231E3F", muted:"#B7B0CF", tabbar:"#16142B", active:"#FF9B7B"},
+  yaowarat:{bg:"#130B12", surface:"#24121F", muted:"#C7AFC1", tabbar:"#130B12", active:"#5FE0B7"},
+  tuktuk:{bg:"#090B10", surface:"#151922", muted:"#B8C0CB", tabbar:"#090B10", active:"#FF7A3D"}
 };
 const TITLES = [
  {id:"student", thai:"นักเรียน", tr:"nák-rian", en:"the student"},
@@ -3413,8 +3534,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.0.0';
-const APP_VERSION_LABEL = 'Phase 1 complete (v8.0.0)';
+const APP_VERSION = 'v8.1.0';
+const APP_VERSION_LABEL = 'Phase 1 complete (v8.1.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -4337,7 +4458,7 @@ const DAY_ACTIVE_IDLE_LIMIT_MS = 60000;
 const ACTIVE_TIME_LIFECYCLE_EVENTS = 'visibilitychange pagehide blur focus';
 const ACTIVE_TIME_SURFACE_TYPES = new Set([
   'class-primer','lesson','quiz','flash','foundation-refresh','contrast','missions',
-  'decode-gym','spell','ghost','echo','write-it','route-talk','wild-deck','story','fluency-read'
+  'decode-gym','spell','ghost','echo','write-it','route-talk','wild-deck','story','fluency-read','arcade'
 ]);
 let activeTime = {surface:null, running:false, startedAt:0, lastInteractionAt:0, pendingMs:0, audio:false};
 function normaliseDayActiveSecs(day){
@@ -4916,6 +5037,53 @@ function sfxComplete(){
     [523, 659, 784].forEach((f,i)=>sfxTone(ctx, f, i*.08, .18, .11));
     sfxTone(ctx, 1047, .3, .22, .12);
     sfxTone(ctx, 1319, .32, .18, .08, 'triangle');
+  });
+}
+function sfxSweep(ctx, from, to, at, dur, peak, type){
+  const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + (at||0);
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(Math.max(1, from), t0);
+  o.frequency.exponentialRampToValueAtTime(Math.max(1, to), t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(peak, t0 + .018);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0 + dur + .05);
+}
+function sfxArcadeNote(ctx, freq, at, dur, peak){
+  if(currentSfxVoice().id === 'ranat') sfxRanatTone(ctx, freq, at, dur, peak);
+  else sfxTone(ctx, freq, at, dur, peak, 'square', {attack:.008});
+}
+function sfxArcadeStart(kind){
+  sfxPlay(ctx=>{
+    if(kind === 'arcade-parcel'){
+      sfxArcadeNote(ctx, 330, 0, .07, .075); sfxArcadeNote(ctx, 440, .075, .08, .075);
+    } else if(kind === 'arcade-market'){
+      sfxArcadeNote(ctx, 523, 0, .13, .09); sfxArcadeNote(ctx, 784, .07, .2, .08);
+    } else {
+      sfxSweep(ctx, 92, 168, 0, .32, .07, 'sawtooth'); sfxArcadeNote(ctx, 660, .25, .08, .07);
+    }
+  });
+}
+function sfxArcadeCorrect(kind, combo){
+  sfxPlay(ctx=>{
+    const lift = Math.min(combo||0, 8) * 22;
+    const base = kind === 'arcade-parcel' ? 440 : kind === 'arcade-market' ? 587 : 523;
+    sfxArcadeNote(ctx, base + lift, 0, .08, .095);
+    sfxArcadeNote(ctx, base * 1.5 + lift, .055, .12, .09);
+    if((combo||0) >= 5) sfxArcadeNote(ctx, base * 2 + lift, .12, .14, .07);
+  });
+}
+function sfxArcadeWrong(kind){
+  sfxPlay(ctx=>{
+    if(kind === 'arcade-tuktuk') sfxSweep(ctx, 190, 105, 0, .2, .075, 'sawtooth');
+    else { sfxArcadeNote(ctx, 196, 0, .11, .075); sfxArcadeNote(ctx, 165, .075, .13, .065); }
+  });
+}
+function sfxArcadeFinish(stars){
+  sfxPlay(ctx=>{
+    const notes = stars >= 3 ? [523,659,784,1047] : stars === 2 ? [440,587,784] : [392,523];
+    notes.forEach((freq,i)=>sfxArcadeNote(ctx, freq, i*.065, .15, .095));
+    if(stars >= 3) sfxSweep(ctx, 260, 1040, .22, .24, .045, 'triangle');
   });
 }
 const COMBO_SHOW_AT = 3;
@@ -5684,6 +5852,8 @@ function practiceState(p){
 function renderDailyPractice(){
   const host = el('daily-practice'); if(!host) return;
 		  const missing = dailyMissingStep();
+		  const featuredGame = !missing ? featuredArcadeGame() : null;
+		  const practiceItems = DAILY_PRACTICE.concat(featuredGame ? [{id:featuredGame.id, title:'Featured: ' + featuredGame.name, gate:featuredGame.gate, go:()=>startArcadeGame(featuredGame.id)}] : []);
 		  const active = activeDepthTask();
 		  const task = active || todayDepthTask();
 		  const due = srsDue().length, band = reviewLoadBand(due), shape = todayReviewShape();
@@ -5694,7 +5864,7 @@ function renderDailyPractice(){
 		    : active ? active.title
 		    : task ? task.title
 	    : 'Available';
-  host.innerHTML = DAILY_PRACTICE.map(p=>{
+  host.innerHTML = practiceItems.map(p=>{
     const s = practiceState(p);
     return `<button class="practice-chip ${s.cls}" data-practice="${p.id}">
       <span class="p-title">${p.title}</span>
@@ -5703,7 +5873,7 @@ function renderDailyPractice(){
   }).join('');
 	  host.querySelectorAll('[data-practice]').forEach(b=>{
     b.addEventListener('click', ()=>{
-      const p = DAILY_PRACTICE.find(x=>x.id===b.dataset.practice);
+      const p = practiceItems.find(x=>x.id===b.dataset.practice);
       if(!p) return;
       if(p.gate && !state.done.includes(p.gate)){ toast('Unlocks after Lesson ' + p.gate.slice(1)); return; }
 	      p.go();
@@ -8757,7 +8927,7 @@ function validateV70OnboardingContracts(){
   if(!/touchstart/.test(onboardingSource) || !/touchend/.test(onboardingSource)) errors.push('onboarding should support swipe gestures');
   const aboutSource = String(showAboutApp);
   if(!/About this app/.test(aboutSource) || !/device voice support/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
-  if(!/^v(?:7\.\d+\.\d+|8\.0\.0)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
+  if(!/^v(?:7\.\d+\.\d+|8\.\d+\.\d+)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
   if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
   if(errors.length) throw new Error('V7.0 onboarding contract failed:\n' + errors.join('\n'));
   return true;
@@ -8858,7 +9028,7 @@ function validateV71VisualSoundContracts(){
   const guardSource = String(requestOverlayClose) + String(showOverlayExitConfirm) + String(overlayExitWouldDiscard) + String(lessonExitWouldDiscard) + String(masteryQuizExitWouldDiscard);
   if(!guardSource.includes('overlayExitWouldDiscard') || !guardSource.includes('bindDialogDismissal') || !guardSource.includes('closeOverlay()')) errors.push('overlay close button should route through the v7.1 discard guard');
   if(!String(lessonExitWouldDiscard).includes('p.i > 0') || !String(masteryQuizExitWouldDiscard).includes('p.opts.boss') || !String(masteryQuizExitWouldDiscard).includes('p.opts.checkpoint') || !String(masteryQuizExitWouldDiscard).includes('p.opts.letters42') || !String(masteryQuizExitWouldDiscard).includes('p.opts.phase1Completion')) errors.push('discard guard should cover progressed lessons and mastery-stakes quizzes only');
-  if(!/^v(?:7\.\d+\.\d+|8\.0\.0)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
+  if(!/^v(?:7\.\d+\.\d+|8\.\d+\.\d+)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
   if(!/Phase 1/.test(APP_VERSION_LABEL) || !APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain Phase 1 and the current app version');
   if(errors.length) throw new Error('V7.1 visual/sound contract failed:\n' + errors.join('\n'));
   return true;
@@ -8943,6 +9113,7 @@ function validateThemeContracts(){
 function shopPurchasables(){
   return PACK_SHOP_ITEMS
     .concat(SOUND_PACKS)
+    .concat(ARCADE_GAMES)
     .concat(THEMES)
     .concat(TITLES.map(t=>Object.assign({price:25}, t)));
 }
@@ -8957,8 +9128,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
+  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9130,8 +9301,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
+  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9225,8 +9396,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
+  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9295,8 +9466,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.0.0') errors.push('internal app version should be v8.0.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('footer label should be Phase 1 complete (v8.0.0)');
+  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9509,7 +9680,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.0.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('v8.0.0 identity mismatch');
+  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9547,8 +9718,77 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.0.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.0.0)') errors.push('v8.0.0 identity mismatch');
+  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV81ArcadeContracts(){
+  const errors = [], css = appStyleText();
+  const expectedGames = {
+    'arcade-parcel':{gate:'l2',price:0},
+    'arcade-market':{gate:'l4',price:50},
+    'arcade-tuktuk':{gate:'l13',price:60}
+  };
+  const expectedThemes = {ekkamai:40, yaowarat:50, tuktuk:60};
+  Object.keys(expectedGames).forEach(id=>{
+    const game = ARCADE_GAMES.find(item=>item.id===id), expected = expectedGames[id];
+    if(!game) errors.push('missing arcade game ' + id);
+    else if(game.gate !== expected.gate || game.price !== expected.price) errors.push(id + ' gate/price drifted');
+  });
+  Object.keys(expectedThemes).forEach(id=>{
+    const theme = THEMES.find(item=>item.id===id);
+    if(!theme || theme.price !== expectedThemes[id]) errors.push('missing or repriced theme ' + id);
+    if(!css.includes('body[data-theme="' + id + '"]{--atlas-ticket')) errors.push(id + ' missing Street Atlas tokens');
+    if(!css.includes('.theme-swatch[data-swatch="' + id + '"]')) errors.push(id + ' missing shop swatch');
+  });
+  const snapshots = [2,4,13,24].map(n=>LESSONS.slice(0,n).map(L=>L.id));
+  const parcel = buildParcelSortRounds(snapshots[0]);
+  const market = buildNightMarketRounds(snapshots[1]);
+  const tuktuk = buildTukTukToneRounds(snapshots[2]);
+  if(parcel.length < 8 || parcel.some(round=>round.axis==='class' && !Object.values(CLS_LABEL).includes(round.answer))) errors.push('Parcel Sort pool is not ready at Lesson 2');
+  if(market.length < 4) errors.push('Night Market Hunt pool is not ready at Lesson 4');
+  if(tuktuk.length < 6 || tuktuk.some(round=>!TONE_NAMES.includes(round.answer))) errors.push('Tuk-Tuk Tone Run pool is not ready at Lesson 13');
+  [snapshots[0],snapshots[1],snapshots[2]].forEach((ids,i)=>{
+    const game = ARCADE_GAMES[i], rounds = arcadeRoundsForGame(game, ids);
+    if(rounds.length !== game.rounds) errors.push(game.id + ' should deliver its advertised round count at the unlock gate');
+  });
+  [market,tuktuk].forEach((rounds,ri)=>rounds.forEach(round=>{
+    const ids = ri === 0 ? snapshots[1] : snapshots[2], target = round.target;
+    if(!target || !thaiItemPrereqsMet(target.thai, ids, wordFrame(target))) errors.push('arcade target exceeds its lesson gate: ' + (target && target.thai || '?'));
+  }));
+  const sealed = new Set(FRESH_DECODE.concat(ASSESSMENT_BANK, RETENTION_DECODE_BANK).map(item=>item.thai));
+  snapshots.forEach(ids=>ARCADE_GAMES.forEach(game=>arcadeRoundsForGame(game, ids).forEach(round=>{
+    const thai = round.target && round.target.thai || round.prompt;
+    if(sealed.has(thai)) errors.push(game.id + ' leaked sealed decode word ' + thai);
+  })));
+  if(arcadeGameGateMet(ARCADE_GAMES[0], ['l1'])) errors.push('Parcel Sort should stay locked before Lesson 2');
+  if(arcadeGameGateMet(ARCADE_GAMES[1], snapshots[0])) errors.push('Night Market Hunt should stay locked before Lesson 4');
+  if(arcadeGameGateMet(ARCADE_GAMES[2], snapshots[1])) errors.push('Tuk-Tuk Tone Run should stay locked before Lesson 13');
+  const fresh = {done:[],srs:{}}; ensureStateCollections(fresh);
+  ['arcade','games','gameScores','themePreview'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh,key)) errors.push('fresh state must not add root key ' + key); });
+  const startSource = String(startArcadeGame) + String(submitArcadeAnswer) + String(advanceArcadeRound) + String(finishArcadeGame) + String(recordArcadeResult);
+  if(/markDailyDepth|bumpStreak|award\(|getLessonBlocker|srsAdd/.test(startSource)) errors.push('arcade must not alter required work, streaks, tokens, lesson blockers or SRS');
+  if(!String(recordArcadeResult).includes('state.drillLog') || !String(ownsArcadeGame).includes('ownsPack')) errors.push('arcade records/ownership should reuse drillLog and packs');
+  const soundSource = [sfxArcadeStart,sfxArcadeCorrect,sfxArcadeWrong,sfxArcadeFinish].map(fn=>String(fn)).join('\n');
+  if(!soundSource.includes('sfxPlay') || /fetch|Audio\(|\.src\s*=|XMLHttpRequest/.test(soundSource)) errors.push('arcade sounds must stay synthesized, local and toggle-aware');
+  if(!String(renderShop).includes('data-theme-preview') || !String(renderShop).includes('Street Arcade') || !String(renderArcadeHub).includes('data-arcade-id')) errors.push('shop/practice arcade surfaces missing');
+  if(!String(renderShop).includes('aria-label="Preview') || !String(renderArcadeHub).includes('aria-label=')) errors.push('theme previews and arcade cabinets need specific accessible names');
+  if(!css.includes('@media(prefers-reduced-motion:reduce)') || !css.includes('.arcade-stage') || !css.includes('.arcade-option')) errors.push('arcade visual or reduced-motion contract missing');
+  if(typeof document !== 'undefined' && typeof document.getElementById === 'function'){
+    const stage = document.getElementById('stage');
+    if(stage && stage === document.getElementById('stage')){
+      const priorHtml = stage.innerHTML, priorPlayer = player;
+      withTemporaryState({done:snapshots[0],srs:{},days:{},packs:[],drillLog:{}}, ()=>{
+        const game = ARCADE_GAMES.find(item=>item.id==='arcade-parcel'), rounds = buildParcelSortRounds(snapshots[0]);
+        player = {type:'arcade',game,rounds,i:0,score:0,combo:0,bestCombo:0,feedback:null,result:null};
+        renderArcadeRound();
+        if(!stage.innerHTML.includes('data-game="arcade-parcel"') || !stage.innerHTML.includes('data-arcade-choice')) errors.push('Parcel Sort round did not render its playable cabinet');
+      });
+      player = priorPlayer; stage.innerHTML = priorHtml;
+    }
+  }
+  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
+  if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10636,10 +10876,14 @@ el('wai-banner').addEventListener('click', ()=>{
 });
 function ownsPack(p){ return (state.packs||[]).includes(p); }
 function ownsTheme(t){ const th = THEMES.find(x=>x.id===t); return (th && th.price===0) || (state.themes||[]).includes(t); }
+let previewThemeId = null;
 function applyTheme(){
-  document.body.dataset.theme = state.theme || 'night';
-  document.body.classList.toggle('juice', (state.theme || '') === 'full');
+  const id = previewThemeId || state.theme || 'night';
+  document.body.dataset.theme = id;
+  document.body.classList.toggle('juice', id === 'full');
 }
+function startThemePreview(id){ previewThemeId = id; applyTheme(); renderShop(); }
+function stopThemePreview(){ previewThemeId = null; applyTheme(); renderShop(); }
 function buy(cost, fn){
   if((state.baht||0) < cost){ toast('Not enough tokens. Need ' + cost + ' 💎.'); return false; }
   award(-cost); fn(); saveState(); return true;
@@ -10656,7 +10900,8 @@ function renderShop(){
   if(!state.titles) state.titles = [];
   if(!state.soundPacks) state.soundPacks = [];
   el('stage').innerHTML = `
-    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · optional language and display settings</p></div>
+    <div class="center"><h2>Unlocks</h2><p class="sub">Balance: ${state.baht||0} 💎 · optional language, arcade and display settings</p></div>
+    ${previewThemeId ? `<div class="theme-preview-banner"><div><b>Previewing ${esc((THEMES.find(t=>t.id===previewThemeId)||{}).name || 'theme')}</b><div class="sub meta-mini">Temporary preview. Nothing has been purchased.</div></div><button class="btn small ghost" id="theme-preview-stop">Stop preview</button></div>` : ''}
     <div class="card">
       <div class="eyebrow">Phrase & story packs</div>
       ${PACK_SHOP_ITEMS.map(item=>`
@@ -10665,6 +10910,19 @@ function renderShop(){
           <button class="btn small ${ownsPack(item.id)?'ghost':''}" data-pack="${escAttr(item.id)}" data-price="${escAttr(item.price)}">${ownsPack(item.id)?'✓ owned':item.price+' 💎'}</button>
         </div>`).join('')}
       <div class="sub" style="font-size:12px;margin-top:10px">Core survival Thai stays free in Read. These sets are optional.</div>
+    </div>
+    <div class="card section-gap">
+      <div class="eyebrow">Street Arcade</div>
+      ${ARCADE_GAMES.map(game=>{
+        const gated = arcadeGameGateMet(game), owned = ownsArcadeGame(game);
+        const label = !gated ? 'Lesson ' + lessonNum(game.gate) : owned ? 'play' : game.price + ' 💎';
+        return `<div class="shop-row arcade-shop-row">
+          <span class="arcade-icon" aria-hidden="true">${game.icon}</span>
+          <div class="s-meta"><div class="s-t">${esc(game.name)}</div><div class="s-d">${esc(game.desc)} · ${game.price ? 'optional cabinet' : 'free milestone unlock'}</div></div>
+          <button class="btn small ${owned?'ghost':''}" data-arcade-buy="${escAttr(game.id)}" ${gated?'':'disabled'}>${label}</button>
+        </div>`;
+      }).join('')}
+      <div class="sub" style="font-size:12px;margin-top:10px">The underlying learning drills stay free. Cabinets give no repeatable tokens.</div>
     </div>
     <div class="card section-gap">
       <div class="eyebrow">Sounds</div>
@@ -10684,7 +10942,10 @@ function renderShop(){
         return `<div class="shop-row">
           <span class="theme-swatch" data-swatch="${escAttr(t.id)}" aria-hidden="true"></span>
           <div class="s-meta"><div class="s-t">${t.name}</div><div class="s-d">${t.id==='night'?'default colours':'class colours stay the same'}</div></div>
-          <button class="btn small ${owned?'ghost':''}" data-theme-id="${escAttr(t.id)}" data-price="${escAttr(t.price)}">${active?'● active':owned?'use':t.price+' 💎'}</button>
+          <div class="theme-row-actions">
+            <button class="btn small ghost" data-theme-preview="${escAttr(t.id)}" aria-label="Preview ${escAttr(t.name)}">preview</button>
+            <button class="btn small ${owned?'ghost':''}" data-theme-id="${escAttr(t.id)}" data-price="${escAttr(t.price)}" aria-label="${escAttr(active?t.name+' active':owned?'Use '+t.name:'Buy '+t.name+' for '+t.price+' tokens')}">${active?'● active':owned?'use':t.price+' 💎'}</button>
+          </div>
         </div>`;
       }).join('')}
     </div>
@@ -10720,13 +10981,26 @@ function renderShop(){
       }
     });
   });
+  el('stage').querySelectorAll('[data-arcade-buy]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const game = ARCADE_GAMES.find(x=>x.id===b.dataset.arcadeBuy);
+      if(!game || !arcadeGameGateMet(game)) return;
+      if(ownsArcadeGame(game)){ startArcadeGame(game.id); return; }
+      if(buy(game.price, ()=>state.packs.push(game.id))){ renderShop(); renderArcadeHub(); toast(game.name + ' unlocked'); }
+    });
+  });
+  el('stage').querySelectorAll('[data-theme-preview]').forEach(b=>{
+    b.addEventListener('click', ()=>startThemePreview(b.dataset.themePreview));
+  });
+  const previewStop = el('theme-preview-stop');
+  if(previewStop) previewStop.onclick = stopThemePreview;
   el('stage').querySelectorAll('[data-theme-id]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const id = b.dataset.themeId;
       if(ownsTheme(id)){
-        state.theme = id; saveState(); applyTheme(); renderShop(); toast('Theme selected');
+        previewThemeId = null; state.theme = id; saveState(); applyTheme(); renderShop(); toast('Theme selected');
       } else if(buy(+b.dataset.price, ()=>{ state.themes.push(id); state.theme = id; })){
-        applyTheme(); renderShop(); toast('Theme added and selected');
+        previewThemeId = null; applyTheme(); renderShop(); toast('Theme added and selected');
       }
     });
   });
@@ -10744,7 +11018,217 @@ function renderShop(){
   });
   const off = el('title-off');
   if(off) off.addEventListener('click', ()=>{ state.title = null; saveState(); renderShop(); renderTitle(); });
-  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+  el('st-done').onclick = ()=>{ previewThemeId = null; applyTheme(); closeOverlay(); renderHome(); };
+}
+
+/* v8.1.0 - optional Street Arcade. Cabinets reuse taught pools, packs[] ownership and drillLog records. */
+function arcadeGameGateMet(game, doneIds){
+  return !!(game && lessonGateMet(game.gate, doneIds || state.done || []));
+}
+function ownsArcadeGame(game){
+  return !!(game && (game.price === 0 || ownsPack(game.id)));
+}
+function arcadeGameReady(game, doneIds){
+  return arcadeGameGateMet(game, doneIds) && ownsArcadeGame(game);
+}
+function arcadeRecord(id){
+  return state.drillLog && state.drillLog[id] || {};
+}
+function arcadeStarsFor(score, total){
+  const pct = total ? 100 * score / total : 0;
+  return pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 50 ? 1 : 0;
+}
+function arcadeStarsHtml(n){
+  return `<span class="arcade-stars" aria-label="${n} of 3 stars">${'★'.repeat(n)}${'☆'.repeat(3-n)}</span>`;
+}
+function recordArcadeResult(game, score, total, bestCombo){
+  if(!state.drillLog) state.drillLog = {};
+  const prev = state.drillLog[game.id] || {};
+  const stars = arcadeStarsFor(score, total);
+  state.drillLog[game.id] = Object.assign({}, prev, {
+    n:(prev.n||0)+1,
+    last:todayStr(),
+    lastScore:score,
+    best:Math.max(prev.best||0, score),
+    bestCombo:Math.max(prev.bestCombo||0, bestCombo||0),
+    stars:Math.max(prev.stars||0, stars)
+  });
+  saveState();
+  return {stars, previousBest:prev.best||0, best:state.drillLog[game.id].best};
+}
+function featuredArcadeGame(){
+  const ready = ARCADE_GAMES.filter(game=>arcadeGameReady(game));
+  if(!ready.length) return null;
+  const key = todayStr().split('').reduce((n,ch)=>n + ch.charCodeAt(0), 0);
+  return ready[key % ready.length];
+}
+function taughtArcadeConsonants(doneIds){
+  const taught = taughtGlyphSet(doneIds || state.done || []);
+  return [...taught].filter(ch=>GLYPHS[ch] && GLYPHS[ch].type === 'c');
+}
+function parcelGroupLabel(group){
+  return group === 'stop' ? 'Stop ending · dead' : group === 'ring' ? 'Ringing ending · live' : 'Glide ending · live';
+}
+function buildParcelSortRounds(doneIds){
+  const ids = doneIds || state.done || [], consonants = taughtArcadeConsonants(ids);
+  const classRounds = weightedWeakSample(consonants, Math.min(7, consonants.length), ch=>weaknessScore('class', ch)).map(ch=>({
+    gameKind:'parcel', axis:'class', prompt:ch, answer:CLS_LABEL[GLYPHS[ch].cls], options:Object.values(CLS_LABEL),
+    explain:ch + ' is ' + CLS_LABEL[GLYPHS[ch].cls].toLowerCase() + '.'
+  }));
+  const finals = consonants.filter(ch=>finalJob(ch));
+  const knownGroups = [...new Set(finals.map(ch=>finalJob(ch).group))];
+  const finalRounds = knownGroups.length >= 2 ? weightedWeakSample(finals, Math.min(3, finals.length), ch=>weaknessScore('final', ch)).map(ch=>{
+    const job = finalJob(ch);
+    return {gameKind:'parcel', axis:'final', prompt:ch, answer:parcelGroupLabel(job.group), options:knownGroups.map(parcelGroupLabel), explain:ch + ' ends as ' + job.sound + ': ' + job.effect + '.'};
+  }) : [];
+  return shuffle(classRounds.concat(finalRounds)).slice(0, 10);
+}
+function arcadeLearnedWords(doneIds){
+  const ids = doneIds || state.done || [], taught = taughtGlyphSet(ids);
+  return learnedWords(ids).filter(w=>thaiTextReadable(w.thai, taught) && thaiItemPrereqsMet(w.thai, ids, wordFrame(w)));
+}
+function buildNightMarketRounds(doneIds){
+  const ids = doneIds || state.done || [], pool = arcadeLearnedWords(ids), taught = taughtGlyphSet(ids);
+  return weightedWeakSample(pool, Math.min(12, pool.length), w=>glyphWeaknessSum(w.thai)).map(target=>{
+    const wrong = wordThaiDistractors(target, pool, 3, taught);
+    return {gameKind:'market', target, prompt:target.thai, answer:target.thai, options:shuffle([target.thai,...wrong])};
+  }).filter(round=>round.options.length >= 4).slice(0, 8);
+}
+function buildTukTukToneRounds(doneIds){
+  const ids = doneIds || state.done || [];
+  const pool = arcadeLearnedWords(ids).map(word=>({word, route:toneRouteForWord(word, ids)})).filter(item=>item.route);
+  return weightedWeakSample(pool, Math.min(10, pool.length), item=>weaknessScore('tone', ruleCellKey(item.word))).map(item=>({
+    gameKind:'tuktuk', target:item.word, route:item.route, prompt:item.word.thai, answer:item.route.tone, options:TONE_NAMES.slice()
+  }));
+}
+function fillArcadeRounds(rounds, count){
+  const source = (rounds || []).slice(), out = source.slice(0, count);
+  if(!source.length) return out;
+  while(out.length < count){
+    shuffle(source).forEach(round=>{
+      if(out.length < count) out.push(Object.assign({}, round, {options:(round.options || []).slice()}));
+    });
+  }
+  return out;
+}
+function arcadeRoundsForGame(game, doneIds){
+  if(!game) return [];
+  let rounds = [];
+  if(game.id === 'arcade-parcel') rounds = buildParcelSortRounds(doneIds);
+  if(game.id === 'arcade-market') rounds = buildNightMarketRounds(doneIds);
+  if(game.id === 'arcade-tuktuk') rounds = buildTukTukToneRounds(doneIds);
+  return fillArcadeRounds(rounds, game.rounds);
+}
+function arcadeMiss(round){
+  if(round.gameKind === 'parcel') recordProfileError(round.axis === 'class' ? 'class' : 'final', round.prompt);
+  if(round.gameKind === 'market') thaiChars(round.target.thai).forEach(ch=>{ if(GLYPHS[ch] && GLYPHS[ch].type === 'c') recordProfileError('sound', ch); });
+  if(round.gameKind === 'tuktuk') recordProfileError('tone', ruleCellKey(round.target));
+}
+function arcadeFeedbackHtml(round, ok){
+  if(round.gameKind === 'parcel') return `<div class="thai-answer">${classColourThaiHtml(round.prompt)}</div>${esc(round.explain)}`;
+  if(round.gameKind === 'market') return `<div class="thai-answer">${classColourThaiHtml(round.target.thai)}</div>${esc(round.target.tr)} · device-voice practice only`;
+  return `<div class="thai-answer">${classColourThaiHtml(round.target.thai)} · ${esc(round.answer)} tone</div>${toneRouteStepsHtml(round.route)}`;
+}
+function arcadeDotsHtml(p){
+  return `<span class="arcade-dots" aria-label="round ${Math.min(p.i+1,p.rounds.length)} of ${p.rounds.length}">${p.rounds.map((_,i)=>`<i class="${i<p.i?'done':i===p.i?'now':''}"></i>`).join('')}</span>`;
+}
+function arcadeOptionsHtml(round){
+  const cls = round.gameKind === 'parcel' ? 'three' : '';
+  if(round.gameKind === 'tuktuk') return `<div class="tuktuk-road">${round.options.map(option=>`<button class="arcade-option tone-lane" data-arcade-choice="${escAttr(option)}">${esc(option)}</button>`).join('')}</div>`;
+  return `<div class="arcade-options ${cls}">${round.options.map(option=>`<button class="arcade-option ${round.gameKind==='market'?'thai':''}" data-arcade-choice="${escAttr(option)}">${round.gameKind==='market'?classColourThaiHtml(option):esc(option)}</button>`).join('')}</div>`;
+}
+function arcadePromptHtml(round){
+  if(round.gameKind === 'parcel') return `<div class="arcade-prompt"><div class="parcel-box"><div class="arcade-thai">${esc(round.prompt)}</div></div><h2>${round.axis==='class'?'Which class conveyor?':'Which ending conveyor?'}</h2><p>The prompt stays neutral. Colour returns after the answer.</p></div>`;
+  if(round.gameKind === 'market') return `<div class="arcade-prompt"><div class="market-awning"></div><div class="arcade-icon">🏮</div><h2>Which stall sign did you hear?</h2><p>Covered words only. Device voice is practice, not listening proof.</p></div><button class="btn arcade-listen" id="arcade-listen">🔊 Play word</button>`;
+  return `<div class="arcade-prompt"><div class="arcade-icon">🛺</div><div class="arcade-thai">${esc(round.prompt)}</div><h2>Choose the tone lane</h2><p>Read the route before you steer.</p></div>`;
+}
+function finishArcadeGame(){
+  const p = player, game = p.game;
+  if(!p.result) p.result = recordArcadeResult(game, p.score, p.rounds.length, p.bestCombo);
+  setProg(100); sfxArcadeFinish(p.result.stars);
+  const newBest = p.score > p.result.previousBest;
+  el('stage').innerHTML = `<div class="arcade-stage" data-game="${escAttr(game.id)}">
+    <div class="arcade-result-ticket">
+      <div class="eyebrow">${esc(game.name)} complete</div>
+      <div class="result-big">${p.score} / ${p.rounds.length}</div>
+      <div class="arcade-result-stars">${'★'.repeat(p.result.stars)}${'☆'.repeat(3-p.result.stars)}</div>
+      <div class="result-sub">Best combo ${p.bestCombo}${newBest?' · new personal best!':' · best score '+p.result.best}</div>
+      <div class="result-sub" style="margin-top:8px">No tokens awarded. This cabinet is optional practice.</div>
+    </div>
+    <div class="stage-actions"><button class="btn full ghost" id="arcade-again">Play again</button><button class="btn full" id="st-done">Done</button></div>
+  </div>`;
+  if(p.result.stars >= 3) triggerRewardBurst('arcade');
+  el('arcade-again').onclick = ()=>startArcadeGame(game.id);
+  el('st-done').onclick = ()=>{ closeOverlay(); renderHome(); renderReviewTab(); };
+}
+function submitArcadeAnswer(choice){
+  const p = player;
+  if(!p || p.type !== 'arcade' || p.feedback || p.i >= p.rounds.length) return null;
+  const round = p.rounds[p.i], ok = String(choice) === String(round.answer);
+  if(ok){
+    p.score++;
+    p.combo++;
+    p.bestCombo = Math.max(p.bestCombo, p.combo);
+    sfxArcadeCorrect(p.game.id, p.combo);
+  }else{
+    p.combo = 0;
+    arcadeMiss(round);
+    saveState();
+    sfxArcadeWrong(p.game.id);
+  }
+  p.feedback = {ok};
+  renderArcadeRound();
+  return {ok, score:p.score, combo:p.combo, index:p.i};
+}
+function advanceArcadeRound(){
+  const p = player;
+  if(!p || p.type !== 'arcade' || !p.feedback) return false;
+  p.feedback = null;
+  p.i++;
+  renderArcadeRound();
+  return true;
+}
+function renderArcadeRound(){
+  const p = player;
+  if(!p || p.type !== 'arcade') return;
+  if(p.i >= p.rounds.length){ finishArcadeGame(); return; }
+  const round = p.rounds[p.i], feedback = p.feedback;
+  setProg(Math.round(100*p.i/p.rounds.length));
+  el('stage').innerHTML = `<div class="arcade-stage" data-game="${escAttr(p.game.id)}">
+    <div class="arcade-hud"><b>${p.game.icon} ${esc(p.game.name)}</b><span>Score ${p.score}</span><span>Combo ${p.combo}</span>${arcadeDotsHtml(p)}</div>
+    ${arcadePromptHtml(round)}
+    ${feedback ? `<div class="arcade-feedback ${feedback.ok?'':'wrong'}" aria-live="polite"><strong>${feedback.ok?'Perfect route!':'Correct route'}</strong>${arcadeFeedbackHtml(round, feedback.ok)}</div><div class="stage-actions"><button class="btn full" id="arcade-next">Next round →</button></div>` : arcadeOptionsHtml(round)}
+  </div>`;
+  const listen = el('arcade-listen');
+  if(listen) listen.onclick = ()=>speak(round.target.thai);
+  if(!feedback && round.gameKind === 'market') window.setTimeout(()=>{ if(player===p && !p.feedback) speak(round.target.thai); }, 180);
+  if(feedback){ el('arcade-next').onclick = advanceArcadeRound; return; }
+  el('stage').querySelectorAll('[data-arcade-choice]').forEach(btn=>{
+    btn.addEventListener('click', ()=>submitArcadeAnswer(btn.dataset.arcadeChoice));
+  });
+}
+function startArcadeGame(id){
+  const game = ARCADE_GAMES.find(item=>item.id===id);
+  if(!game) return;
+  if(!arcadeGameGateMet(game)){ toast('Unlocks after Lesson ' + lessonNum(game.gate)); return; }
+  if(!ownsArcadeGame(game)){ toast('Unlock this cabinet in the shop'); openShop(); return; }
+  const rounds = arcadeRoundsForGame(game, state.done || []);
+  if(rounds.length < Math.min(4, game.rounds)){ toast('This cabinet needs a little more covered material'); return; }
+  player = {type:'arcade', game, rounds:rounds.slice(0,game.rounds), i:0, score:0, combo:0, bestCombo:0, feedback:null, result:null};
+  openOverlay(); sfxArcadeStart(game.id); renderArcadeRound();
+}
+function renderArcadeHub(){
+  const host = el('arcade-grid'); if(!host) return;
+  host.innerHTML = ARCADE_GAMES.map(game=>{
+    const gated = arcadeGameGateMet(game), owned = ownsArcadeGame(game), ready = gated && owned, rec = arcadeRecord(game.id);
+    const status = !gated ? 'Lesson ' + lessonNum(game.gate) : !owned ? game.price + '💎 in shop' : rec.best != null ? 'Best ' + rec.best + '/' + game.rounds : 'Ready';
+    return `<button class="arcade-card ${ready?'':'locked'}" data-arcade-id="${escAttr(game.id)}" aria-label="${escAttr(game.name+'. '+game.desc+'. '+status)}">
+      <span class="arcade-icon" aria-hidden="true">${game.icon}</span>
+      <span><span class="arcade-title">${esc(game.name)}</span><span class="arcade-copy">${esc(game.desc)}</span></span>
+      <span class="arcade-record">${esc(status)} · ${arcadeStarsHtml(rec.stars||0)}</span>
+    </button>`;
+  }).join('');
+  host.querySelectorAll('[data-arcade-id]').forEach(btn=>btn.addEventListener('click', ()=>startArcadeGame(btn.dataset.arcadeId)));
 }
 function renderTitle(){
   const elT = el('user-title');
@@ -11490,7 +11974,7 @@ function openOverlay(){
   const c = el('combo-chip'); if(c){ c.classList.remove('show','milestone'); }
   activeTimeSyncSurface();
 }
-function closeOverlay(){ activeTimeStop(); el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer(); player=null; }
+function closeOverlay(){ activeTimeStop(); el('overlay').classList.remove('open'); document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer(); if(previewThemeId){ previewThemeId=null; applyTheme(); } player=null; }
 function lessonExitWouldDiscard(p){
   return !!(p && p.type === 'lesson' && p.i > 0 && p.i < (p.steps || 0) - 1);
 }
@@ -13097,6 +13581,7 @@ function renderReviewTab(){
   setActionCardState('cta-contrast', active && active.id === 'contrast' ? 'recommended' : state.done.includes('l4') ? '' : 'locked');
   setActionCardState('cta-mouth', mouthCoachCards().length ? '' : 'locked');
   setActionCardState('cta-mission', active && active.id === 'mission' ? 'recommended' : state.done.includes('l3') ? '' : 'locked');
+  renderArcadeHub();
   renderLap();
   renderPath();
   renderTones();        // tone practice badge panel now lives in the Review tab (folded in v2.27)
@@ -15301,7 +15786,8 @@ function runFullStartupValidators(){
     validateV77ColourFadeContracts,
     validateV78RequiredLoopContracts,
     validateV79RetentionDecodeContracts,
-    validateV8VisualContracts
+    validateV8VisualContracts,
+    validateV81ArcadeContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

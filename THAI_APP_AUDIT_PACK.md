@@ -2,7 +2,7 @@
 
 Prepared: 2026-07-05
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.0.0`
+Current app version: `v8.1.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -241,6 +241,14 @@ v8.0.0 is the Bangkok Street Atlas visual-completion pass:
 - Keeps decorative Thai marks out of assistive names with `aria-hidden`, preserves reduced motion and mobile safe areas, and adds no runtime asset/request.
 - Adds `validateV8VisualContracts()` and the 58th generated validator; no curriculum, SRS, blocker, grading, retention, economy, state or service-worker change.
 
+v8.1.0 is the Street Arcade retention-and-fun pass:
+
+- Adds three optional cabinets with hard lesson gates: free Parcel Sort after Lesson 2, 50-token Night Market Hunt after Lesson 4, and 60-token Tuk-Tuk Tone Run after Lesson 13.
+- Rebuilds every round from completed lessons through the existing glyph/mechanism prerequisite checks, excludes all sealed decode corpora, and keeps class prompts neutral before feedback.
+- Reuses `packs[]` for paid ownership and `drillLog` for best score/combo/stars; games do not touch SRS, mastery, blockers, required Today depth, streaks or repeatable rewards.
+- Adds Ekkamai Sunset, Yaowarat Neon and Tuk-Tuk Chrome, temporary non-saving theme previews, stronger paid-theme motifs and local synthesized arcade sound cues controlled by the existing sound settings.
+- Adds `validateV81ArcadeContracts()` and the 59th generated validator, plus `tools/arcade-smoke.js` for deterministic full-session, saved-record, theme-preview and sound-path verification; no required state key, audio asset, network feature or service-worker change.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -248,6 +256,7 @@ v8.0.0 is the Bangkok Street Atlas visual-completion pass:
 - `icon-180.png`, `icon-192.png`, `icon-512.png` - install icons.
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
 - `tools/phase1-audit.js` - deterministic audit extractor.
+- `tools/arcade-smoke.js` - deterministic three-cabinet interaction and sound-path smoke harness.
 - `tools/fresh-decode-check.js` - three-corpus verifier for lesson/maintenance, assessment and retention words (tone routes, stage supply, decodability, freshness, isolation).
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
@@ -278,9 +287,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.0.0`
+- app version `v8.1.0`
 - 24 lessons
-- 58 validators passing
+- 59 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
