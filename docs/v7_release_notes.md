@@ -1,4 +1,12 @@
-# Phase 1 Release Notes (v7-v8.1)
+# Phase 1 and Conversation Pilot Release Notes (v7-v8.2)
+
+## Conversation-first field test · v8.2.0
+
+`v8.2.0` freezes the v8.1.0 Phase 1 reading course and adds one isolated, optional 8–12 minute food-ordering pilot on Today. The scene starts with gist listening, teaches six male-polite learner moves, practises four vendor-response choices, reuses temporary local record/playback, adds one substitution and ends with supported role-play plus a private self-rating.
+
+The pilot uses a dedicated player and separate `FOOD_ORDER_PILOT` content object. It does not enter lessons, the phrase-review pool, SRS, mastery, blockers, required Today work, streaks, tokens or active-time credit. Its optional `conversation` namespace stores only bounded run count, first/last completion day and latest self-rating; no answers or recordings persist.
+
+Device voice remains explicitly a rough preview rather than native listening evidence or pronunciation scoring, and the authored Thai is marked teacher-review pending. `validateV82ConversationPilotContracts()` brings the generated audit to 60 validators; the flow, state boundary and criteria for any expansion live in `docs/v8_2_conversation_pilot_notes.md`.
 
 ## Street Arcade · v8.1.0
 

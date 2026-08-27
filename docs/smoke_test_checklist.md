@@ -1,4 +1,4 @@
-# v8.1.0 Smoke-Test Checklist
+# v8.2.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -8,9 +8,25 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v8.1.0`, 59 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v8.2.0`, 60 validators passing and 0 lesson/pool/role prerequisite issues.
 - Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.1.0 does not change cached asset filenames.
+- Confirm `docs/phase1_audit.md` includes `PASS v82ConversationPilot`.
+- Confirm `sw.js` cache marker remains `aan-thai-v6-4-1`; v8.2.0 does not change cached asset filenames.
+
+## v8.2.0 Conversation Pilot
+
+- On a fresh state at 390 x 844, confirm Today shows one optional `Order food in Bangkok` card without hiding or changing the required route.
+- Open the pilot. Pass: the boundary copy says Thai-teacher review is pending and device voice is a rough preview rather than native listening or pronunciation evidence.
+- Complete the gist, all six learner moves, four vendor-response choices, recording screen, substitution and four-turn supported role-play. Pass: controls fit without horizontal overflow and wrong response feedback can continue.
+- On the recording screen, pass: recording begins only after a user tap, playback remains local, and leaving the screen clears the temporary recording rather than persisting audio.
+- Close or advance both immediately (within 300ms) and after a prompt has begun speaking. Pass: the superseded prompt neither starts later nor continues on Today or over the next step.
+- Confirm modeled learner and vendor polite Thai uses `ครับ`; the substitution reads `เอากะเพราไก่ครับ`.
+- Choose a self-rating and finish. Pass: completion says no tokens, streak, lesson progress or speaking score changed.
+- Before and after the run, compare due count, completed lessons/checks, tokens, streak, Today route and required-practice status. Pass: all remain unchanged.
+- Close and reload. Pass: the Today card reports the saved run count and latest self-rating.
+- Run the scene again with a different rating. Pass: run count increments, first completion stays fixed, last completion/latest rating update, and no per-turn answers or audio are stored.
+- Export/import a completed-pilot state. Pass: valid conversation evidence survives. Import malformed scene records or an invalid rating. Pass: the import is rejected and existing progress remains unchanged.
+- Reset all progress. Pass: the conversation run evidence is removed with the rest of learner progress.
 
 ## Fresh-State Onboarding
 
@@ -38,9 +54,9 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## About And Phase 1 Complete Identity
 
 - Open Progress → Progress tools → About this app.
-- Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
-- Confirm the header version pill and Today footer both read `Phase 1 complete (v8.1.0)`.
-- Confirm exported backup JSON uses `appVersion: "v8.1.0"`.
+- Pass: About explains what อ่าน is, Phase 1 script/class/tone scope, the optional teacher-review-pending conversation pilot, what completion does not claim, the device-voice rough-model boundary, current version and backup/export.
+- Confirm the header version pill and Today footer both read `Phase 1 + conversation pilot (v8.2.0)`.
+- Confirm exported backup JSON uses `appVersion: "v8.2.0"`.
 - Confirm `manifest.json` description foregrounds learning to read Thai script.
 
 ## v8.0.0 Bangkok Street Atlas Visual Pass
@@ -129,7 +145,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.1.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.2.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -236,7 +252,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Phase 1 complete (v8.1.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Phase 1 + conversation pilot (v8.2.0)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

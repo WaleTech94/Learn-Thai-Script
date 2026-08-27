@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T23:16:04.851Z",
-  "appVersion": "v8.1.0",
+  "generatedAt": "2026-08-27T15:09:22.065Z",
+  "appVersion": "v8.2.0",
   "lessonCount": 24,
   "validators": [
     {
@@ -297,6 +297,13 @@
       "name": "v81Arcade",
       "ok": true,
       "issues": []
+    },
+    {
+      "name": "v82ConversationPilot",
+      "ok": false,
+      "issues": [
+        "pilot card must stay visibly optional rather than compete with the required route"
+      ]
     }
   ],
   "prerequisites": {

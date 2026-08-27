@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.2.0 - 2026-08-27
+
+- Added one isolated, optional 8–12 minute conversation-first pilot on Today: a Bangkok food-stall exchange that moves through first-listen gist, six male-polite learner chunks, four vendor-response choices, local record/playback, one food substitution, supported role-play and a private self-rating.
+- Kept the pilot deliberately outside the Phase 1 reading machine. It does not create or change SRS cards, lessons, mastery checks, blockers, required Today work, streaks, tokens, active-time credit, drill records or phrase-review cards; the frozen v8.1.0 Phase 1 curriculum remains intact.
+- Added bounded optional `conversation` state with per-scene run count, first/last completion day and latest self-rating. Load repair and import validation normalise malformed records, preserve future fields, and store no response history or audio.
+- Reused private, temporary local MediaRecorder playback. Device speech is labelled a rough preview rather than native listening evidence or pronunciation scoring, the pilot identifies its authored Thai as teacher-review pending, transitions cancel in-flight speech, and phase/player guards prevent delayed autoplay from escaping a closed or rapidly advanced scene.
+- Added `validateV82ConversationPilotContracts()` for content shape, male-polite Thai, state repair/import, completion aggregation, progression isolation, no active-time/phrase-pool leakage, reset coverage, Today placement and version identity. The generated audit now reports v8.2.0 with 60/60 validators passing.
+- Updated the manual smoke checklist, release/audit documentation and source packaging identity. No audio/font asset, runtime network feature, service-worker cache name or required learner-state key changed.
+
 ## v8.1.0 - 2026-07-11
 
 - Added Street Arcade to Practice with three short optional cabinets: Parcel Sort unlocks free after Lesson 2, Night Market Hunt costs 50 tokens after Lesson 4, and Tuk-Tuk Tone Run costs 60 tokens after Lesson 13. Games record best score, combo and three-star cabinet ratings under the existing `drillLog` container and award no repeatable tokens.

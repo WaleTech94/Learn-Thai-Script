@@ -1,8 +1,8 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-07-05
+Prepared: 2026-08-27
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.1.0`
+Current app version: `v8.2.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
@@ -249,6 +249,15 @@ v8.1.0 is the Street Arcade retention-and-fun pass:
 - Adds Ekkamai Sunset, Yaowarat Neon and Tuk-Tuk Chrome, temporary non-saving theme previews, stronger paid-theme motifs and local synthesized arcade sound cues controlled by the existing sound settings.
 - Adds `validateV81ArcadeContracts()` and the 59th generated validator, plus `tools/arcade-smoke.js` for deterministic full-session, saved-record, theme-preview and sound-path verification; no required state key, audio asset, network feature or service-worker change.
 
+v8.2.0 is the isolated conversation-first field test:
+
+- Adds one optional 8–12 minute Bangkok food-ordering scene on Today, available independently of Phase 1 progress.
+- Moves from first-listen gist through six male-polite learner chunks, vendor-response selection, temporary local record/playback, one substitution and supported role-play.
+- Stores only bounded run count, first/last completion day and latest self-rating under optional `conversation` state; no answer history or audio persists.
+- Does not mutate lessons, SRS, mastery checks, blockers, required Today work, tokens, streaks, active-time credit, error profiles, drills or phrase-review cards.
+- Labels device TTS a rough preview and the authored Thai as teacher-review pending; it makes no native-listening or pronunciation-assessment claim.
+- Adds `validateV82ConversationPilotContracts()` and the 60th generated validator. Detailed boundaries and expansion criteria live in `docs/v8_2_conversation_pilot_notes.md`.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -263,6 +272,7 @@ v8.1.0 is the Street Arcade retention-and-fun pass:
 - `docs/smoke_test_checklist.md` - manual smoke checklist.
 - `docs/v7_release_notes.md` - Phase 1 v7-v8 release notes and post-Phase-1 backlog.
 - `docs/v8_visual_overhaul_notes.md` - approved visual direction, learner-facing changes, accessibility boundaries and v8 visual contract.
+- `docs/v8_2_conversation_pilot_notes.md` - pilot flow, state/progression isolation, audio/Thai caveats and migration criteria.
 - `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
@@ -287,9 +297,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.1.0`
+- app version `v8.2.0`
 - 24 lessons
-- 59 validators passing
+- 60 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

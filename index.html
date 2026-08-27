@@ -1679,7 +1679,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Phase 1 complete (v8.1.0)</span>
+        <span class="version-pill">Phase 1 + conversation pilot (v8.2.0)</span>
       </div>
     </header>
 
@@ -1740,6 +1740,15 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       <div class="section-card backup-card today-backup-hint is-hidden" id="backup-today-hint"></div>
     </section>
 
+    <button class="card cta-card action-card optional" id="conversation-pilot-card">
+      <div>
+        <div class="eyebrow">Optional conversation pilot</div>
+        <div class="t">Order food in Bangkok</div>
+        <div class="d" id="conversation-pilot-status">8–12 min · listen, respond, speak and compare</div>
+      </div>
+      <span class="icon-right">→</span>
+    </button>
+
     <button class="card cta-card action-card recommended is-hidden" id="wai-banner">
       <div><div class="t">Morning warm-up</div><div class="d" id="wai-sub">Replay your trickiest cards</div></div>
       <span class="icon-right">→</span>
@@ -1796,7 +1805,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Phase 1 complete (v8.1.0)</div>
+      <div class="sub meta-tiny meta-top">Phase 1 + conversation pilot (v8.2.0)</div>
     </div>
   </section>
 
@@ -2727,6 +2736,51 @@ const LENGTH_PAIRS = [
 ];
 
 const PHRASE_CATS = ["Politeness","Numbers","Food","Taxi","Shopping","Survival","Slang"];
+const CONVERSATION_SELF_RATINGS = [
+  {id:'need-support', label:'I still need the prompts'},
+  {id:'getting-there', label:'I can answer with some support'},
+  {id:'ready', label:'I could try this at a food stall'}
+];
+const FOOD_ORDER_PILOT = {
+  id:'conv.food_counter_01',
+  title:'Order food in Bangkok',
+  setting:'A counter-service food stall with a male vendor',
+  reviewStatus:'Thai-teacher review pending',
+  chunks:[
+    {id:'conv.food.greet', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.'},
+    {id:'conv.food.order_this', thai:'เอาอันนี้ครับ', tr:'ao an níi khráp', en:'I’ll have this one.'},
+    {id:'conv.food.no_spice', thai:'ไม่เผ็ดครับ', tr:'mâi phèt khráp', en:'Not spicy, please.'},
+    {id:'conv.food.dine_here', thai:'ทานที่นี่ครับ', tr:'thaan thîi-nîi khráp', en:'For here, please.'},
+    {id:'conv.food.water_one', thai:'น้ำเปล่าขวดหนึ่งครับ', tr:'náam-bplàao khùat nùeng khráp', en:'One bottle of water, please.'},
+    {id:'conv.food.thanks', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.'}
+  ],
+  turns:[
+    {speaker:'learner', chunk:'conv.food.greet'},
+    {speaker:'vendor', thai:'สวัสดีครับ จะรับอะไรดีครับ', tr:'sà-wàt-dii khráp · jà ráp a-rai dii khráp', en:'Hello. What would you like?'},
+    {speaker:'learner', chunk:'conv.food.order_this'},
+    {speaker:'vendor', thai:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?'},
+    {speaker:'learner', chunk:'conv.food.no_spice'},
+    {speaker:'vendor', thai:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'For here or takeaway?'},
+    {speaker:'learner', chunk:'conv.food.dine_here'},
+    {speaker:'vendor', thai:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'What drink would you like?'},
+    {speaker:'learner', chunk:'conv.food.water_one'},
+    {speaker:'vendor', thai:'ทั้งหมดแปดสิบบาทครับ', tr:'tháng-mòt bpàaet-sìp bàat khráp', en:'Eighty baht altogether.'},
+    {speaker:'learner', chunk:'conv.food.thanks'},
+    {speaker:'vendor', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.'}
+  ],
+  gist:{answer:'food', options:[
+    {id:'food', label:'Ordering food'},
+    {id:'taxi', label:'Giving taxi directions'},
+    {id:'school', label:'Meeting a colleague'}
+  ]},
+  responses:[
+    {partner:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'What would you like?', answer:'conv.food.order_this', options:['conv.food.order_this','conv.food.no_spice','conv.food.water_one']},
+    {partner:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?', answer:'conv.food.no_spice', options:['conv.food.no_spice','conv.food.dine_here','conv.food.order_this']},
+    {partner:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'For here or takeaway?', answer:'conv.food.dine_here', options:['conv.food.dine_here','conv.food.water_one','conv.food.thanks']},
+    {partner:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'What drink would you like?', answer:'conv.food.water_one', options:['conv.food.water_one','conv.food.order_this','conv.food.no_spice']}
+  ],
+  swap:{frame:'เอา {item} ครับ', item:'กะเพราไก่', thai:'เอากะเพราไก่ครับ', tr:'ao gà-phrao gài khráp', en:'I’ll have chicken basil.'}
+};
 const SLANG = [
   {cat:"Slang", thai:"เจ๋ง", tr:"jěng", en:"cool / awesome"},
   {cat:"Slang", thai:"ชิวๆ", tr:"chiu chiu", en:"chilled, relaxed"},
@@ -3534,8 +3588,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.1.0';
-const APP_VERSION_LABEL = 'Phase 1 complete (v8.1.0)';
+const APP_VERSION = 'v8.2.0';
+const APP_VERSION_LABEL = 'Phase 1 + conversation pilot (v8.2.0)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3712,6 +3766,65 @@ function assertNumberField(obj, key, label){
 function assertBoolField(obj, key, label){
   if(obj[key] != null && typeof obj[key] !== 'boolean') throw new Error(label + '.' + key + ' must be true or false');
 }
+function conversationRatingAllowed(value){
+  return value == null || CONVERSATION_SELF_RATINGS.some(item=>item.id === value);
+}
+function conversationIsoDay(value){
+  if(value == null) return true;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(value + 'T00:00:00Z');
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0,10) === value;
+}
+function freshConversationState(){
+  return {schema:1, scenes:{}};
+}
+function repairConversationState(target){
+  const s = target || state;
+  const before = JSON.stringify(s.conversation);
+  if(!plainObject(s.conversation)) s.conversation = freshConversationState();
+  const c = s.conversation;
+  c.schema = 1;
+  if(!plainObject(c.scenes)) c.scenes = {};
+  Object.keys(c.scenes).forEach(sceneId=>{
+    const raw = c.scenes[sceneId];
+    if(!plainObject(raw)){
+      delete c.scenes[sceneId];
+      return;
+    }
+    const runs = Number.isInteger(raw.runs) && raw.runs >= 0 ? raw.runs : 0;
+    c.scenes[sceneId] = Object.assign({}, raw, {
+      runs,
+      firstCompleted:conversationIsoDay(raw.firstCompleted) ? (raw.firstCompleted || null) : null,
+      lastCompleted:conversationIsoDay(raw.lastCompleted) ? (raw.lastCompleted || null) : null,
+      selfRating:conversationRatingAllowed(raw.selfRating) ? (raw.selfRating || null) : null
+    });
+    if(!runs){
+      c.scenes[sceneId].firstCompleted = null;
+      c.scenes[sceneId].lastCompleted = null;
+      c.scenes[sceneId].selfRating = null;
+    }
+  });
+  return {changed:before !== JSON.stringify(s.conversation)};
+}
+function conversationSceneRecord(sceneId, target){
+  const s = target || state;
+  repairConversationState(s);
+  return s.conversation.scenes[sceneId] || null;
+}
+function recordConversationRun(sceneId, rating, target){
+  if(!sceneId || !conversationRatingAllowed(rating) || rating == null) throw new Error('invalid conversation completion');
+  const s = target || state;
+  repairConversationState(s);
+  const previous = s.conversation.scenes[sceneId] || {};
+  const now = todayStr();
+  s.conversation.scenes[sceneId] = Object.assign({}, previous, {
+    runs:(previous.runs || 0) + 1,
+    firstCompleted:previous.firstCompleted || now,
+    lastCompleted:now,
+    selfRating:rating
+  });
+  return s.conversation.scenes[sceneId];
+}
 function validateImportedStateShape(s){
   assertPlainObject(s, 'progress');
   assertPlainObject(s.srs, 'progress.srs');
@@ -3735,6 +3848,20 @@ function validateImportedStateShape(s){
   if(s.skillStats && s.skillStats.listen != null && !Array.isArray(s.skillStats.listen)) throw new Error('progress.skillStats.listen must be an array');
   if(s.skillStats && s.skillStats.speak != null) assertPlainObject(s.skillStats.speak, 'progress.skillStats.speak');
   if(s.foundationRefresh && s.foundationRefresh.quarantinedFinals != null) assertStringArray(s.foundationRefresh.quarantinedFinals, 'progress.foundationRefresh.quarantinedFinals');
+  if(s.conversation != null){
+    assertPlainObject(s.conversation, 'progress.conversation');
+    if(s.conversation.schema !== 1) throw new Error('progress.conversation.schema must be 1');
+    assertPlainObject(s.conversation.scenes, 'progress.conversation.scenes');
+    Object.keys(s.conversation.scenes).forEach(sceneId=>{
+      const rec = s.conversation.scenes[sceneId];
+      assertPlainObject(rec, 'progress.conversation.scenes.' + sceneId);
+      if(!Number.isInteger(rec.runs) || rec.runs < 0) throw new Error('progress.conversation.scenes.' + sceneId + '.runs must be a non-negative integer');
+      ['firstCompleted','lastCompleted'].forEach(key=>{
+        if(!conversationIsoDay(rec[key])) throw new Error('progress.conversation.scenes.' + sceneId + '.' + key + ' must be a YYYY-MM-DD date or null');
+      });
+      if(!conversationRatingAllowed(rec.selfRating)) throw new Error('progress.conversation.scenes.' + sceneId + '.selfRating is invalid');
+    });
+  }
   ['lastExportAt','backupNudgeSnooze'].forEach(k=>{
     if(s[k] != null && typeof s[k] !== 'string') throw new Error('progress.' + k + ' must be a string');
   });
@@ -3764,8 +3891,9 @@ function importProgressState(s){
   const migrated501 = repairStateForV501(next);
   const migrated54 = repairStateForV54(next);
   const migrated79 = repairStateForV79(next);
+  const conversation = repairConversationState(next);
   validateStateDeckForDone(next, 'imported progress');
-  return {state:next, migrated, migrated501, migrated54, migrated79};
+  return {state:next, migrated, migrated501, migrated54, migrated79, conversation};
 }
 function unwrapProgressImport(obj){
   if(!plainObject(obj)) throw new Error('progress import must be an object');
@@ -5662,6 +5790,7 @@ function showAboutApp(){
     <div class="about-list">
       <div>อ่าน is a self-contained Learn Thai PWA for learning to read Thai script from zero.</div>
       <div>Phase 1 covers script reading, consonant class, tone logic, live/dead syllables, final jobs, vowel length and controlled reading.</div>
+      <div>v8.2 adds one optional food-ordering conversation pilot outside Phase 1 mastery; its Thai-teacher review is still pending.</div>
       <div>Phase 1 completion does not claim real-world listening mastery, speaking mastery, broad vocabulary or free conversation.</div>
       <div>Audio is device voice support: a rough model for practice, not assessment evidence.</div>
       <div>Current version: ${esc(APP_VERSION_LABEL)}.</div>
@@ -9128,8 +9257,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
+  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9301,8 +9430,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
+  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9396,8 +9525,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
+  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9466,8 +9595,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.1.0') errors.push('internal app version should be v8.1.0');
-  if(APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('footer label should be Phase 1 complete (v8.1.0)');
+  if(APP_VERSION !== 'v8.2.0') errors.push('internal app version should be v8.2.0');
+  if(APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('footer label should be Phase 1 + conversation pilot (v8.2.0)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9680,7 +9809,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9718,7 +9847,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9787,8 +9916,85 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.1.0' || APP_VERSION_LABEL !== 'Phase 1 complete (v8.1.0)') errors.push('v8.1.0 identity mismatch');
+  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV82ConversationPilotContracts(){
+  const errors = [], scene = FOOD_ORDER_PILOT;
+  const chunkIds = (scene.chunks || []).map(chunk=>chunk.id);
+  const gistIds = ((scene.gist && scene.gist.options) || []).map(item=>item.id);
+  if(scene.id !== 'conv.food_counter_01') errors.push('pilot scene id drifted');
+  if(scene.chunks.length !== 6 || new Set(chunkIds).size !== scene.chunks.length) errors.push('pilot must keep six stable unique chunk ids');
+  if(scene.chunks.some(chunk=>!chunk.id.startsWith('conv.food.') || !chunk.thai || !chunk.tr || !chunk.en)) errors.push('pilot chunks need stable ids and complete copy');
+  if(scene.chunks.some(chunk=>!chunk.thai.endsWith('ครับ'))) errors.push('all modelled learner moves must use male-polite Thai');
+  if(scene.turns.some(turn=>turn.speaker === 'learner' && !chunkIds.includes(turn.chunk))) errors.push('learner dialogue turn points to an unknown chunk');
+  if(scene.turns.some(turn=>turn.speaker === 'vendor' && !String(turn.thai || '').endsWith('ครับ'))) errors.push('pilot vendor lines must keep the all-male content contract');
+  if(!gistIds.length || new Set(gistIds).size !== gistIds.length || !gistIds.includes(scene.gist.answer)) errors.push('gist must have unique options including its answer');
+  if(scene.responses.some(item=>!String(item.partner || '').endsWith('ครับ') || !chunkIds.includes(item.answer) || item.options.length !== 3 || new Set(item.options).size !== 3 || !item.options.includes(item.answer) || item.options.some(id=>!chunkIds.includes(id)))) errors.push('response practice must use a male-polite prompt and three stable unique chunk choices including the answer');
+  if(!scene.swap || scene.swap.thai !== 'เอากะเพราไก่ครับ') errors.push('bounded food substitution missing');
+  if(!CONVERSATION_SELF_RATINGS.length || CONVERSATION_SELF_RATINGS.some(item=>!conversationRatingAllowed(item.id))) errors.push('self-rating enum is invalid');
+
+  const legacy = {done:['l1'], srs:{}, days:{}, baht:17, streak:{count:3,last:'2026-08-20'}, checks:{}};
+  const beforeLegacy = JSON.stringify({done:legacy.done,srs:legacy.srs,days:legacy.days,baht:legacy.baht,streak:legacy.streak,checks:legacy.checks});
+  const firstRepair = repairConversationState(legacy);
+  const afterFirst = JSON.stringify(legacy.conversation);
+  const secondRepair = repairConversationState(legacy);
+  if(!firstRepair.changed || secondRepair.changed || afterFirst !== JSON.stringify(legacy.conversation)) errors.push('conversation repair must add once and then be idempotent');
+  if(beforeLegacy !== JSON.stringify({done:legacy.done,srs:legacy.srs,days:legacy.days,baht:legacy.baht,streak:legacy.streak,checks:legacy.checks})) errors.push('conversation repair changed literacy or reward state');
+
+  const malformedLocal = {conversation:{schema:1,scenes:{bad:'not-a-record'}}};
+  repairConversationState(malformedLocal);
+  if(Object.prototype.hasOwnProperty.call(malformedLocal.conversation.scenes,'bad')) errors.push('conversation repair must drop non-object scene records');
+
+  const tracked = {conversation:{schema:1,scenes:{future_scene:{runs:2,firstCompleted:'2026-08-01',lastCompleted:'2026-08-02',selfRating:'getting-there',futureField:'keep'}}}};
+  repairConversationState(tracked);
+  if(tracked.conversation.scenes.future_scene.futureField !== 'keep') errors.push('well-shaped future scene fields must survive repair');
+  const firstDate = tracked.conversation.scenes.future_scene.firstCompleted;
+  recordConversationRun('future_scene','ready',tracked);
+  if(tracked.conversation.scenes.future_scene.runs !== 3 || tracked.conversation.scenes.future_scene.firstCompleted !== firstDate || tracked.conversation.scenes.future_scene.selfRating !== 'ready') errors.push('conversation completion aggregation is wrong');
+
+  const validImport = {
+    streak:{count:0,last:null}, done:[], srs:{},
+    conversation:{schema:1,scenes:{[scene.id]:{runs:1,firstCompleted:'2026-08-01',lastCompleted:'2026-08-01',selfRating:'need-support'}}}
+  };
+  const imported = importProgressState(validImport).state;
+  if(!imported.conversation || imported.conversation.scenes[scene.id].runs !== 1) errors.push('valid conversation import did not round-trip');
+  [
+    {schema:1,scenes:[]},
+    {schema:2,scenes:{}},
+    {schema:1,scenes:{bad:{runs:-1,firstCompleted:null,lastCompleted:null,selfRating:null}}},
+    {schema:1,scenes:{bad:{runs:1.5,firstCompleted:null,lastCompleted:null,selfRating:null}}},
+    {schema:1,scenes:{bad:{runs:1,firstCompleted:'not-a-date',lastCompleted:null,selfRating:null}}},
+    {schema:1,scenes:{bad:{runs:1,firstCompleted:null,lastCompleted:null,selfRating:'mastered'}}}
+  ].forEach((conversation,i)=>{
+    try{
+      validateImportedStateShape({streak:{count:0,last:null},done:[],srs:{},conversation});
+      errors.push('malformed conversation import survived case ' + i);
+    }catch(e){}
+  });
+
+  const source = [
+    startConversationPilot, advanceConversationPilot, renderConversationPilot,
+    renderConversationPilotIntro, renderConversationPilotGist, renderConversationPilotChunk,
+    renderConversationPilotResponse, renderConversationPilotRecord, renderConversationPilotSwap,
+    renderConversationPilotRoleplay, renderConversationPilotRating, finishConversationPilot,
+    recordConversationRun
+  ].map(fn=>String(fn)).join('\n');
+  if(/srsAdd|markDailyDepth|bumpStreak|award\(|questCheck|getLessonBlocker/.test(source)) errors.push('pilot must not change literacy progression, Today credit, streak, tokens or blockers');
+  if(ACTIVE_TIME_SURFACE_TYPES.has('conversation-pilot')) errors.push('pilot must not count toward the existing literacy time target');
+  if(String(rawWordPool).includes('FOOD_ORDER_PILOT')) errors.push('pilot content must not leak into literacy distractor pools');
+  if(!String(scheduleConversationSpeech).includes('player !== p') || !String(scheduleConversationSpeech).includes('p.phase !== phase')) errors.push('pilot autoplay must not survive close or fast navigation');
+  if(!String(renderConversationPilot).includes('stopConversationSpeech') || !String(finishConversationPilot).includes('stopConversationSpeech')) errors.push('pilot navigation and completion must cancel in-flight device speech');
+  if(!String(resetProgressNow).includes('conversation:freshConversationState()')) errors.push('reset must clear conversation runs explicitly');
+  if(!String(showAboutApp).includes('conversation pilot') || !String(showAboutApp).includes('teacher review')) errors.push('About must disclose the optional unreviewed pilot boundary');
+  if(typeof document !== 'undefined' && document.getElementById){
+    const card = document.getElementById('conversation-pilot-card');
+    if(!card) errors.push('Today pilot card missing');
+    else if(!card.classList.contains('optional') || card.classList.contains('recommended')) errors.push('pilot card must stay visibly optional rather than compete with the required route');
+  }
+  if(APP_VERSION !== 'v8.2.0' || APP_VERSION_LABEL !== 'Phase 1 + conversation pilot (v8.2.0)') errors.push('v8.2.0 identity mismatch');
+  if(errors.length) throw new Error('V8.2 conversation pilot contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -10844,7 +11050,7 @@ function renderHome(){
     } else _wb.classList.add('is-hidden');
   }
   checkPostcard();
-  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderPhase1Dashboard(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
+  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderConversationPilotCard(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderPhase1Dashboard(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
 }
 function findWordInLessons(thai){
   for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
@@ -10857,6 +11063,7 @@ el('today-review-btn').addEventListener('click', goTodayReviewTask);
 el('today-main-btn').addEventListener('click', routeToMainTask);
 el('today-depth-btn').addEventListener('click', routeToDepthTask);
 el('end-day-btn').addEventListener('click', handleEndDay);
+el('conversation-pilot-card').addEventListener('click', startConversationPilot);
 el('library-read').addEventListener('click', ()=>{
   player = {type:'read'};
   openOverlay();
@@ -11565,7 +11772,7 @@ async function resetProgressNow(){
     streak:{count:0,last:null}, done:[], srs:{}, intro:{}, baht:0, freeze:0,
     days:{}, calib:{1:{n:0,c:0},2:{n:0,c:0},3:{n:0,c:0}}, boss:{}, checks:{},
     skillStats:{listen:[], speak:{attempts:0,last:null}, foundationEar:null},
-    notes:keptNotes, packs:[]
+    notes:keptNotes, packs:[], conversation:freshConversationState()
   };
   state = fresh;
   const raw = JSON.stringify(fresh);
@@ -11577,7 +11784,7 @@ async function resetProgressNow(){
 function showResetFlow(){
   const focusTarget = currentFocusTarget();
   const steps = [
-    {h:'Reset all progress?', b:'This clears completed lessons, review cards, streak, tokens, mastery checks, unlocks and today plans. Notes are kept.'},
+    {h:'Reset all progress?', b:'This clears completed lessons, conversation runs, review cards, streak, tokens, mastery checks, unlocks and today plans. Notes are kept.'},
     {h:'This cannot be undone.', b:'Export first if you might want this progress later. The installed PWA will restart as a fresh learner.'},
     {h:'Final safety check.', b:'This does not reset just today. It erases the whole course state on this device.'},
     {h:'Type I Understand', b:'The erase button only unlocks after the exact phrase is typed.'}
@@ -13361,6 +13568,319 @@ function renderEcho(){
   const rb = el('echo-record'), au = el('echo-own');
   rb.onclick = ()=>toggleLocalRecording(rb, au);
   el('echo-next').onclick = ()=>{ logSpeakAttempt(); clearLocalRecording(); p.i++; renderEcho(); };
+}
+
+/* =====================================================
+   V8.2.0 · CONVERSATION PILOT
+   Optional, isolated field-test flow. No SRS, Today credit, rewards or claims.
+===================================================== */
+function conversationChunk(scene, chunkId){
+  return (scene.chunks || []).find(chunk=>chunk.id === chunkId) || null;
+}
+function resolvedConversationTurn(scene, turn){
+  if(turn.chunk){
+    const chunk = conversationChunk(scene, turn.chunk);
+    return chunk ? Object.assign({speaker:'learner'}, chunk) : null;
+  }
+  return turn;
+}
+function conversationSceneText(scene){
+  return (scene.turns || []).map(turn=>resolvedConversationTurn(scene, turn)).filter(Boolean).map(turn=>turn.thai).join(' ');
+}
+function conversationPilotTotalSteps(scene){
+  return 5 + (scene.chunks || []).length + 2 * (scene.responses || []).length;
+}
+function setConversationPilotProgress(){
+  const p = player;
+  setProg(Math.round(100 * Math.min(p.progress || 0, p.total || 1) / Math.max(p.total || 1, 1)));
+}
+function scheduleConversationSpeech(p, phase, text, delay, stillCurrent){
+  setTimeout(()=>{
+    if(player !== p || p.phase !== phase || (stillCurrent && !stillCurrent())) return;
+    speak(text);
+  }, delay);
+}
+function stopConversationSpeech(){
+  if(typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+}
+function renderConversationPilotCard(){
+  const status = el('conversation-pilot-status');
+  if(!status) return;
+  const rec = conversationSceneRecord(FOOD_ORDER_PILOT.id);
+  if(!rec || !rec.runs){
+    status.textContent = '8–12 min · listen, respond, speak and compare';
+    return;
+  }
+  const rating = CONVERSATION_SELF_RATINGS.find(item=>item.id === rec.selfRating);
+  status.textContent = 'Completed ' + rec.runs + ' time' + (rec.runs === 1 ? '' : 's') + (rating ? ' · ' + rating.label : '');
+}
+function startConversationPilot(){
+  const scene = FOOD_ORDER_PILOT;
+  player = {
+    type:'conversation-pilot', scene, phase:'intro', progress:0,
+    total:conversationPilotTotalSteps(scene), chunkIndex:0, responseIndex:0,
+    roleplayIndex:0, responseSettled:false, swapRevealed:false, roleplayRevealed:false
+  };
+  openOverlay();
+  renderConversationPilot();
+}
+function advanceConversationPilot(phase){
+  clearLocalRecording();
+  player.progress++;
+  player.phase = phase;
+  renderConversationPilot();
+}
+function conversationLearnerListHtml(scene){
+  return `<div class="sign-list">${scene.chunks.map((chunk,i)=>`
+    <div class="mission-card">
+      <div class="eyebrow">Your move ${i+1}</div>
+      <div class="p-thai">${esc(chunk.thai)}</div>
+      <div class="p-tr">${esc(chunk.tr)}</div>
+      <div class="p-en">${esc(chunk.en)}</div>
+    </div>`).join('')}</div>`;
+}
+function renderConversationPilot(){
+  const p = player;
+  if(!p || p.type !== 'conversation-pilot') return;
+  stopConversationSpeech();
+  clearLocalRecording();
+  setConversationPilotProgress();
+  if(p.phase === 'intro') return renderConversationPilotIntro();
+  if(p.phase === 'gist') return renderConversationPilotGist();
+  if(p.phase === 'chunks') return renderConversationPilotChunk();
+  if(p.phase === 'responses') return renderConversationPilotResponse();
+  if(p.phase === 'record') return renderConversationPilotRecord();
+  if(p.phase === 'swap') return renderConversationPilotSwap();
+  if(p.phase === 'roleplay') return renderConversationPilotRoleplay();
+  if(p.phase === 'rating') return renderConversationPilotRating();
+}
+function renderConversationPilotIntro(){
+  const scene = player.scene;
+  el('stage').innerHTML = `
+    <div class="center">
+      <div class="eyebrow">Optional conversation pilot · 8–12 min</div>
+      <h2>${esc(scene.title)}</h2>
+      <p class="sub">${esc(scene.setting)}</p>
+    </div>
+    <div class="notebox">
+      Hear one short exchange, learn six useful moves, answer the vendor, swap one item and try a supported role-play.
+    </div>
+    <div class="notebox" style="margin-top:12px">
+      <b>Pilot boundary:</b> ${esc(scene.reviewStatus)}. Audio uses your device voice as a rough preview, not native listening evidence or pronunciation scoring.
+    </div>
+    <div class="stage-actions"><button class="btn full" id="conversation-begin">Hear the scene →</button></div>`;
+  el('conversation-begin').onclick = ()=>advanceConversationPilot('gist');
+}
+function renderConversationPilotGist(){
+  const p = player, scene = p.scene;
+  el('stage').innerHTML = `
+    <div class="q-prompt">
+      <div class="eyebrow">First listen</div>
+      <div class="q-text">Listen once without reading. What is happening?</div>
+      <div class="audio-inline">${speakBtn(conversationSceneText(scene), 'Hear the complete food-stall scene')}</div>
+      <div class="sub" style="margin-top:8px">Device voice preview · meaning before perfect detail</div>
+    </div>
+    <div class="q-options">
+      ${scene.gist.options.map(item=>`<button class="q-opt" data-conversation-gist="${escAttr(item.id)}">${esc(item.label)}</button>`).join('')}
+    </div>
+    <div class="q-feedback" id="conversation-feedback"></div>`;
+  scheduleConversationSpeech(p, 'gist', conversationSceneText(scene), 300);
+  el('stage').querySelectorAll('[data-conversation-gist]').forEach(button=>{
+    button.onclick = ()=>{
+      const ok = button.dataset.conversationGist === scene.gist.answer;
+      el('stage').querySelectorAll('[data-conversation-gist]').forEach(choice=>{
+        choice.disabled = true;
+        if(choice.dataset.conversationGist === scene.gist.answer) choice.classList.add('correct');
+      });
+      if(!ok) button.classList.add('wrong');
+      const fb = el('conversation-feedback');
+      fb.className = 'q-feedback ' + (ok ? 'ok answer-correct' : 'no answer-wrong');
+      fb.innerHTML = `${ok ? 'Yes — ' : ''}This is a food-stall order.<div class="stage-actions"><button class="btn full" id="conversation-gist-next">Meet your six moves →</button></div>`;
+      el('conversation-gist-next').onclick = ()=>advanceConversationPilot('chunks');
+    };
+  });
+}
+function renderConversationPilotChunk(){
+  const p = player, chunk = p.scene.chunks[p.chunkIndex];
+  if(!chunk){
+    p.responseIndex = 0;
+    p.responseSettled = false;
+    p.phase = 'responses';
+    renderConversationPilot();
+    return;
+  }
+  el('stage').innerHTML = `
+    <div class="center">
+      <div class="eyebrow">Your move ${p.chunkIndex+1} of ${p.scene.chunks.length}</div>
+      <div class="p-thai" style="font-size:34px;margin-top:16px">${esc(chunk.thai)}</div>
+      <div class="p-tr" style="margin-top:8px">${esc(chunk.tr)}</div>
+      <div class="p-en" style="margin-top:6px">${esc(chunk.en)}</div>
+      <div style="margin-top:14px">${speakBtn(chunk.thai, 'Hear this learner response')}</div>
+    </div>
+    <div class="compare-box" style="margin-top:18px">
+      Listen, then say it once. The Thai stays visible because this pilot tests the interaction flow, not unaided memory yet.
+    </div>
+    <div class="stage-actions"><button class="btn full" id="conversation-chunk-next">I said it · ${p.chunkIndex+1 === p.scene.chunks.length ? 'practise responses' : 'next'} →</button></div>`;
+  el('conversation-chunk-next').onclick = ()=>{
+    p.chunkIndex++;
+    p.progress++;
+    renderConversationPilot();
+  };
+}
+function renderConversationPilotResponse(){
+  const p = player, item = p.scene.responses[p.responseIndex];
+  if(!item){
+    p.phase = 'record';
+    renderConversationPilot();
+    return;
+  }
+  el('stage').innerHTML = `
+    <div class="q-prompt">
+      <div class="eyebrow">Answer the vendor · ${p.responseIndex+1} of ${p.scene.responses.length}</div>
+      <div class="p-thai" style="font-size:27px">${esc(item.partner)}</div>
+      <div class="p-tr">${esc(item.tr)}</div>
+      <div class="p-en">${esc(item.en)}</div>
+      <div class="audio-inline">${speakBtn(item.partner, 'Hear the vendor')}</div>
+    </div>
+    <div class="q-options">
+      ${item.options.map(chunkId=>{
+        const chunk = conversationChunk(p.scene, chunkId);
+        return `<button class="q-opt" data-conversation-response="${escAttr(chunkId)}"><span class="thai">${esc(chunk.thai)}</span><span class="sub">${esc(chunk.en)}</span></button>`;
+      }).join('')}
+    </div>
+    <div class="q-feedback" id="conversation-feedback"></div>`;
+  const responseIndex = p.responseIndex;
+  scheduleConversationSpeech(p, 'responses', item.partner, 250, ()=>p.responseIndex === responseIndex);
+  el('stage').querySelectorAll('[data-conversation-response]').forEach(button=>{
+    button.onclick = ()=>{
+      const ok = button.dataset.conversationResponse === item.answer;
+      el('stage').querySelectorAll('[data-conversation-response]').forEach(choice=>{
+        choice.disabled = true;
+        if(choice.dataset.conversationResponse === item.answer) choice.classList.add('correct');
+      });
+      if(!ok) button.classList.add('wrong');
+      const answer = conversationChunk(p.scene, item.answer), fb = el('conversation-feedback');
+      fb.className = 'q-feedback ' + (ok ? 'ok answer-correct' : 'no answer-wrong');
+      fb.innerHTML = `${ok ? 'That reply fits.' : 'Use this reply here:'} <b>${esc(answer.thai)}</b><div class="stage-actions"><button class="btn full" id="conversation-response-next">Continue →</button></div>`;
+      el('conversation-response-next').onclick = ()=>{
+        p.responseIndex++;
+        p.progress++;
+        renderConversationPilot();
+      };
+    };
+  });
+}
+function renderConversationPilotRecord(){
+  const scene = player.scene;
+  const learnerAudio = scene.chunks.map(chunk=>chunk.thai).join(' ');
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Speak the whole learner side</div><h2>Six moves, one practice run</h2><p class="sub">Read them once, then listen back beside the device preview.</p></div>
+    ${conversationLearnerListHtml(scene)}
+    <div class="compare-box">
+      <div class="row" style="justify-content:center;gap:10px;margin-bottom:12px">${speakBtn(learnerAudio, 'Hear all learner responses')}</div>
+      <button class="btn full ghost record-btn" id="conversation-record">● Record yourself</button>
+      <audio class="own-audio" id="conversation-own" controls style="display:none"></audio>
+      <div class="sub" style="font-size:11px;margin-top:8px">Private and temporary. Nothing is uploaded or scored.</div>
+    </div>
+    <div class="stage-actions"><button class="btn full" id="conversation-record-next">Try one substitution →</button></div>`;
+  const record = el('conversation-record'), audio = el('conversation-own');
+  record.onclick = ()=>toggleLocalRecording(record, audio);
+  el('conversation-record-next').onclick = ()=>advanceConversationPilot('swap');
+}
+function renderConversationPilotSwap(){
+  const p = player, swap = p.scene.swap;
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">Swap one detail</div><h2>Order chicken basil</h2><p class="sub">Use the frame <b>${esc(swap.frame)}</b>. Say your answer before revealing it.</p></div>
+    ${p.swapRevealed ? `
+      <div class="notebox" style="text-align:center">
+        <div class="p-thai" style="font-size:32px">${esc(swap.thai)}</div>
+        <div class="p-tr">${esc(swap.tr)}</div>
+        <div class="p-en">${esc(swap.en)}</div>
+        <div style="margin-top:12px">${speakBtn(swap.thai, 'Hear the substituted order')}</div>
+      </div>
+      <div class="stage-actions"><button class="btn full" id="conversation-swap-next">Try the vendor prompts →</button></div>` : `
+      <div class="notebox" style="text-align:center"><div class="p-thai" style="font-size:28px">${esc(swap.item)}</div><div class="sub">Put this into the order frame.</div></div>
+      <div class="stage-actions"><button class="btn full" id="conversation-swap-reveal">Reveal the Thai</button></div>`}
+    <div class="sub" style="font-size:11px;text-align:center;margin-top:12px">Pilot wording · Thai-teacher review pending.</div>`;
+  const reveal = el('conversation-swap-reveal');
+  if(reveal) reveal.onclick = ()=>{ p.swapRevealed = true; renderConversationPilot(); };
+  const next = el('conversation-swap-next');
+  if(next) next.onclick = ()=>{
+    p.progress++;
+    p.phase = 'roleplay';
+    p.roleplayIndex = 0;
+    p.roleplayRevealed = false;
+    renderConversationPilot();
+  };
+}
+function renderConversationPilotRoleplay(){
+  const p = player, item = p.scene.responses[p.roleplayIndex];
+  if(!item){
+    p.phase = 'rating';
+    renderConversationPilot();
+    return;
+  }
+  const answer = conversationChunk(p.scene, item.answer);
+  el('stage').innerHTML = `
+    <div class="q-prompt">
+      <div class="eyebrow">Supported role-play · ${p.roleplayIndex+1} of ${p.scene.responses.length}</div>
+      <div class="q-text">Listen, answer aloud, then check the model.</div>
+      <div class="p-thai" style="font-size:28px">${esc(item.partner)}</div>
+      <div class="p-en">${esc(item.en)}</div>
+      <div class="audio-inline">${speakBtn(item.partner, 'Hear the vendor prompt')}</div>
+    </div>
+    ${p.roleplayRevealed ? `
+      <div class="notebox" style="text-align:center">
+        <div class="p-thai" style="font-size:31px">${esc(answer.thai)}</div>
+        <div class="p-tr">${esc(answer.tr)}</div>
+        <div class="p-en">${esc(answer.en)}</div>
+        <div style="margin-top:10px">${speakBtn(answer.thai, 'Hear the model response')}</div>
+      </div>
+      <div class="stage-actions"><button class="btn full" id="conversation-roleplay-next">${p.roleplayIndex+1 === p.scene.responses.length ? 'Rate this run' : 'Next vendor prompt'} →</button></div>` : `
+      <div class="stage-actions"><button class="btn full" id="conversation-roleplay-reveal">I answered · show the model</button></div>`}`;
+  const roleplayIndex = p.roleplayIndex;
+  if(!p.roleplayRevealed) scheduleConversationSpeech(p, 'roleplay', item.partner, 250, ()=>p.roleplayIndex === roleplayIndex && !p.roleplayRevealed);
+  const reveal = el('conversation-roleplay-reveal');
+  if(reveal) reveal.onclick = ()=>{ p.roleplayRevealed = true; renderConversationPilot(); };
+  const next = el('conversation-roleplay-next');
+  if(next) next.onclick = ()=>{
+    p.roleplayIndex++;
+    p.roleplayRevealed = false;
+    p.progress++;
+    renderConversationPilot();
+  };
+}
+function renderConversationPilotRating(){
+  setConversationPilotProgress();
+  el('stage').innerHTML = `
+    <div class="center"><div class="eyebrow">End of pilot run</div><h2>How supported did you feel?</h2><p class="sub">This is a private self-rating, not a speaking score or mastery result.</p></div>
+    <div class="q-options">
+      ${CONVERSATION_SELF_RATINGS.map(item=>`<button class="q-opt" data-conversation-rating="${escAttr(item.id)}">${esc(item.label)}</button>`).join('')}
+    </div>`;
+  el('stage').querySelectorAll('[data-conversation-rating]').forEach(button=>{
+    button.onclick = ()=>finishConversationPilot(button.dataset.conversationRating);
+  });
+}
+function finishConversationPilot(rating){
+  stopConversationSpeech();
+  const scene = player.scene;
+  const rec = recordConversationRun(scene.id, rating);
+  saveState();
+  setProg(100);
+  sfxComplete();
+  const ratingItem = CONVERSATION_SELF_RATINGS.find(item=>item.id === rec.selfRating);
+  el('stage').innerHTML = `
+    <div class="result-big">Pilot run complete</div>
+    <div class="result-sub">${esc(scene.title)} · run ${rec.runs}</div>
+    <div class="notebox" style="margin-top:14px">${esc(ratingItem ? ratingItem.label : '')}</div>
+    <div class="result-sub" style="font-size:12px">No tokens, streak, lesson progress or speaking score changed.</div>
+    <div class="stage-actions">
+      <button class="btn full" id="conversation-done">Done</button>
+      <button class="btn full ghost" id="conversation-again">Run it again</button>
+    </div>`;
+  el('conversation-done').onclick = ()=>{ closeOverlay(); renderHome(); };
+  el('conversation-again').onclick = startConversationPilot;
 }
 
 function toneRuleTrainerPool(doneIds){
@@ -15787,7 +16307,8 @@ function runFullStartupValidators(){
     validateV78RequiredLoopContracts,
     validateV79RetentionDecodeContracts,
     validateV8VisualContracts,
-    validateV81ArcadeContracts
+    validateV81ArcadeContracts,
+    validateV82ConversationPilotContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -15814,7 +16335,8 @@ window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
     const migrated501 = repairStateForV501(state);
     const migrated54 = repairStateForV54(state);
     const migrated79 = repairStateForV79(state);
-    if(migrated.changed || migrated501.changed || migrated54.changed || migrated79.changed) saveState();
+    const conversation = repairConversationState(state);
+    if(migrated.changed || migrated501.changed || migrated54.changed || migrated79.changed || conversation.changed) saveState();
     applyTheme(); renderTitle();
     renderHome(); renderLearn(); renderReviewTab();
     showV5NoticeIfNeeded(hadProgressBeforeRepair);
