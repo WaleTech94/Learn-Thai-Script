@@ -1,4 +1,10 @@
-# Phase 1 and Conversation-First Release Notes (v7-v8.2.1)
+# Phase 1 and Conversation-First Release Notes (v7-v8.2.2)
+
+## Zero-knowledge first-lesson repair · v8.2.2
+
+`v8.2.2` replaces the cold Thai gist opener with an English-only map of the six things the learner will accomplish. It then teaches each exact vendor cue and learner reply as a visually separated pair, with English meaning before Thai and distinct audio controls.
+
+Only after all six pairs does the app reveal the complete exchange. Each turn retains English meaning, and full playback uses separate utterances with a 900ms gap between speakers. The opening greeting and all later turns are aligned with their taught cues. `validateV822BeginnerConversationContracts()` brings the audit to 62 validators without changing state, progression, Phase 1 or the `aan-thai-v8-2-1` cache.
 
 ## Conversation-first front door · v8.2.1
 
@@ -8,7 +14,7 @@ The complete reading course and the v8.2.0 pilot remain technically intact. Read
 
 ## Conversation-first field test · v8.2.0
 
-`v8.2.0` freezes the v8.1.0 Phase 1 reading course and adds one isolated, optional 8–12 minute food-ordering pilot on Today. The scene starts with gist listening, teaches six male-polite learner moves, practises four vendor-response choices, reuses temporary local record/playback, adds one substitution and ends with supported role-play plus a private self-rating.
+`v8.2.0` freezes the v8.1.0 Phase 1 reading course and adds one isolated, optional 8–12 minute food-ordering pilot on Today. Its original gist-first opening is superseded by the v8.2.2 meaning-first repair; the remaining response-choice, temporary local record/playback, substitution, supported role-play and private self-rating surfaces remain.
 
 The pilot uses a dedicated player and separate `FOOD_ORDER_PILOT` content object. It does not enter lessons, the phrase-review pool, SRS, mastery, blockers, required Today work, streaks, tokens or active-time credit. Its optional `conversation` namespace stores only bounded run count, first/last completion day and latest self-rating; no answers or recordings persist.
 

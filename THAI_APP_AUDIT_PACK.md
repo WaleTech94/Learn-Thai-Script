@@ -2,14 +2,14 @@
 
 Prepared: 2026-08-27
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.2.1`
+Current app version: `v8.2.2`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Usable conversational Thai for daily Bangkok life is now the app's stated primary goal. One food-ordering scene is the recommended first action, while the complete Phase 1 script-mastery course remains available as an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
+Usable conversational Thai for daily Bangkok life is now the app's stated primary goal. One food-ordering scene is the recommended first action; it now teaches its English situation and six separated cue/reply pairs before presenting the complete Thai exchange. The complete Phase 1 script-mastery course remains available as an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -266,6 +266,14 @@ v8.2.1 corrects the product front door:
 - The conversation-state and progression-isolation boundary from v8.2.0 is unchanged.
 - Adds `validateV821ConversationFrontDoorContracts()` and the 61st generated validator. The service-worker cache advances to `aan-thai-v8-2-1` so installed copies refresh the changed cache-first manifest.
 
+v8.2.2 repairs the first lesson for a zero-knowledge learner:
+
+- Removes the cold first-listen gist test and establishes the six-step situation in English before Thai is expected.
+- Teaches each exact vendor cue and learner reply as a pair, with English meaning first, separate audio controls, distinct speaker cards and an explicit visual pause.
+- Delays the complete exchange until after all six pairs and speaks its turns separately with a 900ms inter-speaker gap while keeping English visible.
+- Aligns every taught cue with the immediately preceding vendor turn, including the opening greeting.
+- Adds `validateV822BeginnerConversationContracts()` and the 62nd generated validator without adding state or changing any Phase 1 or conversation-progression boundary. The network-first shell keeps cache `aan-thai-v8-2-1` because no cache-first asset changed.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -305,9 +313,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.2.1`
+- app version `v8.2.2`
 - 24 lessons
-- 61 validators passing
+- 62 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

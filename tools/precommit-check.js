@@ -127,8 +127,8 @@ function checkConversationFrontDoor(html){
   const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
   if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
   const onboardingSource = html.slice(onboardingStart, onboardingEnd);
-  if(!html.includes("const APP_VERSION = 'v8.2.1'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
-    throw new Error('v8.2.1 conversation-first onboarding identity is incomplete');
+  if(!html.includes("const APP_VERSION = 'v8.2.2'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
+    throw new Error('v8.2.2 conversation-first onboarding identity is incomplete');
   }
   if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
     throw new Error('retired reading-first onboarding copy remains');
@@ -138,6 +138,22 @@ function checkConversationFrontDoor(html){
   }
   if(!sw.includes("const CACHE = 'aan-thai-v8-2-1'")) throw new Error('service-worker cache must refresh the changed manifest');
   return 'spoken goal, gradual-reading manifest and cache refresh aligned';
+}
+
+function checkBeginnerConversation(html){
+  const required = [
+    'First understand the situation in English',
+    'You do not need to read or understand Thai yet',
+    'Nothing is tested cold',
+    'pause · then you answer',
+    'Hear the full exchange with gaps',
+    'setTimeout(next, 900)',
+    'validateV822BeginnerConversationContracts'
+  ];
+  const missing = required.filter(text=>!html.includes(text));
+  if(missing.length) throw new Error('beginner conversation scaffold missing: ' + missing.join(', '));
+  if(/scene\.gist|renderConversationPilotGist/.test(html)) throw new Error('cold gist-first conversation surface remains');
+  return 'English meaning, paired turns and 900ms full-scene gaps present';
 }
 
 function toneSnippet(){
@@ -336,6 +352,7 @@ const results = [
   runCheck('male-particle policy', ()=>checkParticle(html)),
   runCheck('currency policy', ()=>checkCurrency(html)),
   runCheck('conversation-first front door', ()=>checkConversationFrontDoor(html)),
+  runCheck('zero-knowledge conversation lesson', ()=>checkBeginnerConversation(html)),
   runCheck('tone-grid transliteration', checkToneGrid),
   runCheck('reading-story decodability', checkStories),
   runCheck('fresh-decode corpora', checkFreshDecode)

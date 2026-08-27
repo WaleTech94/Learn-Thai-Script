@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-27T15:31:06.090Z",
-  "appVersion": "v8.2.1",
+  "generatedAt": "2026-08-27T15:57:10.319Z",
+  "appVersion": "v8.2.2",
   "lessonCount": 24,
   "validators": [
     {
@@ -305,6 +305,11 @@
     },
     {
       "name": "v821ConversationFrontDoor",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v822BeginnerConversation",
       "ok": true,
       "issues": []
     }

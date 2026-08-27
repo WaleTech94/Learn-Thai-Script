@@ -387,6 +387,23 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.conversation-front-door{margin-bottom:22px;padding:4px 0 2px}
 	.conversation-front-door h1{font-size:34px;margin-bottom:6px}
 	.conversation-front-door .cta-card{margin-top:14px}
+	.conversation-meaning-map{display:grid;gap:10px;margin-top:16px}
+	.conversation-meaning-step{display:grid;grid-template-columns:34px 1fr;gap:11px;align-items:start;padding:12px 13px;background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 4px 14px}
+	.conversation-meaning-step b{display:block;margin-bottom:2px}
+	.conversation-step-num{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ui-primary);color:#fff;font-weight:900}
+	.conversation-pair{display:grid;gap:18px;margin-top:16px}
+	.conversation-turn{padding:15px 16px;border:1px solid var(--line);background:var(--surface);border-radius:4px 16px 4px 16px}
+	.conversation-turn.vendor{border-left:4px solid var(--ui-reading)}
+	.conversation-turn.learner{border-left:4px solid var(--ui-primary)}
+	.conversation-speaker{font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+	.conversation-turn .p-thai{font-size:27px;line-height:1.5}
+	.conversation-turn .p-en{margin-top:5px}
+	.conversation-turn-audio{display:flex;align-items:center;gap:9px;margin-top:10px}
+	.conversation-turn-gap{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+	.conversation-turn-gap::before,.conversation-turn-gap::after{content:"";height:1px;flex:1;background:var(--line)}
+	.conversation-transcript{display:grid;gap:12px;margin-top:18px}
+	.conversation-transcript .conversation-turn{padding:13px 14px}
+	.conversation-transcript .conversation-turn .p-thai{font-size:23px}
 	.reading-companion-intro{margin:0 0 14px;padding:14px 16px;border-left:3px solid var(--ui-reading);background:var(--surface);border-radius:4px 14px 4px 14px}
 	.reading-companion-intro h2{margin:3px 0 5px;font-size:21px}
 	.hero-card{position:relative;overflow:hidden;border-radius:22px}
@@ -1684,7 +1701,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Conversation first + reading (v8.2.1)</span>
+        <span class="version-pill">Conversation first + reading (v8.2.2)</span>
       </div>
     </header>
 
@@ -1820,7 +1837,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
     </details>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Conversation first + reading (v8.2.1)</div>
+      <div class="sub meta-tiny meta-top">Conversation first + reading (v8.2.2)</div>
     </div>
   </section>
 
@@ -2761,17 +2778,26 @@ const FOOD_ORDER_PILOT = {
   title:'Order food in Bangkok',
   setting:'A counter-service food stall with a male vendor',
   reviewStatus:'Thai-teacher review pending',
+  meaningMap:[
+    {title:'Greet the vendor', body:'Answer a polite hello.'},
+    {title:'Choose the food', body:'Point and say you want this one.'},
+    {title:'Set the spice level', body:'Ask for it not spicy.'},
+    {title:'Choose where to eat', body:'Say you are eating here.'},
+    {title:'Order a drink', body:'Ask for one bottle of water.'},
+    {title:'Close politely', body:'Say thank you after the price.'}
+  ],
   chunks:[
-    {id:'conv.food.greet', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.'},
-    {id:'conv.food.order_this', thai:'เอาอันนี้ครับ', tr:'ao an níi khráp', en:'I’ll have this one.'},
-    {id:'conv.food.no_spice', thai:'ไม่เผ็ดครับ', tr:'mâi phèt khráp', en:'Not spicy, please.'},
-    {id:'conv.food.dine_here', thai:'ทานที่นี่ครับ', tr:'thaan thîi-nîi khráp', en:'For here, please.'},
-    {id:'conv.food.water_one', thai:'น้ำเปล่าขวดหนึ่งครับ', tr:'náam-bplàao khùat nùeng khráp', en:'One bottle of water, please.'},
-    {id:'conv.food.thanks', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.'}
+    {id:'conv.food.greet', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.', cue:{thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'The vendor greets you: “Hello.”'}},
+    {id:'conv.food.order_this', thai:'เอาอันนี้ครับ', tr:'ao an níi khráp', en:'I’ll have this one.', cue:{thai:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'The vendor asks: “What would you like?”'}},
+    {id:'conv.food.no_spice', thai:'ไม่เผ็ดครับ', tr:'mâi phèt khráp', en:'Not spicy, please.', cue:{thai:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'The vendor asks: “Would you like it spicy?”'}},
+    {id:'conv.food.dine_here', thai:'ทานที่นี่ครับ', tr:'thaan thîi-nîi khráp', en:'For here, please.', cue:{thai:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'The vendor asks: “For here or takeaway?”'}},
+    {id:'conv.food.water_one', thai:'น้ำเปล่าขวดหนึ่งครับ', tr:'náam-bplàao khùat nùeng khráp', en:'One bottle of water, please.', cue:{thai:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'The vendor asks: “What drink would you like?”'}},
+    {id:'conv.food.thanks', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.', cue:{thai:'ทั้งหมดแปดสิบบาทครับ', tr:'tháng-mòt bpàaet-sìp bàat khráp', en:'The vendor gives the total: “Eighty baht altogether.”'}}
   ],
   turns:[
+    {speaker:'vendor', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.'},
     {speaker:'learner', chunk:'conv.food.greet'},
-    {speaker:'vendor', thai:'สวัสดีครับ จะรับอะไรดีครับ', tr:'sà-wàt-dii khráp · jà ráp a-rai dii khráp', en:'Hello. What would you like?'},
+    {speaker:'vendor', thai:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'What would you like?'},
     {speaker:'learner', chunk:'conv.food.order_this'},
     {speaker:'vendor', thai:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?'},
     {speaker:'learner', chunk:'conv.food.no_spice'},
@@ -2783,11 +2809,6 @@ const FOOD_ORDER_PILOT = {
     {speaker:'learner', chunk:'conv.food.thanks'},
     {speaker:'vendor', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.'}
   ],
-  gist:{answer:'food', options:[
-    {id:'food', label:'Ordering food'},
-    {id:'taxi', label:'Giving taxi directions'},
-    {id:'school', label:'Meeting a colleague'}
-  ]},
   responses:[
     {partner:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'What would you like?', answer:'conv.food.order_this', options:['conv.food.order_this','conv.food.no_spice','conv.food.water_one']},
     {partner:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?', answer:'conv.food.no_spice', options:['conv.food.no_spice','conv.food.dine_here','conv.food.order_this']},
@@ -3603,8 +3624,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.2.1';
-const APP_VERSION_LABEL = 'Conversation first + reading (v8.2.1)';
+const APP_VERSION = 'v8.2.2';
+const APP_VERSION_LABEL = 'Conversation first + reading (v8.2.2)';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -9273,8 +9294,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
+  if(APP_VERSION !== 'v8.2.2') errors.push('internal app version should be v8.2.2');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('footer label should be Conversation first + reading (v8.2.2)');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9446,8 +9467,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
+  if(APP_VERSION !== 'v8.2.2') errors.push('internal app version should be v8.2.2');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('footer label should be Conversation first + reading (v8.2.2)');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9541,8 +9562,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
+  if(APP_VERSION !== 'v8.2.2') errors.push('internal app version should be v8.2.2');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('footer label should be Conversation first + reading (v8.2.2)');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9611,8 +9632,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.2.1') errors.push('internal app version should be v8.2.1');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('footer label should be Conversation first + reading (v8.2.1)');
+  if(APP_VERSION !== 'v8.2.2') errors.push('internal app version should be v8.2.2');
+  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('footer label should be Conversation first + reading (v8.2.2)');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9825,7 +9846,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9863,7 +9884,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9932,21 +9953,26 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV82ConversationPilotContracts(){
   const errors = [], scene = FOOD_ORDER_PILOT;
   const chunkIds = (scene.chunks || []).map(chunk=>chunk.id);
-  const gistIds = ((scene.gist && scene.gist.options) || []).map(item=>item.id);
   if(scene.id !== 'conv.food_counter_01') errors.push('pilot scene id drifted');
+  if(!Array.isArray(scene.meaningMap) || scene.meaningMap.length !== 6 || scene.meaningMap.some(item=>!item.title || !item.body)) errors.push('pilot must open with a complete six-step English meaning map');
   if(scene.chunks.length !== 6 || new Set(chunkIds).size !== scene.chunks.length) errors.push('pilot must keep six stable unique chunk ids');
-  if(scene.chunks.some(chunk=>!chunk.id.startsWith('conv.food.') || !chunk.thai || !chunk.tr || !chunk.en)) errors.push('pilot chunks need stable ids and complete copy');
+  if(scene.chunks.some(chunk=>!chunk.id.startsWith('conv.food.') || !chunk.thai || !chunk.tr || !chunk.en || !chunk.cue || !chunk.cue.thai || !chunk.cue.tr || !chunk.cue.en)) errors.push('pilot chunks need stable ids plus complete vendor-cue and learner-reply copy');
   if(scene.chunks.some(chunk=>!chunk.thai.endsWith('ครับ'))) errors.push('all modelled learner moves must use male-polite Thai');
+  if(scene.chunks.some(chunk=>!chunk.cue.thai.endsWith('ครับ'))) errors.push('all modelled vendor cues must use male-polite Thai');
   if(scene.turns.some(turn=>turn.speaker === 'learner' && !chunkIds.includes(turn.chunk))) errors.push('learner dialogue turn points to an unknown chunk');
   if(scene.turns.some(turn=>turn.speaker === 'vendor' && !String(turn.thai || '').endsWith('ครับ'))) errors.push('pilot vendor lines must keep the all-male content contract');
-  if(!gistIds.length || new Set(gistIds).size !== gistIds.length || !gistIds.includes(scene.gist.answer)) errors.push('gist must have unique options including its answer');
+  scene.chunks.forEach(chunk=>{
+    const learnerIndex = scene.turns.findIndex(turn=>turn.chunk === chunk.id);
+    const prior = learnerIndex > 0 ? scene.turns[learnerIndex - 1] : null;
+    if(!prior || prior.speaker !== 'vendor' || prior.thai !== chunk.cue.thai) errors.push('full scene must place the matching vendor cue immediately before ' + chunk.id);
+  });
   if(scene.responses.some(item=>!String(item.partner || '').endsWith('ครับ') || !chunkIds.includes(item.answer) || item.options.length !== 3 || new Set(item.options).size !== 3 || !item.options.includes(item.answer) || item.options.some(id=>!chunkIds.includes(id)))) errors.push('response practice must use a male-polite prompt and three stable unique chunk choices including the answer');
   if(!scene.swap || scene.swap.thai !== 'เอากะเพราไก่ครับ') errors.push('bounded food substitution missing');
   if(!CONVERSATION_SELF_RATINGS.length || CONVERSATION_SELF_RATINGS.some(item=>!conversationRatingAllowed(item.id))) errors.push('self-rating enum is invalid');
@@ -9992,7 +10018,8 @@ function validateV82ConversationPilotContracts(){
 
   const source = [
     startConversationPilot, advanceConversationPilot, renderConversationPilot,
-    renderConversationPilotIntro, renderConversationPilotGist, renderConversationPilotChunk,
+    renderConversationPilotIntro, renderConversationPilotSetup, renderConversationPilotChunk,
+    renderConversationPilotScene, playConversationTurns,
     renderConversationPilotResponse, renderConversationPilotRecord, renderConversationPilotSwap,
     renderConversationPilotRoleplay, renderConversationPilotRating, finishConversationPilot,
     recordConversationRun
@@ -10008,7 +10035,7 @@ function validateV82ConversationPilotContracts(){
     const card = document.getElementById('conversation-pilot-card');
     if(!card) errors.push('Today pilot card missing');
   }
-  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
   if(errors.length) throw new Error('V8.2 conversation pilot contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -10021,7 +10048,7 @@ function validateV821ConversationFrontDoorContracts(){
   const about = String(showAboutApp);
   if(!about.includes('primary goal is usable conversational Thai') || !about.includes('optional reading companion') || !about.includes('Reading progress never gates')) errors.push('About must describe conversation as primary and reading as companion');
   if(!String(renderConversationPilotIntro).includes("Today's spoken Thai")) errors.push('pilot intro must present itself as the spoken starting point');
-  if(APP_VERSION !== 'v8.2.1' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.1)') errors.push('v8.2.1 identity mismatch');
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
   if(typeof document !== 'undefined' && document.getElementById && document.querySelector && document.documentElement && typeof document.documentElement.contains === 'function'){
     const card = document.getElementById('conversation-pilot-card');
     const front = document.querySelector('.conversation-front-door');
@@ -10036,6 +10063,28 @@ function validateV821ConversationFrontDoorContracts(){
     if(!brandLine || !brandLine.textContent.includes('Bangkok Thai for real life')) errors.push('masthead must state the real-life Thai goal');
   }
   if(errors.length) throw new Error('V8.2.1 conversation-first front-door contract failed:\n' + errors.join('\n'));
+  return true;
+}
+function validateV822BeginnerConversationContracts(){
+  const errors = [], scene = FOOD_ORDER_PILOT;
+  const flow = String(renderConversationPilot);
+  const intro = String(renderConversationPilotIntro);
+  const setup = String(renderConversationPilotSetup);
+  const chunk = String(renderConversationPilotChunk);
+  const completeScene = String(renderConversationPilotScene);
+  const sequence = String(playConversationTurns);
+  const css = typeof document !== 'undefined' && document.querySelector ? (document.querySelector('style') || {}).textContent || '' : '';
+  if(flow.indexOf("p.phase === 'setup'") < 0 || flow.indexOf("p.phase === 'chunks'") < flow.indexOf("p.phase === 'setup'") || flow.indexOf("p.phase === 'scene'") < flow.indexOf("p.phase === 'chunks'")) errors.push('beginner flow must run meaning setup, paired chunks, then complete scene in that order');
+  if(!intro.includes('First understand the situation in English') || /speakBtn|conversationSceneText|Hear the scene/.test(intro)) errors.push('intro must explain the task without cold Thai playback');
+  if(!setup.includes('You do not need to read or understand Thai yet') || !setup.includes('Nothing is tested cold') || /speakBtn|conversationTranscriptHtml/.test(setup)) errors.push('meaning setup must be English-led and untested');
+  if(!chunk.includes('Vendor cue') || !chunk.includes('You say') || !chunk.includes('pause · then you answer') || chunk.indexOf('cue.en') > chunk.indexOf('cue.thai') || chunk.indexOf('chunk.en') > chunk.indexOf('chunk.thai')) errors.push('each teaching pair must show English meaning before Thai and visibly separate cue from reply');
+  if(!completeScene.includes('Now hear the complete exchange') || !completeScene.includes('conversationTranscriptHtml') || !completeScene.includes('playConversationTurns') || !completeScene.includes('0.9 seconds')) errors.push('complete exchange must be delayed until after teaching and retain visible meaning plus gapped playback');
+  if(!sequence.includes('new SpeechSynthesisUtterance') || !sequence.includes('setTimeout(next, 900)') || !sequence.includes('player !== p') || !sequence.includes('run !== conversationSpeechRun')) errors.push('full playback must use separately guarded turns with a 900ms inter-speaker pause');
+  if(css && (!css.includes('.conversation-pair') || !css.includes('.conversation-turn-gap') || !css.includes('.conversation-transcript{display:grid;gap:12px'))) errors.push('conversation spacing CSS contract is incomplete');
+  const fresh = {done:[],srs:{}}; ensureStateCollections(fresh);
+  ['conversationLesson','conversationPhase','conversationChunk'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh,key)) errors.push('beginner correction must not add learner-state key ' + key); });
+  if(APP_VERSION !== 'v8.2.2' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.2)') errors.push('v8.2.2 identity mismatch');
+  if(errors.length) throw new Error('V8.2.2 beginner conversation contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -13625,11 +13674,8 @@ function resolvedConversationTurn(scene, turn){
   }
   return turn;
 }
-function conversationSceneText(scene){
-  return (scene.turns || []).map(turn=>resolvedConversationTurn(scene, turn)).filter(Boolean).map(turn=>turn.thai).join(' ');
-}
 function conversationPilotTotalSteps(scene){
-  return 5 + (scene.chunks || []).length + 2 * (scene.responses || []).length;
+  return 6 + (scene.chunks || []).length + 2 * (scene.responses || []).length;
 }
 function setConversationPilotProgress(){
   const p = player;
@@ -13641,9 +13687,53 @@ function scheduleConversationSpeech(p, phase, text, delay, stillCurrent){
     speak(text);
   }, delay);
 }
+let conversationSpeechRun = 0;
 function stopConversationSpeech(){
+  conversationSpeechRun++;
+  if(typeof document !== 'undefined') document.querySelectorAll('.conversation-sequence-playing').forEach(button=>button.classList.remove('playing','conversation-sequence-playing'));
   if(typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try{ window.speechSynthesis.cancel(); }catch(e){}
+}
+function playConversationTurns(p, turns, button){
+  const sequence = (turns || []).map(turn=>resolvedConversationTurn(p.scene, turn)).filter(Boolean);
+  if(!sequence.length) return;
+  stopConversationSpeech();
+  if(typeof window === 'undefined' || !('speechSynthesis' in window)){
+    showAudioSetup('unsupported', sequence[0].thai, button);
+    return;
+  }
+  try{ speechSynthesis.resume(); }catch(e){}
+  if(!thaiVoice) pickVoice();
+  if(!thaiVoice){
+    showAudioSetup('missing-thai', sequence[0].thai, button);
+    return;
+  }
+  const run = conversationSpeechRun;
+  const phase = p.phase;
+  let index = 0;
+  const finish = ()=>{
+    if(button) button.classList.remove('playing','conversation-sequence-playing');
+  };
+  const next = ()=>{
+    if(player !== p || p.phase !== phase || run !== conversationSpeechRun){ finish(); return; }
+    if(index >= sequence.length){ finish(); return; }
+    const utterance = new SpeechSynthesisUtterance(sequence[index].thai);
+    utterance.voice = thaiVoice;
+    utterance.lang = 'th-TH';
+    utterance.rate = 0.72;
+    utterance.onend = ()=>{
+      index++;
+      if(index >= sequence.length){ finish(); return; }
+      setTimeout(next, 900);
+    };
+    utterance.onerror = event=>{
+      finish();
+      if(!event || !/interrupted|canceled/i.test(event.error || '')) showAudioSetup('speech-error', sequence[index].thai, button);
+    };
+    speechSynthesis.speak(utterance);
+  };
+  if(button) button.classList.add('playing','conversation-sequence-playing');
+  next();
 }
 function renderConversationPilotCard(){
   const status = el('conversation-pilot-status');
@@ -13661,7 +13751,7 @@ function startConversationPilot(){
   player = {
     type:'conversation-pilot', scene, phase:'intro', progress:0,
     total:conversationPilotTotalSteps(scene), chunkIndex:0, responseIndex:0,
-    roleplayIndex:0, responseSettled:false, swapRevealed:false, roleplayRevealed:false
+    roleplayIndex:0, swapRevealed:false, roleplayRevealed:false
   };
   openOverlay();
   renderConversationPilot();
@@ -13681,6 +13771,18 @@ function conversationLearnerListHtml(scene){
       <div class="p-en">${esc(chunk.en)}</div>
     </div>`).join('')}</div>`;
 }
+function conversationTurnCardHtml(turn){
+  const speaker = turn.speaker === 'vendor' ? 'vendor' : 'learner';
+  return `<div class="conversation-turn ${speaker}">
+    <div class="conversation-speaker">${speaker === 'vendor' ? 'Vendor' : 'You'}</div>
+    <div class="p-thai">${esc(turn.thai)}</div>
+    <div class="p-tr">${esc(turn.tr || '')}</div>
+    <div class="p-en">${esc(turn.en || '')}</div>
+  </div>`;
+}
+function conversationTranscriptHtml(scene){
+  return `<div class="conversation-transcript">${(scene.turns || []).map(turn=>resolvedConversationTurn(scene, turn)).filter(Boolean).map(conversationTurnCardHtml).join('')}</div>`;
+}
 function renderConversationPilot(){
   const p = player;
   if(!p || p.type !== 'conversation-pilot') return;
@@ -13688,8 +13790,9 @@ function renderConversationPilot(){
   clearLocalRecording();
   setConversationPilotProgress();
   if(p.phase === 'intro') return renderConversationPilotIntro();
-  if(p.phase === 'gist') return renderConversationPilotGist();
+  if(p.phase === 'setup') return renderConversationPilotSetup();
   if(p.phase === 'chunks') return renderConversationPilotChunk();
+  if(p.phase === 'scene') return renderConversationPilotScene();
   if(p.phase === 'responses') return renderConversationPilotResponse();
   if(p.phase === 'record') return renderConversationPilotRecord();
   if(p.phase === 'swap') return renderConversationPilotSwap();
@@ -13705,68 +13808,85 @@ function renderConversationPilotIntro(){
       <p class="sub">${esc(scene.setting)}</p>
     </div>
     <div class="notebox">
-      Hear one short exchange, learn six useful moves, answer the vendor, swap one item and try a supported role-play.
+      First understand the situation in English. Then learn each vendor cue and your reply as a pair. The complete Thai exchange comes only after the six replies have meaning.
     </div>
     <div class="notebox" style="margin-top:12px">
       <b>Pilot boundary:</b> ${esc(scene.reviewStatus)}. Audio uses your device voice as a rough preview, not native listening evidence or pronunciation scoring.
     </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-begin">Hear the scene →</button></div>`;
-  el('conversation-begin').onclick = ()=>advanceConversationPilot('gist');
+    <div class="stage-actions"><button class="btn full" id="conversation-begin">See what happens →</button></div>`;
+  el('conversation-begin').onclick = ()=>advanceConversationPilot('setup');
 }
-function renderConversationPilotGist(){
+function renderConversationPilotSetup(){
   const p = player, scene = p.scene;
   el('stage').innerHTML = `
-    <div class="q-prompt">
-      <div class="eyebrow">First listen</div>
-      <div class="q-text">Listen once without reading. What is happening?</div>
-      <div class="audio-inline">${speakBtn(conversationSceneText(scene), 'Hear the complete food-stall scene')}</div>
-      <div class="sub" style="margin-top:8px">Device voice preview · meaning before perfect detail</div>
+    <div class="center">
+      <div class="eyebrow">Meaning first</div>
+      <h2>You are ordering at a food stall</h2>
+      <p class="sub">You do not need to read or understand Thai yet. These are the six things you will accomplish.</p>
     </div>
-    <div class="q-options">
-      ${scene.gist.options.map(item=>`<button class="q-opt" data-conversation-gist="${escAttr(item.id)}">${esc(item.label)}</button>`).join('')}
+    <div class="conversation-meaning-map">
+      ${(scene.meaningMap || []).map((item,i)=>`<div class="conversation-meaning-step"><span class="conversation-step-num">${i+1}</span><div><b>${esc(item.title)}</b><span class="sub">${esc(item.body)}</span></div></div>`).join('')}
     </div>
-    <div class="q-feedback" id="conversation-feedback"></div>`;
-  scheduleConversationSpeech(p, 'gist', conversationSceneText(scene), 300);
-  el('stage').querySelectorAll('[data-conversation-gist]').forEach(button=>{
-    button.onclick = ()=>{
-      const ok = button.dataset.conversationGist === scene.gist.answer;
-      el('stage').querySelectorAll('[data-conversation-gist]').forEach(choice=>{
-        choice.disabled = true;
-        if(choice.dataset.conversationGist === scene.gist.answer) choice.classList.add('correct');
-      });
-      if(!ok) button.classList.add('wrong');
-      const fb = el('conversation-feedback');
-      fb.className = 'q-feedback ' + (ok ? 'ok answer-correct' : 'no answer-wrong');
-      fb.innerHTML = `${ok ? 'Yes — ' : ''}This is a food-stall order.<div class="stage-actions"><button class="btn full" id="conversation-gist-next">Meet your six moves →</button></div>`;
-      el('conversation-gist-next').onclick = ()=>advanceConversationPilot('chunks');
-    };
-  });
+    <div class="notebox" style="margin-top:16px"><b>Next:</b> every Thai reply appears beside the English meaning of the vendor's cue. Nothing is tested cold.</div>
+    <div class="stage-actions"><button class="btn full" id="conversation-setup-next">Learn the first reply →</button></div>`;
+  el('conversation-setup-next').onclick = ()=>advanceConversationPilot('chunks');
 }
 function renderConversationPilotChunk(){
   const p = player, chunk = p.scene.chunks[p.chunkIndex];
   if(!chunk){
-    p.responseIndex = 0;
-    p.responseSettled = false;
-    p.phase = 'responses';
+    p.phase = 'scene';
     renderConversationPilot();
     return;
   }
+  const cue = chunk.cue;
   el('stage').innerHTML = `
     <div class="center">
-      <div class="eyebrow">Your move ${p.chunkIndex+1} of ${p.scene.chunks.length}</div>
-      <div class="p-thai" style="font-size:34px;margin-top:16px">${esc(chunk.thai)}</div>
-      <div class="p-tr" style="margin-top:8px">${esc(chunk.tr)}</div>
-      <div class="p-en" style="margin-top:6px">${esc(chunk.en)}</div>
-      <div style="margin-top:14px">${speakBtn(chunk.thai, 'Hear this learner response')}</div>
+      <div class="eyebrow">Learn the exchange · ${p.chunkIndex+1} of ${p.scene.chunks.length}</div>
+      <h2>Hear the cue, then say your reply</h2>
+      <p class="sub">The English meaning stays visible. You are learning what to do, not proving that you can read Thai.</p>
     </div>
-    <div class="compare-box" style="margin-top:18px">
-      Listen, then say it once. The Thai stays visible because this pilot tests the interaction flow, not unaided memory yet.
+    <div class="conversation-pair">
+      <div class="conversation-turn vendor">
+        <div class="conversation-speaker">Vendor cue</div>
+        <div class="p-en"><b>${esc(cue.en)}</b></div>
+        <div class="p-thai">${esc(cue.thai)}</div>
+        <div class="p-tr">${esc(cue.tr)}</div>
+        <div class="conversation-turn-audio">${speakBtn(cue.thai, 'Hear the vendor cue')}<span class="sub">Hear the vendor</span></div>
+      </div>
+      <div class="conversation-turn-gap">pause · then you answer</div>
+      <div class="conversation-turn learner">
+        <div class="conversation-speaker">You say</div>
+        <div class="p-en"><b>${esc(chunk.en)}</b></div>
+        <div class="p-thai">${esc(chunk.thai)}</div>
+        <div class="p-tr">${esc(chunk.tr)}</div>
+        <div class="conversation-turn-audio">${speakBtn(chunk.thai, 'Hear your learner reply')}<span class="sub">Hear your reply, then say it</span></div>
+      </div>
     </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-chunk-next">I said it · ${p.chunkIndex+1 === p.scene.chunks.length ? 'practise responses' : 'next'} →</button></div>`;
+    <div class="stage-actions"><button class="btn full" id="conversation-chunk-next">I said it · ${p.chunkIndex+1 === p.scene.chunks.length ? 'hear the whole exchange' : 'next pair'} →</button></div>`;
   el('conversation-chunk-next').onclick = ()=>{
     p.chunkIndex++;
     p.progress++;
     renderConversationPilot();
+  };
+}
+function renderConversationPilotScene(){
+  const p = player, scene = p.scene;
+  el('stage').innerHTML = `
+    <div class="center">
+      <div class="eyebrow">Now hear the complete exchange</div>
+      <h2>Every turn now has meaning</h2>
+      <p class="sub">Follow the English if the Thai is still unfamiliar. Playback pauses for 0.9 seconds between speakers.</p>
+    </div>
+    ${conversationTranscriptHtml(scene)}
+    <div class="compare-box" style="margin-top:18px">
+      <button class="btn full ghost" id="conversation-play-scene">▶ Hear the full exchange with gaps</button>
+      <div class="sub" style="font-size:11px;text-align:center;margin-top:8px">Device voice preview · vendor and learner turns play separately.</div>
+    </div>
+    <div class="stage-actions"><button class="btn full" id="conversation-scene-next">Practise choosing the replies →</button></div>`;
+  el('conversation-play-scene').onclick = event=>playConversationTurns(p, scene.turns, event.currentTarget);
+  el('conversation-scene-next').onclick = ()=>{
+    p.responseIndex = 0;
+    advanceConversationPilot('responses');
   };
 }
 function renderConversationPilotResponse(){
@@ -16350,7 +16470,8 @@ function runFullStartupValidators(){
     validateV8VisualContracts,
     validateV81ArcadeContracts,
     validateV82ConversationPilotContracts,
-    validateV821ConversationFrontDoorContracts
+    validateV821ConversationFrontDoorContracts,
+    validateV822BeginnerConversationContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

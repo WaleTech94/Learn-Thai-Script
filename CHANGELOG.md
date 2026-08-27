@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.2.2 - 2026-08-27
+
+- Rebuilt the first spoken lesson for a genuinely zero-knowledge learner. The cold Thai gist listen/test is gone; an English-only six-step situation map now establishes what the exchange accomplishes before any Thai is expected.
+- Added six exact vendor-cue/learner-reply teaching pairs. Each pair shows English meaning before Thai, labels the two speakers, provides separate audio controls and places a visible `pause · then you answer` divider between turns.
+- Moved the complete exchange after all six pairs. Its transcript keeps English meaning on every turn, and playback now speaks turns separately with a 900ms gap rather than running the conversation together.
+- Aligned the greeting data with the taught interaction: the vendor greeting now immediately precedes the learner's greeting reply, and every other taught cue is likewise contract-checked against its full-scene turn.
+- Added `validateV822BeginnerConversationContracts()` and a precommit zero-knowledge lesson gate. The generated audit now reports v8.2.2 with 62/62 validators passing and zero lesson, pool or role prerequisite issues.
+- Kept the v8.2.0 conversation state and v8.2.1 product hierarchy intact. No SRS, lesson, mastery, required-route, streak, token, active-time, audio/font asset, network or learner-state change was made; the network-first shell continues using cache `aan-thai-v8-2-1` because no cache-first asset changed.
+
 ## v8.2.1 - 2026-08-27
 
 - Corrected the product front door so usable conversational Thai for daily Bangkok life is visibly primary. The masthead, first-run onboarding, Today hierarchy, About screen and PWA manifest no longer introduce the app as a learn-to-read course.

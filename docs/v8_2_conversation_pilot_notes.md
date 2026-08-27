@@ -1,4 +1,10 @@
-# v8.2.0–v8.2.1 Conversation Pilot Notes
+# v8.2.0–v8.2.2 Conversation Pilot Notes
+
+## v8.2.2 zero-knowledge lesson correction
+
+v8.2.2 removes the assumption that a brand-new learner can infer an uninterrupted Thai conversation. The flow now starts with an English-only map of the six things the exchange accomplishes. It then teaches six exact vendor-cue/learner-reply pairs with English meaning before Thai, separate audio controls, speaker labels and a visible `pause · then you answer` divider.
+
+The complete exchange appears only after all six pairs. Its transcript keeps English on every turn, and full playback uses separate speech utterances with a 900ms gap between speakers. The greeting sequence and every later cue are aligned with the pair that was taught. This changes teaching order and presentation only; the state, privacy, evidence and progression boundaries below remain unchanged.
 
 ## v8.2.1 front-door correction
 
@@ -33,13 +39,14 @@ This wording is intentionally marked **Thai-teacher review pending** in the prod
 
 The pilot uses a dedicated `conversation-pilot` player rather than the lesson or generic-quiz engine:
 
-1. Hear the complete scene and choose its gist.
-2. Meet, hear and say the six learner moves with Thai, transliteration and meaning visible.
-3. Choose an appropriate response to four vendor prompts and see immediate functional feedback.
-4. Read the learner side aloud, make a temporary local recording and compare it with the device preview.
-5. Substitute one food item into the order frame.
-6. Answer the four vendor prompts aloud before revealing the supported model.
-7. Save a private support-level self-rating.
+1. Understand the six-step food-stall situation through an English-only map; nothing is tested cold.
+2. Learn six exact vendor-cue/learner-reply pairs with English meaning first and a visible pause between turns.
+3. Hear the complete exchange only after the pairs are familiar, with English on every turn and a 900ms inter-speaker gap.
+4. Choose an appropriate response to four vendor prompts and see immediate functional feedback.
+5. Read the learner side aloud, make a temporary local recording and compare it with the device preview.
+6. Substitute one food item into the order frame.
+7. Answer the four vendor prompts aloud before revealing the supported model.
+8. Save a private support-level self-rating.
 
 The flow tests comprehension, retrieval, variation and interaction. It does not award a speaking score or certify pronunciation.
 
@@ -86,9 +93,11 @@ Pilot completion cannot write SRS cards, completed lessons, checks, tokens, stre
 - repair, future-field preservation, import acceptance/rejection and run aggregation;
 - no use of literacy progression, reward, streak, daily or SRS mutation calls;
 - exclusion from active-time types and phrase-review pools;
-- reset copy, Today-card placement and v8.2.1 identity.
+- reset copy, Today-card placement and current v8.2.2 identity.
 
 `validateV821ConversationFrontDoorContracts()` separately checks the speaking-first onboarding, automatic launch, masthead/About/manifest identity, Today DOM order and explicit reading-companion boundary.
+
+`validateV822BeginnerConversationContracts()` checks meaning → paired teaching → complete-scene order, no cold intro playback, English-before-Thai pair copy, visible spacing CSS, cue-to-full-scene alignment, separately guarded utterances with the 900ms gap, no new learner-state key and v8.2.2 identity.
 
 The normal precommit, generated audit, arcade smoke, embedded-script syntax and browser walkthrough remain release gates.
 
