@@ -1,68 +1,63 @@
-# v8.2.0–v8.2.2 Conversation Pilot Notes
+# v8.2.0–v8.2.3 Conversation-First Notes
 
-## v8.2.2 zero-knowledge lesson correction
+## v8.2.3 complete beginner-practice loop
 
-v8.2.2 removes the assumption that a brand-new learner can infer an uninterrupted Thai conversation. The flow now starts with an English-only map of the six things the exchange accomplishes. It then teaches six exact vendor-cue/learner-reply pairs with English meaning before Thai, separate audio controls, speaker labels and a visible `pause · then you answer` divider.
+v8.2.3 makes the food-ordering scene the app's real A0 starting lesson and today's minimum. It no longer assumes that viewing content is evidence of practice: the learner must complete six taught cue/reply pair playbacks, the full 13-turn exchange, four functional response choices, one supported substitution, a one-phrase speaking step and four supported role-play reveals before the run is recorded.
 
-The complete exchange appears only after all six pairs. Its transcript keeps English on every turn, and full playback uses separate speech utterances with a 900ms gap between speakers. The greeting sequence and every later cue are aligned with the pair that was taught. This changes teaching order and presentation only; the state, privacy, evidence and progression boundaries below remain unchanged.
+The six moves are intentionally split into two polite routines and four active replies. Greeting and thanks are heard and copied; choosing the food, setting spice, choosing where to eat and ordering water are retrieved again in response choice and role-play. Reading stays visible as support—Thai script, pronunciation spelling, English meaning and meaningful phrase segments—but no script knowledge is assumed or tested.
 
-## v8.2.1 front-door correction
+The complete Phase 1 letter → class → tone course is preserved unchanged behind an optional reading-companion control. Conversation evidence and reading evidence remain separate.
 
-v8.2.1 promotes this field test to the recommended first action without coupling it to the literacy progression system. The masthead, onboarding, Today hierarchy, About copy and manifest now say that usable conversational Thai for Bangkok is primary. Finishing onboarding launches the scene; the complete Phase 1 course appears underneath as an optional gradual reading companion.
+## Earlier v8.2 corrections
 
-This is a product-hierarchy change, not a claim that one scene is already a complete conversation curriculum. The separate state, privacy, teacher-review, device-voice and no-progression-mutation boundaries below remain unchanged.
+v8.2.2 removed the cold uninterrupted Thai opener. It added an English-only situation map, exact cue/reply teaching pairs and separate full-scene utterances with a 900ms gap.
 
-## Purpose
+v8.2.1 made usable conversational Thai the product front door. The masthead, onboarding, Today hierarchy, About copy and manifest lead with speaking, while Phase 1 became an explicitly optional reading companion.
 
-v8.2.0 was the first implementation step from the conversation-first curriculum audit. It placed one isolated field-test scene on Today so the owner could judge whether the proposed interaction loop was useful before the app gained conversational SRS or eight weeks of content.
-
-The scene is recommended first, available from a fresh state and designed for an 8–12 minute run. It remains optional in the progression sense: skipping it blocks nothing. The frozen v8.1.0 reading course remains fully usable and unchanged underneath it.
+v8.2.0 introduced the isolated food-counter scene and the separate conversation state boundary.
 
 ## Scene
 
 Stable scene id: `conv.food_counter_01`
 
-Setting: ordering at a Bangkok food stall. The six learner moves are:
+Setting: ordering at a Bangkok food stall with a male vendor. The modeled learner moves are:
 
-1. `สวัสดีครับ` — hello.
-2. `เอาอันนี้ครับ` — I’ll take this one.
-3. `ไม่เผ็ดครับ` — not spicy.
-4. `ทานที่นี่ครับ` — eat here.
-5. `น้ำเปล่าขวดหนึ่งครับ` — one bottle of water.
-6. `ขอบคุณครับ` — thank you.
+1. `สวัสดีครับ` — hello. Polite routine.
+2. `เอาอันนี้ครับ` — I'll have this one. Active reply.
+3. `ไม่เผ็ดครับ` — not spicy, please. Active reply.
+4. `ทานที่นี่ครับ` — I'll eat here. Active reply.
+5. `น้ำเปล่าขวดหนึ่งครับ` — one bottle of water, please. Active reply.
+6. `ขอบคุณครับ` — thank you. Polite routine.
 
-The supported substitution is `เอากะเพราไก่ครับ`. Vendor prompts and every modeled polite learner response use male `ครับ` throughout.
-
-This wording is intentionally marked **Thai-teacher review pending** in the product. It is plausible pilot copy, not a claim of native editorial sign-off.
+The supported substitution replaces `อันนี้` with pre-taught `กะเพราไก่` and models `เอากะเพราไก่ครับ`. Every modeled vendor and learner line uses male polite `ครับ`; `ค่ะ` is prohibited.
 
 ## Learning loop
 
-The pilot uses a dedicated `conversation-pilot` player rather than the lesson or generic-quiz engine:
+The dedicated `conversation-pilot` player runs this sequence:
 
-1. Understand the six-step food-stall situation through an English-only map; nothing is tested cold.
-2. Learn six exact vendor-cue/learner-reply pairs with English meaning first and a visible pause between turns.
-3. Hear the complete exchange only after the pairs are familiar, with English on every turn and a 900ms inter-speaker gap.
-4. Choose an appropriate response to four vendor prompts and see immediate functional feedback.
-5. Read the learner side aloud, make a temporary local recording and compare it with the device preview.
-6. Substitute one food item into the order frame.
-7. Answer the four vendor prompts aloud before revealing the supported model.
-8. Save a private support-level self-rating.
+1. Explain the food-stall situation in English and distinguish routines from active replies.
+2. Teach each vendor cue and learner reply as a pair: English meaning first, Thai and pronunciation support, meaningful segments, then vendor → 900ms pause → learner-model playback.
+3. Play the full 13-turn exchange with a sticky now-playing panel, active-turn state, stop/restart controls and English meaning on every turn.
+4. Shuffle three reply choices for each of the four active prompts. A wrong answer cannot continue: it plays the exact cue/reply repair and requires a retry.
+5. Practise one useful reply aloud. Optional local recording shows elapsed time, can be stopped manually and is capped at 45 seconds.
+6. Preteach the new food item and complete substituted order, then support production with the three phrase parts before revealing the joined model.
+7. Return to all four active vendor prompts in supported role-play. The learner answers aloud before revealing and repeating the model.
+8. Save a private support-level self-rating and the bounded evidence that the practice loop was completed.
 
-The flow tests comprehension, retrieval, variation and interaction. It does not award a speaking score or certify pronunciation.
+The loop supports comprehension, retrieval, variation and interaction. It does not score or certify pronunciation.
 
 ## Audio and privacy boundary
 
-- Speech uses the existing device voice and is labelled a rough preview, not native listening evidence.
-- Local recording reuses the existing `MediaRecorder` path.
-- Recording is temporary, never uploaded, never scored and never persisted in learner state.
-- Pilot transitions cancel in-flight device speech, and delayed callbacks verify the current player, phase and item, so closing or quickly advancing cannot carry an old prompt into the next screen.
-- The app does not claim to assess tones, aspiration, vowel length or final stops from microphone input.
+- The device's Thai `speechSynthesis` voice generates every modeled Thai line. This is the product's fixed pronunciation-model constraint, not a temporary placeholder.
+- No native recording, native reviewer, human-audio manifest, remote audio service or runtime network call is required.
+- The same device voice may play both vendor and learner roles; labels, the now-playing panel and the 900ms gap establish turn-taking.
+- Local recording reuses `MediaRecorder`, remains optional and temporary, and is never uploaded, persisted or scored.
+- Closing, stopping or changing stage cancels in-flight speech; callbacks verify the current player and phase before continuing.
+- The app makes no claim to assess tones, aspiration, vowel length or final stops from microphone input.
 
-Native-speaker audio remains a prerequisite before this loop could become the main listening curriculum.
+## State and Today boundary
 
-## State and progression boundary
-
-The only new optional state is:
+The optional namespace remains schema 1. v8.2.3 adds `lastRun` inside an existing scene record:
 
 ```text
 conversation: {
@@ -72,45 +67,60 @@ conversation: {
       runs,
       firstCompleted,
       lastCompleted,
-      selfRating
+      selfRating,
+      lastRun: {
+        completed,
+        pairAdvances,
+        pairPlaybacks,
+        scenePlaybackCompleted,
+        responseChoices,
+        responseFirstCorrect,
+        roleplayReveals,
+        swapRevealed,
+        recordStepCompleted,
+        recordingAttempted
+      }
     }
   }
 }
 ```
 
-Dates are bounded ISO calendar days and self-ratings use a fixed three-value enum. Repair is idempotent, drops invalid scene records, preserves unknown future fields and stores no per-turn answer history. Import validates the namespace before merge. Reset removes conversation evidence with all other progress.
+`recordingAttempted` is evidence of using the optional recorder, not a completion requirement. All other interaction counts/flags must meet the scene contract. Today is complete only when `lastCompleted` and `lastRun.completed` are today and `lastRun` is structurally complete. Legacy v8.2.0–v8.2.2 records remain valid run history but do not receive invented current-day practice credit. Malformed evidence repairs to `null`; malformed imports fail closed.
 
-Pilot completion cannot write SRS cards, completed lessons, checks, tokens, streaks, daily-route credit, active learning seconds, error profiles, drill records, captures or phrase-review cards. The conversation content is a separate source object and cannot leak into the Phase 1 word/review pools.
+Conversation completion cannot write SRS cards, completed lessons, checks, tokens, streaks, reading-route days, active learning seconds, error profiles, drill records, captures or phrase-review cards. Reset clears conversation evidence and deliberately restores first-run onboarding.
+
+## Accessibility and mobile contract
+
+- Onboarding and learning overlays use modal semantics, focus containment, background inertness and focus restoration.
+- Leaving after meaningful progress requires confirmation; the intro can close without a false warning.
+- Pair, scene and response controls keep 44px minimum targets.
+- The 320px layout has no horizontal document overflow; playback controls stack where needed.
+- The reading companion is collapsed by default and exposes its state through `aria-expanded`.
 
 ## Validation
 
-`validateV82ConversationPilotContracts()` checks:
+`validateV82ConversationPilotContracts()` preserves the original scene, male-polite and progression-isolation boundary.
 
-- the stable scene id and exactly six learner chunks;
-- male-polite endings on modeled learner/vendor Thai;
-- response references and the substitution frame;
-- self-rating ids;
-- repair, future-field preservation, import acceptance/rejection and run aggregation;
-- no use of literacy progression, reward, streak, daily or SRS mutation calls;
-- exclusion from active-time types and phrase-review pools;
-- reset copy, Today-card placement and current v8.2.2 identity.
+`validateV821ConversationFrontDoorContracts()` guards speaking-first onboarding, automatic launch, identity, Today ordering and optional reading.
 
-`validateV821ConversationFrontDoorContracts()` separately checks the speaking-first onboarding, automatic launch, masthead/About/manifest identity, Today DOM order and explicit reading-companion boundary.
+`validateV822BeginnerConversationContracts()` guards meaning → paired teaching → complete-scene order, cue alignment and the 900ms gap.
 
-`validateV822BeginnerConversationContracts()` checks meaning → paired teaching → complete-scene order, no cold intro playback, English-before-Thai pair copy, visible spacing CSS, cue-to-full-scene alignment, separately guarded utterances with the 900ms gap, no new learner-state key and v8.2.2 identity.
+`validateV823ConversationPracticeContracts()` guards:
 
-The normal precommit, generated audit, arcade smoke, embedded-script syntax and browser walkthrough remain release gates.
+- two routines and four active replies;
+- six segmented pair gates and exact four-prompt response/role-play coverage;
+- stable shuffled choices and compulsory wrong-answer repair;
+- one-phrase recording with at least a 30-second window;
+- substitution preteach before supported production;
+- active-turn, stop/restart and full-scene completion controls;
+- bounded `lastRun` evidence, current-day credit and legacy/corrupt repair;
+- reset/onboarding and exit-guard behavior;
+- device-TTS-only content, male-polite Thai and v8.2.3 identity.
 
-## Decision after real use
+`tools/conversation-smoke.js` runs a dependency-free interaction/state harness and is invoked by `tools/precommit-check.js`. The generated Phase 1 audit now contains 63 validators.
 
-Do not scale the pilot merely because it functions technically. Run it during real Bangkok food orders and collect simple observations: whether the prompt felt retrievable, which vendor turns were missed, whether the substitution transferred, and whether the session felt useful enough to repeat.
+## Expansion rule
 
-Only after Thai-teacher review and owner field use should the project decide whether to:
+Do not add scenes merely to increase content count. Field use should decide which functions transfer, where prompts fail and which substitutions are genuinely useful. Any next scene must preserve the same A0 contract: meaning before testing, limited active targets, compulsory repair, repeated retrieval, device-generated audio, male-polite modeled Thai and no claim of pronunciation certification.
 
-- keep the loop and commission native audio;
-- revise its step order or support fade;
-- decide whether conversation needs its own compulsory route or should remain a recommended independent scene;
-- add conversational spaced retrieval; or
-- build the proposed eight-week scene sequence.
-
-Phase 1 remains preserved as a parallel reading track whatever that decision is.
+Native audio and native review are explicitly not prerequisites. If expert feedback becomes available later it can improve wording, but the curriculum and product must remain operable without it. Phase 1 stays available as a parallel optional reading track.

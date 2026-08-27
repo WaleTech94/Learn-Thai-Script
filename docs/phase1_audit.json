@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-27T15:57:10.319Z",
-  "appVersion": "v8.2.2",
+  "generatedAt": "2026-08-27T17:08:16.087Z",
+  "appVersion": "v8.2.3",
   "lessonCount": 24,
   "validators": [
     {
@@ -310,6 +310,11 @@
     },
     {
       "name": "v822BeginnerConversation",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "name": "v823ConversationPractice",
       "ok": true,
       "issues": []
     }

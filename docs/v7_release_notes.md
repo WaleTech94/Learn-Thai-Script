@@ -1,4 +1,10 @@
-# Phase 1 and Conversation-First Release Notes (v7-v8.2.2)
+# Phase 1 and Conversation-First Release Notes (v7-v8.2.3)
+
+## Complete beginner conversation loop · v8.2.3
+
+`v8.2.3` turns the repaired first scene into a gated A0 practice loop. Six cue/reply pairs must be heard before the complete exchange; the full 13-turn scene has active-turn, stop and restart controls; four active replies use shuffled choices with compulsory wrong-answer repair; one phrase is practised with optional local recording; one substitution is pre-taught; and all four active prompts return in supported role-play.
+
+The spoken scene is now the daily minimum and the full Phase 1 route is collapsed behind an optional reading control. Current-day credit requires bounded `lastRun` interaction evidence, while lessons, SRS, mastery, tokens, streaks, active-time and reading evidence remain untouched. Device TTS is the fixed pronunciation model—there is no native-audio or native-review prerequisite and no pronunciation score. `validateV823ConversationPracticeContracts()` plus `tools/conversation-smoke.js` bring the audit to 63 validators.
 
 ## Zero-knowledge first-lesson repair · v8.2.2
 
@@ -18,7 +24,7 @@ The complete reading course and the v8.2.0 pilot remain technically intact. Read
 
 The pilot uses a dedicated player and separate `FOOD_ORDER_PILOT` content object. It does not enter lessons, the phrase-review pool, SRS, mastery, blockers, required Today work, streaks, tokens or active-time credit. Its optional `conversation` namespace stores only bounded run count, first/last completion day and latest self-rating; no answers or recordings persist.
 
-Device voice remains explicitly a rough preview rather than native listening evidence or pronunciation scoring, and the authored Thai is marked teacher-review pending. `validateV82ConversationPilotContracts()` brings the generated audit to 60 validators; the flow, state boundary and criteria for any expansion live in `docs/v8_2_conversation_pilot_notes.md`.
+Device voice is now the explicit app pronunciation model rather than native listening evidence or pronunciation scoring. The product does not depend on native audio or a native reviewer. `validateV82ConversationPilotContracts()` remains the original v8.2.0 boundary guard; the current flow and evidence contract live in `docs/v8_2_conversation_pilot_notes.md`.
 
 ## Street Arcade · v8.1.0
 

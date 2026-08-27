@@ -127,11 +127,16 @@ function checkConversationFrontDoor(html){
   const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
   if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
   const onboardingSource = html.slice(onboardingStart, onboardingEnd);
-  if(!html.includes("const APP_VERSION = 'v8.2.2'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
-    throw new Error('v8.2.2 conversation-first onboarding identity is incomplete');
+  if(!html.includes("const APP_VERSION = 'v8.2.3'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
+    throw new Error('v8.2.3 conversation-first onboarding identity is incomplete');
   }
   if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
     throw new Error('retired reading-first onboarding copy remains');
+  }
+  const readingPanelStart = html.indexOf('<div id="reading-companion-panel" hidden>');
+  const readingPanelEnd = html.indexOf('<div class="settings-row">', readingPanelStart);
+  if(readingPanelStart < 0 || readingPanelEnd < 0 || !['class="today-focus"','class="daily-section"','id="course-map-drawer"'].every(marker=>html.slice(readingPanelStart, readingPanelEnd).includes(marker))){
+    throw new Error('complete literacy surface must remain collapsed inside the optional reading companion');
   }
   if(!/usable conversational Thai/i.test(manifest.description || '') || !/reading as a gradual companion/i.test(manifest.description || '')){
     throw new Error('manifest must describe conversation first and gradual reading');
@@ -146,9 +151,13 @@ function checkBeginnerConversation(html){
     'You do not need to read or understand Thai yet',
     'Nothing is tested cold',
     'pause · then you answer',
-    'Hear the full exchange with gaps',
+    'Play vendor → pause → you',
+    'Play full exchange',
+    'Say it, then retry this cue',
+    'Record one useful reply',
+    'Preteach the change',
     'setTimeout(next, 900)',
-    'validateV822BeginnerConversationContracts'
+    'validateV823ConversationPracticeContracts'
   ];
   const missing = required.filter(text=>!html.includes(text));
   if(missing.length) throw new Error('beginner conversation scaffold missing: ' + missing.join(', '));
@@ -345,6 +354,14 @@ function checkFreshDecode(){
   return String(result.stdout || '').trim().replace(/^fresh-decode corpus check OK: /, '');
 }
 
+function checkConversationSmoke(){
+  const result = spawnSync(process.execPath, [path.join(__dirname, 'conversation-smoke.js')], {encoding:'utf8'});
+  if(result.status !== 0){
+    throw new Error(String(result.stderr || result.stdout || 'conversation smoke failed').split('\n').slice(0, 16).join('; '));
+  }
+  return 'v8.2.3 interaction, state and device-TTS boundaries verified';
+}
+
 const html = readIndex();
 const results = [
   runCheck('embedded script syntax', ()=>checkScriptSyntax(html)),
@@ -353,6 +370,7 @@ const results = [
   runCheck('currency policy', ()=>checkCurrency(html)),
   runCheck('conversation-first front door', ()=>checkConversationFrontDoor(html)),
   runCheck('zero-knowledge conversation lesson', ()=>checkBeginnerConversation(html)),
+  runCheck('conversation interaction smoke', checkConversationSmoke),
   runCheck('tone-grid transliteration', checkToneGrid),
   runCheck('reading-story decodability', checkStories),
   runCheck('fresh-decode corpora', checkFreshDecode)

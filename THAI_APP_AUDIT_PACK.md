@@ -1,15 +1,15 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-08-27
+Prepared: 2026-08-28
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.2.2`
+Current app version: `v8.2.3`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Usable conversational Thai for daily Bangkok life is now the app's stated primary goal. One food-ordering scene is the recommended first action; it now teaches its English situation and six separated cue/reply pairs before presenting the complete Thai exchange. The complete Phase 1 script-mastery course remains available as an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
+Usable conversational Thai for daily Bangkok life is the app's primary goal. The first food-ordering scene now gates six taught pairs, complete-scene playback, four active response choices with wrong-answer repair, one supported substitution, one-phrase speaking practice and four role-play reveals. Completing that interaction loop—not reading—is today's minimum. The complete Phase 1 script-mastery course remains available behind an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -255,7 +255,7 @@ v8.2.0 is the isolated conversation-first field test:
 - Moves from first-listen gist through six male-polite learner chunks, vendor-response selection, temporary local record/playback, one substitution and supported role-play.
 - Stores only bounded run count, first/last completion day and latest self-rating under optional `conversation` state; no answer history or audio persists.
 - Does not mutate lessons, SRS, mastery checks, blockers, required Today work, tokens, streaks, active-time credit, error profiles, drills or phrase-review cards.
-- Labels device TTS a rough preview and the authored Thai as teacher-review pending; it makes no native-listening or pronunciation-assessment claim.
+- Uses device TTS for every modeled line and makes no native-listening or pronunciation-assessment claim. Native audio/review are not product prerequisites.
 - Adds `validateV82ConversationPilotContracts()` and the 60th generated validator. Detailed boundaries and expansion criteria live in `docs/v8_2_conversation_pilot_notes.md`.
 
 v8.2.1 corrects the product front door:
@@ -274,6 +274,15 @@ v8.2.2 repairs the first lesson for a zero-knowledge learner:
 - Aligns every taught cue with the immediately preceding vendor turn, including the opening greeting.
 - Adds `validateV822BeginnerConversationContracts()` and the 62nd generated validator without adding state or changing any Phase 1 or conversation-progression boundary. The network-first shell keeps cache `aan-thai-v8-2-1` because no cache-first asset changed.
 
+v8.2.3 completes the beginner conversation-practice loop:
+
+- Separates two polite routines from four active replies, segments each taught phrase and requires all six cue/reply pair playbacks before the full scene.
+- Adds sticky full-scene now-playing, active-turn, stop/restart and completion controls; response options rotate positions and wrong choices require exact cue/reply repair plus retry.
+- Narrows recording to one optional 45-second-capped phrase, preteaches the food substitution and repeats all four active prompts in supported role-play.
+- Makes completed conversation evidence the daily minimum while keeping the full reading route collapsed and optional.
+- Adds bounded `lastRun` evidence inside the existing conversation scene record. Legacy or malformed evidence cannot invent Today credit, and completion still mutates no lesson/SRS/mastery/token/streak/reading state.
+- Adds `validateV823ConversationPracticeContracts()` and `tools/conversation-smoke.js`, bringing the generated audit to 63 validators. Device TTS is the fixed audio model; no native-audio/reviewer dependency exists.
+
 ## Current Tracked Source
 
 - `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
@@ -282,6 +291,7 @@ v8.2.2 repairs the first lesson for a zero-knowledge learner:
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
 - `tools/phase1-audit.js` - deterministic audit extractor.
 - `tools/arcade-smoke.js` - deterministic three-cabinet interaction and sound-path smoke harness.
+- `tools/conversation-smoke.js` - deterministic A0 conversation interaction, state-evidence and isolation harness.
 - `tools/fresh-decode-check.js` - three-corpus verifier for lesson/maintenance, assessment and retention words (tone routes, stage supply, decodability, freshness, isolation).
 - `tools/make-release-zip.sh` - tracked-source review zip helper.
 - `docs/phase1_audit.md`, `docs/phase1_audit.json` - generated audit output.
@@ -306,6 +316,7 @@ Use these checks for source review:
 ```bash
 node --check tools/phase1-audit.js
 node tools/precommit-check.js
+node tools/conversation-smoke.js
 node tools/phase1-audit.js
 node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('index.html','utf8');const scripts=[...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\\n');new vm.Script(scripts);console.log('embedded scripts parse OK');"
 tools/make-release-zip.sh
@@ -313,9 +324,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.2.2`
+- app version `v8.2.3`
 - 24 lessons
-- 62 validators passing
+- 63 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues

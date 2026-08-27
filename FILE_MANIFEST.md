@@ -2,9 +2,9 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v8.2.2`.
-Verified current footer string: `Conversation first + reading (v8.2.2)`.
-Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the shell is network-first and v8.2.2 changes no cache-first asset).
+Verified current app version: `v8.2.3`.
+Verified current footer string: `Conversation first + reading (v8.2.3)`.
+Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the shell is network-first and v8.2.3 changes no cache-first asset).
 
 ## Tracked Source For Review/Deploy Packages
 
@@ -20,6 +20,7 @@ Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the 
 - `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
 - `tools/precommit-check.js` - committed release gate for embedded script syntax, NFC, particle/currency policy, tone-grid transliteration, Reading-room story decodability and the fresh-decode corpora.
 - `tools/arcade-smoke.js` - deterministic interaction harness that completes all three cabinets at their unlock gates and checks feedback, records, progression isolation, theme preview/restore and Default/Ranat/muted sound scheduling.
+- `tools/conversation-smoke.js` - deterministic A0 conversation harness covering pair gates, option order, wrong-answer repair, substitution, recording limits, role-play evidence, Today isolation and device-TTS-only scope.
 - `tools/fresh-decode-check.js` - standalone verifier for `FRESH_DECODE`, `ASSESSMENT_BANK` and `RETENTION_DECODE_BANK`: tone routes, gate decodability, prerequisites, whole-file freshness, stage isolation and supply floors.
 - `tools/make-release-zip.sh` - dependency-free helper that packages tracked source from `HEAD` with `git archive`.
 - `.gitignore` - keeps generated zips and local-only artifacts out of source review.
@@ -40,7 +41,7 @@ Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the 
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v8.2.2-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v8.2.3-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -71,7 +72,7 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v8.2.2-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v8.2.3-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
@@ -90,6 +91,7 @@ For a clean current-source audit, include:
 - `README.md`
 - `tools/phase1-audit.js`
 - `tools/precommit-check.js`
+- `tools/conversation-smoke.js`
 - `tools/fresh-decode-check.js`
 - `tools/make-release-zip.sh`
 - `docs/phase1_audit.md`

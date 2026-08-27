@@ -2,6 +2,19 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.2.3 - 2026-08-28
+
+- Completed the first scene as an actual A0 practice loop rather than a linear content demo. The six taught moves are now explicitly divided into two polite routines and four active replies; Thai remains supported by English meaning, pronunciation spelling and phrase segmentation instead of becoming a reading test.
+- Made every cue/reply pair an interaction gate: the learner hears vendor → 900ms pause → learner model before advancing. Full-scene playback gained a sticky now-playing panel, active-turn transcript state, stop/restart controls and an explicit completion gate before response practice.
+- Rebuilt the four response choices as retrieval practice. Correct options rotate across positions; a wrong choice cannot continue, plays the exact cue/reply repair, and must be retried. The same four active replies return in supported role-play before completion.
+- Narrowed the voice-comparison step to one useful reply with a visible elapsed timer, manual stop and a 45-second cap. Recording remains optional, temporary, local and unscored.
+- Reworked substitution as preteach → supported production → joined reveal. The new food item `กะเพราไก่` and the complete `เอากะเพราไก่ครับ` model must be heard before the learner tries the three-part frame.
+- Made the completed spoken scene today's minimum. The reading course is collapsed behind an optional companion control; conversation completion changes no lesson, SRS, mastery, streak, token, active-time or reading evidence.
+- Added bounded optional `lastRun` interaction evidence inside the existing conversation schema. Today credit is granted only when the current-day run proves six pair playbacks/advances, full-scene completion, four response choices, substitution reveal, one-phrase practice and four role-play reveals; malformed or legacy evidence fails closed without inventing credit.
+- Replaced native-audio/native-review assumptions with the product's fixed constraint: the device generates every Thai line, no native speaker or reviewer is required, and the app makes no pronunciation-assessment claim.
+- Rebuilt first-run onboarding around understand → hear/copy → respond/vary; added trapped focus/background inertness, in-progress exit protection and post-reset onboarding restoration. Repaired the 320px header overflow while preserving 44px controls.
+- Added `validateV823ConversationPracticeContracts()` and `tools/conversation-smoke.js`. The generated audit reports v8.2.3 with 63/63 validators passing; service-worker cache `aan-thai-v8-2-1` remains valid because no cache-first asset changed.
+
 ## v8.2.2 - 2026-08-27
 
 - Rebuilt the first spoken lesson for a genuinely zero-knowledge learner. The cold Thai gist listen/test is gone; an English-only six-step situation map now establishes what the exchange accomplishes before any Thai is expected.
