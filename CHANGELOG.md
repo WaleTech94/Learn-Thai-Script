@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.3.0 - 2026-08-28
+
+- Replaced the isolated food pilot with Week 1 of the frozen Bangkok Conversation Foundation: three meaning-first beginner lessons covering food choice/spice, dine-in/water/payment and precise misunderstanding repair. A complete exchange is withheld until each cue/reply pair is taught; Lesson 2 has a learner-controlled meal break before the learner-led bill request.
+- Added the reusable external `conversation-course.js` engine with separate learner-controlled cue/model controls, playback credit only after successful device-TTS completion, six objective items per lesson, compulsory miss clearing, controlled substitution, supported and reduced-support spoken retrieval, optional one-phrase local recording, an eight-objective consolidation, six spoken prompts and two controlled transfers.
+- Added exact Week 1 assessment supply: 24 disjoint sealed gate interactions across three 12-objective A/B/C forms, two exact +1 forms per lesson, two distinct +7 forms per lesson and two 12-objective +30 forms. Cold first attempts remain immutable; failed assessment repair is separate and cannot rewrite the score.
+- Added conversation schema 2, Bangkok-calendar dates, one-main-task-per-day pacing, a deterministic two-check backlog governor, conversation-only weakness/active-time evidence and action-boundary resume for lessons, consolidation, gates and retention. Reload does not reroll exposed forms or completed cold answers; an interrupted saved cold answer reopens as immutable feedback rather than an answerable item.
+- Added strict schema-2 imports, topological local repair, future-schema and malformed-leaf recovery at `thai_state_v1_conversation_recovery`, and schema-1 pilot migration to harmless history only. Reset clears the recovery copy; all Phase 1 roots remain isolated.
+- Rebuilt onboarding, Today, Progress and About around usable spoken Bangkok Thai. Phase 1 reading remains intact under collapsed optional companion/progress controls. Device Thai TTS is the only pronunciation model; native recordings, native-speaker review, remote audio and pronunciation scoring are neither present nor prerequisites.
+- Advanced the installed shell to `aan-thai-v8-3-0`, cached `conversation-course.js`, replaced pilot smoke assertions with exact form/state/resume checks and registered `validateV830ConversationCourseContracts()` as validator 60/60.
+
 ## v8.2.3 - 2026-08-28
 
 - Completed the first scene as an actual A0 practice loop rather than a linear content demo. The six taught moves are now explicitly divided into two polite routines and four active replies; Thai remains supported by English meaning, pronunciation spelling and phrase segmentation instead of becoming a reading test.

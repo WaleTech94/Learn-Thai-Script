@@ -1,7 +1,7 @@
 {
-  "name": "อ่าน — Learn Thai",
+  "name": "ÀAN — Bangkok Thai",
   "short_name": "อ่าน",
-  "description": "Build usable conversational Thai for daily Bangkok life, with Thai reading as a gradual companion track.",
+  "description": "Build usable conversational Thai for daily Bangkok life through meaning-first lessons, with reading as a gradual companion that remains optional.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

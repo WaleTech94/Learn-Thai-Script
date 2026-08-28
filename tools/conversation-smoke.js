@@ -4,140 +4,147 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.resolve(__dirname, '..');
-const HTML = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-const match = HTML.match(/<script>([\s\S]*)<\/script>/);
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+const match = html.match(/<script>([\s\S]*)<\/script>/);
 if(!match) throw new Error('embedded app script not found');
-const script = match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped by conversation smoke */\n');
+const embedded = match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped by conversation smoke */\n');
 
 function stubElement(){
   const attrs = new Map();
   return {
-    style:{}, dataset:{}, innerHTML:'', textContent:'', value:'', disabled:false, hidden:false,
-    classList:{add(){},remove(){},toggle(){},contains(){ return false; }},
+    style:{},dataset:{},innerHTML:'',textContent:'',value:'',disabled:false,hidden:false,
+    classList:{add(){},remove(){},toggle(){},contains(){return false;}},
     addEventListener(){},removeEventListener(){},appendChild(){},remove(){},focus(){},click(){},
-    querySelector(){ return stubElement(); },querySelectorAll(){ return []; },closest(){ return null; },
-    setAttribute(key,value){ attrs.set(key,String(value)); },removeAttribute(key){ attrs.delete(key); },hasAttribute(key){ return attrs.has(key); },
-    getAttribute(key){ return attrs.get(key) || null; },scrollIntoView(){}
+    querySelector(){return stubElement();},querySelectorAll(){return [];},closest(){return null;},
+    setAttribute(key,value){attrs.set(key,String(value));},removeAttribute(key){attrs.delete(key);},hasAttribute(key){return attrs.has(key);},getAttribute(key){return attrs.get(key)||null;},scrollIntoView(){}
   };
 }
-const body = stubElement();
-const documentStub = {
-  body, activeElement:stubElement(), documentElement:stubElement(),
-  addEventListener(){},removeEventListener(){},getElementById(){ return stubElement(); },
-  querySelector(){ return stubElement(); },querySelectorAll(){ return []; },createElement(){ return stubElement(); }
-};
-const sandbox = {
-  console, Date, Math, JSON, RegExp, Set, Map, Intl,
-  setTimeout,clearTimeout,setInterval,clearInterval,
-  document:documentStub,navigator:{},location:{protocol:'http:',search:''},
-  localStorage:{getItem(){ return null; },setItem(){},removeItem(){}},
-  sessionStorage:{getItem(){ return null; },setItem(){},removeItem(){}},
-  speechSynthesis:{cancel(){},resume(){},speak(){},getVoices(){ return []; }},
-  SpeechSynthesisUtterance:function(text){ this.text=text; },
-  matchMedia(){ return {matches:false}; },addEventListener(){},removeEventListener(){},
-  window:null,globalThis:null
-};
-sandbox.window = sandbox;
-sandbox.globalThis = sandbox;
-vm.createContext(sandbox);
-vm.runInContext(script, sandbox, {filename:'index.html'});
+const body=stubElement();
+const documentStub={body,activeElement:stubElement(),documentElement:stubElement(),addEventListener(){},removeEventListener(){},getElementById(){return stubElement();},querySelector(){return stubElement();},querySelectorAll(){return [];},createElement(){return stubElement();}};
+const sandbox={console,Date,Math,JSON,RegExp,Set,Map,Intl,URLSearchParams,setTimeout,clearTimeout,setInterval,clearInterval,document:documentStub,navigator:{},location:{protocol:'http:',search:''},localStorage:{getItem(){return null;},setItem(){},removeItem(){}},sessionStorage:{getItem(){return null;},setItem(){},removeItem(){}},speechSynthesis:{cancel(){},resume(){},speak(){},getVoices(){return [];}},SpeechSynthesisUtterance:function(text){this.text=text;},matchMedia(){return {matches:false};},addEventListener(){},removeEventListener(){},window:null,globalThis:null};
+sandbox.window=sandbox;sandbox.globalThis=sandbox;
+vm.createContext(sandbox);vm.runInContext(course+'\n'+embedded,sandbox,{filename:'app-bundle.js'});
 
-const api = vm.runInContext(`({
-  scene:FOOD_ORDER_PILOT,
-  optionIds:conversationResponseOptionIds,
-  evidenceComplete:conversationEvidenceComplete,
-  recordRun:recordConversationRun,
-  todayComplete:conversationTodayComplete,
-  freshConversationState,
-  todayStr,
-  exitGuard:conversationPilotExitWouldDiscard,
-  onboardingEligible:onboardingEligibleForState,
-  completeOnboarding,
-  responseSource:String(renderConversationPilotResponse),
-  recordSource:String(renderConversationPilotRecord),
-  swapSource:String(renderConversationPilotSwap),
-  roleplaySource:String(renderConversationPilotRoleplay),
-  playbackSource:String(playConversationTurns)+String(setConversationActiveTurn)+String(stopConversationSpeech),
-  sceneSource:String(renderConversationPilotScene),
-  resetSource:String(resetProgressNow),
-  recorderSource:String(toggleLocalRecording),
-  recordLimit:LOCAL_RECORDING_LIMIT_MS,
-  version:APP_VERSION
-})`, sandbox);
+const api=vm.runInContext(`({
+  version:APP_VERSION,
+  lessons:CV1_LESSONS,
+  scenes:CV1_SCENES,
+  lines:CV1_LINES,
+  consolidation:CV1_CONSOLIDATION,
+  gateMeta:CV1_GATE_META,
+  supportRatings:CV1_SUPPORT_RATINGS,
+  gateForms:CV1_GATE_FORMS,
+  gatePool:CV1_GATE_POOL,
+  retentionForms:CV1_RETENTION_FORMS,
+  fresh:cvFreshConversationState,
+  repair:cvRepairConversationState,
+  validateImport:cvValidateConversationImport,
+  objectives:cvBuildObjectives,
+  plusDays:cvPlusDays,
+  bangkokDayStr,
+  schedule:cvScheduleLessonRetention,
+  due:cvDueAssignments,
+  plannedDue:cvPlannedDueAssignments,
+  claim:cvClaimMainCredit,
+  resumeValid:cvResumeValid,
+  resumeMatches:cvResumeMatchesAuthority,
+  recoverResume:cvRecoveredAssessmentResume,
+  assessmentRecord:cvAssessmentRecord,
+  assessmentSpoken:cvAssessmentSpoken,
+  weaknessSeen:cvWeaknessSeen,
+  validator:validateV830ConversationCourseContracts,
+  courseSource:String(renderConversationCourseLesson)+String(cvRenderLessonObjective)+String(cvRenderLessonRoleplay),
+  pairSource:String(cvRenderLessonPair)+String(cvPronunciationKeyHtml),
+  spokenSource:String(cvRenderAssessmentSpoken),
+  assessmentSource:String(cvRenderAssessmentObjective)+String(cvFinishAssessment),
+  playbackSource:String(playConversationTurns)+String(stopConversationSpeech),
+  deviceSource:String(speakWithDeviceVoice),
+  resetSource:String(resetProgressNow)
+})`,sandbox);
 
-function assert(ok, message){ if(!ok) throw new Error(message); }
-function pass(message){ console.log('PASS ' + message); }
+function assert(ok,message){if(!ok)throw new Error(message);}
+function pass(message){console.log('PASS '+message);}
 
-const active = api.scene.chunks.filter(chunk=>chunk.practiceMode === 'active');
-const routines = api.scene.chunks.filter(chunk=>chunk.practiceMode === 'routine');
-assert(api.scene.chunks.length === 6 && active.length === 4 && routines.length === 2, 'expected six moves split into four active and two routines');
-assert(JSON.stringify(active.map(x=>x.id).sort()) === JSON.stringify(api.scene.responses.map(x=>x.answer).sort()), 'active response coverage drifted');
-assert(api.swapSource.indexOf('Preteach the change') < api.swapSource.indexOf('Try it with support'), 'substitution production appears before preteach');
-pass('move coverage and no-cold-production guard');
+assert(api.version==='v8.3.0','expected v8.3.0 identity');
+assert(api.validator(),'v8.3 validator failed');
+assert(Object.keys(api.lessons).length===3,'expected three Week 1 lessons');
+assert(api.scenes.l01.turns.length===8&&api.scenes.l02.turns.length===10&&api.scenes.l03.turns.length===13,'scene turn counts drifted');
+assert(Object.values(api.lines).every(line=>line.revision===1&&['active','recognition','routine','slot','transfer-only'].includes(line.role)),'Thai line revision/role metadata drifted');
+assert(api.lessons['cv1.lesson.w01.l01.food-order'].totalMinutes===27&&api.lessons['cv1.lesson.w01.l02.food-options'].totalMinutes===29&&api.lessons['cv1.lesson.w01.l03.repair'].totalMinutes===30,'lesson workloads drifted');
+assert(api.consolidation.coreMinutes===23&&api.consolidation.ordinaryRepairMinutes===5&&api.consolidation.totalMinutes===28,'consolidation workload drifted');
+assert(api.gateMeta.coreMinutes===22&&api.gateMeta.ordinaryRepairMinutes===8&&api.gateMeta.totalMinutes===30,'gate workload drifted');
+assert(api.supportRatings.map(item=>item.id).join('|')==='full-support|some-support|minimal-support','course support-rating enum drifted');
+pass('canonical Week 1 lesson and scene registry');
 
-const positions = new Set(), permutations = new Set();
-for(let offset=0;offset<3;offset++){
-  api.scene.responses.forEach((item,index)=>{
-    const p = {optionOffset:offset,responseOptionOrders:{}};
-    const first = api.optionIds(p,item,index), again = api.optionIds(p,item,index);
-    assert(JSON.stringify(first) === JSON.stringify(again), 'option order changed during repair');
-    positions.add(first.indexOf(item.answer));
-    permutations.add(first.join('|'));
-  });
-}
-assert(positions.size === 3 && permutations.size > 3, 'response choices do not exercise every answer position');
-pass('shuffled stable response options');
+Object.values(api.lessons).forEach(lesson=>{
+  const form=`cv1.form.lesson.w01.l0${lesson.number}.a`;
+  assert(api.objectives(lesson.interactions,form,'lesson').length===6,'lesson objective count drifted');
+});
+assert(api.gateForms.length===3&&api.gateForms.every(form=>form.revision===1&&api.objectives(form.items,form.id,'gate').length===12),'gate forms drifted');
+assert(Object.keys(api.gatePool).length===24,'Week 1 gate must retain 24 disjoint sealed interactions');
+assert(api.gateForms.flatMap(form=>form.items.map(item=>item.id)).length===new Set(api.gateForms.flatMap(form=>form.items.map(item=>item.id))).size,'gate source interactions leaked across forms');
+const gateA=api.gateForms[0],gateAObjectives=api.objectives(gateA.items,gateA.id,'gate');
+assert(gateA.items.map(item=>item.id).join('|')==='cv1.interaction.assessment.w01.pool-a.l01.01|cv1.interaction.assessment.w01.pool-a.l02.01|cv1.interaction.assessment.w01.pool-a.l03.01|cv1.interaction.assessment.w01.pool-a.l01.02|cv1.interaction.assessment.w01.pool-a.l02.02|cv1.interaction.assessment.w01.pool-a.l03.02|cv1.interaction.assessment.w01.pool-a.l02.03|cv1.interaction.assessment.w01.pool-a.l03.03','gate A manifest drifted');
+assert(gateAObjectives.slice(0,4).every(item=>item.direction==='intent')&&gateAObjectives.slice(4,8).every(item=>item.direction==='response'),'gate objective ordering drifted');
+Object.entries(api.retentionForms).forEach(([id,forms])=>{
+  const expected=id.endsWith('d1')?6:id.endsWith('d7')?8:12;
+  assert(forms.length===2&&forms.every(form=>form.revision===1&&api.objectives(form.items,form.id,'assessment').length===expected),'retention form drifted: '+id);
+});
+['cv1.retention.w01.l01.d7','cv1.retention.w01.l02.d7','cv1.retention.w01.l03.d7'].forEach(id=>{
+  const [a,b]=api.retentionForms[id];assert(a.items.every(item=>!b.items.some(other=>other.id===item.id)),'parallel +7 source IDs overlap: '+id);
+});
+pass('lesson, retention and gate form sizes');
 
-assert(api.responseSource.includes('Say it, then retry this cue'), 'wrong answer has no required retry');
-assert(api.responseSource.includes('playConversationTurns') && !api.responseSource.includes('item.options.map'), 'wrong repair or rotated choices are not wired');
-assert(api.responseSource.includes('p.responseIndex++') && api.responseSource.indexOf('p.responseIndex++') < api.responseSource.lastIndexOf('return;'), 'correct clear path missing');
-pass('wrong-answer cue/reply repair and required retry');
-assert(api.responseSource.includes("scheduleConversationSpeech(p, 'responses', answer.thai") && api.roleplaySource.includes("scheduleConversationSpeech(p, 'roleplay', answer.thai"), 'active learner models do not play after supported actions');
-pass('active learner-model playback');
+const phase1={done:['l1'],srs:{g:{iv:2,due:'2026-08-28'}},days:{x:{r:1}},baht:17,streak:{count:4,last:'2026-08-27'},checks:{a:true},conversation:{schema:1,scenes:{old:{runs:2,firstCompleted:'2026-08-01',lastCompleted:'2026-08-02',selfRating:'ready',lastRun:null}}}};
+const before=JSON.stringify({done:phase1.done,srs:phase1.srs,days:phase1.days,baht:phase1.baht,streak:phase1.streak,checks:phase1.checks});
+api.repair(phase1);
+assert(phase1.conversation.schema===2&&phase1.conversation.pace.cursor===0&&Object.keys(phase1.conversation.lessons).length===0,'legacy pilot invented course authority');
+assert(before===JSON.stringify({done:phase1.done,srs:phase1.srs,days:phase1.days,baht:phase1.baht,streak:phase1.streak,checks:phase1.checks}),'conversation migration changed Phase 1');
+const once=JSON.stringify(phase1.conversation);api.repair(phase1);assert(once===JSON.stringify(phase1.conversation),'migration is not idempotent');
+const future={done:['l1'],conversation:{schema:3,authority:{bad:true}}};api.repair(future);assert(future.done.join('|')==='l1'&&future.conversation.schema===2&&future.conversation.recovery&&future.conversation.recovery.reason==='future-schema','future conversation schema was not isolated');
+pass('schema-1 history migration and Phase 1 isolation');
 
-assert(api.sceneSource.indexOf('conversation-playback-panel') < api.sceneSource.indexOf('conversationTranscriptHtml'), 'playback controls are below transcript');
-assert(api.sceneSource.includes('data-conversation-stop') && api.playbackSource.includes('aria-current') && api.playbackSource.includes('scrollIntoView'), 'active turn or Stop is missing');
-assert(api.playbackSource.includes('speechSynthesis.cancel') && api.playbackSource.includes('setTimeout(next, 900)'), 'stop/restart or turn gap is missing');
-pass('active-turn highlight, scroll, stop and restart');
+const c=api.fresh(),lesson=api.lessons['cv1.lesson.w01.l01.food-order'];
+api.schedule(c,lesson,'2026-08-28');
+assert(c.retention['cv1.retention.w01.l01.d1'].due==='2026-08-29','+1 due date wrong');
+assert(c.retention['cv1.retention.w01.l01.d7'].due==='2026-09-04','+7 due date wrong');
+assert(api.bangkokDayStr(new Date('2026-08-28T16:59:59Z'))==='2026-08-28'&&api.bangkokDayStr(new Date('2026-08-28T17:00:00Z'))==='2026-08-29','Bangkok midnight wrong');
+assert(api.validateImport(api.fresh()),'fresh schema-2 state should pass strict import validation');
+const unknown=api.fresh();unknown.unexpected=true;let rejected=false;try{api.validateImport(unknown);}catch(_){rejected=true;}assert(rejected,'unknown schema-2 fields must reject import');
+const l1=api.lessons['cv1.lesson.w01.l01.food-order'],spoken=l1.interactions.flatMap((_,index)=>['supported','reduced'].map(mode=>`cv1.spoken.lesson.w01.l01.${mode}.${String(index+1).padStart(2,'0')}`));
+assert(api.resumeValid({taskId:l1.id,taskKind:'lesson',taskRevision:1,curriculumRevision:1,formId:null,formCycle:null,attemptOrdinal:1,runSeed:l1.id+'|1',startedDay:'2026-08-28',savedDay:'2026-08-28',stageId:'intro',stageIndex:0,itemIndex:0,evidence:{pairIdsPlayed:[],sceneIdsPlayed:[],responsePromptIds:[],responseFirstCorrectIds:[],responseRepairIds:[],itemIds:[],answeredIds:[],firstCorrectIds:[],clearedIds:[],spokenPromptIds:spoken,spokenBeforeRevealIds:[],modelRevealIds:[],supportOpenedIds:[],substitutionIds:[],transferIds:[],transferCompletedIds:[],recordStepCompleted:false,recordingAttempted:false}}),'valid Lesson 1 resume rejected');
+const recoveryForm=api.gateForms[0],recoveryObjectives=api.objectives(recoveryForm.items,recoveryForm.id,'gate'),recoverySpoken=api.assessmentSpoken(recoveryForm,'gate'),recoverySpokenIds=recoverySpoken.map((_,i)=>`${recoveryForm.id}.spoken.${String(i+1).padStart(2,'0')}`),recoveryFirst=recoveryObjectives.slice(0,10).map(item=>item.id),recoveryMissed=recoveryObjectives.slice(10).map(item=>item.id),partialRun={completed:'2026-08-28',revision:1,formId:recoveryForm.id,itemIds:recoveryObjectives.map(item=>item.id),answeredIds:recoveryObjectives.map(item=>item.id),firstCorrectIds:recoveryFirst,feedbackAcknowledgedIds:recoveryMissed,spokenPromptIds:recoverySpokenIds,spokenBeforeRevealIds:recoverySpokenIds.slice(0,2),modelRevealIds:recoverySpokenIds.slice(0,2),supportOpenedIds:[],objectiveCorrect:10,objectiveTotal:12,objectivePassed:true,spokenCompleted:2,spokenRequired:6,participationPassed:false};
+const partialRecord=api.assessmentRecord(null);Object.assign(partialRecord,{attempts:1,firstPct:83,lastPct:83,bestPct:83,lastAttempt:'2026-08-28',formCycle:1,usedFormIds:[recoveryForm.id],lastFormId:recoveryForm.id,lastRun:partialRun});
+const reconstructed=api.recoverResume('gate','cv1.gate.w01',partialRecord);assert(reconstructed&&reconstructed.stageId==='spoken'&&reconstructed.stageIndex===2&&reconstructed.itemIndex===12&&api.resumeValid(reconstructed),'partial cold assessment did not reconstruct an exact spoken-stage resume');
+const failedFullRun=JSON.parse(JSON.stringify(partialRun));failedFullRun.spokenBeforeRevealIds=recoverySpokenIds.slice();failedFullRun.modelRevealIds=recoverySpokenIds.slice();failedFullRun.spokenCompleted=6;failedFullRun.participationPassed=true;partialRecord.lastRun=failedFullRun;
+const repairResume=api.recoverResume('gate','cv1.gate.w01',partialRecord);assert(repairResume&&repairResume.stageId==='repair'&&repairResume.stageIndex===0&&api.resumeValid(repairResume),'failed cold assessment did not reconstruct its separate repair stage');
+const resumeAuthority=api.fresh();resumeAuthority.gates['cv1.gate.w01']=partialRecord;
+assert(api.resumeMatches(repairResume,resumeAuthority),'assessment resume did not match its exact attempt/form authority');
+const wrongAttempt=JSON.parse(JSON.stringify(repairResume));wrongAttempt.attemptOrdinal++;wrongAttempt.runSeed=wrongAttempt.taskId+'|'+wrongAttempt.attemptOrdinal;
+assert(!api.resumeMatches(wrongAttempt,resumeAuthority),'assessment resume accepted a different attempt ordinal');
+pass('Bangkok dates and delayed scheduling');
 
-assert(api.recordLimit >= 30000 && api.recordSource.includes('Record one useful reply'), 'conversation recording is too short or too broad');
-assert(api.recorderSource.includes('■ Stop recording') && api.recorderSource.includes('rec.stop()'), 'recording is not manually stoppable');
-assert(!api.recordSource.includes('scene.chunks.map'), 'recording screen still concatenates all learner lines');
-pass('45-second recorder and manual stop');
+const weakness=api.fresh(),objective=api.objectives(l1.interactions,'cv1.form.lesson.w01.l01.a','lesson')[0];api.weaknessSeen(weakness,objective,false,'wrong');
+const weaknessItem=weakness.weakness.items[objective.interaction.id+'>'+objective.direction];assert(weaknessItem.seen===1&&weaknessItem.firstMisses===1,'one first attempt must update weakness exactly once');
+pass('strict import, resume and weakness evidence');
 
-assert(api.exitGuard({type:'conversation-pilot',phase:'chunks',completed:false}), 'progressed conversation does not warn on exit');
-assert(!api.exitGuard({type:'conversation-pilot',phase:'intro',completed:false}) && !api.exitGuard({type:'conversation-pilot',phase:'rating',completed:true}), 'conversation exit guard overreaches');
-const resetState = {done:[],srs:{},notices:{onboardAfterReset:true}};
-assert(api.onboardingEligible(resetState,true), 'reset marker cannot restore onboarding');
-api.completeOnboarding('finish',resetState);
-assert(!resetState.notices.onboardAfterReset && !api.onboardingEligible(resetState,true), 'reset onboarding marker does not clear');
-assert(api.resetSource.includes('onboardAfterReset:true'), 'reset state does not set onboarding marker');
-pass('conversation exit guard and reset onboarding');
+assert(api.courseSource.includes('audio-only')||api.courseSource.includes('Hear each possible reply'),'objective response choices are not listening-first');
+assert(api.courseSource.includes('spokenBeforeRevealIds')&&api.courseSource.includes('supportOpenedIds'),'support-fading evidence missing');
+assert(api.pairSource.includes('cv-pair-cue')&&api.pairSource.includes('cv-pair-reply')&&!api.pairSource.includes('playConversationTurns(p,turns'),'teaching pair still uses a passive timed gap instead of learner-controlled reply playback');
+assert(api.pairSource.includes('if(!ok||!stillHere())return'),'teaching pair can award playback evidence before successful device speech completion');
+assert(['bp','dt','ph','th','kh','ng','ʉ','Doubled vowels','caron (ǎ)'].every(term=>api.pairSource.includes(term)),'pronunciation-spelling key is incomplete');
+assert(api.spokenSource.includes('cv-assessment-support')&&api.spokenSource.includes('supportOpenedIds'),'assessment spoken support is not bounded and recorded');
+assert(api.assessmentSource.includes('feedbackAcknowledgedIds')&&api.assessmentSource.includes('repairCompletedAt'),'cold evidence or repair boundary missing');
+assert(api.assessmentSource.includes("p.phase='repair'")&&api.assessmentSource.includes('cvPersistCourseResume'),'post-check repair is not action-boundary resumable');
+assert(api.assessmentSource.includes('first answer was saved before the interruption')&&api.assessmentSource.includes('Continue without changing the score'),'interrupted cold answer can be answered again or rewritten');
+assert(api.playbackSource.includes('SpeechSynthesisUtterance')&&api.playbackSource.includes('setTimeout(next, 900)')&&api.playbackSource.includes('speechSynthesis.cancel'),'guarded device-TTS playback missing');
+assert(api.playbackSource.includes('utteranceWatchdog')&&api.deviceSource.includes('watchdog')&&api.deviceSource.includes('onComplete')&&api.deviceSource.includes('speechRun === deviceSpeechRun'),'TTS stalled/interrupted/error completion guard missing');
+assert(api.resetSource.includes('conversation:freshConversationState()'),'reset does not clear schema-2 conversation state');
+pass('meaning-first, cold-evidence, repair, playback and reset boundaries');
 
-const evidence = {completed:api.todayStr(),pairAdvances:6,pairPlaybacks:6,scenePlaybackCompleted:true,responseChoices:4,responseFirstCorrect:2,roleplayReveals:4,swapRevealed:true,recordStepCompleted:true,recordingAttempted:false};
-assert(api.evidenceComplete(evidence,api.scene), 'complete interaction evidence rejected');
-const target = {done:['l1'],srs:{x:{iv:0,due:api.todayStr(),lapses:0}},days:{d:{r:1}},baht:11,streak:{count:2,last:null},checks:{x:true},retention:{x:true},conversation:api.freshConversationState()};
-const before = JSON.stringify({done:target.done,srs:target.srs,days:target.days,baht:target.baht,streak:target.streak,checks:target.checks,retention:target.retention});
-api.recordRun(api.scene.id,'getting-there',target,evidence);
-assert(api.todayComplete(api.scene.id,target), 'complete run did not satisfy current-day spoken minimum');
-assert(before === JSON.stringify({done:target.done,srs:target.srs,days:target.days,baht:target.baht,streak:target.streak,checks:target.checks,retention:target.retention}), 'conversation run mutated Phase 1 or reward state');
-pass('current-day conversation credit isolated from literacy');
-
-const thai = JSON.stringify(api.scene);
-assert(!thai.includes('ค่ะ') && api.scene.chunks.every(chunk=>chunk.thai.endsWith('ครับ') && chunk.cue.thai.endsWith('ครับ')), 'male-polite Thai contract failed');
-assert(!/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(thai), 'conversation data contains authored or remote audio');
-assert(api.playbackSource.includes('SpeechSynthesisUtterance') && api.playbackSource.includes('speechSynthesis.speak'), 'device TTS playback missing');
-const mediaFiles = [];
-function walk(dir){
-  fs.readdirSync(dir,{withFileTypes:true}).forEach(entry=>{
-    if(entry.name === '.git') return;
-    const full = path.join(dir,entry.name);
-    if(entry.isDirectory()) walk(full);
-    else if(/\.(?:mp3|m4a|wav|ogg|aac|flac|webm)$/i.test(entry.name)) mediaFiles.push(path.relative(ROOT,full));
-  });
-}
-walk(ROOT);
-assert(mediaFiles.length === 0, 'unexpected authored audio assets: ' + mediaFiles.join(', '));
-pass('male-polite and device-TTS-only boundary');
-assert(api.version === 'v8.2.3', 'expected v8.2.3 identity');
-pass('v8.2.3 conversation smoke');
+const thai=JSON.stringify({lessons:api.lessons,scenes:api.scenes,forms:api.retentionForms});
+assert(!thai.includes('ค่ะ'),'female polite particle leaked into course');
+assert(!/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(thai),'authored or remote audio leaked into course');
+pass('male-polite and device-TTS-only content');
+pass('v8.3.0 conversation smoke');

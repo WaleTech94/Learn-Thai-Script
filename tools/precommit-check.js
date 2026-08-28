@@ -15,7 +15,8 @@ function readIndex(){
 function appScript(html){
   const match = html.match(/<script>([\s\S]*)<\/script>/);
   if(!match) throw new Error('script block not found');
-  return match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for precommit check */\n');
+  const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+  return course + '\n' + match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for precommit check */\n');
 }
 
 function stubElement(){
@@ -127,8 +128,8 @@ function checkConversationFrontDoor(html){
   const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
   if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
   const onboardingSource = html.slice(onboardingStart, onboardingEnd);
-  if(!html.includes("const APP_VERSION = 'v8.2.3'") || !html.includes('Speak useful Thai first') || !html.includes('Start speaking')){
-    throw new Error('v8.2.3 conversation-first onboarding identity is incomplete');
+  if(!html.includes("const APP_VERSION = 'v8.3.0'") || !html.includes('Speak useful Thai first') || !html.includes('Start Lesson 1')){
+    throw new Error('v8.3.0 conversation-course onboarding identity is incomplete');
   }
   if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
     throw new Error('retired reading-first onboarding copy remains');
@@ -141,28 +142,33 @@ function checkConversationFrontDoor(html){
   if(!/usable conversational Thai/i.test(manifest.description || '') || !/reading as a gradual companion/i.test(manifest.description || '')){
     throw new Error('manifest must describe conversation first and gradual reading');
   }
-  if(!sw.includes("const CACHE = 'aan-thai-v8-2-1'")) throw new Error('service-worker cache must refresh the changed manifest');
+  if(!sw.includes("const CACHE = 'aan-thai-v8-3-0'") || !sw.includes("'./conversation-course.js'")) throw new Error('service-worker cache must include the v8.3 course module');
   return 'spoken goal, gradual-reading manifest and cache refresh aligned';
 }
 
 function checkBeginnerConversation(html){
+  const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+  const source = html + '\n' + course;
   const required = [
-    'First understand the situation in English',
-    'You do not need to read or understand Thai yet',
+    'Situation first',
+    'No Thai knowledge or reading is assumed',
     'Nothing is tested cold',
     'pause · then you answer',
-    'Play vendor → pause → you',
+    'Hear the partner cue',
+    'Hear the model reply',
+    'answer in your own time',
+    'Pronunciation-spelling key',
     'Play full exchange',
     'Say it, then retry this cue',
-    'Record one useful reply',
-    'Preteach the change',
+    'Record one useful phrase',
+    'Controlled substitution',
     'setTimeout(next, 900)',
-    'validateV823ConversationPracticeContracts'
+    'validateV830ConversationCourseContracts'
   ];
-  const missing = required.filter(text=>!html.includes(text));
+  const missing = required.filter(text=>!source.includes(text));
   if(missing.length) throw new Error('beginner conversation scaffold missing: ' + missing.join(', '));
-  if(/scene\.gist|renderConversationPilotGist/.test(html)) throw new Error('cold gist-first conversation surface remains');
-  return 'English meaning, paired turns and 900ms full-scene gaps present';
+  if(/scene\.gist|renderConversationPilotGist/.test(source)) throw new Error('cold gist-first conversation surface remains');
+  return 'English meaning, learner-controlled teaching pairs and 900ms full-scene gaps present';
 }
 
 function toneSnippet(){
@@ -359,7 +365,7 @@ function checkConversationSmoke(){
   if(result.status !== 0){
     throw new Error(String(result.stderr || result.stdout || 'conversation smoke failed').split('\n').slice(0, 16).join('; '));
   }
-  return 'v8.2.3 interaction, state and device-TTS boundaries verified';
+  return 'v8.3.0 route, state and device-TTS boundaries verified';
 }
 
 const html = readIndex();

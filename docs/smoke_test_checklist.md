@@ -1,41 +1,41 @@
-# v8.2.3 Smoke-Test Checklist
+# v8.3.0 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
 ## Validation Gate
 
 - Run `node tools/arcade-smoke.js` and confirm all three games, theme preview and sound paths pass.
-- Run `node tools/conversation-smoke.js` and confirm every A0 flow, state and device-TTS-only path passes.
+- Run `node tools/conversation-smoke.js` and confirm the exact Week 1 registry, workload, schema-2 state, resume/recovery, form rotation and device-TTS-only paths pass.
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v8.2.3`, 63 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v8.3.0`, 60 validators passing and 0 lesson/pool/role prerequisite issues.
 - Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `docs/phase1_audit.md` includes `PASS v82ConversationPilot`, `PASS v821ConversationFrontDoor`, `PASS v822BeginnerConversation` and `PASS v823ConversationPractice`.
-- Confirm `sw.js` cache marker remains `aan-thai-v8-2-1`; v8.2.3 changes only the network-first shell and no cache-first asset.
+- Confirm `docs/phase1_audit.md` includes `PASS v830ConversationCourse`.
+- Confirm `sw.js` cache marker is `aan-thai-v8-3-0` and caches `conversation-course.js` with the shell.
 
-## v8.2.3 Complete A0 First Lesson
+## v8.3.0 Week 1 Conversation Foundation
 
-- On a fresh state at 390 x 844, confirm `Order food in Bangkok` is the first primary card and the complete reading course is collapsed behind `Optional: open the complete reading course`.
-- Open the scene. Pass: the boundary says the device generates Thai as the pronunciation model, with no native-audio/reviewer dependency and no pronunciation score.
-- Pass: the intro contains no Thai transcript, no autoplay and no gist question. It says the situation will be understood in English first.
-- Continue. Pass: an English-only six-step map identifies two polite routines and four active replies and says nothing is tested cold.
-- Step through all six cue/reply pairs. Pass: English meaning appears before Thai, vendor and learner occupy distinct cards, phrase parts are segmented, `pause · then you answer` separates the turns, and Next stays disabled until pair playback completes.
-- Pass: the first pair teaches vendor `สวัสดีครับ` immediately before learner `สวัสดีครับ`; each later vendor cue likewise matches the full exchange.
-- After pair six, pass: the complete exchange appears for the first time; its sticky panel identifies the current speaker/turn and Stop/Restart work. `Practise choosing the replies` stays disabled until all 13 turns finish with about 0.9 seconds between turns.
-- In each of the four response choices, pass: the correct option rotates across positions. Choose a wrong option; pass: Continue is absent, the exact cue/reply repair plays and `Say it, then retry this cue` restores the same stable option order.
-- On the recording screen, pass: only `เอาอันนี้ครับ` is targeted, elapsed time is visible, Stop works, auto-stop occurs at 45 seconds, recording remains optional/local and leaving clears it.
-- On substitution, pass: the learner must hear `กะเพราไก่` and `เอากะเพราไก่ครับ` before supported production and joined reveal.
-- In role-play, pass: all four active vendor prompts return; each requires answer aloud → reveal model → repeat before advancing.
-- Close or advance both immediately (within 300ms) and after a prompt has begun speaking. Pass: the superseded prompt neither starts later nor continues on Today or over the next step.
-- Confirm modeled learner and vendor polite Thai uses `ครับ`; the substitution reads `เอากะเพราไก่ครับ`.
-- Choose a self-rating and finish. Pass: `Spoken minimum complete` says no tokens, streak, lesson progress or speaking score changed; Today says the spoken minimum is complete while reading remains collapsed/optional.
-- Before and after the run, compare due count, completed lessons/checks, tokens, streak, reading-day evidence and required reading status. Pass: all remain unchanged.
-- Close and reload. Pass: the Today card says `Done today · tap to practise again` only when a complete current-day `lastRun` exists.
-- Run the scene again with a different rating. Pass: run count increments, first completion stays fixed, last completion/latest rating update, and no per-turn answers or audio are stored.
-- Export/import complete evidence. Pass: valid `lastRun` survives. Legacy records preserve run history but do not invent Today credit; malformed `lastRun`, scene records or ratings reject/repair closed.
-- At 320px, 360px, 390px and 430px, pass: document width equals viewport width, 44px controls remain tappable and playback actions stack without clipping.
-- Reset all progress. Pass: conversation evidence is removed and the three-screen speaking-first onboarding appears again exactly once.
+- On a fresh state at 390 x 844, confirm Lesson 1 is the first primary task, says about 27 minutes, assumes no Thai or reading knowledge, and the complete Phase 1 reading course is collapsed and optional.
+- Open Lesson 1. Pass: the boundary names device-generated Thai as the pronunciation model, promises no native recording/reviewer, makes no pronunciation-assessment claim and contains no autoplay.
+- Pass: the first screen establishes the situation in English; the next screen is an English meaning map. Thai appears only when the first cue/reply pair is taught.
+- Step through the three Lesson 1 cue/reply pairs. Pass: partner and learner occupy distinct cards, English meaning precedes Thai, phrase parts are segmented, an explicit `pause · then you answer` gap separates the turns and each pair must be played before advancing.
+- Pass: the complete 8-turn scene appears only after all three pairs. Stop/restart work, current speaker is visible and turns have about 0.9 seconds between them.
+- In guided choice, deliberately choose a wrong reply. Pass: the first attempt is recorded once, exact cue/reply repair appears, the same item returns with stable answer order and no miss can be skipped.
+- In the six-item objective block, pass: cue-function items are audio-first and response choices expose only playable A/B/C audio before feedback—no Thai text or transliteration leaks.
+- Pass: the controlled substitution is taught before use; supported role-play runs three prompts, then reduced-support role-play runs the same three prompts. Each requires answer aloud → reveal model → repeat; optional recording targets one phrase and stores no audio.
+- Close/reload during the intro, first pair, objective block and role-play. Pass: `Continue current lesson` restores the exact action boundary; interrupted audio restarts only when explicitly played and previously completed evidence remains.
+- Finish with a self-rating. Pass: Lesson 1 schedules +1 and +7 from the actual Bangkok completion date, advances only the conversation cursor, and changes no Phase 1 lesson/SRS/check/token/streak authority.
+- On the next Bangkok day, pass: due delayed checks come before a new main task; at most two checks and at most 16 objective decisions are assigned, with overflow queued deterministically.
+- Complete Lesson 2. Pass: it says about 29 minutes, uses a 10-turn scene, includes a visible meal-finished break and makes `คิดเงินด้วยครับ` learner-initiated rather than a reply to an invented cue.
+- Complete Lesson 3. Pass: it says about 30 minutes, uses a 13-turn scene and distinguishes unknown meaning, excessive speed and one missed playback. Every repair returns to and completes the original food/service task.
+- Complete consolidation. Pass: it contains 8 listening decisions, 6 answer-before-reveal spoken prompts, 2 controlled transfers and 1 weakness-driven repair; it cannot complete with any required evidence missing.
+- Run the Week 1 check. Pass: it uses one of three fixed 12-objective forms, gives 6 answer-before-reveal spoken prompts, preserves cold first attempts, requires 10/12 plus all spoken participation and routes misses into a separate ordinary repair block.
+- Fail and retake on a later Bangkok day. Pass: A/B/C form rotation never repeats the immediately previous form after exhaustion, repair never rewrites cold evidence and +30 schedules only from the first gate pass.
+- Interrupt a cold check after its objective pass, then corrupt only its resume pointer. Pass: recovery data is quarantined and the spoken-stage resume is reconstructed instead of deadlocking the check.
+- Export/import a valid schema-2 state. Pass: exact authority, form consumption, due dates and resume survive. Unknown fields, impossible topology, future schema, forged completion and malformed evidence reject or quarantine closed.
+- At 320px, 360px, 390px and 430px, pass: document width equals viewport width, 44px controls remain tappable and pair, choice, role-play and recovery controls stack without clipping.
+- Reset all progress. Pass: schema-2 conversation authority and its recovery copy are removed and the three-screen conversation-first onboarding appears again exactly once.
 
 ## Fresh-State Onboarding
 
@@ -45,7 +45,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - On the final screen, pass: letter → class → tone is preserved as optional support, device TTS/privacy boundaries are explicit and no native resource is promised.
 - On the setup screen, tap `Test Thai voice`.
 - Pass: no audio autoplays before the tap. If no Thai voice exists, the existing Audio setup panel opens; if one exists, the sample plays from device voice support.
-- Finish with `Start speaking`. Pass: the food-ordering scene opens immediately and `state.notices.onboarded` is true.
+- Finish with `Start Lesson 1`. Pass: canonical Lesson 1 opens immediately and `state.notices.onboarded` is true.
 - Reload. Pass: onboarding does not repeat.
 
 ## Onboarding Skip And Existing Learners
@@ -63,9 +63,10 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## About And Conversation-First Identity
 
 - Open Progress → Progress tools → About this app.
-- Pass: About states usable conversational Thai for Bangkok as the primary goal, describes Phase 1 as the optional reading companion, explains device-generated Thai/no scoring, and says neither track alters the other's evidence.
-- Confirm the masthead says `Bangkok Thai for real life` and the header version pill and Today footer both read `Conversation first + reading (v8.2.3)`.
-- Confirm exported backup JSON uses `appVersion: "v8.2.3"`.
+- Pass: About leads with `Thai for daily life in Bangkok`, states that the primary course has eight units and 24 lessons, makes speaking practice required but recording optional/unscored, describes Phase 1 as the optional reading companion and says neither track alters the other's evidence.
+- Confirm the masthead says `Bangkok Thai for daily life` and the header version pill and Today footer both read `Bangkok Conversation Foundation · v8.3.0`.
+- Confirm Progress shows conversation authority first as lessons out of 24 and gates out of 8; Phase 1 reading progress remains inside its optional companion panel.
+- Confirm exported backup JSON uses `appVersion: "v8.3.0"`.
 - Confirm `manifest.json` foregrounds conversational Thai and describes reading as a gradual companion.
 
 ## v8.0.0 Bangkok Street Atlas Visual Pass
@@ -154,7 +155,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.2.3"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.3.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -167,6 +168,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Pass: the app falls back to a fresh safe state, copies the raw blob to `localStorage["thai_state_v1_corrupt"]`, and shows `Your saved progress could not be read. A copy has been kept.`
 - Tap `Copy recovery data`; pass: the corrupt blob copies to clipboard or appears in the fallback prompt.
 - Dismiss the notice and confirm the quarantine key is not auto-deleted.
+- Put a malformed or future-version object only under `state.conversation`, then reload. Pass: Phase 1 data is preserved, safe schema-2 conversation state loads, `thai_state_v1_conversation_recovery` contains the quarantined subtree and Copy/Download/Dismiss controls are available.
 
 ## Save, Error And Update Notices
 
@@ -261,7 +263,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Conversation first + reading (v8.2.3)`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Bangkok Conversation Foundation · v8.3.0`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

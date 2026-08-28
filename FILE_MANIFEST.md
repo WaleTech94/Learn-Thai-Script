@@ -2,13 +2,14 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v8.2.3`.
-Verified current footer string: `Conversation first + reading (v8.2.3)`.
-Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the shell is network-first and v8.2.3 changes no cache-first asset).
+Verified current app version: `v8.3.0`.
+Verified current footer string: `Bangkok Conversation Foundation · v8.3.0`.
+Verified current service-worker cache: `aan-thai-v8-3-0` (includes the new external conversation engine).
 
 ## Tracked Source For Review/Deploy Packages
 
-- `index.html` - shipped single-file PWA: HTML shell, CSS, curriculum data, state/migration logic, import/export, validators, lesson player, review engines and UI.
+- `index.html` - shipped PWA shell: HTML/CSS, preserved Phase 1 data/engine, shared state/import/export, validators and UI.
+- `conversation-course.js` - schema-2 Bangkok conversation curriculum, player, scheduler, evidence, resume, repair/import and validation layer.
 - `manifest.json` - PWA metadata, icons, standalone display, portrait orientation and theme colours.
 - `sw.js` - service worker using network-first shell refresh and cache-first static assets.
 - `vercel.json` - static Vercel deployment configuration with no build step and must-revalidate headers for shell files.
@@ -20,7 +21,7 @@ Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the 
 - `tools/phase1-audit.js` - deterministic Node extractor/validator for the embedded app script and generated Phase 1 audit.
 - `tools/precommit-check.js` - committed release gate for embedded script syntax, NFC, particle/currency policy, tone-grid transliteration, Reading-room story decodability and the fresh-decode corpora.
 - `tools/arcade-smoke.js` - deterministic interaction harness that completes all three cabinets at their unlock gates and checks feedback, records, progression isolation, theme preview/restore and Default/Ranat/muted sound scheduling.
-- `tools/conversation-smoke.js` - deterministic A0 conversation harness covering pair gates, option order, wrong-answer repair, substitution, recording limits, role-play evidence, Today isolation and device-TTS-only scope.
+- `tools/conversation-smoke.js` - deterministic conversation harness covering canonical forms, disjoint gate supply, schema migration/isolation, Bangkok dates, strict imports, resume, weakness evidence and device-TTS-only scope.
 - `tools/fresh-decode-check.js` - standalone verifier for `FRESH_DECODE`, `ASSESSMENT_BANK` and `RETENTION_DECODE_BANK`: tone routes, gate decodability, prerequisites, whole-file freshness, stage isolation and supply floors.
 - `tools/make-release-zip.sh` - dependency-free helper that packages tracked source from `HEAD` with `git archive`.
 - `.gitignore` - keeps generated zips and local-only artifacts out of source review.
@@ -37,11 +38,15 @@ Verified current service-worker cache: `aan-thai-v8-2-1` (unchanged because the 
 - `docs/v8_visual_overhaul_notes.md` - Bangkok Street Atlas direction, learner-facing changes, accessibility/theme rules and validation contract.
 - `docs/v8_1_street_arcade_notes.md` - arcade gates, theme expansion, sound design, retention/economy boundaries and validation contract.
 - `docs/v8_2_conversation_pilot_notes.md` - the food-ordering pilot flow, state boundary, Thai/audio caveats and migration criteria.
+- `docs/conversation_course_implementation_spec.md` - binding eight-week architecture, evidence, scheduler, migration and release contracts.
+- `docs/conversation_course_content_inventory.md` - frozen eight-week content and recurrence inventory.
+- `docs/conversation_course_form_manifest.md` - frozen cross-course assessment, consolidation and retention form membership.
+- `docs/conversation_registry_weeks_1_2.md`, `docs/conversation_registry_weeks_3_4.md`, `docs/conversation_registry_weeks_5_6.md`, `docs/conversation_registry_weeks_7_8.md` - exact machine registries for all 24 planned lessons.
 - `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v8.2.3-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v8.3.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -72,13 +77,14 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v8.2.3-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v8.3.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 
 For a clean current-source audit, include:
 
 - `index.html`
+- `conversation-course.js`
 - `manifest.json`
 - `sw.js`
 - `vercel.json`
@@ -104,6 +110,13 @@ For a clean current-source audit, include:
 - `docs/v8_visual_overhaul_notes.md`
 - `docs/v8_1_street_arcade_notes.md`
 - `docs/v8_2_conversation_pilot_notes.md`
+- `docs/conversation_course_implementation_spec.md`
+- `docs/conversation_course_content_inventory.md`
+- `docs/conversation_course_form_manifest.md`
+- `docs/conversation_registry_weeks_1_2.md`
+- `docs/conversation_registry_weeks_3_4.md`
+- `docs/conversation_registry_weeks_5_6.md`
+- `docs/conversation_registry_weeks_7_8.md`
 - `docs/economy_notes.md`
 - `docs/phase2_refactor_plan.md`
 - `THAI_APP_AUDIT_PACK.md`

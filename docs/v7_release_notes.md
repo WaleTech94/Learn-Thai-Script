@@ -1,4 +1,14 @@
-# Phase 1 and Conversation-First Release Notes (v7-v8.2.3)
+# Phase 1 and Conversation-First Release Notes (v7-v8.3.0)
+
+## Bangkok Conversation Foundation · v8.3.0
+
+`v8.3.0` replaces the one-scene prototype as learner authority. Week 1 now contains three canonical meaning-first lessons—food ordering, dine-in/drink/bill choices and precise communication repair—followed by integrated consolidation and a real-life gate. The ordinary task totals are frozen at 27, 29, 30, 28 and 30 minutes, with bounded repair time represented separately.
+
+Every lesson establishes the Bangkok situation in English before showing Thai, teaches three cue/reply pairs with an explicit response gap, delays the full 8/10/13-turn scene until those pairs are heard, repairs every wrong choice, runs six audio-first objective decisions, teaches one controlled substitution and fades support across supported and reduced role-play. Recording remains optional, temporary and unscored.
+
+The new schema-2 course state separates lessons, consolidation, gates, retention, weakness evidence, Bangkok-day workload and action-boundary resume. It preserves cold first attempts across ordinary repair; rotates fixed A/B/C gate and A/B delayed forms; schedules +1/+7 from actual lesson completion and +30 from first gate pass; and limits overdue work to two checks or 16 objective decisions per day. Strict import validation, subtree quarantine and spoken-stage resume reconstruction fail closed without changing Phase 1 authority.
+
+All complete Thai lines are revisioned, role-tagged, male-polite with `ครับ` and spoken only through device Thai TTS. Native recordings and native-speaker review are neither available nor prerequisites, and the app makes no pronunciation-assessment claim. Reading remains a progression-independent optional companion. `validateV830ConversationCourseContracts()` and the expanded `tools/conversation-smoke.js` cover the release; the generated Phase 1 audit reports 60 active validators.
 
 ## Complete beginner conversation loop · v8.2.3
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>อ่าน: Learn Thai</title>
+<title>ÀAN: Bangkok Thai</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070916">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -426,6 +426,22 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.reading-companion-toggle::after{content:"+";font-size:22px;line-height:1}.reading-companion-toggle[aria-expanded="true"]::after{content:"−"}
 	.reading-companion-intro{margin:0 0 14px;padding:14px 16px;border-left:3px solid var(--ui-reading);background:var(--surface);border-radius:4px 14px 4px 14px}
 	.reading-companion-intro h2{margin:3px 0 5px;font-size:21px}
+	.conversation-route-list{display:grid;gap:10px;margin:14px 0}
+	.conversation-route-item{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:12px 13px;border:2px solid var(--line);border-radius:4px 14px 4px 14px;background:var(--atlas-panel)}
+	.conversation-route-item .route-number{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ui-speak);color:#10151c;font-weight:900}
+	.conversation-route-item.due{border-color:var(--atlas-sun)}
+	.conversation-route-item.done{opacity:.72}
+	.conversation-route-item button{min-width:84px}
+	.conversation-optional-panel{margin:14px 0 18px;padding:14px;border:2px dashed var(--line-bright);border-radius:4px 14px 4px 14px}
+	.conversation-progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+	.conversation-progress-grid>div{padding:10px;border:1px solid var(--line);border-radius:3px 10px 3px 10px;text-align:center}
+	.conversation-progress-grid b{display:block;font-size:20px}
+	.optional-reading-progress>summary{list-style:none;cursor:pointer;padding:14px 16px;border:2px solid var(--line-bright);border-radius:4px 14px 4px 14px;background:var(--atlas-panel);font-weight:850}
+	.optional-reading-progress>summary::-webkit-details-marker{display:none}
+	.optional-reading-progress[open]>summary{margin-bottom:12px}
+	.cv-audio-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px;border:2px solid var(--line);border-radius:4px 12px 4px 12px;background:var(--atlas-panel)}
+	.cv-audio-option+.cv-audio-option{margin-top:8px}
+	.cv-support-hidden{padding:16px;border:2px dashed var(--line-bright);border-radius:4px 14px 4px 14px;text-align:center}
 	.hero-card{position:relative;overflow:hidden;border-radius:22px}
 	.route-summary.hero-card{
 	  --route-accent:var(--ui-primary-2);
@@ -1730,29 +1746,31 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       <div>
         <div class="brand brand-lockup">
           <span class="brand-thai">อ่าน<span class="thai-accent">.</span></span>
-          <span class="brand-sign"><b>ÀAN</b><small>Bangkok Thai for real life</small></span>
+          <span class="brand-sign"><b>ÀAN</b><small>Bangkok Thai for daily life</small></span>
         </div>
         <div id="user-title" class="compact-meta is-hidden"></div>
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Conversation first + reading (v8.2.3)</span>
+        <span class="version-pill">Bangkok Conversation Foundation · v8.3.0</span>
       </div>
     </header>
 
     <section class="conversation-front-door">
-      <div class="progress-divider">SPEAK FIRST</div>
+      <div class="progress-divider">TODAY · CONVERSATION</div>
       <h1>Use Thai in Bangkok</h1>
-      <p class="sub">Start with meaning in English, then hear and practise one short food-stall exchange. No Thai knowledge is assumed.</p>
-      <button class="card cta-card action-card primary recommended" id="conversation-pilot-card">
+      <p class="sub">Start with the situation in English, learn each short cue and reply, then hear and practise the exchange. No Thai knowledge or reading is assumed.</p>
+      <button class="card cta-card action-card primary recommended" id="conversation-course-card">
         <div>
-          <div class="eyebrow">Start here · conversation</div>
-          <div class="t">Order food in Bangkok</div>
-          <div class="d" id="conversation-pilot-status">8–12 min · listen, respond, speak and compare</div>
+          <div class="eyebrow" id="conversation-card-kicker">Start here · Lesson 1</div>
+          <div class="t" id="conversation-card-title">Order food: choose an item and spice level</div>
+          <div class="d" id="conversation-course-status">About 27 min · meaning first, then hear, respond and speak</div>
         </div>
         <span class="icon-right">→</span>
       </button>
-      <div class="conversation-day-status" id="conversation-day-status">Complete this scene for today's minimum. Reading is optional.</div>
+      <div class="conversation-day-status" id="conversation-day-status">No Thai knowledge or reading is assumed.</div>
+      <div class="conversation-route-list" id="conversation-due-list"></div>
+      <div class="conversation-optional-panel" id="conversation-optional-panel" hidden></div>
     </section>
 
     <button class="reading-companion-toggle" id="reading-companion-toggle" aria-expanded="false" aria-controls="reading-companion-panel">Optional: open the complete reading course</button>
@@ -1876,7 +1894,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
     </details>
     </div>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Conversation first + reading (v8.2.3)</div>
+      <div class="sub meta-tiny meta-top">Bangkok Conversation Foundation · v8.3.0</div>
     </div>
   </section>
 
@@ -1885,9 +1903,17 @@ h1,h2,h3,.display{letter-spacing:-.025em}
     <div class="screen-head">
       <div class="screen-kicker">Progress</div>
       <h1 class="screen-title">Progress &amp; settings</h1>
-      <p class="screen-sub">Track script progress, streaks, saved progress, and optional extras.</p>
+      <p class="screen-sub">Track conversation lessons, delayed checks and optional reading progress.</p>
       <span class="screen-mark" aria-hidden="true">๔๒</span>
     </div>
+    <div class="section-card" id="conversation-progress-card">
+      <div class="spread"><div><div class="eyebrow">Bangkok Conversation Foundation</div><h2>Your conversation route</h2></div><span class="sub meta-mini" id="conversation-progress-status">Week 1</span></div>
+      <div class="conversation-progress-grid" id="conversation-progress-grid"></div>
+      <div class="sub meta-mini mt-10" id="conversation-progress-next">Lesson 1 is ready.</div>
+    </div>
+    <details class="optional-reading-progress" id="optional-reading-progress">
+      <summary>Optional reading progress</summary>
+      <div>
     <button class="section-card phase1-dashboard" id="phase1-dashboard-card">
       <div class="spread">
         <div>
@@ -1958,6 +1984,8 @@ h1,h2,h3,.display{letter-spacing:-.025em}
 	      </div>
       <div class="heatmap" id="heatmap"></div>
     </div>
+      </div>
+    </details>
     <div class="section-card progress-tools-card">
       <div class="eyebrow">Progress tools</div>
       <div class="backup-card is-hidden" id="backup-nudge"></div>
@@ -2286,6 +2314,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
 		  </div>
 </nav>
 </div>
+<script src="./conversation-course.js"></script>
 <script>
 /* =====================================================
    DATA
@@ -2807,85 +2836,6 @@ const LENGTH_PAIRS = [
 ];
 
 const PHRASE_CATS = ["Politeness","Numbers","Food","Taxi","Shopping","Survival","Slang"];
-const CONVERSATION_SELF_RATINGS = [
-  {id:'need-support', label:'I needed every prompt'},
-  {id:'getting-there', label:'I needed some prompts'},
-  {id:'ready', label:'I answered each prompt with support'}
-];
-const FOOD_ORDER_PILOT = {
-  id:'conv.food_counter_01',
-  title:'Order food in Bangkok',
-  setting:'A counter-service food stall with a male vendor',
-  audioStatus:'Thai speech uses the device voice throughout',
-  meaningMap:[
-    {title:'Greet the vendor', body:'A polite routine: hear it and copy it.', mode:'routine'},
-    {title:'Choose the food', body:'Active reply 1: point and say you want this one.', mode:'active'},
-    {title:'Set the spice level', body:'Active reply 2: ask for it not spicy.', mode:'active'},
-    {title:'Choose where to eat', body:'Active reply 3: say you are eating here.', mode:'active'},
-    {title:'Order a drink', body:'Active reply 4: ask for one bottle of water.', mode:'active'},
-    {title:'Close politely', body:'A polite routine: say thank you after the price.', mode:'routine'}
-  ],
-  chunks:[
-    {
-      id:'conv.food.greet', functionId:'greet', practiceMode:'routine', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.',
-      segments:[{thai:'สวัสดี',tr:'sà-wàt-dii',en:'hello'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'The vendor greets you: “Hello.”', segments:[{thai:'สวัสดี',tr:'sà-wàt-dii',en:'hello'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    },
-    {
-      id:'conv.food.order_this', functionId:'choose-food', practiceMode:'active', thai:'เอาอันนี้ครับ', tr:'ao an níi khráp', en:'I’ll have this one.',
-      segments:[{thai:'เอา',tr:'ao',en:'I’ll have'},{thai:'อันนี้',tr:'an níi',en:'this one'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'The vendor asks: “What would you like?”', segments:[{thai:'จะรับ',tr:'jà ráp',en:'would you like'},{thai:'อะไรดี',tr:'a-rai dii',en:'what will it be?'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    },
-    {
-      id:'conv.food.no_spice', functionId:'spice', practiceMode:'active', thai:'ไม่เผ็ดครับ', tr:'mâi phèt khráp', en:'Not spicy, please.',
-      segments:[{thai:'ไม่',tr:'mâi',en:'not'},{thai:'เผ็ด',tr:'phèt',en:'spicy'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'The vendor asks: “Would you like it spicy?”', segments:[{thai:'รับเผ็ด',tr:'ráp phèt',en:'have it spicy'},{thai:'ไหม',tr:'mǎi',en:'yes/no question'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    },
-    {
-      id:'conv.food.dine_here', functionId:'dine-here', practiceMode:'active', thai:'ทานที่นี่ครับ', tr:'thaan thîi-nîi khráp', en:'For here, please.',
-      segments:[{thai:'ทานที่นี่',tr:'thaan thîi-nîi',en:'eat here'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'The vendor asks: “For here or takeaway?”', segments:[{thai:'ทานที่นี่',tr:'thaan thîi-nîi',en:'eat here'},{thai:'หรือ',tr:'rǔue',en:'or'},{thai:'กลับบ้าน',tr:'glàp bâan',en:'take away'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    },
-    {
-      id:'conv.food.water_one', functionId:'water', practiceMode:'active', thai:'น้ำเปล่าขวดหนึ่งครับ', tr:'náam-bplàao khùat nùeng khráp', en:'One bottle of water, please.',
-      segments:[{thai:'น้ำเปล่า',tr:'náam-bplàao',en:'plain water'},{thai:'ขวดหนึ่ง',tr:'khùat nùeng',en:'one bottle'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'The vendor asks: “What drink would you like?”', segments:[{thai:'รับน้ำ',tr:'ráp náam',en:'would you like a drink'},{thai:'อะไรดี',tr:'a-rai dii',en:'what would you like?'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    },
-    {
-      id:'conv.food.thanks', functionId:'close', practiceMode:'routine', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.',
-      segments:[{thai:'ขอบคุณ',tr:'khòrp-khun',en:'thank you'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-      cue:{thai:'ทั้งหมดแปดสิบบาทครับ', tr:'tháng-mòt bpàaet-sìp bàat khráp', en:'The vendor gives the total: “Eighty baht altogether.”', segments:[{thai:'ทั้งหมด',tr:'tháng-mòt',en:'altogether'},{thai:'แปดสิบบาท',tr:'bpàaet-sìp bàat',en:'eighty baht'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]}
-    }
-  ],
-  turns:[
-    {speaker:'vendor', thai:'สวัสดีครับ', tr:'sà-wàt-dii khráp', en:'Hello.'},
-    {speaker:'learner', chunk:'conv.food.greet'},
-    {speaker:'vendor', thai:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'What would you like?'},
-    {speaker:'learner', chunk:'conv.food.order_this'},
-    {speaker:'vendor', thai:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?'},
-    {speaker:'learner', chunk:'conv.food.no_spice'},
-    {speaker:'vendor', thai:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'For here or takeaway?'},
-    {speaker:'learner', chunk:'conv.food.dine_here'},
-    {speaker:'vendor', thai:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'What drink would you like?'},
-    {speaker:'learner', chunk:'conv.food.water_one'},
-    {speaker:'vendor', thai:'ทั้งหมดแปดสิบบาทครับ', tr:'tháng-mòt bpàaet-sìp bàat khráp', en:'Eighty baht altogether.'},
-    {speaker:'learner', chunk:'conv.food.thanks'},
-    {speaker:'vendor', thai:'ขอบคุณครับ', tr:'khòrp-khun khráp', en:'Thank you.'}
-  ],
-  responses:[
-    {partner:'จะรับอะไรดีครับ', tr:'jà ráp a-rai dii khráp', en:'What would you like?', answer:'conv.food.order_this', options:['conv.food.order_this','conv.food.no_spice','conv.food.water_one']},
-    {partner:'รับเผ็ดไหมครับ', tr:'ráp phèt mǎi khráp', en:'Would you like it spicy?', answer:'conv.food.no_spice', options:['conv.food.no_spice','conv.food.dine_here','conv.food.order_this']},
-    {partner:'ทานที่นี่หรือกลับบ้านครับ', tr:'thaan thîi-nîi rǔue glàp bâan khráp', en:'For here or takeaway?', answer:'conv.food.dine_here', options:['conv.food.dine_here','conv.food.water_one','conv.food.thanks']},
-    {partner:'รับน้ำอะไรดีครับ', tr:'ráp náam a-rai dii khráp', en:'What drink would you like?', answer:'conv.food.water_one', options:['conv.food.water_one','conv.food.order_this','conv.food.no_spice']}
-  ],
-  swap:{
-    frame:'เอา {item} ครับ', item:'กะเพราไก่', itemTr:'gà-phrao gài', itemEn:'chicken with holy basil',
-    thai:'เอากะเพราไก่ครับ', tr:'ao gà-phrao gài khráp', en:'I’ll have chicken with holy basil.',
-    parentChunk:'conv.food.order_this',
-    originalSegments:[{thai:'เอา',tr:'ao',en:'I’ll have'},{thai:'อันนี้',tr:'an níi',en:'this one · replace this'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}],
-    modelSegments:[{thai:'เอา',tr:'ao',en:'I’ll have'},{thai:'กะเพราไก่',tr:'gà-phrao gài',en:'chicken with holy basil'},{thai:'ครับ',tr:'khráp',en:'male polite ending'}]
-  }
-};
 const SLANG = [
   {cat:"Slang", thai:"เจ๋ง", tr:"jěng", en:"cool / awesome"},
   {cat:"Slang", thai:"ชิวๆ", tr:"chiu chiu", en:"chilled, relaxed"},
@@ -3694,8 +3644,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.2.3';
-const APP_VERSION_LABEL = 'Conversation first + reading (v8.2.3)';
+const APP_VERSION = 'v8.3.0';
+const APP_VERSION_LABEL = 'Bangkok Conversation Foundation · v8.3.0';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -3704,6 +3654,7 @@ let stateLoadHadCorruptState = false;
 let saveFailureWarningShown = false;
 let runtimeErrorBannerShown = false;
 let updateReadyNoticeShown = false;
+let conversationRecoveryNoticeDismissed = false;
 const safetyBanners = {};
 function cloneForJson(value){
   return JSON.parse(JSON.stringify(value));
@@ -3804,6 +3755,19 @@ function showCorruptStateNotice(){
     ]
   });
 }
+function showConversationRecoveryNotice(){
+  const recovery = state.conversation && state.conversation.recovery;
+  if(!recovery || conversationRecoveryNoticeDismissed) return false;
+  const readRecovery = ()=>{try{return localStorage.getItem('thai_state_v1_conversation_recovery')||'';}catch(_){return '';}};
+  return showSafetyBanner('conversation-recovery', {
+    text:'Some conversation-course data was unsafe or inconsistent. It was removed from live progress and a recovery copy was kept; reading progress was not changed.',
+    actions:[
+      {label:'Copy recovery', dismiss:false, fn:()=>copyTextWithPrompt(readRecovery(),'Conversation recovery copied','Copy conversation recovery data:')},
+      {label:'Download', dismiss:false, fn:()=>{const raw=readRecovery();if(raw)downloadTextFile('aan-thai-conversation-recovery.json',raw);}},
+      {label:'Dismiss', ghost:true, fn:()=>{conversationRecoveryNoticeDismissed=true;}}
+    ]
+  });
+}
 function showSaveFailureNotice(){
   if(saveFailureWarningShown) return false;
   saveFailureWarningShown = true;
@@ -3872,93 +3836,11 @@ function assertNumberField(obj, key, label){
 function assertBoolField(obj, key, label){
   if(obj[key] != null && typeof obj[key] !== 'boolean') throw new Error(label + '.' + key + ' must be true or false');
 }
-function conversationRatingAllowed(value){
-  return value == null || CONVERSATION_SELF_RATINGS.some(item=>item.id === value);
-}
-function conversationIsoDay(value){
-  if(value == null) return true;
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const parsed = new Date(value + 'T00:00:00Z');
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0,10) === value;
-}
 function freshConversationState(){
-  return {schema:1, scenes:{}};
-}
-const CONVERSATION_EVIDENCE_FIELDS = ['pairAdvances','pairPlaybacks','responseChoices','responseFirstCorrect','roleplayReveals'];
-function conversationEvidenceShapeValid(value){
-  if(!plainObject(value) || !conversationIsoDay(value.completed)) return false;
-  if(CONVERSATION_EVIDENCE_FIELDS.some(key=>!Number.isInteger(value[key]) || value[key] < 0)) return false;
-  if(value.responseFirstCorrect > value.responseChoices) return false;
-  return ['scenePlaybackCompleted','swapRevealed','recordStepCompleted','recordingAttempted'].every(key=>typeof value[key] === 'boolean');
-}
-function conversationEvidenceComplete(value, scene){
-  const activeCount = (scene && scene.responses || []).length;
-  return conversationEvidenceShapeValid(value) &&
-    value.pairAdvances >= (scene && scene.chunks || []).length &&
-    value.pairPlaybacks >= (scene && scene.chunks || []).length &&
-    value.scenePlaybackCompleted &&
-    value.responseChoices >= activeCount &&
-    value.roleplayReveals >= activeCount &&
-    value.swapRevealed && value.recordStepCompleted;
+  return cvFreshConversationState();
 }
 function repairConversationState(target){
-  const s = target || state;
-  const before = JSON.stringify(s.conversation);
-  if(!plainObject(s.conversation)) s.conversation = freshConversationState();
-  const c = s.conversation;
-  c.schema = 1;
-  if(!plainObject(c.scenes)) c.scenes = {};
-  Object.keys(c.scenes).forEach(sceneId=>{
-    const raw = c.scenes[sceneId];
-    if(!plainObject(raw)){
-      delete c.scenes[sceneId];
-      return;
-    }
-    const runs = Number.isInteger(raw.runs) && raw.runs >= 0 ? raw.runs : 0;
-    c.scenes[sceneId] = Object.assign({}, raw, {
-      runs,
-      firstCompleted:conversationIsoDay(raw.firstCompleted) ? (raw.firstCompleted || null) : null,
-      lastCompleted:conversationIsoDay(raw.lastCompleted) ? (raw.lastCompleted || null) : null,
-      selfRating:conversationRatingAllowed(raw.selfRating) ? (raw.selfRating || null) : null,
-      lastRun:conversationEvidenceShapeValid(raw.lastRun) && raw.lastRun.completed === raw.lastCompleted ? Object.assign({}, raw.lastRun) : null
-    });
-    if(!runs){
-      c.scenes[sceneId].firstCompleted = null;
-      c.scenes[sceneId].lastCompleted = null;
-      c.scenes[sceneId].selfRating = null;
-      c.scenes[sceneId].lastRun = null;
-    }
-  });
-  return {changed:before !== JSON.stringify(s.conversation)};
-}
-function conversationSceneRecord(sceneId, target){
-  const s = target || state;
-  repairConversationState(s);
-  return s.conversation.scenes[sceneId] || null;
-}
-function conversationTodayComplete(sceneId, target, date){
-  const rec = conversationSceneRecord(sceneId, target);
-  const day = date || todayStr();
-  const scene = sceneId === FOOD_ORDER_PILOT.id ? FOOD_ORDER_PILOT : null;
-  return !!(rec && rec.runs > 0 && rec.lastCompleted === day && rec.lastRun && rec.lastRun.completed === day && conversationEvidenceComplete(rec.lastRun, scene));
-}
-function recordConversationRun(sceneId, rating, target, evidence){
-  if(!sceneId || !conversationRatingAllowed(rating) || rating == null) throw new Error('invalid conversation completion');
-  const scene = sceneId === FOOD_ORDER_PILOT.id ? FOOD_ORDER_PILOT : null;
-  const now = todayStr();
-  const lastRun = Object.assign({}, evidence || {}, {completed:now});
-  if(!scene || !conversationEvidenceComplete(lastRun, scene)) throw new Error('conversation practice is incomplete');
-  const s = target || state;
-  repairConversationState(s);
-  const previous = s.conversation.scenes[sceneId] || {};
-  s.conversation.scenes[sceneId] = Object.assign({}, previous, {
-    runs:(previous.runs || 0) + 1,
-    firstCompleted:previous.firstCompleted || now,
-    lastCompleted:now,
-    selfRating:rating,
-    lastRun
-  });
-  return s.conversation.scenes[sceneId];
+  return cvRepairConversationState(target || state);
 }
 function validateImportedStateShape(s){
   assertPlainObject(s, 'progress');
@@ -3984,22 +3866,7 @@ function validateImportedStateShape(s){
   if(s.skillStats && s.skillStats.speak != null) assertPlainObject(s.skillStats.speak, 'progress.skillStats.speak');
   if(s.foundationRefresh && s.foundationRefresh.quarantinedFinals != null) assertStringArray(s.foundationRefresh.quarantinedFinals, 'progress.foundationRefresh.quarantinedFinals');
   if(s.conversation != null){
-    assertPlainObject(s.conversation, 'progress.conversation');
-    if(s.conversation.schema !== 1) throw new Error('progress.conversation.schema must be 1');
-    assertPlainObject(s.conversation.scenes, 'progress.conversation.scenes');
-    Object.keys(s.conversation.scenes).forEach(sceneId=>{
-      const rec = s.conversation.scenes[sceneId];
-      assertPlainObject(rec, 'progress.conversation.scenes.' + sceneId);
-      if(!Number.isInteger(rec.runs) || rec.runs < 0) throw new Error('progress.conversation.scenes.' + sceneId + '.runs must be a non-negative integer');
-      ['firstCompleted','lastCompleted'].forEach(key=>{
-        if(!conversationIsoDay(rec[key])) throw new Error('progress.conversation.scenes.' + sceneId + '.' + key + ' must be a YYYY-MM-DD date or null');
-      });
-      if(!conversationRatingAllowed(rec.selfRating)) throw new Error('progress.conversation.scenes.' + sceneId + '.selfRating is invalid');
-      if(rec.lastRun != null){
-        if(!conversationEvidenceShapeValid(rec.lastRun)) throw new Error('progress.conversation.scenes.' + sceneId + '.lastRun is invalid');
-        if(rec.lastRun.completed !== rec.lastCompleted) throw new Error('progress.conversation.scenes.' + sceneId + '.lastRun must match lastCompleted');
-      }
-    });
+    cvValidateConversationImport(s.conversation);
   }
   ['lastExportAt','backupNudgeSnooze'].forEach(k=>{
     if(s[k] != null && typeof s[k] !== 'string') throw new Error('progress.' + k + ' must be a string');
@@ -4725,7 +4592,7 @@ const DAY_ACTIVE_IDLE_LIMIT_MS = 60000;
 const ACTIVE_TIME_LIFECYCLE_EVENTS = 'visibilitychange pagehide blur focus';
 const ACTIVE_TIME_SURFACE_TYPES = new Set([
   'class-primer','lesson','quiz','flash','foundation-refresh','contrast','missions',
-  'decode-gym','spell','ghost','echo','write-it','route-talk','wild-deck','story','fluency-read','arcade'
+  'decode-gym','spell','ghost','echo','write-it','route-talk','wild-deck','story','fluency-read','arcade','conversation-course'
 ]);
 let activeTime = {surface:null, running:false, startedAt:0, lastInteractionAt:0, pendingMs:0, audio:false};
 function normaliseDayActiveSecs(day){
@@ -4781,7 +4648,7 @@ function activeTimeFlush(sync){
   const secs = Math.floor(activeTime.pendingMs / 1000);
   if(secs <= 0) return false;
   activeTime.pendingMs -= secs * 1000;
-  const changed = accumulateDayActiveSeconds(secs);
+  const changed = activeTime.surface === 'conversation-course' ? cvAccumulateActiveSeconds(secs) : accumulateDayActiveSeconds(secs);
   if(changed && !sync) saveState();
   return changed;
 }
@@ -4808,7 +4675,8 @@ function activeTimeSetSurface(surface){
   activeTime.pendingMs = 0;
   activeTime.audio = false;
   if(next){
-    ensureDay();
+    if(next === 'conversation-course') cvEnsureConversationDay(cvConversation(), bangkokDayStr());
+    else ensureDay();
     activeTimeResume();
   }
 }
@@ -5759,7 +5627,7 @@ function bindDialogDismissal(wrap, close, opts){
 }
 function showEndDayModal(){
   const missing = dailyMissingStep();
-  const spokenDone = conversationTodayComplete(FOOD_ORDER_PILOT.id);
+  const spokenDone = cvConversation().pace.lastMainCreditDay === bangkokDayStr();
   const focusTarget = currentFocusTarget();
   const routeDay = !missing ? ensureDay() : null;
   const timeLine = !spokenDone && routeDay && !routeDay.lite && !timeFillAtTarget() ? `<p class="sub">Reading time today: ${esc(timeFillLine())}.</p>` : '';
@@ -5768,7 +5636,7 @@ function showEndDayModal(){
   wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="end-day-title">
     <div class="eyebrow">${spokenDone ? 'Minimum day complete' : missing ? 'Stop for today' : 'Reading route complete'}</div>
     <h2 id="end-day-title">${spokenDone ? 'Spoken Thai done for today' : 'Mastery beats breadth.'}</h2>
-    <p class="sub">${spokenDone ? 'You completed the conversation scene. Phase 1 reading remains optional and keeps its own progress.' : missing ? 'You can stop here. The optional reading route will be ready when you return.' : "You have cleared today's reading route."}</p>
+    <p class="sub">${spokenDone ? 'You completed today’s main conversation task. Phase 1 reading remains optional and keeps its own progress.' : missing ? 'You can stop here. The optional reading route will be ready when you return.' : "You have cleared today's reading route."}</p>
     ${timeLine}
     <div class="confirm-actions">
       <button class="btn ghost" id="end-more">${spokenDone ? 'Optional reading' : 'Bonus practice'}</button>
@@ -5782,9 +5650,9 @@ function showEndDayModal(){
   wrap.addEventListener('click', e=>{ if(e.target === wrap) close(); });
 }
 function handleEndDay(){
-  if(!conversationTodayComplete(FOOD_ORDER_PILOT.id)){
-    toast('Complete the spoken scene to finish today’s minimum.');
-    startConversationPilot();
+  if(cvConversation().pace.lastMainCreditDay !== bangkokDayStr()){
+    toast('Complete today’s conversation task first.');
+    startConversationCoursePrimary();
     return;
   }
   showEndDayModal();
@@ -5847,23 +5715,23 @@ function completeOnboarding(mode, target){
 const ONBOARDING_STEPS = [
   {
     title:'Speak useful Thai first',
-    body:`<p class="sub">อ่าน is for usable conversational Thai in daily Bangkok life. Start with a short exchange you can actually try outside; the first scene is ordering food.</p>
-    <div class="notebox"><b>Your minimum day:</b> about 10 minutes of listening, responding aloud and comparing. Reading is a gradual companion, not a prerequisite.</div>`
+    body:`<p class="sub">This course is for daily life in Bangkok. Your usual new lesson takes about 27–30 minutes; due checks can bring a busy day up to 45 minutes. Reading is optional and never unlocks speaking.</p>
+    <div class="notebox"><b>Conversation is the required route.</b><div class="sub">The course begins from English meaning; no Thai knowledge or reading is assumed.</div></div>`
   },
   {
-    title:'How a scene works',
+    title:'Understand before the conversation',
     body:`<div class="onboarding-route-list">
-      <div><b>Understand</b><br><span class="sub">See the situation and meaning in English first.</span></div>
-      <div><b>Hear and copy</b><br><span class="sub">Hear the vendor, pause, then copy a male-polite reply.</span></div>
-      <div><b>Respond and vary</b><br><span class="sub">Choose the useful reply, say it, then change one already-taught detail.</span></div>
+      <div><b>Situation and purpose</b><br><span class="sub">Start in English so you know who is speaking and what you need to do.</span></div>
+      <div><b>Short cue and reply</b><br><span class="sub">Learn each meaning, then hear the male-polite Thai with a visible pause.</span></div>
+      <div><b>Complete exchange</b><br><span class="sub">Only after teaching, hear the whole scene with spacing and playback controls.</span></div>
     </div>
-    <p class="sub">Prompts stay supportive. Help should fade only after a response feels familiar.</p>`
+    <p class="sub">First see the situation and purpose in English. Then learn each partner cue and useful reply separately. Only after that do you hear the complete exchange, with visible spacing and controls. Nothing is tested cold.</p>`
   },
   {
-    title:'Audio, privacy and optional reading',
-    body:`<p class="sub">Your device generates every Thai line. It is the app’s pronunciation model, not a recording or a pronunciation score.</p>
+    title:'Use the device voice; keep reading optional',
+    body:`<p class="sub">Your device generates every Thai line. You answer aloud and compare, but the app does not score pronunciation. Native recordings and native-speaker review are not available or required.</p>
     <button class="btn full ghost" id="onboard-test-voice">Test Thai voice</button>
-    <p class="sub">Your optional recording is temporary and stays on this device. The complete Phase 1 letter → class → tone course remains available below the spoken scene, but it never gates speaking.</p>`
+    <p class="sub">Thai script and pronunciation spelling remain available; a short script-noticing activity and the complete reading course are optional. Optional recordings are temporary and stay on this device.</p>`
   }
 ];
 function onboardingStepHtml(i){
@@ -5880,7 +5748,7 @@ function onboardingStepHtml(i){
     </div>
     <div class="onboarding-actions">
       <button class="btn ghost" id="onboard-back" ${i===0?'disabled':''}>Back</button>
-      <button class="btn" id="onboard-next">${i===ONBOARDING_STEPS.length-1?'Start speaking':'Next'}</button>
+      <button class="btn" id="onboard-next">${i===ONBOARDING_STEPS.length-1?'Start Lesson 1':'Next'}</button>
     </div>
     <button class="btn ghost onboarding-skip" id="onboard-skip">Skip</button>`;
 }
@@ -5909,7 +5777,7 @@ function showOnboarding(){
     const skip = wrap.querySelector('#onboard-skip');
     const test = wrap.querySelector('#onboard-test-voice');
     if(back) back.onclick = ()=>{ if(i > 0){ i--; render(); } };
-    if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completionMode = 'finish'; dismiss(); setTimeout(startConversationPilot, 0); } };
+    if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completionMode = 'finish'; dismiss(); setTimeout(()=>startConversationCourseTask('cv1.lesson.w01.l01.food-order'), 0); } };
     if(skip) skip.onclick = dismiss;
     if(test) test.onclick = ()=>testOnboardingThaiVoice(test);
     setTimeout(()=>{ const target = next || skip || back; if(target) target.focus(); }, 0);
@@ -5939,13 +5807,14 @@ function showAboutApp(){
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="about-app-title">
     <div class="eyebrow">About this app</div>
-    <h2 id="about-app-title">Thai for real life in Bangkok</h2>
+    <h2 id="about-app-title">Thai for daily life in Bangkok</h2>
     <div class="about-list">
-      <div>อ่าน’s primary goal is usable conversational Thai for daily Bangkok life.</div>
-      <div>The food-ordering scene teaches meaning first, then cue/reply pairs, supported choices, one substitution and role-play.</div>
-      <div>Phase 1 is the optional reading companion. It preserves the complete script, consonant-class, tone, final, vowel-length and controlled-reading course.</div>
-      <div>Reading progress never gates the spoken pilot. Conversation completion also does not alter literacy mastery, SRS, tokens or streaks.</div>
-      <div>Your device generates every Thai line. It supports pronunciation practice but does not assess your pronunciation.</div>
+      <div>The primary course is an eight-unit, 24-lesson conversation foundation.</div>
+      <div>Lessons teach the situation and meaning before device-generated Thai cue/reply pairs and a complete exchange.</div>
+      <div>Speaking practice is required, but recording is optional and pronunciation is not assessed.</div>
+      <div>Reading develops gradually through optional script noticing; the complete Phase 1 reading course remains available and never gates conversation.</div>
+      <div>Your device generates every Thai line. Native recordings and native-speaker review are not available or required.</div>
+      <div>Conversation progress is isolated from Phase 1 reading mastery, SRS, tokens and streaks.</div>
       <div>Current version: ${esc(APP_VERSION_LABEL)}.</div>
       <div>Backups live in Progress → Progress tools. Export before resetting or changing devices.</div>
     </div>
@@ -7097,42 +6966,58 @@ function closeAudioSetup(){
   restoreFocus(audioSetupFocusTarget);
   audioSetupFocusTarget = null;
 }
-function speak(text, btn, rate){
-  speakWithDeviceVoice(text, btn, rate);
+let deviceSpeechRun = 0;
+function speak(text, btn, rate, onComplete){
+  return speakWithDeviceVoice(text, btn, rate, onComplete);
 }
-function speakWithDeviceVoice(text, btn, rate){
+function speakWithDeviceVoice(text, btn, rate, onComplete){
   markReadTimerUnreliable();
-  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text, btn); return; }
+  if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text, btn); return false; }
   try{ speechSynthesis.resume(); }catch(e){}
   if(!thaiVoice) pickVoice();
   if(!thaiVoice){
     if(!voiceWarned){ showAudioSetup('missing-thai', text, btn); voiceWarned = true; }
-    return;
+    return false;
   }
+  const speechRun = ++deviceSpeechRun;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   if(thaiVoice) u.voice = thaiVoice;
   u.lang = 'th-TH'; u.rate = rate || 0.75;
-  let timingClosed = false;
+  let timingClosed = false, settled = false, watchdog = null;
   const closeTiming = ()=>{
     if(timingClosed) return;
     timingClosed = true;
     emitReviewTimingEvent('thai-audio-end');
   };
+  const settle = ok=>{
+    if(settled) return false;
+    settled = true;
+    if(watchdog) clearTimeout(watchdog);
+    if(btn) btn.classList.remove('playing');
+    closeTiming();
+    if(typeof onComplete === 'function') onComplete(!!ok && speechRun === deviceSpeechRun);
+    return true;
+  };
   emitReviewTimingEvent('thai-audio-start');
   if(btn){
     btn.classList.add('playing');
-    u.onend = ()=>{ btn.classList.remove('playing'); closeTiming(); };
+    u.onend = ()=>settle(true);
     u.onerror = e=>{
-      btn.classList.remove('playing');
-      closeTiming();
+      if(!settle(false)) return;
       if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text, btn);
     };
   } else {
-    u.onend = closeTiming;
-    u.onerror = e=>{ closeTiming(); if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text, btn); };
+    u.onend = ()=>settle(true);
+    u.onerror = e=>{ if(!settle(false)) return; if(!e || !/interrupted|canceled/i.test(e.error||'')) showAudioSetup('speech-error', text, btn); };
   }
-  speechSynthesis.speak(u);
+  watchdog = setTimeout(()=>{
+    if(!settle(false)) return;
+    if(speechRun !== deviceSpeechRun) return;
+    try{ speechSynthesis.cancel(); }catch(e){}
+    showAudioSetup('speech-error', text, btn);
+  }, 12000);
+  try{ speechSynthesis.speak(u);return true; }catch(e){settle(false);showAudioSetup('speech-error', text, btn);return false;}
 }
 function speakBtn(text, label){
   return `<button class="speak" data-say="${escAttr(text)}" aria-label="${escAttr(label || ('Hear: ' + text))}"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></button>`;
@@ -9434,8 +9319,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.2.3') errors.push('internal app version should be v8.2.3');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('footer label should be Conversation first + reading (v8.2.3)');
+  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9607,8 +9492,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.2.3') errors.push('internal app version should be v8.2.3');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('footer label should be Conversation first + reading (v8.2.3)');
+  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9702,8 +9587,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.2.3') errors.push('internal app version should be v8.2.3');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('footer label should be Conversation first + reading (v8.2.3)');
+  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9772,8 +9657,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.2.3') errors.push('internal app version should be v8.2.3');
-  if(APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('footer label should be Conversation first + reading (v8.2.3)');
+  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9986,7 +9871,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
+  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -10024,7 +9909,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
+  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -10093,214 +9978,8 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
+  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
-  return true;
-}
-function validateV82ConversationPilotContracts(){
-  const errors = [], scene = FOOD_ORDER_PILOT;
-  const chunkIds = (scene.chunks || []).map(chunk=>chunk.id);
-  if(scene.id !== 'conv.food_counter_01') errors.push('pilot scene id drifted');
-  if(!Array.isArray(scene.meaningMap) || scene.meaningMap.length !== 6 || scene.meaningMap.some(item=>!item.title || !item.body)) errors.push('pilot must open with a complete six-step English meaning map');
-  if(scene.chunks.length !== 6 || new Set(chunkIds).size !== scene.chunks.length) errors.push('pilot must keep six stable unique chunk ids');
-  if(scene.chunks.some(chunk=>!chunk.id.startsWith('conv.food.') || !chunk.thai || !chunk.tr || !chunk.en || !chunk.cue || !chunk.cue.thai || !chunk.cue.tr || !chunk.cue.en)) errors.push('pilot chunks need stable ids plus complete vendor-cue and learner-reply copy');
-  if(scene.chunks.some(chunk=>!chunk.thai.endsWith('ครับ'))) errors.push('all modelled learner moves must use male-polite Thai');
-  if(scene.chunks.some(chunk=>!chunk.cue.thai.endsWith('ครับ'))) errors.push('all modelled vendor cues must use male-polite Thai');
-  if(scene.turns.some(turn=>turn.speaker === 'learner' && !chunkIds.includes(turn.chunk))) errors.push('learner dialogue turn points to an unknown chunk');
-  if(scene.turns.some(turn=>turn.speaker === 'vendor' && !String(turn.thai || '').endsWith('ครับ'))) errors.push('pilot vendor lines must keep the all-male content contract');
-  scene.chunks.forEach(chunk=>{
-    const learnerIndex = scene.turns.findIndex(turn=>turn.chunk === chunk.id);
-    const prior = learnerIndex > 0 ? scene.turns[learnerIndex - 1] : null;
-    if(!prior || prior.speaker !== 'vendor' || prior.thai !== chunk.cue.thai) errors.push('full scene must place the matching vendor cue immediately before ' + chunk.id);
-  });
-  if(scene.responses.some(item=>!String(item.partner || '').endsWith('ครับ') || !chunkIds.includes(item.answer) || item.options.length !== 3 || new Set(item.options).size !== 3 || !item.options.includes(item.answer) || item.options.some(id=>!chunkIds.includes(id)))) errors.push('response practice must use a male-polite prompt and three stable unique chunk choices including the answer');
-  if(!scene.swap || scene.swap.thai !== 'เอากะเพราไก่ครับ') errors.push('bounded food substitution missing');
-  if(!CONVERSATION_SELF_RATINGS.length || CONVERSATION_SELF_RATINGS.some(item=>!conversationRatingAllowed(item.id))) errors.push('self-rating enum is invalid');
-
-  const legacy = {done:['l1'], srs:{}, days:{}, baht:17, streak:{count:3,last:'2026-08-20'}, checks:{}};
-  const beforeLegacy = JSON.stringify({done:legacy.done,srs:legacy.srs,days:legacy.days,baht:legacy.baht,streak:legacy.streak,checks:legacy.checks});
-  const firstRepair = repairConversationState(legacy);
-  const afterFirst = JSON.stringify(legacy.conversation);
-  const secondRepair = repairConversationState(legacy);
-  if(!firstRepair.changed || secondRepair.changed || afterFirst !== JSON.stringify(legacy.conversation)) errors.push('conversation repair must add once and then be idempotent');
-  if(beforeLegacy !== JSON.stringify({done:legacy.done,srs:legacy.srs,days:legacy.days,baht:legacy.baht,streak:legacy.streak,checks:legacy.checks})) errors.push('conversation repair changed literacy or reward state');
-
-  const malformedLocal = {conversation:{schema:1,scenes:{bad:'not-a-record'}}};
-  repairConversationState(malformedLocal);
-  if(Object.prototype.hasOwnProperty.call(malformedLocal.conversation.scenes,'bad')) errors.push('conversation repair must drop non-object scene records');
-
-  const tracked = {conversation:{schema:1,scenes:{[scene.id]:{runs:2,firstCompleted:'2026-08-01',lastCompleted:'2026-08-02',selfRating:'getting-there',futureField:'keep'}}}};
-  repairConversationState(tracked);
-  if(tracked.conversation.scenes[scene.id].futureField !== 'keep') errors.push('well-shaped future scene fields must survive repair');
-  const firstDate = tracked.conversation.scenes[scene.id].firstCompleted;
-  const evidence = {completed:todayStr(),pairAdvances:6,pairPlaybacks:6,scenePlaybackCompleted:true,responseChoices:4,responseFirstCorrect:3,roleplayReveals:4,swapRevealed:true,recordStepCompleted:true,recordingAttempted:false};
-  recordConversationRun(scene.id,'ready',tracked,evidence);
-  if(tracked.conversation.scenes[scene.id].runs !== 3 || tracked.conversation.scenes[scene.id].firstCompleted !== firstDate || tracked.conversation.scenes[scene.id].selfRating !== 'ready') errors.push('conversation completion aggregation is wrong');
-
-  const validImport = {
-    streak:{count:0,last:null}, done:[], srs:{},
-    conversation:{schema:1,scenes:{[scene.id]:{runs:1,firstCompleted:'2026-08-01',lastCompleted:'2026-08-01',selfRating:'need-support'}}}
-  };
-  const imported = importProgressState(validImport).state;
-  if(!imported.conversation || imported.conversation.scenes[scene.id].runs !== 1) errors.push('valid conversation import did not round-trip');
-  [
-    {schema:1,scenes:[]},
-    {schema:2,scenes:{}},
-    {schema:1,scenes:{bad:{runs:-1,firstCompleted:null,lastCompleted:null,selfRating:null}}},
-    {schema:1,scenes:{bad:{runs:1.5,firstCompleted:null,lastCompleted:null,selfRating:null}}},
-    {schema:1,scenes:{bad:{runs:1,firstCompleted:'not-a-date',lastCompleted:null,selfRating:null}}},
-    {schema:1,scenes:{bad:{runs:1,firstCompleted:null,lastCompleted:null,selfRating:'mastered'}}}
-  ].forEach((conversation,i)=>{
-    try{
-      validateImportedStateShape({streak:{count:0,last:null},done:[],srs:{},conversation});
-      errors.push('malformed conversation import survived case ' + i);
-    }catch(e){}
-  });
-
-  const source = [
-    startConversationPilot, advanceConversationPilot, renderConversationPilot,
-    renderConversationPilotIntro, renderConversationPilotSetup, renderConversationPilotChunk,
-    renderConversationPilotScene, playConversationTurns,
-    renderConversationPilotResponse, renderConversationPilotRecord, renderConversationPilotSwap,
-    renderConversationPilotRoleplay, renderConversationPilotRating, finishConversationPilot,
-    recordConversationRun
-  ].map(fn=>String(fn)).join('\n');
-  if(/srsAdd|markDailyDepth|bumpStreak|award\(|questCheck|getLessonBlocker/.test(source)) errors.push('conversation must not change literacy progression, Phase 1 Today state, streak, tokens or blockers');
-  if(ACTIVE_TIME_SURFACE_TYPES.has('conversation-pilot')) errors.push('pilot must not count toward the existing literacy time target');
-  if(String(rawWordPool).includes('FOOD_ORDER_PILOT')) errors.push('pilot content must not leak into literacy distractor pools');
-  if(!String(scheduleConversationSpeech).includes('player !== p') || !String(scheduleConversationSpeech).includes('p.phase !== phase')) errors.push('pilot autoplay must not survive close or fast navigation');
-  if(!String(renderConversationPilot).includes('stopConversationSpeech') || !String(finishConversationPilot).includes('stopConversationSpeech')) errors.push('pilot navigation and completion must cancel in-flight device speech');
-  if(!String(resetProgressNow).includes('conversation:freshConversationState()')) errors.push('reset must clear conversation runs explicitly');
-  if(!String(showAboutApp).includes('device generates every Thai line') || !String(showAboutApp).includes('does not assess your pronunciation')) errors.push('About must disclose the device-voice boundary');
-  if(typeof document !== 'undefined' && document.getElementById && document.querySelector && document.documentElement && typeof document.documentElement.contains === 'function'){
-    const card = document.getElementById('conversation-pilot-card');
-    if(!card) errors.push('Today pilot card missing');
-  }
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
-  if(errors.length) throw new Error('V8.2 conversation pilot contract failed:\n' + errors.join('\n'));
-  return true;
-}
-function validateV821ConversationFrontDoorContracts(){
-  const errors = [];
-  const onboarding = JSON.stringify(ONBOARDING_STEPS);
-  if(!onboarding.includes('Speak useful Thai first') || !onboarding.includes('usable conversational Thai') || !onboarding.includes('Reading is a gradual companion')) errors.push('onboarding must lead with useful spoken Bangkok Thai');
-  if(/Read Thai from zero|letters, not phrase memorising|Start reading/.test(onboarding + String(onboardingStepHtml))) errors.push('reading-first onboarding language must stay retired');
-  if(!String(onboardingStepHtml).includes('Start speaking') || !String(showOnboarding).includes('startConversationPilot')) errors.push('finished onboarding must launch the spoken scene');
-  const about = String(showAboutApp);
-  if(!about.includes('primary goal is usable conversational Thai') || !about.includes('optional reading companion') || !about.includes('Reading progress never gates')) errors.push('About must describe conversation as primary and reading as companion');
-  if(!String(renderConversationPilotIntro).includes("Today's spoken Thai")) errors.push('pilot intro must present itself as the spoken starting point');
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
-  if(typeof document !== 'undefined' && document.getElementById && document.querySelector && document.documentElement && typeof document.documentElement.contains === 'function'){
-    const card = document.getElementById('conversation-pilot-card');
-    const front = document.querySelector('.conversation-front-door');
-    const reading = document.querySelector('.today-focus');
-    const readingIntro = document.querySelector('.reading-companion-intro');
-    const brandLine = document.querySelector('.brand-sign small');
-    if(!card || !front || !reading || !readingIntro) errors.push('conversation-first Today hierarchy is incomplete');
-    else {
-      if(!(front.compareDocumentPosition(reading) & 4)) errors.push('spoken scene must appear before the reading companion');
-      if(!card.classList.contains('primary') || !card.classList.contains('recommended') || card.classList.contains('optional')) errors.push('spoken scene must be the clear primary recommendation');
-    }
-    if(!brandLine || !brandLine.textContent.includes('Bangkok Thai for real life')) errors.push('masthead must state the real-life Thai goal');
-  }
-  if(errors.length) throw new Error('V8.2.1 conversation-first front-door contract failed:\n' + errors.join('\n'));
-  return true;
-}
-function validateV822BeginnerConversationContracts(){
-  const errors = [], scene = FOOD_ORDER_PILOT;
-  const flow = String(renderConversationPilot);
-  const intro = String(renderConversationPilotIntro);
-  const setup = String(renderConversationPilotSetup);
-  const chunk = String(renderConversationPilotChunk);
-  const completeScene = String(renderConversationPilotScene);
-  const sequence = String(playConversationTurns);
-  const css = typeof document !== 'undefined' && document.querySelector ? (document.querySelector('style') || {}).textContent || '' : '';
-  if(flow.indexOf("p.phase === 'setup'") < 0 || flow.indexOf("p.phase === 'chunks'") < flow.indexOf("p.phase === 'setup'") || flow.indexOf("p.phase === 'scene'") < flow.indexOf("p.phase === 'chunks'")) errors.push('beginner flow must run meaning setup, paired chunks, then complete scene in that order');
-  if(!intro.includes('First understand the situation in English') || /speakBtn|conversationSceneText|Hear the scene/.test(intro)) errors.push('intro must explain the task without cold Thai playback');
-  if(!setup.includes('You do not need to read or understand Thai yet') || !setup.includes('Nothing is tested cold') || /speakBtn|conversationTranscriptHtml/.test(setup)) errors.push('meaning setup must be English-led and untested');
-  if(!chunk.includes('Vendor cue') || !chunk.includes('You say') || !chunk.includes('pause · then you answer') || chunk.indexOf('cue.en') > chunk.indexOf('cue.thai') || chunk.indexOf('chunk.en') > chunk.indexOf('chunk.thai')) errors.push('each teaching pair must show English meaning before Thai and visibly separate cue from reply');
-  if(!completeScene.includes('Now hear the complete exchange') || !completeScene.includes('conversationTranscriptHtml') || !completeScene.includes('playConversationTurns') || !completeScene.includes('0.9 seconds')) errors.push('complete exchange must be delayed until after teaching and retain visible meaning plus gapped playback');
-  if(!sequence.includes('new SpeechSynthesisUtterance') || !sequence.includes('setTimeout(next, 900)') || !sequence.includes('player !== p') || !sequence.includes('run !== conversationSpeechRun')) errors.push('full playback must use separately guarded turns with a 900ms inter-speaker pause');
-  if(css && (!css.includes('.conversation-pair') || !css.includes('.conversation-turn-gap') || !css.includes('.conversation-transcript{display:grid;gap:12px'))) errors.push('conversation spacing CSS contract is incomplete');
-  const fresh = {done:[],srs:{}}; ensureStateCollections(fresh);
-  ['conversationLesson','conversationPhase','conversationChunk'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh,key)) errors.push('beginner correction must not add learner-state key ' + key); });
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
-  if(errors.length) throw new Error('V8.2.2 beginner conversation contract failed:\n' + errors.join('\n'));
-  return true;
-}
-function validateV823ConversationPracticeContracts(){
-  const errors = [], scene = FOOD_ORDER_PILOT;
-  const active = scene.chunks.filter(chunk=>chunk.practiceMode === 'active');
-  const routines = scene.chunks.filter(chunk=>chunk.practiceMode === 'routine');
-  const activeIds = active.map(chunk=>chunk.id).sort();
-  const responseIds = scene.responses.map(item=>item.answer).sort();
-  if(active.length !== 4 || routines.length !== 2) errors.push('scene must keep four active replies and two polite routines');
-  if(JSON.stringify(activeIds) !== JSON.stringify(responseIds)) errors.push('response practice must cover exactly the four active replies');
-  if(routines.map(chunk=>chunk.id).sort().join('|') !== 'conv.food.greet|conv.food.thanks') errors.push('greeting and thanks must remain routines');
-  const completeParts = item=>Array.isArray(item.segments) && item.segments.length && item.segments.every(part=>part.thai && part.tr && part.en) && item.segments.map(part=>part.thai).join('') === item.thai;
-  scene.chunks.forEach(chunk=>{
-    if(!chunk.functionId || !completeParts(chunk) || !completeParts(chunk.cue)) errors.push('cue/reply segmentation is incomplete for ' + chunk.id);
-    if(!chunk.thai.endsWith('ครับ') || !chunk.cue.thai.endsWith('ครับ')) errors.push('male-polite ending missing for ' + chunk.id);
-  });
-  if(!scene.swap || scene.swap.parentChunk !== 'conv.food.order_this' || !scene.swap.itemTr || !scene.swap.itemEn || !completeParts({thai:scene.swap.thai,segments:scene.swap.modelSegments})) errors.push('substitution must preteach and segment its replacement model');
-  if(!scene.swap.thai.endsWith('ครับ')) errors.push('substitution model must stay male-polite');
-
-  const positions = [];
-  scene.responses.forEach((item,index)=>{
-    const p = {optionOffset:1,responseOptionOrders:{}};
-    const first = conversationResponseOptionIds(p,item,index), second = conversationResponseOptionIds(p,item,index);
-    positions.push(first.indexOf(item.answer));
-    if(JSON.stringify(first) !== JSON.stringify(second)) errors.push('response option order must stay stable during repair');
-  });
-  if(new Set(positions).size < 3 || positions.every(position=>position === 0)) errors.push('response answers must rotate across option positions');
-
-  const evidence = {completed:todayStr(),pairAdvances:6,pairPlaybacks:6,scenePlaybackCompleted:true,responseChoices:4,responseFirstCorrect:2,roleplayReveals:4,swapRevealed:true,recordStepCompleted:true,recordingAttempted:false};
-  const base = {done:['l1'],srs:{card:{iv:1,due:todayStr(),lapses:0}},days:{x:{r:1}},baht:9,streak:{count:2,last:'2026-08-01'},checks:{c1:true},retention:{kept:true},skillStats:{listen:[],speak:{attempts:0,last:null}},conversation:freshConversationState()};
-  const isolate = target=>JSON.stringify({done:target.done,srs:target.srs,days:target.days,baht:target.baht,streak:target.streak,checks:target.checks,retention:target.retention,skillStats:target.skillStats});
-  const before = isolate(base);
-  try{
-    recordConversationRun(scene.id,'getting-there',base,Object.assign({},evidence,{pairPlaybacks:5}));
-    errors.push('incomplete interaction evidence must not record a run');
-  }catch(e){}
-  if(before !== isolate(base) || conversationSceneRecord(scene.id,base)) errors.push('rejected completion must not mutate learner state');
-  recordConversationRun(scene.id,'getting-there',base,evidence);
-  if(!conversationTodayComplete(scene.id,base) || conversationTodayComplete(scene.id,base,'2000-01-01')) errors.push('spoken minimum must derive only from a complete current-day run');
-  if(before !== isolate(base)) errors.push('conversation completion changed a Phase 1, reward or streak namespace');
-  const oldRecord = {conversation:{schema:1,scenes:{[scene.id]:{runs:1,firstCompleted:todayStr(),lastCompleted:todayStr(),selfRating:'need-support'}}}};
-  if(conversationTodayComplete(scene.id,oldRecord)) errors.push('legacy aggregate run must not gain invented interaction evidence');
-  const corruptEvidence = {conversation:{schema:1,scenes:{[scene.id]:{runs:1,firstCompleted:todayStr(),lastCompleted:todayStr(),selfRating:'ready',lastRun:{completed:todayStr(),pairAdvances:'six'}}}}};
-  repairConversationState(corruptEvidence);
-  if(corruptEvidence.conversation.scenes[scene.id].lastRun !== null) errors.push('malformed local interaction evidence must repair to null');
-  try{
-    validateImportedStateShape({streak:{count:0,last:null},done:[],srs:{},conversation:{schema:1,scenes:{[scene.id]:{runs:1,firstCompleted:todayStr(),lastCompleted:todayStr(),selfRating:'ready',lastRun:{completed:todayStr(),pairAdvances:'six'}}}}});
-    errors.push('malformed imported interaction evidence must fail closed');
-  }catch(e){}
-
-  const resetState = {done:[],srs:{},notices:{onboardAfterReset:true}};
-  if(!onboardingEligibleForState(resetState,true)) errors.push('reset marker must restore onboarding despite the saved fresh blob');
-  completeOnboarding('finish',resetState);
-  if(resetState.notices.onboardAfterReset || onboardingEligibleForState(resetState,true)) errors.push('finishing reset onboarding must clear its one-time marker');
-  if(onboardingEligibleForState({done:[],srs:{},notices:{}},true)) errors.push('ordinary historical saved blank states must remain ineligible for onboarding');
-  if(!conversationPilotExitWouldDiscard({type:'conversation-pilot',phase:'chunks',completed:false}) || conversationPilotExitWouldDiscard({type:'conversation-pilot',phase:'intro',completed:false}) || conversationPilotExitWouldDiscard({type:'conversation-pilot',phase:'rating',completed:true})) errors.push('conversation exit guard boundary is wrong');
-
-  const responseSource = String(renderConversationPilotResponse), recordSource = String(renderConversationPilotRecord), swapSource = String(renderConversationPilotSwap);
-  const sceneSource = String(renderConversationPilotScene), playbackSource = String(playConversationTurns) + String(setConversationActiveTurn) + String(stopConversationSpeech);
-  if(!responseSource.includes('conversationResponseOptionIds') || !responseSource.includes('Say it, then retry this cue') || /item\.options\.map/.test(responseSource)) errors.push('response practice must shuffle and require wrong-answer repair');
-  if(!recordSource.includes('Record one useful reply') || recordSource.includes('scene.chunks.map') || LOCAL_RECORDING_LIMIT_MS < 30000) errors.push('conversation recording must be one phrase and allow at least 30 seconds');
-  if(swapSource.indexOf('Preteach the change') < 0 || swapSource.indexOf('Hear the food name') < 0 || swapSource.indexOf('Try it with support') < 0) errors.push('substitution must preteach item and model before supported production');
-  if(sceneSource.indexOf('conversation-playback-panel') < 0 || sceneSource.indexOf('conversation-playback-panel') > sceneSource.indexOf('conversationTranscriptHtml') || !sceneSource.includes('data-conversation-stop')) errors.push('full-scene playback controls must precede the collapsed transcript');
-  if(!playbackSource.includes('aria-current') || !playbackSource.includes('scrollIntoView') || !playbackSource.includes('speechSynthesis.cancel') || !playbackSource.includes('setTimeout(next, 900)')) errors.push('playback must highlight, scroll, stop and preserve the speaker gap');
-  if(!String(resetProgressNow).includes('onboardAfterReset:true')) errors.push('reset must mark the fresh onboarding path');
-  if(ACTIVE_TIME_SURFACE_TYPES.has('conversation-pilot')) errors.push('conversation must stay out of Phase 1 active-time state');
-  if(/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(JSON.stringify(scene))) errors.push('conversation data must remain device-TTS-only');
-  if(typeof document !== 'undefined' && document.documentElement && typeof document.documentElement.contains === 'function'){
-    const panel = document.getElementById('reading-companion-panel');
-    if(panel && document.documentElement.contains(panel)){
-      if(!panel.hidden || !panel.querySelector('.today-focus') || !panel.querySelector('.daily-section') || !panel.querySelector('#course-map-drawer')) errors.push('complete reading route must start collapsed inside one optional companion panel');
-    }
-  }
-  if(APP_VERSION !== 'v8.2.3' || APP_VERSION_LABEL !== 'Conversation first + reading (v8.2.3)') errors.push('v8.2.3 identity mismatch');
-  if(errors.length) throw new Error('V8.2.3 conversation-practice contract failed:\n' + errors.join('\n'));
   return true;
 }
 function validateV601FirstRunContracts(){
@@ -11356,7 +11035,7 @@ function renderHome(){
     } else _wb.classList.add('is-hidden');
   }
   checkPostcard();
-  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderConversationPilotCard(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderPhase1Dashboard(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
+  ensureDay(); renderBackupNudge(); questCheck(); renderPlan(); renderTodayActions(); renderDailyPractice(); renderConversationCourseHome(); renderConversationCourseProgress(); renderRail(); renderLearn(); renderBossRematches(); renderClassTiles(); renderPhase1Dashboard(); renderHeatmap(); renderProgressWall(); renderConstellation(); syncNavBadges();
 }
 function findWordInLessons(thai){
   for(const L of LESSONS){ if(L.words.some(w=>w.thai===thai)) return true; }
@@ -11369,7 +11048,7 @@ el('today-review-btn').addEventListener('click', goTodayReviewTask);
 el('today-main-btn').addEventListener('click', routeToMainTask);
 el('today-depth-btn').addEventListener('click', routeToDepthTask);
 el('end-day-btn').addEventListener('click', handleEndDay);
-el('conversation-pilot-card').addEventListener('click', startConversationPilot);
+el('conversation-course-card').addEventListener('click', startConversationCoursePrimary);
 el('reading-companion-toggle').addEventListener('click', ()=>setReadingCompanionOpen(el('reading-companion-panel').hidden));
 el('library-read').addEventListener('click', ()=>{
   player = {type:'read'};
@@ -12084,6 +11763,7 @@ async function resetProgressNow(){
   state = fresh;
   const raw = JSON.stringify(fresh);
   try{ localStorage.setItem(SKEY, raw); }catch(e){}               // PWA / browser - the store the old handler forgot (so it actually persists on iPhone)
+  try{ localStorage.removeItem('thai_state_v1_conversation_recovery'); }catch(e){}
   try{ if(window.storage) await window.storage.set(SKEY, raw); }catch(e){}   // Claude-artifact fallback
   toast('Progress reset. Starting fresh...');
   setTimeout(()=>location.reload(), 450);                          // reload → init() rebuilds cleanly, no half-wiped state
@@ -12521,7 +12201,7 @@ function closeOverlay(){
   if(views) views.removeAttribute('inert');
   if(tabbar) tabbar.removeAttribute('inert');
   if(overlayKeyHandler){ document.removeEventListener('keydown', overlayKeyHandler); overlayKeyHandler = null; }
-  document.body.style.overflow=''; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer();
+  document.body.style.overflow=''; deviceSpeechRun++; speechSynthesis && speechSynthesis.cancel(); clearInterval(window._qTimer); clearLocalRecording(); clearReadTimer();
   if(previewThemeId){ previewThemeId=null; applyTheme(); }
   player=null;
   restoreFocus(overlayFocusTarget); overlayFocusTarget=null;
@@ -12535,21 +12215,22 @@ function masteryQuizExitWouldDiscard(p){
   const stakes = p.opts.boss || p.opts.checkpoint != null || p.opts.letters42 || p.opts.phase1Completion || p.opts.retention30;
   return !!(stakes && progress > 0 && progress < (p.qs || []).length);
 }
-function conversationPilotExitWouldDiscard(p){
-  return !!(p && p.type === 'conversation-pilot' && !p.completed && p.phase !== 'intro');
+function conversationCourseExitWouldDiscard(p){
+  return !!(p && p.type === 'conversation-course' && !p.completed && p.phase !== 'intro');
 }
 function overlayExitWouldDiscard(){
-  return lessonExitWouldDiscard(player) || masteryQuizExitWouldDiscard(player) || conversationPilotExitWouldDiscard(player);
+  return lessonExitWouldDiscard(player) || masteryQuizExitWouldDiscard(player) || conversationCourseExitWouldDiscard(player);
 }
 function showOverlayExitConfirm(){
-  const speaking = !!(player && player.type === 'conversation-pilot');
+  const speaking = !!(player && player.type === 'conversation-course');
+  const resumable = !!(player && player.type === 'conversation-course' && state.conversation && state.conversation.resume);
   const focusTarget = currentFocusTarget();
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
   wrap.innerHTML = `<div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="lesson-exit-title">
     <div class="eyebrow">Leave attempt</div>
     <h2 id="lesson-exit-title">${speaking ? 'Leave this speaking practice?' : 'Leave this lesson?'}</h2>
-    <p class="sub">${speaking ? 'This run is not saved until the final self-rating. You’ll restart from the beginning.' : 'This attempt restarts from the beginning next time.'}</p>
+    <p class="sub">${resumable ? 'Completed actions are saved. Interrupted audio restarts at the current prompt; cold answers and option order do not reroll.' : speaking ? 'This unfinished replay restarts from the beginning; no completion authority is awarded.' : 'This attempt restarts from the beginning next time.'}</p>
     <div class="confirm-actions">
       <button class="btn ghost" id="exit-stay">Stay</button>
       <button class="btn" id="exit-leave">Leave</button>
@@ -13919,8 +13600,7 @@ function renderEcho(){
 }
 
 /* =====================================================
-   V8.2.0 · CONVERSATION PILOT
-   Optional, isolated field-test flow. No SRS, Today credit, rewards or claims.
+   SHARED CONVERSATION AUDIO AND UI PRIMITIVES
 ===================================================== */
 function conversationChunk(scene, chunkId){
   return (scene.chunks || []).find(chunk=>chunk.id === chunkId) || null;
@@ -13931,19 +13611,6 @@ function resolvedConversationTurn(scene, turn){
     return chunk ? Object.assign({speaker:'learner'}, chunk) : null;
   }
   return turn;
-}
-function conversationPilotTotalSteps(scene){
-  return 5 + (scene.chunks || []).length + 2 * (scene.responses || []).length;
-}
-function setConversationPilotProgress(){
-  const p = player;
-  setProg(Math.round(100 * Math.min(p.progress || 0, p.total || 1) / Math.max(p.total || 1, 1)));
-}
-function scheduleConversationSpeech(p, phase, text, delay, stillCurrent){
-  setTimeout(()=>{
-    if(player !== p || p.phase !== phase || (stillCurrent && !stillCurrent())) return;
-    speak(text);
-  }, delay);
 }
 let conversationSpeechRun = 0;
 function clearConversationActiveTurn(){
@@ -13982,6 +13649,7 @@ function resetConversationPlaybackUi(message){
 }
 function stopConversationSpeech(){
   conversationSpeechRun++;
+  deviceSpeechRun++;
   resetConversationPlaybackUi('Stopped. Restart whenever you are ready.');
   if(typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try{ window.speechSynthesis.cancel(); }catch(e){}
@@ -14025,13 +13693,28 @@ function playConversationTurns(p, turns, button, options){
     const utterance = new SpeechSynthesisUtterance(sequence[index].thai);
     utterance.voice = thaiVoice;
     utterance.lang = 'th-TH';
-    utterance.rate = 0.72;
+    utterance.rate = sequence[index].rate || 0.72;
+    let utteranceSettled = false;
+    const utteranceWatchdog = setTimeout(()=>{
+      if(utteranceSettled) return;
+      utteranceSettled = true;
+      if(player !== p || p.phase !== phase || run !== conversationSpeechRun){ finish(false); return; }
+      try{ speechSynthesis.cancel(); }catch(e){}
+      finish(false);
+      showAudioSetup('speech-error', sequence[index].thai, button);
+    }, 15000);
     utterance.onend = ()=>{
+      if(utteranceSettled) return;
+      utteranceSettled = true;
+      clearTimeout(utteranceWatchdog);
       index++;
       if(index >= sequence.length){ finish(true); return; }
       setTimeout(next, 900);
     };
     utterance.onerror = event=>{
+      if(utteranceSettled) return;
+      utteranceSettled = true;
+      clearTimeout(utteranceWatchdog);
       finish(false);
       if(!event || !/interrupted|canceled/i.test(event.error || '')) showAudioSetup('speech-error', sequence[index].thai, button);
     };
@@ -14047,32 +13730,6 @@ function playConversationTurns(p, turns, button, options){
   }
   next();
 }
-function renderConversationPilotCard(){
-  const status = el('conversation-pilot-status');
-  if(!status) return;
-  const rec = conversationSceneRecord(FOOD_ORDER_PILOT.id);
-  const dayStatus = el('conversation-day-status');
-  const card = el('conversation-pilot-card');
-  const doneToday = conversationTodayComplete(FOOD_ORDER_PILOT.id);
-  if(card){
-    card.classList.toggle('done', doneToday);
-    card.classList.toggle('recommended', !doneToday);
-  }
-  if(dayStatus){
-    dayStatus.className = 'conversation-day-status' + (doneToday ? ' done' : '');
-    dayStatus.textContent = doneToday ? 'Today’s spoken minimum is complete. Stop here or open optional reading.' : 'Complete this scene for today’s minimum. Reading is optional.';
-  }
-  if(doneToday){
-    status.textContent = 'Done today · tap to practise again';
-    return;
-  }
-  if(!rec || !rec.runs){
-    status.textContent = '8–12 min · listen, respond, speak and compare';
-    return;
-  }
-  const rating = CONVERSATION_SELF_RATINGS.find(item=>item.id === rec.selfRating);
-  status.textContent = 'Run again · ' + rec.runs + ' completed run' + (rec.runs === 1 ? '' : 's') + (rating ? ' · ' + rating.label : '');
-}
 function setReadingCompanionOpen(open){
   const panel = el('reading-companion-panel'), toggle = el('reading-companion-toggle');
   if(!panel || !toggle) return;
@@ -14080,28 +13737,6 @@ function setReadingCompanionOpen(open){
   toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   toggle.textContent = open ? 'Hide the optional reading course' : 'Optional: open the complete reading course';
   if(open && typeof panel.scrollIntoView === 'function') setTimeout(()=>panel.scrollIntoView({block:'start',behavior:'smooth'}), 0);
-}
-function startConversationPilot(){
-  const scene = FOOD_ORDER_PILOT;
-  player = {
-    type:'conversation-pilot', scene, phase:'intro', progress:0,
-    total:conversationPilotTotalSteps(scene), chunkIndex:0, responseIndex:0,
-    roleplayIndex:0, swapStep:'teach', roleplayRevealed:false, optionOffset:Math.floor(Math.random()*3),
-    responseOptionOrders:{}, responseAttempted:{}, pairPlayed:{}, roleplayModels:{}, completed:false,
-    evidence:{
-      pairAdvances:0, pairPlaybacks:0, scenePlaybackCompleted:false,
-      responseChoices:0, responseFirstCorrect:0, roleplayReveals:0,
-      swapRevealed:false, recordStepCompleted:false, recordingAttempted:false
-    }
-  };
-  openOverlay();
-  renderConversationPilot();
-}
-function advanceConversationPilot(phase){
-  clearLocalRecording();
-  player.progress++;
-  player.phase = phase;
-  renderConversationPilot();
 }
 function conversationSegmentsHtml(segments, label){
   if(!Array.isArray(segments) || !segments.length) return '';
@@ -14111,15 +13746,6 @@ function conversationSegmentsHtml(segments, label){
       <span class="tr">${esc(segment.tr)}</span>
       <span class="en">${esc(segment.en)}</span>
     </div>`).join('')}</div>`;
-}
-function conversationResponseOptionIds(p, item, index){
-  if(p.responseOptionOrders[index]) return p.responseOptionOrders[index].slice();
-  const wrong = shuffle((item.options || []).filter(id=>id !== item.answer));
-  const target = (p.optionOffset + index) % Math.max(1, item.options.length);
-  const order = wrong.slice();
-  order.splice(target, 0, item.answer);
-  p.responseOptionOrders[index] = order;
-  return order.slice();
 }
 function conversationTurnCardHtml(turn, index){
   const speaker = turn.speaker === 'vendor' ? 'vendor' : 'learner';
@@ -14134,394 +13760,6 @@ function conversationTranscriptHtml(scene){
   const turns = (scene.turns || []).map(turn=>resolvedConversationTurn(scene, turn)).filter(Boolean);
   return `<details class="conversation-transcript-drawer"><summary>View the full ${turns.length}-turn transcript</summary><div class="conversation-transcript">${turns.map(conversationTurnCardHtml).join('')}</div></details>`;
 }
-function focusConversationStage(){
-  const heading = el('stage') && el('stage').querySelector('h2, [role="heading"]');
-  if(!heading) return;
-  heading.setAttribute('tabindex','-1');
-  try{ heading.focus({preventScroll:true}); }catch(e){ try{ heading.focus(); }catch(_){} }
-}
-function renderConversationPilot(){
-  const p = player;
-  if(!p || p.type !== 'conversation-pilot') return;
-  stopConversationSpeech();
-  clearLocalRecording();
-  setConversationPilotProgress();
-  if(p.phase === 'intro') renderConversationPilotIntro();
-  else if(p.phase === 'setup') renderConversationPilotSetup();
-  else if(p.phase === 'chunks') renderConversationPilotChunk();
-  else if(p.phase === 'scene') renderConversationPilotScene();
-  else if(p.phase === 'responses') renderConversationPilotResponse();
-  else if(p.phase === 'record') renderConversationPilotRecord();
-  else if(p.phase === 'swap') renderConversationPilotSwap();
-  else if(p.phase === 'roleplay') renderConversationPilotRoleplay();
-  else if(p.phase === 'rating') renderConversationPilotRating();
-  setTimeout(focusConversationStage, 0);
-}
-function renderConversationPilotIntro(){
-  const scene = player.scene;
-  el('stage').innerHTML = `
-    <div class="center">
-      <div class="eyebrow">Today's spoken Thai · about 10 min</div>
-      <h2>${esc(scene.title)}</h2>
-      <p class="sub">${esc(scene.setting)}</p>
-    </div>
-    <div class="notebox">
-      First understand the situation in English. Then learn each vendor cue and your reply as a pair. Nothing begins with an unexplained Thai conversation.
-    </div>
-    <div class="notebox" style="margin-top:12px">
-      <b>Audio:</b> ${esc(scene.audioStatus)}. It is a synthetic pronunciation model for practice, not a pronunciation score.
-    </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-begin">See the situation →</button></div>`;
-  el('conversation-begin').onclick = ()=>advanceConversationPilot('setup');
-}
-function renderConversationPilotSetup(){
-  const p = player, scene = p.scene;
-  el('stage').innerHTML = `
-    <div class="center">
-      <div class="eyebrow">Meaning first</div>
-      <h2>You are ordering at a food stall</h2>
-      <p class="sub">You do not need to read or understand Thai yet. Two moves are polite routines; four are replies you will actively practise.</p>
-    </div>
-    <div class="conversation-meaning-map">
-      ${(scene.meaningMap || []).map((item,i)=>`<div class="conversation-meaning-step"><span class="conversation-step-num">${i+1}</span><div><span class="conversation-function-badge ${item.mode === 'active' ? 'active' : ''}">${item.mode === 'active' ? 'Active reply' : 'Polite routine'}</span><b>${esc(item.title)}</b><span class="sub">${esc(item.body)}</span></div></div>`).join('')}
-    </div>
-    <div class="notebox" style="margin-top:16px"><b>Next:</b> every Thai reply appears beside the English meaning of the vendor's cue. Nothing is tested cold.</div>
-    <div class="stage-actions"><button class="btn full" id="conversation-setup-next">Learn the first reply →</button></div>`;
-  el('conversation-setup-next').onclick = ()=>advanceConversationPilot('chunks');
-}
-function renderConversationPilotChunk(){
-  const p = player, chunk = p.scene.chunks[p.chunkIndex];
-  if(!chunk){
-    p.phase = 'scene';
-    renderConversationPilot();
-    return;
-  }
-  const cue = chunk.cue;
-  const active = chunk.practiceMode === 'active';
-  const played = !!p.pairPlayed[chunk.id];
-  el('stage').innerHTML = `
-    <div class="center">
-      <div class="eyebrow">Learn the exchange · ${p.chunkIndex+1} of ${p.scene.chunks.length}</div>
-      <span class="conversation-function-badge ${active ? 'active' : ''}">${active ? 'Learn now · answer later' : 'Polite routine · copy it'}</span>
-      <h2>${esc((p.scene.meaningMap[p.chunkIndex] || {}).title || chunk.en)}</h2>
-      <p class="sub">Meaning comes first. Thai script and pronunciation spelling are support, not a reading test.</p>
-    </div>
-    <div class="conversation-pair">
-      <div class="conversation-turn vendor">
-        <div class="conversation-speaker">Vendor cue</div>
-        <div class="p-en"><b>${esc(cue.en)}</b></div>
-        <div class="p-thai" lang="th">${esc(cue.thai)}</div>
-        <div class="p-tr">${esc(cue.tr)}</div>
-        <div class="conversation-turn-audio">${speakBtn(cue.thai, 'Hear the vendor cue')}<span class="sub">Hear the vendor</span></div>
-        ${conversationSegmentsHtml(cue.segments, 'What you are hearing')}
-      </div>
-      <div class="conversation-turn-gap">pause · then you answer</div>
-      <div class="conversation-turn learner">
-        <div class="conversation-speaker">You say</div>
-        <div class="p-en"><b>${esc(chunk.en)}</b></div>
-        <div class="p-thai" lang="th">${esc(chunk.thai)}</div>
-        <div class="p-tr">${esc(chunk.tr)}</div>
-        <div class="conversation-turn-audio">${speakBtn(chunk.thai, 'Hear your learner reply')}<span class="sub">Hear your reply, then say it</span></div>
-        ${conversationSegmentsHtml(chunk.segments, 'Build your reply')}
-      </div>
-    </div>
-    ${p.chunkIndex === 0 ? '<div class="conversation-pronunciation-key"><b>ครับ (khráp)</b> is the male polite ending used throughout. Accent marks in the pronunciation spelling show pitch; doubled vowels are held longer.</div>' : ''}
-    <div class="compare-box" style="margin-top:16px">
-      <div class="conversation-playback-actions">
-        <button class="btn ghost" id="conversation-pair-play">${played ? '↻ Play the pair again' : '▶ Play vendor → pause → you'}</button>
-        <button class="btn ghost" id="conversation-pair-stop" data-conversation-stop disabled>Stop</button>
-      </div>
-    </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-chunk-next" ${played ? '' : 'disabled'}>${played ? 'I copied it · ' : 'Play the pair first · '}${p.chunkIndex+1 === p.scene.chunks.length ? 'hear the whole exchange' : 'next pair'} →</button></div>`;
-  const pairPlay = el('conversation-pair-play'), pairStop = el('conversation-pair-stop'), next = el('conversation-chunk-next');
-  pairPlay.onclick = ()=>playConversationTurns(p, [chunk.cue,{speaker:'learner',chunk:chunk.id}], pairPlay, {
-    stopButton:pairStop,
-    onComplete:()=>{
-      if(!p.pairPlayed[chunk.id]){
-        p.pairPlayed[chunk.id] = true;
-        p.evidence.pairPlaybacks++;
-      }
-      next.disabled = false;
-      next.textContent = 'I copied it · ' + (p.chunkIndex+1 === p.scene.chunks.length ? 'hear the whole exchange' : 'next pair') + ' →';
-    }
-  });
-  next.onclick = ()=>{
-    if(!p.pairPlayed[chunk.id]) return;
-    p.evidence.pairAdvances++;
-    p.chunkIndex++;
-    p.progress++;
-    renderConversationPilot();
-  };
-}
-function renderConversationPilotScene(){
-  const p = player, scene = p.scene;
-  const heard = !!p.evidence.scenePlaybackCompleted;
-  el('stage').innerHTML = `
-    <div class="center">
-      <div class="eyebrow">Now hear the complete exchange</div>
-      <h2>Every turn now has meaning</h2>
-      <p class="sub">Follow the English if the Thai is still unfamiliar. Playback pauses for 0.9 seconds between speakers.</p>
-    </div>
-    <div class="conversation-playback-panel">
-      <div class="conversation-now-playing" id="conversation-now-playing" role="status" aria-live="polite">
-        <div class="conversation-speaker">Ready to play</div>
-        <div class="p-en"><b>The current turn will appear here.</b></div>
-      </div>
-      <div class="conversation-playback-actions">
-        <button class="btn ghost" id="conversation-play-scene">${heard ? '↻ Play again from turn 1' : '▶ Play full exchange'}</button>
-        <button class="btn ghost" id="conversation-stop-scene" data-conversation-stop disabled>Stop</button>
-      </div>
-      <div class="sub" style="font-size:11px;text-align:center;margin-top:8px">The same device-generated Thai voice plays both roles; labels and pauses show who is speaking.</div>
-    </div>
-    ${conversationTranscriptHtml(scene)}
-    <div class="stage-actions"><button class="btn full" id="conversation-scene-next" ${heard ? '' : 'disabled'}>${heard ? 'Practise choosing the replies' : 'Hear the full exchange first'} →</button></div>`;
-  const play = el('conversation-play-scene'), stop = el('conversation-stop-scene'), next = el('conversation-scene-next');
-  play.onclick = ()=>playConversationTurns(p, scene.turns, play, {stopButton:stop,onComplete:()=>{
-    p.evidence.scenePlaybackCompleted = true;
-    next.disabled = false;
-    next.textContent = 'Practise choosing the replies →';
-  }});
-  next.onclick = ()=>{
-    if(!p.evidence.scenePlaybackCompleted) return;
-    p.responseIndex = 0;
-    advanceConversationPilot('responses');
-  };
-}
-function renderConversationPilotResponse(){
-  const p = player, item = p.scene.responses[p.responseIndex];
-  if(!item){
-    p.phase = 'record';
-    renderConversationPilot();
-    return;
-  }
-  const answer = conversationChunk(p.scene, item.answer);
-  const optionIds = conversationResponseOptionIds(p, item, p.responseIndex);
-  const responseIndex = p.responseIndex;
-  el('stage').innerHTML = `
-    <div class="q-prompt">
-      <div class="eyebrow">Choose the useful reply · ${p.responseIndex+1} of ${p.scene.responses.length}</div>
-      <h2>${esc(item.en)}</h2>
-      <div class="p-thai" lang="th" style="font-size:27px">${esc(item.partner)}</div>
-      <div class="p-tr">${esc(item.tr)}</div>
-      <div class="audio-inline">${speakBtn(item.partner, 'Hear the vendor')}</div>
-    </div>
-    <div class="q-options">
-      ${optionIds.map(chunkId=>{
-        const chunk = conversationChunk(p.scene, chunkId);
-        return `<button class="q-opt" data-conversation-response="${escAttr(chunkId)}"><span class="thai" lang="th">${esc(chunk.thai)}</span><span class="p-tr">${esc(chunk.tr)}</span><span class="sub">${esc(chunk.en)}</span></button>`;
-      }).join('')}
-    </div>
-    <div class="q-feedback" id="conversation-feedback" role="status" aria-live="polite"></div>`;
-  el('stage').querySelectorAll('[data-conversation-response]').forEach(button=>{
-    button.onclick = ()=>{
-      const ok = button.dataset.conversationResponse === item.answer;
-      const firstChoice = !p.responseAttempted[p.responseIndex];
-      if(firstChoice){
-        p.responseAttempted[p.responseIndex] = true;
-        p.evidence.responseChoices++;
-        if(ok) p.evidence.responseFirstCorrect++;
-      }
-      el('stage').querySelectorAll('[data-conversation-response]').forEach(choice=>{
-        choice.disabled = true;
-        if(choice.dataset.conversationResponse === item.answer) choice.classList.add('correct');
-      });
-      if(!ok) button.classList.add('wrong');
-      const fb = el('conversation-feedback');
-      fb.className = 'q-feedback ' + (ok ? 'ok answer-correct' : 'no answer-wrong');
-      if(ok){
-        fb.innerHTML = `<div class="conversation-repair"><b>That reply fits this situation.</b><div class="p-thai" lang="th">${esc(answer.thai)}</div><div class="p-tr">${esc(answer.tr)}</div><div class="p-en">${esc(answer.en)}</div><div>${speakBtn(answer.thai, 'Hear the learner reply')}</div></div><div class="stage-actions"><button class="btn full" id="conversation-response-next">Continue →</button></div>`;
-        scheduleConversationSpeech(p, 'responses', answer.thai, 180, ()=>p.responseIndex === responseIndex);
-        el('conversation-response-next').onclick = ()=>{
-          p.responseIndex++;
-          p.progress++;
-          renderConversationPilot();
-        };
-        return;
-      }
-      fb.innerHTML = `<div class="conversation-repair"><b>That reply belongs to a different moment. Repair this cue before moving on.</b><div class="p-en">${esc(item.en)} → ${esc(answer.en)}</div><div class="p-thai" lang="th">${esc(answer.thai)}</div><div class="p-tr">${esc(answer.tr)}</div><div class="conversation-playback-actions"><button class="btn ghost" id="conversation-repair-play">▶ Hear cue → reply</button><button class="btn ghost" id="conversation-repair-stop" data-conversation-stop disabled>Stop</button></div><button class="btn full" id="conversation-response-retry">Say it, then retry this cue</button></div>`;
-      const repairPlay = el('conversation-repair-play'), repairStop = el('conversation-repair-stop');
-      repairPlay.onclick = ()=>playConversationTurns(p, [{speaker:'vendor',thai:item.partner,tr:item.tr,en:item.en},{speaker:'learner',chunk:item.answer}], repairPlay, {stopButton:repairStop});
-      setTimeout(()=>{ if(player === p && p.phase === 'responses' && p.scene.responses[p.responseIndex] === item) repairPlay.click(); }, 120);
-      el('conversation-response-retry').onclick = ()=>{
-        stopConversationSpeech();
-        renderConversationPilotResponse();
-        setTimeout(focusConversationStage, 0);
-      };
-    };
-  });
-}
-function renderConversationPilotRecord(){
-  const p = player;
-  const chunk = conversationChunk(p.scene, 'conv.food.order_this');
-  el('stage').innerHTML = `
-    <div class="center"><div class="eyebrow">One-phrase voice check</div><h2>Record one useful reply</h2><p class="sub">Say “I’ll have this one.” Recording is optional; speaking aloud is the practice.</p></div>
-    <div class="conversation-turn learner">
-      <div class="conversation-speaker">Your phrase</div>
-      <div class="p-en"><b>${esc(chunk.en)}</b></div>
-      <div class="p-thai" lang="th">${esc(chunk.thai)}</div>
-      <div class="p-tr">${esc(chunk.tr)}</div>
-      ${conversationSegmentsHtml(chunk.segments, 'Build the phrase')}
-    </div>
-    <div class="compare-box">
-      <div class="row" style="justify-content:center;gap:10px;margin-bottom:12px">${speakBtn(chunk.thai, 'Hear the phrase model')}<span class="sub">Hear the phrase</span></div>
-      <button class="btn full ghost record-btn" id="conversation-record">● Record yourself</button>
-      <audio class="own-audio" id="conversation-own" controls style="display:none"></audio>
-      <div class="sub" style="font-size:11px;margin-top:8px">Optional, private and temporary. Nothing is uploaded, saved or scored. If the microphone is unavailable, say it aloud and continue.</div>
-    </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-record-next">I practised it · change one detail →</button></div>`;
-  const record = el('conversation-record'), audio = el('conversation-own');
-  record.onclick = ()=>{
-    p.evidence.recordingAttempted = true;
-    toggleLocalRecording(record, audio, LOCAL_RECORDING_LIMIT_MS);
-  };
-  el('conversation-record-next').onclick = ()=>{
-    p.evidence.recordStepCompleted = true;
-    advanceConversationPilot('swap');
-  };
-}
-function renderConversationPilotSwap(){
-  const p = player, swap = p.scene.swap;
-  if(p.swapStep === 'teach'){
-    el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">Preteach the change</div><h2>Replace “this one” with a dish</h2><p class="sub">First see what changes. You will hear the new item and the complete order before trying it.</p></div>
-      <div class="notebox">
-        <div class="conversation-speaker">The phrase you already know</div>
-        ${conversationSegmentsHtml(swap.originalSegments, 'Replace the middle part')}
-      </div>
-      <div class="conversation-turn learner" style="margin-top:14px">
-        <div class="conversation-speaker">New food item</div>
-        <div class="p-en"><b>${esc(swap.itemEn)}</b></div>
-        <div class="p-thai" lang="th">${esc(swap.item)}</div>
-        <div class="p-tr">${esc(swap.itemTr)}</div>
-        <button class="btn full ghost" id="conversation-swap-hear-item">▶ Hear the food name</button>
-      </div>
-      <div class="conversation-turn learner" style="margin-top:14px">
-        <div class="conversation-speaker">Complete changed order</div>
-        ${conversationSegmentsHtml(swap.modelSegments, 'เอา + dish + ครับ')}
-        <button class="btn full ghost" id="conversation-swap-hear-model">▶ Hear the complete order</button>
-      </div>
-      <div class="stage-actions"><button class="btn full" id="conversation-swap-try" ${p.swapHeardItem && p.swapHeardModel ? '' : 'disabled'}>${p.swapHeardItem && p.swapHeardModel ? 'Try it with support' : 'Hear the item and complete order first'} →</button></div>`;
-    const itemBtn = el('conversation-swap-hear-item'), modelBtn = el('conversation-swap-hear-model'), tryBtn = el('conversation-swap-try');
-    const sync = ()=>{
-      tryBtn.disabled = !(p.swapHeardItem && p.swapHeardModel);
-      if(!tryBtn.disabled) tryBtn.textContent = 'Try it with support →';
-    };
-    itemBtn.onclick = ()=>{ p.swapHeardItem = true; speak(swap.item, itemBtn); sync(); };
-    modelBtn.onclick = ()=>{ p.swapHeardModel = true; speak(swap.thai, modelBtn); sync(); };
-    tryBtn.onclick = ()=>{ if(p.swapHeardItem && p.swapHeardModel){ p.swapStep = 'try'; renderConversationPilot(); } };
-    return;
-  }
-  if(p.swapStep === 'try'){
-    el('stage').innerHTML = `
-      <div class="center"><div class="eyebrow">Supported substitution</div><h2>Order chicken with holy basil</h2><p class="sub">Use the three parts below. Say the complete order aloud, then check it.</p></div>
-      <div class="notebox">${conversationSegmentsHtml(swap.modelSegments, 'Your supported answer')}</div>
-      <div class="stage-actions"><button class="btn full" id="conversation-swap-reveal">I said it · show the joined phrase</button></div>`;
-    el('conversation-swap-reveal').onclick = ()=>{
-      p.swapStep = 'reveal';
-      p.evidence.swapRevealed = true;
-      renderConversationPilot();
-    };
-    return;
-  }
-  el('stage').innerHTML = `
-    <div class="center"><div class="eyebrow">Changed order complete</div><h2>You replaced one useful slot</h2></div>
-    <div class="notebox" style="text-align:center">
-      <div class="p-en"><b>${esc(swap.en)}</b></div>
-      <div class="p-thai" lang="th" style="font-size:32px">${esc(swap.thai)}</div>
-      <div class="p-tr">${esc(swap.tr)}</div>
-      <div style="margin-top:12px">${speakBtn(swap.thai, 'Hear the substituted order')}</div>
-    </div>
-    <div class="stage-actions"><button class="btn full" id="conversation-swap-next">Try the vendor prompts →</button></div>`;
-  el('conversation-swap-next').onclick = ()=>{
-    p.progress++;
-    p.phase = 'roleplay';
-    p.roleplayIndex = 0;
-    p.roleplayRevealed = false;
-    renderConversationPilot();
-  };
-}
-function renderConversationPilotRoleplay(){
-  const p = player, item = p.scene.responses[p.roleplayIndex];
-  if(!item){
-    p.phase = 'rating';
-    renderConversationPilot();
-    return;
-  }
-  const answer = conversationChunk(p.scene, item.answer);
-  el('stage').innerHTML = `
-    <div class="q-prompt">
-      <div class="eyebrow">Supported role-play · ${p.roleplayIndex+1} of ${p.scene.responses.length}</div>
-      <h2>${esc(item.en)}</h2>
-      <div class="q-text">Hear the vendor, answer aloud, then check and repeat the model.</div>
-      <div class="audio-inline">${speakBtn(item.partner, 'Hear the vendor prompt')}</div>
-      <details class="conversation-transcript-drawer"><summary>Need help? Show the pronunciation</summary><div class="conversation-turn vendor"><div class="p-thai" lang="th">${esc(item.partner)}</div><div class="p-tr">${esc(item.tr)}</div></div></details>
-    </div>
-    ${p.roleplayRevealed ? `
-      <div class="notebox" style="text-align:center">
-        <div class="p-thai" lang="th" style="font-size:31px">${esc(answer.thai)}</div>
-        <div class="p-tr">${esc(answer.tr)}</div>
-        <div class="p-en">${esc(answer.en)}</div>
-        <div style="margin-top:10px">${speakBtn(answer.thai, 'Hear the model response')}</div>
-      </div>
-      <div class="stage-actions"><button class="btn full" id="conversation-roleplay-next">I repeated it · ${p.roleplayIndex+1 === p.scene.responses.length ? 'rate this run' : 'next vendor prompt'} →</button></div>` : `
-      <div class="stage-actions"><button class="btn full" id="conversation-roleplay-reveal">I answered aloud · show the model</button></div>`}`;
-  const reveal = el('conversation-roleplay-reveal');
-  if(reveal) reveal.onclick = ()=>{
-    if(!p.roleplayModels[p.roleplayIndex]){
-      p.roleplayModels[p.roleplayIndex] = true;
-      p.evidence.roleplayReveals++;
-    }
-    p.roleplayRevealed = true;
-    renderConversationPilot();
-    scheduleConversationSpeech(p, 'roleplay', answer.thai, 180, ()=>p.roleplayIndex < p.scene.responses.length && p.roleplayRevealed);
-  };
-  const next = el('conversation-roleplay-next');
-  if(next) next.onclick = ()=>{
-    p.roleplayIndex++;
-    p.roleplayRevealed = false;
-    p.progress++;
-    renderConversationPilot();
-  };
-}
-function renderConversationPilotRating(){
-  setConversationPilotProgress();
-  el('stage').innerHTML = `
-    <div class="center"><div class="eyebrow">End of practice run</div><h2>How much support did you need?</h2><p class="sub">This is a private self-rating, not a speaking score or mastery result.</p></div>
-    <div class="q-options">
-      ${CONVERSATION_SELF_RATINGS.map(item=>`<button class="q-opt" data-conversation-rating="${escAttr(item.id)}">${esc(item.label)}</button>`).join('')}
-    </div>`;
-  el('stage').querySelectorAll('[data-conversation-rating]').forEach(button=>{
-    button.onclick = ()=>finishConversationPilot(button.dataset.conversationRating);
-  });
-}
-function finishConversationPilot(rating){
-  stopConversationSpeech();
-  const p = player, scene = p.scene;
-  const evidence = Object.assign({}, p.evidence, {completed:todayStr()});
-  if(!conversationEvidenceComplete(evidence, scene)){
-    toast('A practice step is still incomplete.');
-    return false;
-  }
-  const rec = recordConversationRun(scene.id, rating, null, p.evidence);
-  p.completed = true;
-  saveState();
-  setProg(100);
-  sfxComplete();
-  const ratingItem = CONVERSATION_SELF_RATINGS.find(item=>item.id === rec.selfRating);
-  el('stage').innerHTML = `
-    <div class="result-big">Spoken minimum complete</div>
-    <div class="result-sub">${esc(scene.title)} · run ${rec.runs}</div>
-    <div class="notebox" style="margin-top:14px">${esc(ratingItem ? ratingItem.label : '')}</div>
-    <div class="result-sub" style="font-size:12px">Today’s conversation is done. Phase 1 reading remains optional. No tokens, streak, lesson progress or speaking score changed.</div>
-    <div class="stage-actions">
-      <button class="btn full" id="conversation-done">Done</button>
-      <button class="btn full ghost" id="conversation-again">Run it again</button>
-    </div>`;
-  el('conversation-done').onclick = ()=>{ closeOverlay(); renderHome(); };
-  el('conversation-again').onclick = startConversationPilot;
-  return true;
-}
-
 function toneRuleTrainerPool(doneIds){
   let pool = learnedWords(doneIds).filter(monoSyllable);
   if(pool.length < 8) pool = LESSONS.flatMap(x=>x.words).filter(monoSyllable);
@@ -16947,10 +16185,7 @@ function runFullStartupValidators(){
     validateV79RetentionDecodeContracts,
     validateV8VisualContracts,
     validateV81ArcadeContracts,
-    validateV82ConversationPilotContracts,
-    validateV821ConversationFrontDoorContracts,
-    validateV822BeginnerConversationContracts,
-    validateV823ConversationPracticeContracts
+    validateV830ConversationCourseContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){
@@ -16983,6 +16218,7 @@ window.addEventListener('unhandledrejection', ()=>showRuntimeErrorNotice());
     renderHome(); renderLearn(); renderReviewTab();
     showV5NoticeIfNeeded(hadProgressBeforeRepair);
     showCorruptStateNotice();
+    showConversationRecoveryNotice();
     showOnboardingIfNeeded();
     showPhase1CompletionCelebrationIfNeeded();
   }catch(e){

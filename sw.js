@@ -1,6 +1,6 @@
-/* อ่าน — Learn Thai service worker */
-const CACHE = 'aan-thai-v8-2-1';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
+/* ÀAN — Bangkok Thai service worker */
+const CACHE = 'aan-thai-v8-3-0';
+const ASSETS = ['./', './index.html', './conversation-course.js', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 const SHELL_TIMEOUT_MS = 4000;
 
 self.addEventListener('install', e => {

@@ -21,7 +21,8 @@ const INDEX = path.join(ROOT, 'index.html');
 function appScript(html){
   const match = html.match(/<script>([\s\S]*)<\/script>/);
   if(!match) throw new Error('script block not found');
-  return match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for corpus check */\n');
+  const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+  return course + '\n' + match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for corpus check */\n');
 }
 function stubElement(){
   return {

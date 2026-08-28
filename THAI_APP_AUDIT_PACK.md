@@ -2,14 +2,14 @@
 
 Prepared: 2026-08-28
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.2.3`
+Current app version: `v8.3.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Usable conversational Thai for daily Bangkok life is the app's primary goal. The first food-ordering scene now gates six taught pairs, complete-scene playback, four active response choices with wrong-answer repair, one supported substitution, one-phrase speaking practice and four role-play reveals. Completing that interaction loop—not reading—is today's minimum. The complete Phase 1 script-mastery course remains available behind an optional gradual reading companion. The app remains a single-file vanilla PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or Phase 2 route.
+Usable conversational Thai for daily Bangkok life is the app's primary goal. v8.3.0 replaces the one-scene pilot with the schema-2 Bangkok Conversation Foundation engine and the exact first week: three meaning-first lessons, integrated consolidation, a sealed real-life gate and +1/+7/+30 retrieval. The learner hears, chooses and produces male-polite Thai before script is required; reading remains a gradual, optional companion. The app remains a vanilla static PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or native-review dependency.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -283,9 +283,20 @@ v8.2.3 completes the beginner conversation-practice loop:
 - Adds bounded `lastRun` evidence inside the existing conversation scene record. Legacy or malformed evidence cannot invent Today credit, and completion still mutates no lesson/SRS/mastery/token/streak/reading state.
 - Adds `validateV823ConversationPracticeContracts()` and `tools/conversation-smoke.js`, bringing the generated audit to 63 validators. Device TTS is the fixed audio model; no native-audio/reviewer dependency exists.
 
+v8.3.0 establishes the conversation-course authority:
+
+- Adds `conversation-course.js` as the canonical revisioned registry and engine for Week 1: food ordering, dine-in/drink/bill choices and precise communication repair.
+- Freezes ordinary workloads at 27, 29, 30, 28 and 30 minutes for Lessons 1-3, consolidation and the gate, with core and bounded repair minutes recorded separately.
+- Teaches each situation in English before Thai, requires cue/reply playback with an explicit gap, delays full scenes until teaching is complete, uses compulsory miss repair and fades support across two role-play passes.
+- Adds exact 6-item lesson checks, 8-item consolidation, three disjoint 12-item gate forms and fixed +1/+7/+30 forms. Cold evidence, ordinary repair and spoken participation remain distinct.
+- Adds schema-2 authority, Bangkok-calendar scheduling, a two-check/16-decision backlog governor, deterministic form rotation, action-boundary resume, strict import validation and local quarantine/reconstruction for damaged conversation resumes.
+- Keeps every modeled full line male-polite with `ครับ`, uses device Thai TTS only and stores neither audio nor pronunciation scores. Phase 1 reading namespaces remain isolated.
+- Replaces the four historical pilot validators in the active audit with `validateV830ConversationCourseContracts()`; the generated audit remains 60 validators because the new validator covers the consolidated course architecture.
+
 ## Current Tracked Source
 
-- `index.html` - full app shell, curriculum, state, review, lesson and UI logic.
+- `index.html` - app shell, Phase 1 curriculum/state and shared UI/runtime logic.
+- `conversation-course.js` - schema-2 conversation registry, lesson/assessment engine, scheduling, recovery and v8.3 contracts.
 - `manifest.json`, `sw.js`, `vercel.json` - static PWA/deploy support.
 - `icon-180.png`, `icon-192.png`, `icon-512.png` - install icons.
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
@@ -299,6 +310,8 @@ v8.2.3 completes the beginner conversation-practice loop:
 - `docs/v7_release_notes.md` - Phase 1 v7-v8 release notes and post-Phase-1 backlog.
 - `docs/v8_visual_overhaul_notes.md` - approved visual direction, learner-facing changes, accessibility boundaries and v8 visual contract.
 - `docs/v8_2_conversation_pilot_notes.md` - pilot flow, state/progression isolation, audio/Thai caveats and migration criteria.
+- `docs/conversation_course_implementation_spec.md` and `docs/conversation_course_content_inventory.md` - frozen architecture and migration/content disposition.
+- `docs/conversation_course_form_manifest.md` and `docs/conversation_registry_weeks_1_2.md` through `docs/conversation_registry_weeks_7_8.md` - sealed form and eight-week curriculum registries.
 - `docs/economy_notes.md` - v7.2 token economy calibration notes.
 - `docs/phase1_content_pedagogy_notes.md`, `docs/content_pedagogy_checklist.md` - content-pedagogy notes and future-edit checklist.
 - `docs/v6_ui_pass_notes.md` - UI pass notes and deferred checks.
@@ -324,9 +337,9 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.2.3`
+- app version `v8.3.0`
 - 24 lessons
-- 63 validators passing
+- 60 validators passing
 - 0 lesson prerequisite issues
 - 0 pool prerequisite issues
 - 0 role-contract issues
@@ -340,7 +353,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-2-1`, including refresh of the changed manifest description
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-3-0`, including the external conversation-course module
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording
