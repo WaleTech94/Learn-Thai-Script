@@ -442,6 +442,28 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.cv-audio-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px;border:2px solid var(--line);border-radius:4px 12px 4px 12px;background:var(--atlas-panel)}
 	.cv-audio-option+.cv-audio-option{margin-top:8px}
 	.cv-support-hidden{padding:16px;border:2px dashed var(--line-bright);border-radius:4px 14px 4px 14px;text-align:center}
+	.cv-mission{margin:16px 0;padding:18px;border:2px solid var(--ui-primary);border-radius:4px 18px 4px 18px;background:var(--atlas-panel);box-shadow:4px 4px 0 var(--atlas-hard-shadow)}
+	.cv-mission h2{margin:4px 0 8px}
+	.cv-goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+	.cv-goal{padding:8px 10px;border:1px solid var(--line-bright);border-radius:999px;background:var(--surface2);font-size:12px;font-weight:850}
+	.cv-builder{display:grid;gap:14px;margin-top:16px;padding:15px;border:2px solid var(--line-bright);border-radius:4px 16px 4px 16px;background:var(--atlas-panel)}
+	.cv-builder.complete{border-color:var(--ui-success)}
+	.cv-builder-target,.cv-builder-bank{display:flex;flex-wrap:wrap;gap:9px;min-height:58px;padding:10px;border-radius:3px 12px 3px 12px}
+	.cv-builder-target{align-items:center;border:2px dashed var(--line-bright);background:var(--surface2)}
+	.cv-builder-target:empty::before{content:'Tap the parts below';color:var(--muted);font-size:13px;font-weight:750}
+	.cv-builder-bank{align-items:stretch;padding:0}
+	.cv-word-tile{display:grid;gap:1px;min-width:86px;padding:10px 12px;border:2px solid var(--line-bright);border-radius:4px 13px 4px 13px;background:var(--surface);color:var(--text);box-shadow:2px 2px 0 var(--atlas-hard-shadow);text-align:center;cursor:pointer}
+	.cv-word-tile .thai{font-family:var(--font-display);font-size:23px;line-height:1.25}
+	.cv-word-tile .tr,.cv-word-tile .en{color:var(--muted);font-size:11px;line-height:1.25}
+	.cv-word-tile.in-answer{border-color:var(--ui-primary);background:var(--surface2)}
+	.cv-builder-feedback{min-height:22px;font-size:13px;font-weight:800}
+	.cv-builder-feedback.ok{color:var(--ui-success)}
+	.cv-builder-feedback.no{color:var(--ui-danger)}
+	.cv-dialogue-progress{display:flex;gap:6px;justify-content:center;margin:8px 0 16px}
+	.cv-dialogue-progress span{width:28px;height:6px;border-radius:999px;background:var(--line-bright)}
+	.cv-dialogue-progress span.done{background:var(--ui-success)}
+	.cv-dialogue-progress span.active{background:var(--ui-primary)}
+	.cv-voice-note{margin-top:10px;color:var(--muted);font-size:12px;text-align:center}
 	.hero-card{position:relative;overflow:hidden;border-radius:22px}
 	.route-summary.hero-card{
 	  --route-accent:var(--ui-primary-2);
@@ -1752,23 +1774,23 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Bangkok Conversation Foundation · v8.3.0</span>
+        <span class="version-pill">Bangkok Thai · v8.4.0</span>
       </div>
     </header>
 
     <section class="conversation-front-door">
       <div class="progress-divider">TODAY · CONVERSATION</div>
-      <h1>Use Thai in Bangkok</h1>
-      <p class="sub">Start with the situation in English, learn each short cue and reply, then hear and practise the exchange. No Thai knowledge or reading is assumed.</p>
+      <h1>Speak Thai today</h1>
+      <p class="sub">Listen to a short Bangkok situation, build the reply from phrase parts and say it aloud.</p>
       <button class="card cta-card action-card primary recommended" id="conversation-course-card">
         <div>
           <div class="eyebrow" id="conversation-card-kicker">Start here · Lesson 1</div>
-          <div class="t" id="conversation-card-title">Order food: choose an item and spice level</div>
-          <div class="d" id="conversation-course-status">About 27 min · meaning first, then hear, respond and speak</div>
+          <div class="t" id="conversation-card-title">Order food and ask for no spice</div>
+          <div class="d" id="conversation-course-status">10 min · listen, build and speak</div>
         </div>
         <span class="icon-right">→</span>
       </button>
-      <div class="conversation-day-status" id="conversation-day-status">No Thai knowledge or reading is assumed.</div>
+      <div class="conversation-day-status" id="conversation-day-status">Your first useful reply is only a few taps away.</div>
       <div class="conversation-route-list" id="conversation-due-list"></div>
       <div class="conversation-optional-panel" id="conversation-optional-panel" hidden></div>
     </section>
@@ -1894,7 +1916,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
     </details>
     </div>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Bangkok Conversation Foundation · v8.3.0</div>
+      <div class="sub meta-tiny meta-top">Bangkok Thai · v8.4.0</div>
     </div>
   </section>
 
@@ -1907,7 +1929,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       <span class="screen-mark" aria-hidden="true">๔๒</span>
     </div>
     <div class="section-card" id="conversation-progress-card">
-      <div class="spread"><div><div class="eyebrow">Bangkok Conversation Foundation</div><h2>Your conversation route</h2></div><span class="sub meta-mini" id="conversation-progress-status">Week 1</span></div>
+      <div class="spread"><div><div class="eyebrow">Bangkok Thai</div><h2>Your conversation route</h2></div><span class="sub meta-mini" id="conversation-progress-status">Week 1</span></div>
       <div class="conversation-progress-grid" id="conversation-progress-grid"></div>
       <div class="sub meta-mini mt-10" id="conversation-progress-next">Lesson 1 is ready.</div>
     </div>
@@ -3644,8 +3666,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.3.0';
-const APP_VERSION_LABEL = 'Bangkok Conversation Foundation · v8.3.0';
+const APP_VERSION = 'v8.4.0';
+const APP_VERSION_LABEL = 'Bangkok Thai · v8.4.0';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -5714,24 +5736,12 @@ function completeOnboarding(mode, target){
 }
 const ONBOARDING_STEPS = [
   {
-    title:'Speak useful Thai first',
-    body:`<p class="sub">This course is for daily life in Bangkok. Your usual new lesson takes about 27–30 minutes; due checks can bring a busy day up to 45 minutes. Reading is optional and never unlocks speaking.</p>
-    <div class="notebox"><b>Conversation is the required route.</b><div class="sub">The course begins from English meaning; no Thai knowledge or reading is assumed.</div></div>`
+    title:'Order something in your first lesson',
+    body:`<p class="sub">In about 10 minutes, you will learn to point to food, order it and ask for no spice.</p><div class="onboarding-route-list"><div><b>Listen</b><br><span class="sub">Hear one short question at a time.</span></div><div><b>Build</b><br><span class="sub">Tap phrase parts into the right order.</span></div><div><b>Use it</b><br><span class="sub">Say the reply inside a short conversation.</span></div></div><p class="sub">The reading course is available separately whenever you want it.</p>`
   },
   {
-    title:'Understand before the conversation',
-    body:`<div class="onboarding-route-list">
-      <div><b>Situation and purpose</b><br><span class="sub">Start in English so you know who is speaking and what you need to do.</span></div>
-      <div><b>Short cue and reply</b><br><span class="sub">Learn each meaning, then hear the male-polite Thai with a visible pause.</span></div>
-      <div><b>Complete exchange</b><br><span class="sub">Only after teaching, hear the whole scene with spacing and playback controls.</span></div>
-    </div>
-    <p class="sub">First see the situation and purpose in English. Then learn each partner cue and useful reply separately. Only after that do you hear the complete exchange, with visible spacing and controls. Nothing is tested cold.</p>`
-  },
-  {
-    title:'Use the device voice; keep reading optional',
-    body:`<p class="sub">Your device generates every Thai line. You answer aloud and compare, but the app does not score pronunciation. Native recordings and native-speaker review are not available or required.</p>
-    <button class="btn full ghost" id="onboard-test-voice">Test Thai voice</button>
-    <p class="sub">Thai script and pronunciation spelling remain available; a short script-noticing activity and the complete reading course are optional. Optional recordings are temporary and stay on this device.</p>`
+    title:'Check the voices on your phone',
+    body:`<p class="sub">Conversation audio comes from the Thai voices installed on this device. If two are available, the vendor and your reply use different voices. With one voice, the app separates the roles with pacing and a clear pause.</p><div class="audio-setup-actions"><button class="btn ghost" id="onboard-test-vendor">Test vendor</button><button class="btn ghost" id="onboard-test-learner">Test your reply</button></div><p class="sub">The app helps you listen and practise. It does not score pronunciation.</p>`
   }
 ];
 function onboardingStepHtml(i){
@@ -5752,13 +5762,13 @@ function onboardingStepHtml(i){
     </div>
     <button class="btn ghost onboarding-skip" id="onboard-skip">Skip</button>`;
 }
-function testOnboardingThaiVoice(btn){
-  const sample = 'สวัสดีครับ';
+function testOnboardingThaiVoice(btn,role){
+  const sample = role==='vendor'?'รับอะไรดีครับ':'เอาอันนี้ครับ';
   if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', sample, btn); return; }
   try{ speechSynthesis.resume(); }catch(e){}
   pickVoice();
   if(!thaiVoice){ showAudioSetup('missing-thai', sample, btn); return; }
-  speak(sample, btn);
+  speak(sample, btn, .72, null, role);
 }
 function showOnboarding(){
   const focusTarget = currentFocusTarget();
@@ -5775,11 +5785,13 @@ function showOnboarding(){
     const back = wrap.querySelector('#onboard-back');
     const next = wrap.querySelector('#onboard-next');
     const skip = wrap.querySelector('#onboard-skip');
-    const test = wrap.querySelector('#onboard-test-voice');
+    const vendorTest = wrap.querySelector('#onboard-test-vendor');
+    const learnerTest = wrap.querySelector('#onboard-test-learner');
     if(back) back.onclick = ()=>{ if(i > 0){ i--; render(); } };
     if(next) next.onclick = ()=>{ if(i < ONBOARDING_STEPS.length - 1){ i++; render(); } else { completionMode = 'finish'; dismiss(); setTimeout(()=>startConversationCourseTask('cv1.lesson.w01.l01.food-order'), 0); } };
     if(skip) skip.onclick = dismiss;
-    if(test) test.onclick = ()=>testOnboardingThaiVoice(test);
+    if(vendorTest) vendorTest.onclick = ()=>testOnboardingThaiVoice(vendorTest,'vendor');
+    if(learnerTest) learnerTest.onclick = ()=>testOnboardingThaiVoice(learnerTest,'learner');
     setTimeout(()=>{ const target = next || skip || back; if(target) target.focus(); }, 0);
   };
   wrap.addEventListener('touchstart', e=>{
@@ -5809,12 +5821,11 @@ function showAboutApp(){
     <div class="eyebrow">About this app</div>
     <h2 id="about-app-title">Thai for daily life in Bangkok</h2>
     <div class="about-list">
-      <div>The primary course is an eight-unit, 24-lesson conversation foundation.</div>
-      <div>Lessons teach the situation and meaning before device-generated Thai cue/reply pairs and a complete exchange.</div>
-      <div>Speaking practice is required, but recording is optional and pronunciation is not assessed.</div>
-      <div>Reading develops gradually through optional script noticing; the complete Phase 1 reading course remains available and never gates conversation.</div>
-      <div>Your device generates every Thai line. Native recordings and native-speaker review are not available or required.</div>
-      <div>Conversation progress is isolated from Phase 1 reading mastery, SRS, tokens and streaks.</div>
+      <div>Short lessons cover food, transport, shopping and everyday problems.</div>
+      <div>You listen to one turn, build your reply and use it in a conversation.</div>
+      <div>Speaking is part of each lesson. Recording is optional, and pronunciation is not scored.</div>
+      <div>Your phone or computer generates the Thai audio. The course does not require native recordings or a native reviewer.</div>
+      <div>Reading is separate and optional. Open the complete reading course whenever you want it.</div>
       <div>Current version: ${esc(APP_VERSION_LABEL)}.</div>
       <div>Backups live in Progress → Progress tools. Export before resetting or changing devices.</div>
     </div>
@@ -6840,7 +6851,7 @@ function mcCard(id){           // → {prompt,text,answer,options,thaiOpts?,say?
 /* =====================================================
    SPEECH
 ===================================================== */
-let thaiVoice = null, voiceWarned = false, audioSetupOpen = false, audioSetupFocusTarget = null, audioSetupKeyHandler = null, audioSetupMadeAppInert = false;
+let thaiVoice = null, thaiVoices = [], voiceWarned = false, audioSetupOpen = false, audioSetupFocusTarget = null, audioSetupKeyHandler = null, audioSetupMadeAppInert = false;
 function emitReviewTimingEvent(name){
   try{
     if(typeof document !== 'undefined' && document.dispatchEvent && typeof CustomEvent === 'function'){
@@ -6851,7 +6862,14 @@ function emitReviewTimingEvent(name){
 function pickVoice(){
   if(!('speechSynthesis' in window)) return [];
   const vs = speechSynthesis.getVoices();
-  thaiVoice = vs.find(v => v.lang && v.lang.toLowerCase().startsWith('th')) || null;
+  const seen = new Set();
+  thaiVoices = vs.filter(v => v.lang && v.lang.toLowerCase().startsWith('th')).filter(v=>{
+    const key = v.voiceURI || `${v.name}|${v.lang}`;
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a,b)=>Number(b.localService===true)-Number(a.localService===true)||Number(b.default===true)-Number(a.default===true)||String(a.name||'').localeCompare(String(b.name||'')));
+  thaiVoice = thaiVoices[0] || null;
   return vs;
 }
 if('speechSynthesis' in window){
@@ -6967,10 +6985,27 @@ function closeAudioSetup(){
   audioSetupFocusTarget = null;
 }
 let deviceSpeechRun = 0;
-function speak(text, btn, rate, onComplete){
-  return speakWithDeviceVoice(text, btn, rate, onComplete);
+function conversationVoiceForRole(role){
+  if(!thaiVoices.length) pickVoice();
+  if(role === 'learner' && thaiVoices.length > 1) return thaiVoices[1];
+  return thaiVoices[0] || thaiVoice || null;
 }
-function speakWithDeviceVoice(text, btn, rate, onComplete){
+function conversationVoiceSummary(){
+  if(!thaiVoices.length) pickVoice();
+  if(thaiVoices.length > 1) return `Vendor: ${thaiVoices[0].name} · You: ${thaiVoices[1].name}`;
+  return thaiVoices.length ? 'One Thai voice is installed; the two roles use slightly different pacing.' : 'A Thai device voice is required for conversation audio.';
+}
+function thaiRoleRate(rate, role){
+  const base = rate || 0.75;
+  if(thaiVoices.length > 1) return base;
+  if(role === 'vendor') return Math.max(.58, base - .03);
+  if(role === 'learner') return Math.min(.9, base + .04);
+  return base;
+}
+function speak(text, btn, rate, onComplete, role){
+  return speakWithDeviceVoice(text, btn, rate, onComplete, role);
+}
+function speakWithDeviceVoice(text, btn, rate, onComplete, role){
   markReadTimerUnreliable();
   if(!('speechSynthesis' in window)){ showAudioSetup('unsupported', text, btn); return false; }
   try{ speechSynthesis.resume(); }catch(e){}
@@ -6982,8 +7017,9 @@ function speakWithDeviceVoice(text, btn, rate, onComplete){
   const speechRun = ++deviceSpeechRun;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  if(thaiVoice) u.voice = thaiVoice;
-  u.lang = 'th-TH'; u.rate = rate || 0.75;
+  const selectedVoice = role ? conversationVoiceForRole(role) : thaiVoice;
+  if(selectedVoice) u.voice = selectedVoice;
+  u.lang = 'th-TH'; u.rate = thaiRoleRate(rate, role);
   let timingClosed = false, settled = false, watchdog = null;
   const closeTiming = ()=>{
     if(timingClosed) return;
@@ -9114,10 +9150,10 @@ function validateV70OnboardingContracts(){
 
   const onboardingSource = String(showOnboarding) + JSON.stringify(ONBOARDING_STEPS);
   if(!/onboard-skip/.test(onboardingSource)) errors.push('onboarding needs a skip control');
-  if(!/Test Thai voice/.test(onboardingSource) || !/showAudioSetup/.test(String(testOnboardingThaiVoice))) errors.push('onboarding must expose proactive Thai voice setup');
+  if(!/Test vendor/.test(onboardingSource) || !/Test your reply/.test(onboardingSource) || !/showAudioSetup/.test(String(testOnboardingThaiVoice))) errors.push('onboarding must expose proactive role-voice setup');
   if(!/touchstart/.test(onboardingSource) || !/touchend/.test(onboardingSource)) errors.push('onboarding should support swipe gestures');
   const aboutSource = String(showAboutApp);
-  if(!/About this app/.test(aboutSource) || !/device generates every Thai line/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
+  if(!/About this app/.test(aboutSource) || !/phone or computer generates the Thai audio/.test(aboutSource) || !/Progress → Progress tools/.test(aboutSource)) errors.push('About page content missing required scope or backup copy');
   if(!/^v(?:7\.\d+\.\d+|8\.\d+\.\d+)$/.test(APP_VERSION)) errors.push('internal app version should stay on the Phase 1 release line');
   if(!APP_VERSION_LABEL.includes(APP_VERSION)) errors.push('footer label should contain the current app version');
   if(errors.length) throw new Error('V7.0 onboarding contract failed:\n' + errors.join('\n'));
@@ -9319,8 +9355,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
-  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
+  if(APP_VERSION !== 'v8.4.0') errors.push('internal app version should be v8.4.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('footer label should be Bangkok Thai · v8.4.0');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9492,8 +9528,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
-  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
+  if(APP_VERSION !== 'v8.4.0') errors.push('internal app version should be v8.4.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('footer label should be Bangkok Thai · v8.4.0');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9587,8 +9623,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
-  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
+  if(APP_VERSION !== 'v8.4.0') errors.push('internal app version should be v8.4.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('footer label should be Bangkok Thai · v8.4.0');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9657,8 +9693,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.3.0') errors.push('internal app version should be v8.3.0');
-  if(APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('footer label should be Bangkok Conversation Foundation · v8.3.0');
+  if(APP_VERSION !== 'v8.4.0') errors.push('internal app version should be v8.4.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('footer label should be Bangkok Thai · v8.4.0');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9871,7 +9907,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
+  if(APP_VERSION !== 'v8.4.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('v8.4.0 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9909,7 +9945,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
+  if(APP_VERSION !== 'v8.4.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('v8.4.0 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9978,7 +10014,7 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.3.0' || APP_VERSION_LABEL !== 'Bangkok Conversation Foundation · v8.3.0') errors.push('v8.3.0 identity mismatch');
+  if(APP_VERSION !== 'v8.4.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.0') errors.push('v8.4.0 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -13608,7 +13644,7 @@ function conversationChunk(scene, chunkId){
 function resolvedConversationTurn(scene, turn){
   if(turn.chunk){
     const chunk = conversationChunk(scene, turn.chunk);
-    return chunk ? Object.assign({speaker:'learner'}, chunk) : null;
+    return chunk ? Object.assign({}, chunk, turn, {speaker:turn.speaker || 'learner'}) : null;
   }
   return turn;
 }
@@ -13691,9 +13727,9 @@ function playConversationTurns(p, turns, button, options){
     setConversationActiveTurn(index, sequence[index], sequence.length);
     if(typeof opts.onTurn === 'function') opts.onTurn(index, sequence[index]);
     const utterance = new SpeechSynthesisUtterance(sequence[index].thai);
-    utterance.voice = thaiVoice;
+    utterance.voice = conversationVoiceForRole(sequence[index].speaker);
     utterance.lang = 'th-TH';
-    utterance.rate = sequence[index].rate || 0.72;
+    utterance.rate = thaiRoleRate(sequence[index].rate || 0.72, sequence[index].speaker);
     let utteranceSettled = false;
     const utteranceWatchdog = setTimeout(()=>{
       if(utteranceSettled) return;
@@ -13709,7 +13745,7 @@ function playConversationTurns(p, turns, button, options){
       clearTimeout(utteranceWatchdog);
       index++;
       if(index >= sequence.length){ finish(true); return; }
-      setTimeout(next, 900);
+      setTimeout(next, sequence[index-1].pauseAfter || 1000);
     };
     utterance.onerror = event=>{
       if(utteranceSettled) return;
@@ -16185,7 +16221,7 @@ function runFullStartupValidators(){
     validateV79RetentionDecodeContracts,
     validateV8VisualContracts,
     validateV81ArcadeContracts,
-    validateV830ConversationCourseContracts
+    validateV840ConversationBuilderContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

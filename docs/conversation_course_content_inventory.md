@@ -3,7 +3,7 @@
 **Inventory revision:** 1.0
 **Date:** 2026-08-28
 **Parent specification:** `conversation_course_implementation_spec.md`
-**Status:** frozen binding content appendix; Week 1 is implemented in v8.3.0 and Weeks 2–8 remain reserved for the staged releases in the parent specification
+**Status:** frozen binding content appendix; Week 1 content was implemented in v8.3.0 and its learner flow was rebuilt in v8.4.0. Weeks 2–8 remain reserved for staged releases in the parent specification.
 
 This is the binding content appendix for the 24-lesson course. It fixes the situations, active functions, model-dialogue order, first substitution, delayed variants and later recurrence before implementation begins. The parent specification controls scheduling, evidence, gates, state, audio, migration and validation when this inventory and the parent differ.
 

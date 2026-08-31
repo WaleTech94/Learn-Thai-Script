@@ -53,27 +53,33 @@ const api=vm.runInContext(`({
   assessmentRecord:cvAssessmentRecord,
   assessmentSpoken:cvAssessmentSpoken,
   weaknessSeen:cvWeaknessSeen,
-  validator:validateV830ConversationCourseContracts,
-  courseSource:String(renderConversationCourseLesson)+String(cvRenderLessonObjective)+String(cvRenderLessonRoleplay),
+  validator:validateV840ConversationBuilderContracts,
+  courseSource:String(renderConversationCourseLesson)+String(cvRenderLessonPair)+String(cvRenderLessonGuided)+String(cvRenderLessonSubstitution)+String(cvRenderConsolidationTransfer),
+  builderSource:String(cvSentenceBuilderHtml)+String(cvBindSentenceBuilder),
+  builderOrder:cvBuilderOrder,
   pairSource:String(cvRenderLessonPair)+String(cvPronunciationKeyHtml),
   spokenSource:String(cvRenderAssessmentSpoken),
   assessmentSource:String(cvRenderAssessmentObjective)+String(cvFinishAssessment),
   playbackSource:String(playConversationTurns)+String(stopConversationSpeech),
   deviceSource:String(speakWithDeviceVoice),
+  pickVoice,
+  roleVoiceName:role=>(conversationVoiceForRole(role)||{}).name||null,
+  roleRate:thaiRoleRate,
+  resolveTurn:resolvedConversationTurn,
   resetSource:String(resetProgressNow)
 })`,sandbox);
 
 function assert(ok,message){if(!ok)throw new Error(message);}
 function pass(message){console.log('PASS '+message);}
 
-assert(api.version==='v8.3.0','expected v8.3.0 identity');
-assert(api.validator(),'v8.3 validator failed');
+assert(api.version==='v8.4.0','expected v8.4.0 identity');
+assert(api.validator(),'v8.4 validator failed');
 assert(Object.keys(api.lessons).length===3,'expected three Week 1 lessons');
 assert(api.scenes.l01.turns.length===8&&api.scenes.l02.turns.length===10&&api.scenes.l03.turns.length===13,'scene turn counts drifted');
 assert(Object.values(api.lines).every(line=>line.revision===1&&['active','recognition','routine','slot','transfer-only'].includes(line.role)),'Thai line revision/role metadata drifted');
-assert(api.lessons['cv1.lesson.w01.l01.food-order'].totalMinutes===27&&api.lessons['cv1.lesson.w01.l02.food-options'].totalMinutes===29&&api.lessons['cv1.lesson.w01.l03.repair'].totalMinutes===30,'lesson workloads drifted');
-assert(api.consolidation.coreMinutes===23&&api.consolidation.ordinaryRepairMinutes===5&&api.consolidation.totalMinutes===28,'consolidation workload drifted');
-assert(api.gateMeta.coreMinutes===22&&api.gateMeta.ordinaryRepairMinutes===8&&api.gateMeta.totalMinutes===30,'gate workload drifted');
+assert(api.lessons['cv1.lesson.w01.l01.food-order'].totalMinutes===10&&api.lessons['cv1.lesson.w01.l02.food-options'].totalMinutes===12&&api.lessons['cv1.lesson.w01.l03.repair'].totalMinutes===12,'lesson workloads drifted');
+assert(api.consolidation.coreMinutes===8&&api.consolidation.ordinaryRepairMinutes===2&&api.consolidation.totalMinutes===10,'consolidation workload drifted');
+assert(api.gateMeta.coreMinutes===10&&api.gateMeta.ordinaryRepairMinutes===2&&api.gateMeta.totalMinutes===12,'gate workload drifted');
 assert(api.supportRatings.map(item=>item.id).join('|')==='full-support|some-support|minimal-support','course support-rating enum drifted');
 pass('canonical Week 1 lesson and scene registry');
 
@@ -129,22 +135,33 @@ const weakness=api.fresh(),objective=api.objectives(l1.interactions,'cv1.form.le
 const weaknessItem=weakness.weakness.items[objective.interaction.id+'>'+objective.direction];assert(weaknessItem.seen===1&&weaknessItem.firstMisses===1,'one first attempt must update weakness exactly once');
 pass('strict import, resume and weakness evidence');
 
-assert(api.courseSource.includes('audio-only')||api.courseSource.includes('Hear each possible reply'),'objective response choices are not listening-first');
-assert(api.courseSource.includes('spokenBeforeRevealIds')&&api.courseSource.includes('supportOpenedIds'),'support-fading evidence missing');
+const order=api.builderOrder(api.lines.orderThis,'lesson-1-order');
+assert(order.length===api.lines.orderThis.segments.length&&new Set(order).size===order.length&&order.some((value,index)=>value!==index),'builder tile order is not a complete deterministic shuffle');
+assert(api.builderSource.includes('state.selected.every')&&api.builderSource.includes('onFirstWrong')&&api.builderSource.includes('onCorrect'),'sentence builder does not check order and support retry');
+assert(api.courseSource.includes("'teach'")&&api.courseSource.includes("'practice'")&&api.courseSource.includes('Build it again with less help'),'lesson does not move from supported to less-supported sentence building');
+assert(api.courseSource.includes('spokenBeforeRevealIds'),'spoken-use evidence missing');
 assert(api.pairSource.includes('cv-pair-cue')&&api.pairSource.includes('cv-pair-reply')&&!api.pairSource.includes('playConversationTurns(p,turns'),'teaching pair still uses a passive timed gap instead of learner-controlled reply playback');
 assert(api.pairSource.includes('if(!ok||!stillHere())return'),'teaching pair can award playback evidence before successful device speech completion');
+assert(api.pairSource.includes('cvBuilderState')&&api.pairSource.includes('.complete')&&!api.pairSource.includes('p.evidence.responsePromptIds.includes'),'a wrong saved builder attempt could restore as completed after reload');
 assert(['bp','dt','ph','th','kh','ng','ʉ','Doubled vowels','caron (ǎ)'].every(term=>api.pairSource.includes(term)),'pronunciation-spelling key is incomplete');
 assert(api.spokenSource.includes('cv-assessment-support')&&api.spokenSource.includes('supportOpenedIds'),'assessment spoken support is not bounded and recorded');
 assert(api.assessmentSource.includes('feedbackAcknowledgedIds')&&api.assessmentSource.includes('repairCompletedAt'),'cold evidence or repair boundary missing');
 assert(api.assessmentSource.includes("p.phase='repair'")&&api.assessmentSource.includes('cvPersistCourseResume'),'post-check repair is not action-boundary resumable');
-assert(api.assessmentSource.includes('first answer was saved before the interruption')&&api.assessmentSource.includes('Continue without changing the score'),'interrupted cold answer can be answered again or rewritten');
-assert(api.playbackSource.includes('SpeechSynthesisUtterance')&&api.playbackSource.includes('setTimeout(next, 900)')&&api.playbackSource.includes('speechSynthesis.cancel'),'guarded device-TTS playback missing');
+assert(api.assessmentSource.includes('You already answered this before leaving the app')&&api.assessmentSource.includes('p.objectiveIndex++'),'interrupted first answer could be answered again or rewritten');
+assert(api.playbackSource.includes('SpeechSynthesisUtterance')&&api.playbackSource.includes('pauseAfter || 1000')&&api.playbackSource.includes('speechSynthesis.cancel'),'guarded device-TTS playback missing');
+const mealTurn=api.resolveTurn(api.scenes.l02,api.scenes.l02.turns[5]);
+assert(mealTurn&&mealTurn.speaker==='learner'&&mealTurn.pauseAfter===1800,'resolved learner chunk lost the meal-to-payment pause');
 assert(api.playbackSource.includes('utteranceWatchdog')&&api.deviceSource.includes('watchdog')&&api.deviceSource.includes('onComplete')&&api.deviceSource.includes('speechRun === deviceSpeechRun'),'TTS stalled/interrupted/error completion guard missing');
+assert(api.deviceSource.includes('conversationVoiceForRole')&&!api.deviceSource.includes('.pitch'),'role voices must not alter pitch in tonal Thai');
+sandbox.speechSynthesis.getVoices=()=>[{name:'Thai A',lang:'th-TH',voiceURI:'a',localService:true,default:true},{name:'Thai B',lang:'th-TH',voiceURI:'b',localService:true,default:false}];api.pickVoice();
+assert(api.roleVoiceName('vendor')==='Thai A'&&api.roleVoiceName('learner')==='Thai B','two available Thai voices were not assigned to different roles');
+sandbox.speechSynthesis.getVoices=()=>[{name:'Thai Solo',lang:'th-TH',voiceURI:'solo',localService:true,default:true}];api.pickVoice();
+assert(api.roleVoiceName('vendor')==='Thai Solo'&&api.roleVoiceName('learner')==='Thai Solo'&&api.roleRate(.72,'vendor')!==api.roleRate(.72,'learner'),'single-voice fallback does not separate roles with pacing');
 assert(api.resetSource.includes('conversation:freshConversationState()'),'reset does not clear schema-2 conversation state');
-pass('meaning-first, cold-evidence, repair, playback and reset boundaries');
+pass('meaning-first builder, assessment, role-voice, playback and reset boundaries');
 
 const thai=JSON.stringify({lessons:api.lessons,scenes:api.scenes,forms:api.retentionForms});
 assert(!thai.includes('ค่ะ'),'female polite particle leaked into course');
 assert(!/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(thai),'authored or remote audio leaked into course');
 pass('male-polite and device-TTS-only content');
-pass('v8.3.0 conversation smoke');
+pass('v8.4.0 conversation smoke');

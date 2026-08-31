@@ -2,7 +2,7 @@
 
 **Specification revision:** 1.0
 **Date:** 2026-08-28
-**Status:** frozen specification; v8.3.0 implements the front door, engine and complete Week 1 slice in §15, while Weeks 2–8 remain staged for v8.4.0–v8.7.0
+**Status:** frozen course/content specification; v8.3.0 implemented the engine and complete Week 1 slice, while v8.4.0 supersedes its learner flow, workload and UI-copy rules through `docs/v8_4_conversation_builder_implementation.md`. Weeks 2–8 remain staged.
 **Course id:** `bangkok-conversation-foundation-v1`
 **Curriculum revision:** `1`
 
@@ -1004,14 +1004,15 @@ Browser acceptance covers onboarding through Lesson 1, every activity type, audi
 
 1. **Specification freeze:** this document, exact content inventory, recurrence matrix and bank assignments pass two independent reviews.
 2. **v8.3.0 — front door, engine + Week 1:** the binding onboarding/Home/Progress/About migration in §8.1, schema 2, migration, Bangkok dates, reusable bidirectional engine, exact evidence, support fading, first three lessons, consolidation, gate and due scheduler.
-3. **v8.4.0 — Weeks 2–3:** transport and daily transactions; first real +7 checks; sealed quantity and slot recombination.
-4. **v8.5.0 — Weeks 4–5:** people/work and condo life; mid-course cumulative gate, missed-week recovery and first unit +30 serving.
-5. **v8.6.0 — Weeks 6–7:** shopping/problem repair and health/help; earlier repair frames deepen under harder cues; medical-language safety boundary.
-6. **v8.7.0 — Week 8 + maintenance:** integrated scenes, final 85% gate, final +30 route, completion dashboard and full 56-day deterministic simulation.
+3. **v8.4.0 — Week 1 learner rebuild:** short listen-build-speak lessons, sentence builders, role voices, explicit pauses and plain product copy, as specified in `v8_4_conversation_builder_implementation.md`.
+4. **v8.5.0 — Weeks 2–3:** transport and daily transactions; first real +7 checks; sealed quantity and slot recombination.
+5. **v8.6.0 — Weeks 4–5:** people/work and condo life; mid-course cumulative gate, missed-week recovery and first unit +30 serving.
+6. **v8.7.0 — Weeks 6–7:** shopping/problem repair and health/help; earlier repair frames deepen under harder cues; medical-language safety boundary.
+7. **v8.8.0 — Week 8 + maintenance:** integrated scenes, final 85% gate, final +30 route, completion dashboard and full 56-day deterministic simulation.
 
 Every versioned release updates app identity, `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, generated audits and smoke documentation; passes the full precommit harness; and is committed. Push/deployment remains blocked until GitHub authentication has access to the repository.
 
-The overall conversation course may be described as Phase-1-equivalent in engineering and pedagogical rigor only after v8.7.0 passes the final definition below.
+The overall conversation course may be described as Phase-1-equivalent in engineering and pedagogical rigor only after v8.8.0 passes the final definition below.
 
 ## 16. Definition of done
 

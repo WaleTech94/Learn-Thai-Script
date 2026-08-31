@@ -2,6 +2,15 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.4.0 - 2026-08-31
+
+- Rebuilt Week 1 around short listen → build → speak loops. Every new reply now uses a tappable phrase builder with supported tiles during teaching and reduced English support during contextual reuse; wrong orders repair in place and each lesson ends with an active phrase change.
+- Removed the long learner-facing map, separate objective block, duplicate supported/reduced role-play and required recording screen. Lesson totals are now 10/12/12 minutes, consolidation and gate are 10/12, and delayed reviews are 3/5/8.
+- Added role-aware device voices. Vendor and learner use different installed Thai voices when available; one-voice devices use slight rate separation, explicit pauses and no pitch manipulation. Lesson 2 adds a longer meal-to-payment pause.
+- Replaced internal-sounding learner copy across onboarding, Today, About, situations, checks, repair and completion. First-run onboarding is two short screens with separate vendor/learner voice tests and launches Lesson 1 directly.
+- Preserved the v8.3 schema-2 authority, exact gate/delayed forms, first-attempt evidence, repair, Bangkok scheduling, imports, recovery and Phase 1 isolation. Existing completion records remain valid and old partial stages route forward into the new flow.
+- Advanced identity to `Bangkok Thai · v8.4.0`, cache to `aan-thai-v8-4-0`, added `validateV840ConversationBuilderContracts()` and expanded the conversation smoke harness to test builder order/retry, two-voice assignment and one-voice fallback. The generated audit remains 60/60.
+
 ## v8.3.0 - 2026-08-28
 
 - Replaced the isolated food pilot with Week 1 of the frozen Bangkok Conversation Foundation: three meaning-first beginner lessons covering food choice/spice, dine-in/water/payment and precise misunderstanding repair. A complete exchange is withheld until each cue/reply pair is taught; Lesson 2 has a learner-controlled meal break before the learner-led bill request.

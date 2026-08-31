@@ -128,8 +128,8 @@ function checkConversationFrontDoor(html){
   const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
   if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
   const onboardingSource = html.slice(onboardingStart, onboardingEnd);
-  if(!html.includes("const APP_VERSION = 'v8.3.0'") || !html.includes('Speak useful Thai first') || !html.includes('Start Lesson 1')){
-    throw new Error('v8.3.0 conversation-course onboarding identity is incomplete');
+  if(!html.includes("const APP_VERSION = 'v8.4.0'") || !html.includes('Order something in your first lesson') || !html.includes('Start Lesson 1')){
+    throw new Error('v8.4.0 conversation-course onboarding identity is incomplete');
   }
   if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
     throw new Error('retired reading-first onboarding copy remains');
@@ -142,7 +142,7 @@ function checkConversationFrontDoor(html){
   if(!/usable conversational Thai/i.test(manifest.description || '') || !/reading as a gradual companion/i.test(manifest.description || '')){
     throw new Error('manifest must describe conversation first and gradual reading');
   }
-  if(!sw.includes("const CACHE = 'aan-thai-v8-3-0'") || !sw.includes("'./conversation-course.js'")) throw new Error('service-worker cache must include the v8.3 course module');
+  if(!sw.includes("const CACHE = 'aan-thai-v8-4-0'") || !sw.includes("'./conversation-course.js'")) throw new Error('service-worker cache must include the v8.4 course module');
   return 'spoken goal, gradual-reading manifest and cache refresh aligned';
 }
 
@@ -150,25 +150,23 @@ function checkBeginnerConversation(html){
   const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
   const source = html + '\n' + course;
   const required = [
-    'Situation first',
-    'No Thai knowledge or reading is assumed',
-    'Nothing is tested cold',
-    'pause · then you answer',
-    'Hear the partner cue',
-    'Hear the model reply',
-    'answer in your own time',
+    'Order something in your first lesson',
+    'Tap phrase parts into the right order',
+    'Test vendor',
+    'Test your reply',
+    'Build your reply',
+    'Check my sentence',
+    'Build it again with less help',
+    'Change one part',
     'Pronunciation-spelling key',
-    'Play full exchange',
-    'Say it, then retry this cue',
-    'Record one useful phrase',
-    'Controlled substitution',
-    'setTimeout(next, 900)',
-    'validateV830ConversationCourseContracts'
+    'conversationVoiceForRole',
+    'pauseAfter || 1000',
+    'validateV840ConversationBuilderContracts'
   ];
   const missing = required.filter(text=>!source.includes(text));
   if(missing.length) throw new Error('beginner conversation scaffold missing: ' + missing.join(', '));
   if(/scene\.gist|renderConversationPilotGist/.test(source)) throw new Error('cold gist-first conversation surface remains');
-  return 'English meaning, learner-controlled teaching pairs and 900ms full-scene gaps present';
+  return 'short meaning-first lessons, tap builders and separated conversation roles present';
 }
 
 function toneSnippet(){
@@ -365,7 +363,7 @@ function checkConversationSmoke(){
   if(result.status !== 0){
     throw new Error(String(result.stderr || result.stdout || 'conversation smoke failed').split('\n').slice(0, 16).join('; '));
   }
-  return 'v8.3.0 route, state and device-TTS boundaries verified';
+  return 'v8.4.0 builder, route, state and role-voice boundaries verified';
 }
 
 const html = readIndex();

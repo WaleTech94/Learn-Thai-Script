@@ -1,4 +1,14 @@
-# Phase 1 and Conversation-First Release Notes (v7-v8.3.0)
+# Phase 1 and Conversation-First Release Notes (v7-v8.4.0)
+
+## Bangkok Thai · v8.4.0
+
+`v8.4.0` rebuilds Week 1 around the actual beginner learner. The compulsory lesson loop is now listen → build → speak: each vendor turn is taught on its own, the learner assembles the reply from tappable phrase parts, hears and says it, then rebuilds it with less English support. Each lesson finishes with one active phrase change, and consolidation uses the same builder for transfer. The long map, separate objective block, two role-play passes and required recording screen are removed from the learner route.
+
+Lesson totals fall from 27/29/30 minutes to 10/12/12; consolidation and the gate fall to 10 and 12 minutes; +1/+7/+30 reviews are 3/5/8 minutes. The two-review governor remains. Complete conversations now have a one-second default pause plus a longer meal-to-payment pause in Lesson 2.
+
+Thai device voices are assigned by role: two installed voices produce separate vendor and learner voices, while one-voice devices use slight rate separation. Pitch is never altered. Onboarding has two short screens, gives both roles a voice-test button and opens directly into Lesson 1. About, Today, checks and learner situations use plain language rather than internal evidence/schema terminology.
+
+No state field is added. Builder state is temporary and existing schema-2 action evidence remains authoritative; old partial resumes route safely into the new flow, and completed Week 1 records remain valid. Gate forms, delayed forms, first-attempt scoring, separate repair, import validation, quarantine, male-polite `ครับ` and Phase 1 isolation are unchanged. `validateV840ConversationBuilderContracts()` plus the expanded conversation smoke harness keep the generated audit at 60 passing validators.
 
 ## Bangkok Conversation Foundation · v8.3.0
 
