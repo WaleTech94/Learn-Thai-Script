@@ -1,23 +1,26 @@
-# v8.4 Conversation Builder — Implementation Plan and Shipped Contract
+# v8.4.1 Model Before Practice — Implementation Plan and Shipped Contract
 
-**Status:** implemented in v8.4.0. This document supersedes the learner-flow, workload and learner-facing-copy portions of the v8.3 Week 1 specification. The canonical Thai lines, interaction IDs, gate forms, delayed forms and schema-2 authority remain unchanged.
+**Status:** corrected in v8.4.1 after the v8.4.0 builder exposed an untaught reply as a reconstruction task. This document supersedes the learner-flow, workload and learner-facing-copy portions of the v8.3 Week 1 specification. The canonical Thai lines, interaction IDs, gate forms, delayed forms and schema-2 authority remain unchanged.
 
 ## Product decision
 
 Week 1 must feel useful within the first minute. A new learner should never be asked to infer an untaught conversation, work through a long explanation or perform a passive sequence of playback screens. The compulsory loop is:
 
 1. See the immediate Bangkok goal in English.
-2. Hear one vendor turn.
-3. Build the learner reply from tappable phrase parts.
-4. Hear and say the reply.
-5. Rebuild it with less support in context.
-6. Change one part to create a useful variant.
+2. See the complete learner reply in correct Thai order, with its meaning and pronunciation spelling.
+3. Understand each phrase part in that same correct order.
+4. Hear the complete learner reply.
+5. Hear the vendor turn, then put the now-familiar reply back together.
+6. Hear and say the reply in context.
+7. Rebuild it later with less support.
+8. Change one part to create a useful variant.
 
 Reading remains available separately and never unlocks speaking. Thai script stays visible alongside transliteration because gradual familiarity is useful, but script recall is not required in the conversation route.
 
 ## Interaction architecture
 
-- **Teaching builder:** shows Thai, pronunciation spelling and English meaning on each phrase tile. Tiles begin in a deterministic non-answer order. A wrong order is repaired in place and recorded only once.
+- **Teaching model:** shows the whole reply, English meaning and pronunciation spelling, followed by every part in correct order with its individual meaning. Its full model audio must finish before practice appears.
+- **Teaching builder:** appears only after that model. It shows Thai, pronunciation spelling and English meaning on each familiar phrase tile. Tiles begin in a deterministic non-answer order. A wrong order is repaired in place and recorded only once.
 - **Use-it builder:** repeats the same reply without English on the tiles. The learner must first identify the vendor's intention, then assemble, hear and say the response.
 - **Conversation playback:** vendor and learner turns are separate utterances with a one-second default pause. Lesson 2 inserts a longer pause between finishing the order and asking for the bill.
 - **Transfer:** each lesson changes one phrase through the same builder, rather than presenting substitution as passive text. Consolidation transfers use the reduced-support builder.
@@ -42,7 +45,7 @@ The two-review daily governor remains. These figures describe expected active le
 
 ## Copy rules
 
-- Use direct learner language: “Build your reply,” “Hear the vendor,” “Try again,” “Ready tomorrow.”
+- Use direct learner language: “Your new reply,” “What each part means,” “Now put it together,” “Try again,” “Ready tomorrow.”
 - Do not expose implementation terms such as authority, schema, evidence, cold form, bounded workload or frozen registry.
 - Describe communication problems as a learner would: “You did not understand,” “They spoke too quickly,” or “You missed it.”
 - Keep the device-audio limitation once in onboarding/setup/About; do not repeat it throughout lessons.
@@ -51,7 +54,7 @@ The two-review daily governor remains. These figures describe expected active le
 ## Migration and preservation
 
 - No learner-state schema change is introduced.
-- In-session builder state is ephemeral and is reconstructed from existing action evidence after reload.
+- In-session model/builder state is ephemeral. An unfinished phrase returns to its teaching model after reload; completed action evidence remains authoritative.
 - Old partial `map`, `objective`, `roleplay`, `resolution` and `record` resumes route forward into the new pair, guided or substitution stages.
 - Existing completed Week 1 records remain valid.
 - Gate forms, delayed-form rotation, first-attempt scoring, repair separation, Bangkok dates, import validation and corruption quarantine remain unchanged.
@@ -59,9 +62,12 @@ The two-review daily governor remains. These figures describe expected active le
 
 ## Release gates
 
-`validateV840ConversationBuilderContracts()` and `tools/conversation-smoke.js` must verify:
+`validateV841ConversationTeachingContracts()` and `tools/conversation-smoke.js` must verify:
 
 - all Week 1 workload figures;
+- whole-phrase Thai, English, pronunciation spelling and correct-order parts before practice;
+- successful complete-phrase model audio before the builder can appear, including after resume;
+- dynamic vendor-playback unlock so the builder cannot remain disabled after the cue is heard;
 - builder order, retry and completion behavior;
 - supported then less-supported building;
 - successful device speech before action credit;

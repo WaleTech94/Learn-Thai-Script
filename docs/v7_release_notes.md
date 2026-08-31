@@ -1,4 +1,10 @@
-# Phase 1 and Conversation-First Release Notes (v7-v8.4.0)
+# Phase 1 and Conversation-First Release Notes (v7-v8.4.1)
+
+## Bangkok Thai · v8.4.1
+
+`v8.4.1` fixes the central teaching error in the first v8.4 flow. A new reply is no longer introduced as a shuffled sentence task. The learner first sees the complete Thai phrase in its correct order, its English meaning, pronunciation spelling and a part-by-part explanation; the full learner-role device voice must then finish before the practice builder unlocks.
+
+The builder moves to a second screen inside the conversation context and is labelled `Now put it together`. Its vendor-heard gate is evaluated live, so hearing the vendor reliably unlocks checking after the learner taps the tiles. Reloading an incomplete phrase deliberately returns to the full teaching model. Onboarding and About now describe Learn → Practise → Use it rather than presenting construction as instruction. No learner-state field, Thai content, workload, gate, delayed review, role voice, reading or Phase 1 contract changes. `validateV841ConversationTeachingContracts()` and the smoke harness protect the new order.
 
 ## Bangkok Thai · v8.4.0
 

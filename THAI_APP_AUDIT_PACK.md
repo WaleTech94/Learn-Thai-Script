@@ -2,14 +2,14 @@
 
 Prepared: 2026-08-31
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.4.0`
+Current app version: `v8.4.1`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Usable conversational Thai for daily Bangkok life is the app's primary goal. v8.4.0 rebuilds the schema-2 Week 1 course around short listen-build-speak lessons for a true beginner: tappable phrase construction, less-supported reuse, active transfer and role-aware device voices. Reading remains separate and optional. The app remains a vanilla static PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or native-review dependency.
+Usable conversational Thai for daily Bangkok life is the app's primary goal. v8.4.1 enforces model-before-practice teaching: each new Week 1 reply is shown whole with meaning, pronunciation spelling and ordered parts, then heard, before its tappable builder can appear. Reading remains separate and optional. The app remains a vanilla static PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or native-review dependency.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -283,7 +283,15 @@ v8.2.3 completes the beginner conversation-practice loop:
 - Adds bounded `lastRun` evidence inside the existing conversation scene record. Legacy or malformed evidence cannot invent Today credit, and completion still mutates no lesson/SRS/mastery/token/streak/reading state.
 - Adds `validateV823ConversationPracticeContracts()` and `tools/conversation-smoke.js`, bringing the generated audit to 63 validators. Device TTS is the fixed audio model; no native-audio/reviewer dependency exists.
 
-v8.4.0 rebuilds the learner experience while preserving authority:
+v8.4.1 repairs the model-before-practice boundary:
+
+- Shows every new learner reply as a complete Thai phrase with its English meaning and pronunciation spelling.
+- Explains every phrase part in correct order before any shuffle or reconstruction task.
+- Requires successful full-phrase device playback before practice unlocks; unfinished reloads return to the model.
+- Evaluates the vendor-heard builder gate live so sentence checking unlocks after actual cue playback.
+- Adds `validateV841ConversationTeachingContracts()` and explicit smoke coverage while changing no curriculum, state, form, voice or Phase 1 contract.
+
+v8.4.0 rebuilt the learner experience while preserving authority:
 
 - Replaces the long map/objective/dual-role-play/recording route with three 10–12 minute listen-build-speak lessons.
 - Requires every new reply to be assembled from tappable phrase parts, then rebuilt without English tile meanings and changed once for transfer.
@@ -291,7 +299,7 @@ v8.4.0 rebuilds the learner experience while preserving authority:
 - Cuts consolidation/gate to 10/12 minutes and delayed reviews to 3/5/8 minutes while keeping the two-review governor.
 - Rewrites onboarding, Today, About, situations, checks and repair in plain learner language.
 - Adds no state field: existing schema-2 action evidence, completion records, forms, scheduling, resume/recovery and Phase 1 isolation remain valid.
-- Adds `validateV840ConversationBuilderContracts()` and stronger deterministic builder/role-voice smoke checks; the audit remains 60 validators.
+- Added `validateV840ConversationBuilderContracts()` and stronger deterministic builder/role-voice smoke checks; v8.4.1 supersedes that validator while the audit remains 60 validators.
 
 v8.3.0 established the conversation-course authority:
 
@@ -348,7 +356,7 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.4.0`
+- app version `v8.4.1`
 - 24 lessons
 - 60 validators passing
 - 0 lesson prerequisite issues
@@ -364,7 +372,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-4-0`, including the external conversation-course module
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-4-1`, including the external conversation-course module
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording

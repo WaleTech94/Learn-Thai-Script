@@ -53,9 +53,12 @@ const api=vm.runInContext(`({
   assessmentRecord:cvAssessmentRecord,
   assessmentSpoken:cvAssessmentSpoken,
   weaknessSeen:cvWeaknessSeen,
-  validator:validateV840ConversationBuilderContracts,
+  validator:validateV841ConversationTeachingContracts,
   courseSource:String(renderConversationCourseLesson)+String(cvRenderLessonPair)+String(cvRenderLessonGuided)+String(cvRenderLessonSubstitution)+String(cvRenderConsolidationTransfer),
+  teachingSource:String(cvTeachingModelHtml),
+  teachingHtml:line=>cvTeachingModelHtml(line),
   builderSource:String(cvSentenceBuilderHtml)+String(cvBindSentenceBuilder),
+  builderBlocked:cvBuilderIsBlocked,
   builderOrder:cvBuilderOrder,
   pairSource:String(cvRenderLessonPair)+String(cvPronunciationKeyHtml),
   spokenSource:String(cvRenderAssessmentSpoken),
@@ -72,8 +75,8 @@ const api=vm.runInContext(`({
 function assert(ok,message){if(!ok)throw new Error(message);}
 function pass(message){console.log('PASS '+message);}
 
-assert(api.version==='v8.4.0','expected v8.4.0 identity');
-assert(api.validator(),'v8.4 validator failed');
+assert(api.version==='v8.4.1','expected v8.4.1 identity');
+assert(api.validator(),'v8.4.1 validator failed');
 assert(Object.keys(api.lessons).length===3,'expected three Week 1 lessons');
 assert(api.scenes.l01.turns.length===8&&api.scenes.l02.turns.length===10&&api.scenes.l03.turns.length===13,'scene turn counts drifted');
 assert(Object.values(api.lines).every(line=>line.revision===1&&['active','recognition','routine','slot','transfer-only'].includes(line.role)),'Thai line revision/role metadata drifted');
@@ -137,10 +140,16 @@ pass('strict import, resume and weakness evidence');
 
 const order=api.builderOrder(api.lines.orderThis,'lesson-1-order');
 assert(order.length===api.lines.orderThis.segments.length&&new Set(order).size===order.length&&order.some((value,index)=>value!==index),'builder tile order is not a complete deterministic shuffle');
-assert(api.builderSource.includes('state.selected.every')&&api.builderSource.includes('onFirstWrong')&&api.builderSource.includes('onCorrect'),'sentence builder does not check order and support retry');
+const teachingHtml=api.teachingHtml(api.lines.orderThis);
+assert(teachingHtml.includes('เอาอันนี้ครับ')&&teachingHtml.includes('ao an níi khráp')&&teachingHtml.includes('I will have this one.')&&teachingHtml.indexOf('เอา')<teachingHtml.indexOf('อันนี้')&&teachingHtml.indexOf('อันนี้')<teachingHtml.indexOf('ครับ'),'new phrase is not explicitly presented whole and unpacked in the correct order before practice');
+assert(api.teachingSource.includes('What each part means')&&api.teachingSource.includes('Hear the complete phrase'),'model-first teaching card is incomplete');
+assert(api.builderSource.includes('state.selected.every')&&api.builderSource.includes('onFirstWrong')&&api.builderSource.includes('onCorrect')&&api.builderSource.includes('cvBuilderIsBlocked'),'sentence builder does not check order, dynamic cue unlock and support retry');
+let cueHeard=false;const cueGate={disabled:()=>!cueHeard};assert(api.builderBlocked(cueGate),'builder must stay blocked before vendor playback');cueHeard=true;assert(!api.builderBlocked(cueGate),'builder must unlock when vendor playback completes');
 assert(api.courseSource.includes("'teach'")&&api.courseSource.includes("'practice'")&&api.courseSource.includes('Build it again with less help'),'lesson does not move from supported to less-supported sentence building');
 assert(api.courseSource.includes('spokenBeforeRevealIds'),'spoken-use evidence missing');
 assert(api.pairSource.includes('cv-pair-cue')&&api.pairSource.includes('cv-pair-reply')&&!api.pairSource.includes('playConversationTurns(p,turns'),'teaching pair still uses a passive timed gap instead of learner-controlled reply playback');
+assert(api.pairSource.includes("pairMode==='model'")&&api.pairSource.includes('cvTeachingModelHtml')&&api.pairSource.includes('heard.model=true')&&api.pairSource.includes('if(!heard.model)return'),'builder can appear before the complete reply has been taught and heard');
+assert(api.pairSource.includes('disabled:()=>!heard.cue'),'builder captured the pre-playback vendor state and cannot unlock after the learner hears the cue');
 assert(api.pairSource.includes('if(!ok||!stillHere())return'),'teaching pair can award playback evidence before successful device speech completion');
 assert(api.pairSource.includes('cvBuilderState')&&api.pairSource.includes('.complete')&&!api.pairSource.includes('p.evidence.responsePromptIds.includes'),'a wrong saved builder attempt could restore as completed after reload');
 assert(['bp','dt','ph','th','kh','ng','ʉ','Doubled vowels','caron (ǎ)'].every(term=>api.pairSource.includes(term)),'pronunciation-spelling key is incomplete');
@@ -158,10 +167,10 @@ assert(api.roleVoiceName('vendor')==='Thai A'&&api.roleVoiceName('learner')==='T
 sandbox.speechSynthesis.getVoices=()=>[{name:'Thai Solo',lang:'th-TH',voiceURI:'solo',localService:true,default:true}];api.pickVoice();
 assert(api.roleVoiceName('vendor')==='Thai Solo'&&api.roleVoiceName('learner')==='Thai Solo'&&api.roleRate(.72,'vendor')!==api.roleRate(.72,'learner'),'single-voice fallback does not separate roles with pacing');
 assert(api.resetSource.includes('conversation:freshConversationState()'),'reset does not clear schema-2 conversation state');
-pass('meaning-first builder, assessment, role-voice, playback and reset boundaries');
+pass('model-before-practice teaching, builder unlock, assessment, role-voice and reset boundaries');
 
 const thai=JSON.stringify({lessons:api.lessons,scenes:api.scenes,forms:api.retentionForms});
 assert(!thai.includes('ค่ะ'),'female polite particle leaked into course');
 assert(!/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(thai),'authored or remote audio leaked into course');
 pass('male-polite and device-TTS-only content');
-pass('v8.4.0 conversation smoke');
+pass('v8.4.1 conversation smoke');

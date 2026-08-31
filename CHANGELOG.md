@@ -2,6 +2,12 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.4.1 - 2026-08-31
+
+- Fixed the first-principles teaching failure in Week 1: every new reply is now shown whole in Thai, English and pronunciation spelling, unpacked into correct-order meaning chunks and played by the learner-role device voice before its builder can appear.
+- Split each teaching pair into a model screen and a later conversation-practice screen. Builders now say `Now put it together`; reloading an unfinished pair returns to the teaching model instead of treating prior interaction state as instruction. Fixed the builder's captured cue state so hearing the vendor reliably unlocks sentence checking before or after tile selection.
+- Updated onboarding/About copy to describe Learn → Practise → Use it honestly, advanced the cache and identity to v8.4.1 and added model-before-practice regression coverage without changing state, curriculum, checks, voices, reading or Phase 1.
+
 ## v8.4.0 - 2026-08-31
 
 - Rebuilt Week 1 around short listen → build → speak loops. Every new reply now uses a tappable phrase builder with supported tiles during teaching and reduced English support during contextual reuse; wrong orders repair in place and each lesson ends with an active phrase change.

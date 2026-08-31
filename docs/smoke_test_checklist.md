@@ -1,4 +1,4 @@
-# v8.4.0 Smoke-Test Checklist
+# v8.4.1 Smoke-Test Checklist
 
 Use this as the manual pass before external source review or live deploy. Keep exported/imported progress JSON private.
 
@@ -9,24 +9,26 @@ Use this as the manual pass before external source review or live deploy. Keep e
 - Run `node tools/precommit-check.js` (now includes the fresh-decode corpora gate).
 - Run `node --check tools/phase1-audit.js`.
 - Run `node tools/phase1-audit.js`.
-- Confirm `docs/phase1_audit.json` reports app version `v8.4.0`, 60 validators passing and 0 lesson/pool/role prerequisite issues.
+- Confirm `docs/phase1_audit.json` reports app version `v8.4.1`, 60 validators passing and 0 lesson/pool/role prerequisite issues.
 - Confirm `docs/phase1_audit.md` includes `PASS v8Visual`, `PASS v79RetentionDecode`, `PASS v78RequiredLoop`, `PASS v77ColourFade`, `PASS freshDecode`, `PASS timeAwareRoute`, `PASS v74StreetRead`, `PASS v73ReadingMileage`, `PASS v72Shop`, `PASS themeContracts`, `PASS v71VisualSound`, `PASS v70Onboarding`, `PASS v67CompletionJourney`, `PASS v66DataSafety` and `PASS v601FirstRun`.
-- Confirm `docs/phase1_audit.md` includes `PASS v840ConversationBuilder`.
-- Confirm `sw.js` cache marker is `aan-thai-v8-4-0` and caches `conversation-course.js` with the shell.
+- Confirm `docs/phase1_audit.md` includes `PASS v841ConversationTeaching`.
+- Confirm `sw.js` cache marker is `aan-thai-v8-4-1` and caches `conversation-course.js` with the shell.
 
-## v8.4.0 Week 1 Conversation Builder
+## v8.4.1 Week 1 Model Before Practice
 
-- On a fresh state at 390 × 844, confirm Lesson 1 is the first primary task, says `10 min · listen, build and speak`, and the complete reading course is collapsed and optional.
+- On a fresh state at 390 × 844, confirm Lesson 1 is the first primary task, says `10 min · learn, practise and speak`, and the complete reading course is collapsed and optional.
 - Open Lesson 1. Pass: the first screen gives the food-stall goal and three short outcomes in English, with no curriculum/evidence terminology and no autoplay.
-- On phrase 1, tap `Hear the vendor`. Pass: the vendor audio finishes before the builder becomes checkable.
-- Pass: the builder starts in a non-answer order and every tile shows Thai, pronunciation spelling and English meaning. Tapping moves tiles between the bank and answer area.
+- On every `Learn phrase` screen, pass: no builder or shuffled Thai is visible. The complete learner reply appears first in correct Thai order with its English meaning, pronunciation spelling and a `What each part means` breakdown in that same order.
+- On phrase 2, pass: `I will have this one.` is explicitly taught as `เอาอันนี้ครับ` / `ao an níi khráp`, with `เอา` = `I will have`, `อันนี้` = `this one` and `ครับ` = the male polite ending.
+- Before playing the model, pass: `Practise this reply` is disabled. Tap `Hear the complete phrase`; only successful learner-role device playback enables practice.
+- Continue to practice. Pass: the vendor turn and its meaning are visible and playable before the builder is checkable. The builder starts in a non-answer order and every tile shows the already-taught Thai, pronunciation spelling and English meaning.
 - Deliberately submit a wrong order. Pass: the learner gets one short retry message, can move tiles back, and the first miss is recorded only once.
 - Build the correct answer. Pass: the learner voice plays, the next button unlocks only after successful audio completion and the screen asks the learner to say the reply once.
 - Repeat for all three phrases. Pass: there is no passive map, separate six-question objective block, duplicated supported/reduced role-play or required recording screen.
 - Play the complete 8-turn scene. Pass: current speaker is visible, stop/restart works and every turn has a clear one-second gap.
 - In `Use it`, listen and choose what the vendor means, then rebuild the reply. Pass: English is absent from the phrase tiles, wrong intent/order choices repair in place and `Next turn` stays locked until the reply has played.
 - In `Change one part`, build the new food phrase. Pass: transfer is an active builder, not a passive explanation.
-- Close/reload during a teaching phrase, scene, use-it turn and substitution. Pass: completed actions survive and old v8.3 partial stage names route into the nearest new stage without deadlock.
+- Close/reload during a teaching model, its builder, scene, use-it turn and substitution. Pass: an unfinished phrase returns to its full teaching model; completed actions survive and old v8.3 partial stage names route into the nearest safe stage without deadlock.
 - Finish with a support rating. Pass: Lesson 1 schedules +1 and +7 from the Bangkok completion date, advances only the conversation cursor and changes no reading/SRS/check/token/streak progress.
 - Complete Lesson 2. Pass: it says 12 minutes, keeps payment learner-initiated and inserts a longer pause after the meal before `คิดเงินด้วยครับ`.
 - Complete Lesson 3. Pass: it says 12 minutes and uses plain distinctions: did not understand, speaker too fast, or missed what was said.
@@ -48,7 +50,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - Clear `localStorage["thai_state_v1"]` and any Codex/browser artifact storage for the app origin, then open the app online.
 - Pass: the first-run onboarding overlay appears once with Skip visible.
-- Step through the two screens. Pass: the first promises a useful food order through Listen → Build → Use it and positions reading as a separate option.
+- Step through the two screens. Pass: the first promises a useful food order through Learn → Practise → Use it, explicitly says the complete phrase comes before reconstruction and positions reading as a separate option.
 - On the final screen, pass: device TTS and the two-role/one-role fallback are clear and no native resource is promised.
 - Tap `Test vendor`, then `Test your reply`.
 - Pass: no audio autoplays before the tap. If no Thai voice exists, the existing Audio setup panel opens; if one exists, the sample plays from device voice support.
@@ -70,10 +72,10 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## About And Conversation-First Identity
 
 - Open Progress → Progress tools → About this app.
-- Pass: About leads with `Thai for daily life in Bangkok`, explains the listen-build-use loop, makes speaking required but recording optional/unscored and describes reading as separate and optional.
-- Confirm the masthead says `Bangkok Thai for daily life` and the header version pill and Today footer both read `Bangkok Thai · v8.4.0`.
+- Pass: About leads with `Thai for daily life in Bangkok`, explains that the complete reply and each part are taught before practice, makes speaking required but recording optional/unscored and describes reading as separate and optional.
+- Confirm the masthead says `Bangkok Thai for daily life` and the header version pill and Today footer both read `Bangkok Thai · v8.4.1`.
 - Confirm Progress shows conversation authority first as lessons out of 24 and gates out of 8; Phase 1 reading progress remains inside its optional companion panel.
-- Confirm exported backup JSON uses `appVersion: "v8.4.0"`.
+- Confirm exported backup JSON uses `appVersion: "v8.4.1"`.
 - Confirm `manifest.json` foregrounds conversational Thai and describes reading as a gradual companion.
 
 ## v8.0.0 Bangkok Street Atlas Visual Pass
@@ -162,7 +164,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 
 - In Progress tools, tap `Download backup`.
 - Pass: a file/share-sheet backup named `aan-thai-progress-YYYY-MM-DD.json` is offered and progress remains in place.
-- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.4.0"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
+- Open the JSON and confirm it is an envelope with `app: "aan-thai"`, `appVersion: "v8.4.1"`, `key: "thai_state_v1"`, `exportedAt` and full `state`.
 - Tap `Copy backup`; pass: the same envelope can be copied or shown in the fallback prompt.
 - Import the new envelope and confirm `Progress imported` appears with lessons/tokens/cards preserved.
 - Import a legacy raw-state JSON blob and confirm it still follows the normal import repair path.
@@ -270,7 +272,7 @@ Use this as the manual pass before external source review or live deploy. Keep e
 ## Core Installed-PWA Checks
 
 - Open the installed PWA online, swipe it closed, reopen it, and confirm progress remains.
-- Confirm footer string `Bangkok Thai · v8.4.0`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
+- Confirm footer string `Bangkok Thai · v8.4.1`, 44pt taps, safe-area top/bottom chrome and Thai device voice setup still behave normally.
 - Confirm bottom tabs read Today / Practice / Tones / Read / Progress and fit on the target iPhone viewport.
 - Confirm Today route hero pips/bar match real steps and End today states stay short: `Review first`, `Main task first`, `Practice first`, `Ready` or `Done`.
 

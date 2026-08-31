@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-31T13:24:01.097Z",
-  "appVersion": "v8.4.0",
+  "generatedAt": "2026-08-31T14:55:04.762Z",
+  "appVersion": "v8.4.1",
   "lessonCount": 24,
   "validators": [
     {
@@ -299,7 +299,7 @@
       "issues": []
     },
     {
-      "name": "v840ConversationBuilder",
+      "name": "v841ConversationTeaching",
       "ok": true,
       "issues": []
     }
