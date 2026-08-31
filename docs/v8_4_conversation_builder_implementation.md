@@ -70,4 +70,3 @@ The two-review daily governor remains. These figures describe expected active le
 - explicit conversation pauses;
 - male-polite Thai and no remote/authored audio;
 - unchanged schema-2 import, migration, resume, gate and delayed-form contracts.
-
