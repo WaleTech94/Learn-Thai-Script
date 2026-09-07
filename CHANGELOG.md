@@ -2,6 +2,16 @@
 
 Every versioned app release must update this file and `AGENTS.md` in the same commit. The local `CLAUDE.md` mirror must also be synchronized when present.
 
+## v8.5.0 - 2026-09-07
+
+- Added “What stuck?” for completed conversation lessons: first answers saved before feedback, audio-only listening/reply choices, recall without tiles with an explicit self-report, and reading questions limited to completed prerequisites. Keeps the latest three snapshots and a resumable attempt; old completion, reading progress, SRS, tokens and streaks stay intact.
+- Made reusable phrase patterns explicit, added hidden-model recall after builders, and finished misunderstanding repairs by asking the original question again. Audio completion no longer counts as a spoken attempt. Lesson estimates now allow 12/14/14 minutes for the added work.
+- Fixed predictable answer positions, cue/meaning mismatches and English context leaking the answer. A shared choice view requires successful cue/candidate playback, saves first attempts, and drives actual retries after missed assessments. Substitution/transfer playback can be retried after interruption.
+- Put the full reading course prominently on Today and show only shipped conversation content in progress totals (3 lessons, 1 gate). Reading and conversation remain independently paced.
+- Removed the unshipped taxi prerequisite from Lesson 3 +7 review. Active forms C/D use Week 1 contexts; archived A/B remain readable in saved history. Replaying a lesson preserves an unrelated unfinished review.
+- Split authored content, course authority/shared views and supplementary checks into three local scripts. Removed dead lesson renderers; retained legacy stage conversion at the resume boundary. All harnesses use the page script manifest; versioned script URLs and cache `aan-thai-v8-5-0` avoid mixing old and new modules during PWA updates.
+- Added event-driven conversation tests to the precommit gate. Device Thai TTS remains the pronunciation model; speaking results are self-reported and never pronunciation certification.
+
 ## v8.4.1 - 2026-08-31
 
 - Fixed the first-principles teaching failure in Week 1: every new reply is now shown whole in Thai, English and pronunciation spelling, unpacked into correct-order meaning chunks and played by the learner-role device voice before its builder can appear.

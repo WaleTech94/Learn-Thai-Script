@@ -1,289 +1,6 @@
-/* Bangkok Conversation Foundation v1 — schema 2 and canonical Week 1 course.
-   Device Thai TTS is the only pronunciation model. No recording is persisted or scored. */
+/* Conversation state, scheduling and shared lesson/assessment player.
+   Authored content lives in conversation-content.js; supplementary checks in conversation-check.js. */
 'use strict';
-
-const CV1_COURSE_ID = 'bangkok-conversation-foundation-v1';
-const CV1_CURRICULUM_REVISION = 1;
-const CV1_WEEK1_GATE = 'cv1.gate.w01';
-const CV1_WEEK1_CONSOLIDATION = 'cv1.activity.w01.consolidation';
-const CV1_SUPPORT_RATINGS = [
-  {id:'full-support',label:'I needed the word hints'},
-  {id:'some-support',label:'I needed a little help'},
-  {id:'minimal-support',label:'I could answer on my own'}
-];
-const CV1_MAIN_SEQUENCE = [
-  'cv1.lesson.w01.l01.food-order',
-  'cv1.lesson.w01.l02.food-options',
-  'cv1.lesson.w01.l03.repair',
-  CV1_WEEK1_CONSOLIDATION,
-  CV1_WEEK1_GATE
-];
-
-function cvLine(id, thai, tr, en, parts){
-  return {id,revision:1,role:null,thai,ttsText:thai,tr,en,lang:'th-TH',rate:.72,segments:(parts || []).map(part=>({thai:part[0],tr:part[1],en:part[2]}))};
-}
-
-const CV1_LINES = {
-  greeting:cvLine('cv1.routine.social.greeting','สวัสดีครับ','sà-wàt-dii khráp','Hello.',[['สวัสดี','sà-wàt-dii','hello'],['ครับ','khráp','male polite ending']]),
-  thanks:cvLine('cv1.routine.social.thanks','ขอบคุณครับ','khòrp-khun khráp','Thank you.',[['ขอบคุณ','khòrp-khun','thank you'],['ครับ','khráp','male polite ending']]),
-  okay:cvLine('cv1.routine.social.okay','ได้ครับ','dâai khráp','Okay.',[['ได้','dâai','okay'],['ครับ','khráp','male polite ending']]),
-  noProblem:cvLine('cv1.routine.social.no-problem','ไม่เป็นไรครับ','mâi bpen rai khráp','No problem.',[['ไม่เป็นไร','mâi bpen rai','no problem'],['ครับ','khráp','male polite ending']]),
-  what1:cvLine('cv1.cue-variant.food.what-would-you-like.v01','จะรับอะไรดีครับ','jà ráp a-rai dii khráp','What would you like?',[['จะรับ','jà ráp','would you like'],['อะไรดี','a-rai dii','what will it be'],['ครับ','khráp','male polite ending']]),
-  what2:cvLine('cv1.cue-variant.food.what-would-you-like.v02','รับอะไรดีครับ','ráp a-rai dii khráp','What would you like?',[['รับ','ráp','have'],['อะไรดี','a-rai dii','what will it be'],['ครับ','khráp','male polite ending']]),
-  what3:cvLine('cv1.cue-variant.food.what-would-you-like.v03','จะเอาอะไรครับ','jà ao a-rai khráp','What do you want?',[['จะเอา','jà ao','want'],['อะไร','a-rai','what'],['ครับ','khráp','male polite ending']]),
-  spice1:cvLine('cv1.cue-variant.food.spice-choice.v01','รับเผ็ดไหมครับ','ráp phèt mǎi khráp','Would you like it spicy?',[['รับเผ็ด','ráp phèt','have it spicy'],['ไหม','mǎi','question'],['ครับ','khráp','male polite ending']]),
-  spice2:cvLine('cv1.cue-variant.food.spice-choice.v02','เอาเผ็ดไหมครับ','ao phèt mǎi khráp','Do you want it spicy?',[['เอาเผ็ด','ao phèt','want spicy'],['ไหม','mǎi','question'],['ครับ','khráp','male polite ending']]),
-  spice3:cvLine('cv1.cue-variant.food.spice-choice.v03','เผ็ดไหมครับ','phèt mǎi khráp','Spicy?',[['เผ็ด','phèt','spicy'],['ไหม','mǎi','question'],['ครับ','khráp','male polite ending']]),
-  orderThis:cvLine('cv1.response.w01.l01.order-this','เอาอันนี้ครับ','ao an níi khráp','I will have this one.',[['เอา','ao','I will have'],['อันนี้','an níi','this one'],['ครับ','khráp','male polite ending']]),
-  orderGaprao:cvLine('cv1.response.w01.l01.order-gaprao-chicken','เอากะเพราไก่ครับ','ao gà-phrao gài khráp','I will have chicken with holy basil.',[['เอา','ao','I will have'],['กะเพราไก่','gà-phrao gài','chicken with holy basil'],['ครับ','khráp','male polite ending']]),
-  notSpicy:cvLine('cv1.response.w01.l01.not-spicy','ไม่เผ็ดครับ','mâi phèt khráp','Not spicy, please.',[['ไม่','mâi','not'],['เผ็ด','phèt','spicy'],['ครับ','khráp','male polite ending']]),
-  service1:cvLine('cv1.cue-variant.food.service-choice.v01','ทานที่นี่หรือกลับบ้านครับ','thaan thîi-nîi rǔue glàp bâan khráp','For here or takeaway?',[['ทานที่นี่','thaan thîi-nîi','eat here'],['หรือ','rǔue','or'],['กลับบ้าน','glàp bâan','takeaway'],['ครับ','khráp','male polite ending']]),
-  service2:cvLine('cv1.cue-variant.food.service-choice.v02','ที่นี่หรือกลับบ้านครับ','thîi-nîi rǔue glàp bâan khráp','Here or takeaway?',[['ที่นี่','thîi-nîi','here'],['หรือ','rǔue','or'],['กลับบ้าน','glàp bâan','takeaway'],['ครับ','khráp','male polite ending']]),
-  service3:cvLine('cv1.cue-variant.food.service-choice.v03','ทานที่นี่ไหมครับ','thaan thîi-nîi mǎi khráp','Will you eat here?',[['ทานที่นี่','thaan thîi-nîi','eat here'],['ไหม','mǎi','question'],['ครับ','khráp','male polite ending']]),
-  drink1:cvLine('cv1.cue-variant.food.drink-choice.v01','รับน้ำอะไรดีครับ','ráp náam a-rai dii khráp','What drink would you like?',[['รับน้ำ','ráp náam','have a drink'],['อะไรดี','a-rai dii','which one'],['ครับ','khráp','male polite ending']]),
-  drink2:cvLine('cv1.cue-variant.food.drink-choice.v02','รับน้ำอะไรครับ','ráp náam a-rai khráp','What drink would you like?',[['รับน้ำ','ráp náam','have a drink'],['อะไร','a-rai','what'],['ครับ','khráp','male polite ending']]),
-  drink3:cvLine('cv1.cue-variant.food.drink-choice.v03','เอาน้ำอะไรครับ','ao náam a-rai khráp','What drink do you want?',[['เอาน้ำ','ao náam','want a drink'],['อะไร','a-rai','what'],['ครับ','khráp','male polite ending']]),
-  total:cvLine('cv1.cue-variant.food.total.v01','ทั้งหมดแปดสิบบาทครับ','tháng-mòt bpàaet-sìp bàat khráp','Eighty baht altogether.',[['ทั้งหมด','tháng-mòt','altogether'],['แปดสิบบาท','bpàaet-sìp bàat','eighty baht'],['ครับ','khráp','male polite ending']]),
-  dineHere:cvLine('cv1.response.w01.l02.dine-here','ทานที่นี่ครับ','thaan thîi-nîi khráp','For here.',[['ทานที่นี่','thaan thîi-nîi','eat here'],['ครับ','khráp','male polite ending']]),
-  takeaway:cvLine('cv1.response.w01.l02.takeaway','กลับบ้านครับ','glàp bâan khráp','Takeaway.',[['กลับบ้าน','glàp bâan','takeaway'],['ครับ','khráp','male polite ending']]),
-  water:cvLine('cv1.response.w01.l02.water-one','น้ำเปล่าขวดหนึ่งครับ','náam-bplàao khùat nùeng khráp','One bottle of water.',[['น้ำเปล่า','náam-bplàao','plain water'],['ขวดหนึ่ง','khùat nùeng','one bottle'],['ครับ','khráp','male polite ending']]),
-  bill:cvLine('cv1.response.w01.l02.bill','คิดเงินด้วยครับ','khít ngern dûai khráp','The bill, please.',[['คิดเงิน','khít ngern','calculate the bill'],['ด้วย','dûai','please'],['ครับ','khráp','male polite ending']]),
-  dontUnderstand:cvLine('cv1.response.w01.l03.dont-understand','ไม่เข้าใจครับ','mâi khâo-jai khráp','I do not understand.',[['ไม่','mâi','not'],['เข้าใจ','khâo-jai','understand'],['ครับ','khráp','male polite ending']]),
-  slower:cvLine('cv1.response.w01.l03.slower','พูดช้าๆ ได้ไหมครับ','phûut cháa-cháa dâai mǎi khráp','Could you speak slowly?',[['พูด','phûut','speak'],['ช้าๆ','cháa-cháa','slowly'],['ได้ไหม','dâai mǎi','could you'],['ครับ','khráp','male polite ending']]),
-  again:cvLine('cv1.response.w01.l03.again','พูดอีกครั้งได้ไหมครับ','phûut ìik khráng dâai mǎi khráp','Could you say it again?',[['พูด','phûut','speak'],['อีกครั้ง','ìik khráng','again'],['ได้ไหม','dâai mǎi','could you'],['ครับ','khráp','male polite ending']]),
-  slowAgain:cvLine('cv1.response.w01.l03.slow-again','พูดช้าๆ อีกครั้งได้ไหมครับ','phûut cháa-cháa ìik khráng dâai mǎi khráp','Could you say it again slowly?',[['พูด','phûut','speak'],['ช้าๆ','cháa-cháa','slowly'],['อีกครั้ง','ìik khráng','again'],['ได้ไหม','dâai mǎi','could you'],['ครับ','khráp','male polite ending']]),
-  destination1:cvLine('cv1.cue-variant.transport.destination-question.v01','ไปไหนครับ','bpai nǎi khráp','Where are you going?',[['ไป','bpai','go'],['ไหน','nǎi','where'],['ครับ','khráp','male polite ending']]),
-  destinationEkkamai:cvLine('cv1.response.w02.l04.destination-ekkamai-station','ไปสถานีเอกมัยครับ','bpai sà-thǎa-nii èek-gà-mai khráp','To Ekkamai Station.',[['ไป','bpai','to'],['สถานีเอกมัย','sà-thǎa-nii èek-gà-mai','Ekkamai Station'],['ครับ','khráp','male polite ending']]),
-  noMeter1:cvLine('cv1.cue-variant.transport.no-meter-proposal.v01','ไม่ใช้มิเตอร์ครับ','mâi chái mí-dtêr khráp','I am not using the meter.',[['ไม่ใช้','mâi chái','not use'],['มิเตอร์','mí-dtêr','meter'],['ครับ','khráp','male polite ending']]),
-  meterRequest:cvLine('cv1.response.w02.l04.meter-request','ใช้มิเตอร์ได้ไหมครับ','chái mí-dtêr dâai mǎi khráp','Could you use the meter?',[['ใช้มิเตอร์','chái mí-dtêr','use the meter'],['ได้ไหม','dâai mǎi','could you'],['ครับ','khráp','male polite ending']])
-};
-
-const CV1_LINE_ROLES = {
-  greeting:'routine',thanks:'routine',okay:'routine',noProblem:'routine',
-  what1:'recognition',what2:'recognition',what3:'recognition',spice1:'recognition',spice2:'recognition',spice3:'recognition',
-  service1:'recognition',service2:'recognition',service3:'recognition',drink1:'recognition',drink2:'recognition',drink3:'recognition',total:'recognition',
-  destination1:'recognition',noMeter1:'recognition',
-  orderThis:'active',notSpicy:'active',dineHere:'active',water:'active',bill:'active',dontUnderstand:'active',slower:'active',again:'active',destinationEkkamai:'active',meterRequest:'active',
-  orderGaprao:'transfer-only',takeaway:'transfer-only',slowAgain:'transfer-only'
-};
-Object.keys(CV1_LINES).forEach(key=>{ CV1_LINES[key].role=CV1_LINE_ROLES[key]; });
-
-const CV1_RESPONSE_BY_ID = {};
-['greeting','thanks','okay','orderThis','orderGaprao','notSpicy','dineHere','takeaway','water','bill','dontUnderstand','slower','again','slowAgain','destinationEkkamai','meterRequest'].forEach(key=>{ CV1_RESPONSE_BY_ID[CV1_LINES[key].id] = CV1_LINES[key]; });
-
-function cvFunctionIdForResponse(response){
-  const map={
-    [CV1_LINES.greeting.id]:'cv1.fn.social.greeting',[CV1_LINES.thanks.id]:'cv1.fn.social.thanks',[CV1_LINES.okay.id]:'cv1.fn.social.acknowledge',
-    [CV1_LINES.orderThis.id]:'cv1.fn.food.order-item',[CV1_LINES.orderGaprao.id]:'cv1.fn.food.order-item',[CV1_LINES.notSpicy.id]:'cv1.fn.food.spice-level',
-    [CV1_LINES.dineHere.id]:'cv1.fn.food.service-choice',[CV1_LINES.takeaway.id]:'cv1.fn.food.service-choice',[CV1_LINES.water.id]:'cv1.fn.food.order-drink',[CV1_LINES.bill.id]:'cv1.fn.food.request-bill',
-    [CV1_LINES.dontUnderstand.id]:'cv1.fn.repair.meaning-unknown',[CV1_LINES.slower.id]:'cv1.fn.repair.slow-down',[CV1_LINES.again.id]:'cv1.fn.repair.repeat',[CV1_LINES.slowAgain.id]:'cv1.fn.repair.slow-repeat',
-    [CV1_LINES.destinationEkkamai.id]:'cv1.fn.transport.destination',[CV1_LINES.meterRequest.id]:'cv1.fn.transport.meter-request'
-  };
-  return map[response.id]||'cv1.fn.social.respond';
-}
-function cvFrameIdForResponse(response){return cvFunctionIdForResponse(response).replace('cv1.fn','cv1.frame');}
-function cvCueFamilyId(cue){
-  if(!cue)return null;
-  if(cue.id.startsWith('cv1.cue-variant.'))return cue.id.replace('cv1.cue-variant.','cv1.cue-family.').replace(/\.v\d+$/,'');
-  return cue.id.replace('cv1.routine.','cv1.cue-family.').replace('cv1.response.','cv1.cue-family.');
-}
-function cvLearnerContext(text){
-  return String(text||'')
-    .replace('politely return the opening.','say hello back.')
-    .replace('you intend to eat there.','you want to eat there.')
-    .replace('you heard the cue but do not know what it means.','you do not understand what the vendor said.')
-    .replace('you know the choice function, but the speech is too fast.','you know it is a question, but the vendor spoke too quickly.')
-    .replace('you understood this kind of cue earlier, but missed this playback.','you understood before, but missed what the vendor just said.')
-    .replace(/opening: return the greeting\./g,'opening: say hello back.')
-    .replace(/choose the pointed item\./g,'order what you are pointing at.')
-    .replace(/request non-spicy\./g,'ask for no spice.')
-    .replace(/order one water\./g,'order a bottle of water.')
-    .replace(/ask for one water\./g,'order a bottle of water.')
-    .replace(/initiate payment\./g,'ask to pay.')
-    .replace(/choose takeaway\./g,'say it is takeaway.')
-    .replace(/choose to eat there\./g,'say you are eating there.')
-    .replace(/: eat there\./g,': say you are eating there.')
-    .replace(/the meaning is unknown\./g,'you did not understand.')
-    .replace(/its meaning is unknown\./g,'you did not understand.')
-    .replace(/the rate is too fast\./g,'the speaker is too fast.')
-    .replace(/it is too fast\./g,'the speaker is too fast.')
-    .replace(/the playback was missed once\./g,'you missed what was said.')
-    .replace(/the destination cue playback was interrupted\./g,'you missed the destination question.')
-    .replace(/a slow replay is explicitly needed\./g,'the speaker is too fast, and you want it repeated slowly.')
-    .replace(/ cue:/g,':');
-}
-function cvInteraction(id, context, cue, response, options, intent, intentOptions, extra){
-  const functionId=cvFunctionIdForResponse(response),event=!!(extra&&extra.event),distractors=options.filter(option=>option!==response.id).map((responseId,index)=>({responseId,misconceptionTag:index===0?'related-taught-function':'wrong-context-response'}));
-  return Object.assign({id,revision:1,direction:event?'learner-led':'partner-led',functionId,cueFamilyId:cvCueFamilyId(cue),cueVariantId:cue?cue.id:null,eventId:event?(response.id===CV1_LINES.bill.id?'cv1.event.w01.l02.meal-finished':id.replace('cv1.interaction','cv1.event')):null,contextId:id.replace('cv1.interaction','cv1.context'),context:cvLearnerContext(context),frameId:cvFrameIdForResponse(response),slotIds:[],acceptedSetId:functionId.replace('cv1.fn','cv1.accepted-set'),cue,response,options,distractors,intent,intentOptions}, extra || {});
-}
-
-const CV1_I = {
-  l01Greeting:cvInteraction('cv1.interaction.lesson.w01.l01.a.01','Food stall: politely return the opening.',CV1_LINES.greeting,CV1_LINES.greeting,[CV1_LINES.greeting.id,CV1_LINES.thanks.id,CV1_LINES.okay.id],'A polite greeting.',['A polite greeting.','The price is being given.','The stall is closing.']),
-  l01Order:cvInteraction('cv1.interaction.lesson.w01.l01.a.02','Food display: you want the item you are pointing at.',CV1_LINES.what1,CV1_LINES.orderThis,[CV1_LINES.orderThis.id,CV1_LINES.notSpicy.id,CV1_LINES.thanks.id],'The vendor is asking you to choose food.',['The vendor is asking you to choose food.','The vendor is asking about spice.','The vendor is giving the price.']),
-  l01Spice:cvInteraction('cv1.interaction.lesson.w01.l01.a.03','Food stall: you want the non-spicy option.',CV1_LINES.spice1,CV1_LINES.notSpicy,[CV1_LINES.notSpicy.id,CV1_LINES.orderThis.id,CV1_LINES.okay.id],'The vendor is asking whether you want it spicy.',['The vendor is asking whether you want it spicy.','The vendor is asking where you will eat.','The vendor is asking which drink you want.']),
-  l02Here:cvInteraction('cv1.interaction.lesson.w01.l02.a.01','Counter stall: you intend to eat there.',CV1_LINES.service1,CV1_LINES.dineHere,[CV1_LINES.dineHere.id,CV1_LINES.water.id,CV1_LINES.bill.id],'The vendor is asking whether the food is for here or takeaway.',['The vendor is asking whether the food is for here or takeaway.','The vendor is asking which drink you want.','The vendor is giving the total.']),
-  l02Water:cvInteraction('cv1.interaction.lesson.w01.l02.a.02','Drink counter: you want one bottle of plain water.',CV1_LINES.drink1,CV1_LINES.water,[CV1_LINES.water.id,CV1_LINES.dineHere.id,CV1_LINES.bill.id],'The vendor is asking which drink you want.',['The vendor is asking which drink you want.','The vendor is asking where you will eat.','The meal has finished and you need to pay.']),
-  l02Bill:cvInteraction('cv1.interaction.lesson.w01.l02.a.03','Your meal is finished and you want to pay.',null,CV1_LINES.bill,[CV1_LINES.bill.id,CV1_LINES.water.id,CV1_LINES.dineHere.id],'You should ask for the bill.',['You should ask for the bill.','You should order another drink.','You should choose where to eat.'],{event:true,partnerReply:CV1_LINES.total}),
-  l03Unknown:cvInteraction('cv1.interaction.lesson.w01.l03.a.01','Food stall: you heard the cue but do not know what it means.',CV1_LINES.what1,CV1_LINES.dontUnderstand,[CV1_LINES.dontUnderstand.id,CV1_LINES.orderThis.id,CV1_LINES.thanks.id],'You did not understand.',['You did not understand.','They spoke too quickly.','You missed it and want to hear it again.'],{resolution:{cue:CV1_LINES.what1,response:CV1_LINES.orderThis,rate:.72}}),
-  l03Slow:cvInteraction('cv1.interaction.lesson.w01.l03.a.02','Food stall: you know the choice function, but the speech is too fast.',CV1_LINES.what1,CV1_LINES.slower,[CV1_LINES.slower.id,CV1_LINES.water.id,CV1_LINES.thanks.id],'They spoke too quickly.',['They spoke too quickly.','You did not understand.','You missed it and want to hear it again.'],{resolution:{cue:CV1_LINES.what1,response:CV1_LINES.orderThis,rate:.58}}),
-  l03Again:cvInteraction('cv1.interaction.lesson.w01.l03.a.03','Food stall: you understood this kind of cue earlier, but missed this playback.',CV1_LINES.what1,CV1_LINES.again,[CV1_LINES.again.id,CV1_LINES.notSpicy.id,CV1_LINES.thanks.id],'You missed it and want to hear it again.',['You missed it and want to hear it again.','You did not understand.','They spoke too quickly.'],{resolution:{cue:CV1_LINES.what1,response:CV1_LINES.orderThis,rate:.72}})
-};
-
-function cvScene(id, turns, responseKeys){
-  return {id,revision:1,title:id,turns,chunks:(responseKeys || []).map(key=>CV1_LINES[key])};
-}
-const CV1_SCENES = {
-  l01:cvScene('cv1.scene.w01.l01.model',[
-    {speaker:'vendor',...CV1_LINES.greeting},{speaker:'learner',chunk:CV1_LINES.greeting.id},
-    {speaker:'vendor',...CV1_LINES.what1},{speaker:'learner',chunk:CV1_LINES.orderThis.id},
-    {speaker:'vendor',...CV1_LINES.spice1},{speaker:'learner',chunk:CV1_LINES.notSpicy.id},
-    {speaker:'vendor',...CV1_LINES.okay},{speaker:'learner',chunk:CV1_LINES.thanks.id}
-  ],['greeting','orderThis','notSpicy','thanks']),
-  l02:cvScene('cv1.scene.w01.l02.model',[
-    {speaker:'vendor',...CV1_LINES.service1},{speaker:'learner',chunk:CV1_LINES.dineHere.id},
-    {speaker:'vendor',...CV1_LINES.drink1},{speaker:'learner',chunk:CV1_LINES.water.id},
-    {speaker:'vendor',...CV1_LINES.okay},{speaker:'learner',chunk:CV1_LINES.thanks.id,pauseAfter:1800},
-    {speaker:'learner',chunk:CV1_LINES.bill.id},{speaker:'vendor',...CV1_LINES.total},
-    {speaker:'learner',chunk:CV1_LINES.thanks.id},{speaker:'vendor',...CV1_LINES.thanks}
-  ],['dineHere','water','thanks','bill']),
-  l03:cvScene('cv1.scene.w01.l03.model',[
-    {speaker:'vendor',...CV1_LINES.greeting},{speaker:'learner',chunk:CV1_LINES.greeting.id},
-    {speaker:'vendor',...CV1_LINES.what1},{speaker:'learner',chunk:CV1_LINES.dontUnderstand.id},
-    {speaker:'vendor',...CV1_LINES.what1},{speaker:'learner',chunk:CV1_LINES.slower.id},
-    {speaker:'vendor',...CV1_LINES.what1,rate:.58},{speaker:'learner',chunk:CV1_LINES.again.id},
-    {speaker:'vendor',...CV1_LINES.what1,rate:.58},{speaker:'learner',chunk:CV1_LINES.orderThis.id},
-    {speaker:'vendor',...CV1_LINES.okay},{speaker:'learner',chunk:CV1_LINES.thanks.id},{speaker:'vendor',...CV1_LINES.noProblem}
-  ],['greeting','dontUnderstand','slower','again','orderThis','thanks'])
-};
-
-const CV1_LESSONS = {
-  'cv1.lesson.w01.l01.food-order':{
-    id:'cv1.lesson.w01.l01.food-order',revision:1,number:1,title:'Order food and ask for no spice',coreMinutes:8,ordinaryRepairMinutes:2,totalMinutes:10,minutes:10,
-    situation:'You are at a Bangkok food stall. Point to what you want, then ask for it not spicy.',
-    roles:'The vendor asks. You answer as the customer. Every Thai line uses the male polite ending ครับ.',
-    meaning:[['Say hello','Return the greeting.'],['Choose the food','Point and say, “I’ll have this one.”'],['Choose the spice level','Say, “Not spicy, please.”']],
-    interactions:[CV1_I.l01Greeting,CV1_I.l01Order,CV1_I.l01Spice],scene:CV1_SCENES.l01,
-    substitution:{id:'cv1.substitution.w01.l01.gaprao-chicken',revision:1,from:CV1_LINES.orderThis,to:CV1_LINES.orderGaprao,label:'Replace “this one” with chicken with holy basil.'},
-    record:CV1_LINES.orderThis
-  },
-  'cv1.lesson.w01.l02.food-options':{
-    id:'cv1.lesson.w01.l02.food-options',revision:1,number:2,title:'Eat here, order water and ask to pay',coreMinutes:10,ordinaryRepairMinutes:2,totalMinutes:12,minutes:12,
-    situation:'You are at a counter stall. Choose to eat there, order water and ask for the bill when you finish.',
-    roles:'The vendor asks about your order. At the end of the meal, you start the payment conversation.',
-    meaning:[['Choose where to eat','Say you will eat there.'],['Order a drink','Ask for one bottle of plain water.'],['Finish the meal','When the meal is over, ask for the bill.']],
-    interactions:[CV1_I.l02Here,CV1_I.l02Water,CV1_I.l02Bill],scene:CV1_SCENES.l02,
-    substitution:{id:'cv1.substitution.w01.l02.takeaway',revision:1,from:CV1_LINES.dineHere,to:CV1_LINES.takeaway,label:'Change “for here” to “takeaway”.'},
-    record:CV1_LINES.bill
-  },
-  'cv1.lesson.w01.l03.repair':{
-    id:'cv1.lesson.w01.l03.repair',revision:1,number:3,title:'Ask for help when you miss something',coreMinutes:10,ordinaryRepairMinutes:2,totalMinutes:12,minutes:12,
-    situation:'Someone says something you do not understand, says it too quickly or needs to repeat it.',
-    roles:'Choose the short phrase that gets the conversation moving again.',
-    meaning:[['You do not understand','Say that you do not understand.'],['It is too fast','Ask the speaker to slow down.'],['You missed it','Ask to hear it again.']],
-    interactions:[CV1_I.l03Unknown,CV1_I.l03Slow,CV1_I.l03Again],scene:CV1_SCENES.l03,
-    substitution:{id:'cv1.substitution.w01.l03.slow-again',revision:1,from:CV1_LINES.again,to:CV1_LINES.slowAgain,label:'Combine “slowly” and “again” in one request.'},
-    record:CV1_LINES.slower
-  }
-};
-
-function cvVariant(base, id, context, cue, response, extra){
-  let options=base.options.slice();
-  if(!options.includes(response.id)){
-    const replace=options.indexOf(base.response.id);
-    if(replace>=0)options[replace]=response.id;
-    else options=[response.id].concat(options.filter(option=>option!==response.id).slice(0,2));
-  }
-  return cvInteraction(id,context,cue,response,options,base.intent,base.intentOptions,Object.assign({},extra || {}));
-}
-
-const CV1_RETENTION_FORMS = {
-  'cv1.retention.w01.l01.d1':[
-    {id:'cv1.form.retention.w01.l01.d1.a',items:[cvVariant(CV1_I.l01Greeting,'cv1.interaction.retention.w01.l01.d1.a.01','Street stall opening: return the greeting.',CV1_LINES.greeting,CV1_LINES.greeting),cvVariant(CV1_I.l01Order,'cv1.interaction.retention.w01.l01.d1.a.02','Display tray: choose the pointed item.',CV1_LINES.what2,CV1_LINES.orderThis),cvVariant(CV1_I.l01Spice,'cv1.interaction.retention.w01.l01.d1.a.03','Noodle stall: request non-spicy.',CV1_LINES.spice2,CV1_LINES.notSpicy)]},
-    {id:'cv1.form.retention.w01.l01.d1.b',items:[cvVariant(CV1_I.l01Greeting,'cv1.interaction.retention.w01.l01.d1.b.01','Canteen opening: return the greeting.',CV1_LINES.greeting,CV1_LINES.greeting),cvVariant(CV1_I.l01Order,'cv1.interaction.retention.w01.l01.d1.b.02','Counter display: choose the pointed item.',CV1_LINES.what3,CV1_LINES.orderThis),cvVariant(CV1_I.l01Spice,'cv1.interaction.retention.w01.l01.d1.b.03','Curry counter: request non-spicy.',CV1_LINES.spice3,CV1_LINES.notSpicy)]}
-  ],
-  'cv1.retention.w01.l02.d1':[
-    {id:'cv1.form.retention.w01.l02.d1.a',items:[cvVariant(CV1_I.l02Here,'cv1.interaction.retention.w01.l02.d1.a.01','Mall counter: eat there.',CV1_LINES.service3,CV1_LINES.dineHere),cvVariant(CV1_I.l02Water,'cv1.interaction.retention.w01.l02.d1.a.02','Drink counter: order one water.',CV1_LINES.drink2,CV1_LINES.water),cvVariant(CV1_I.l02Bill,'cv1.interaction.retention.w01.l02.d1.a.03','A café drink is finished: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total})]},
-    {id:'cv1.form.retention.w01.l02.d1.b',items:[cvVariant(CV1_I.l02Here,'cv1.interaction.retention.w01.l02.d1.b.01','Lunch counter: choose takeaway.',CV1_LINES.service2,CV1_LINES.takeaway),cvVariant(CV1_I.l02Water,'cv1.interaction.retention.w01.l02.d1.b.02','Food kiosk: order one water.',CV1_LINES.drink3,CV1_LINES.water),cvVariant(CV1_I.l02Bill,'cv1.interaction.retention.w01.l02.d1.b.03','A food-court meal is finished: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total})]}
-  ],
-  'cv1.retention.w01.l03.d1':[
-    {id:'cv1.form.retention.w01.l03.d1.a',items:[cvVariant(CV1_I.l03Unknown,'cv1.interaction.retention.w01.l03.d1.a.01','Food choice: the meaning is unknown.',CV1_LINES.what2,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.what2,response:CV1_LINES.orderThis,rate:.72}}),cvVariant(CV1_I.l03Slow,'cv1.interaction.retention.w01.l03.d1.a.02','Spice choice: the rate is too fast.',CV1_LINES.spice1,CV1_LINES.slower,{resolution:{cue:CV1_LINES.spice1,response:CV1_LINES.notSpicy,rate:.58}}),cvVariant(CV1_I.l03Again,'cv1.interaction.retention.w01.l03.d1.a.03','Service choice: the playback was missed once.',CV1_LINES.service1,CV1_LINES.again,{resolution:{cue:CV1_LINES.service1,response:CV1_LINES.dineHere,rate:.72}})]},
-    {id:'cv1.form.retention.w01.l03.d1.b',items:[cvVariant(CV1_I.l03Unknown,'cv1.interaction.retention.w01.l03.d1.b.01','Drink choice: the meaning is unknown.',CV1_LINES.drink1,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.drink1,response:CV1_LINES.water,rate:.72}}),cvVariant(CV1_I.l03Slow,'cv1.interaction.retention.w01.l03.d1.b.02','Food choice: the rate is too fast.',CV1_LINES.what3,CV1_LINES.slower,{resolution:{cue:CV1_LINES.what3,response:CV1_LINES.orderThis,rate:.58}}),cvVariant(CV1_I.l03Again,'cv1.interaction.retention.w01.l03.d1.b.03','Spice choice: the playback was missed once.',CV1_LINES.spice2,CV1_LINES.again,{resolution:{cue:CV1_LINES.spice2,response:CV1_LINES.notSpicy,rate:.72}})]}
-  ]
-};
-
-function cvD7Forms(lessonId){
-  const lesson = CV1_LESSONS[lessonId];
-  const maps = {
-    1:{
-      a:[[CV1_I.l01Order,'Lunch counter: order chicken with holy basil.',CV1_LINES.what3,CV1_LINES.orderGaprao],[CV1_I.l01Spice,'Curry stall: request non-spicy.',CV1_LINES.spice3,CV1_LINES.notSpicy],[CV1_I.l01Greeting,'Café opening: return the greeting.',CV1_LINES.greeting,CV1_LINES.greeting],[CV1_I.l01Order,'Convenience drink case: choose the bottle being pointed at.',CV1_LINES.drink2,CV1_LINES.orderThis]],
-      b:[[CV1_I.l01Order,'Food-court stall: order chicken with holy basil.',CV1_LINES.what2,CV1_LINES.orderGaprao],[CV1_I.l01Spice,'Wok stall: request non-spicy.',CV1_LINES.spice2,CV1_LINES.notSpicy],[CV1_I.l01Greeting,'Market-stall opening: return the greeting.',CV1_LINES.greeting,CV1_LINES.greeting],[CV1_I.l01Order,'Café snack display: order chicken with holy basil.',CV1_LINES.what3,CV1_LINES.orderGaprao]]
-    },
-    2:{
-      a:[[CV1_I.l02Here,'Office canteen: choose takeaway.',CV1_LINES.service3,CV1_LINES.takeaway],[CV1_I.l02Water,'Kiosk: order one water.',CV1_LINES.drink3,CV1_LINES.water],[CV1_I.l02Bill,'A café table has been cleared: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total}],[CV1_I.l02Water,'Convenience hot-food counter: ask for one water.',CV1_LINES.what2,CV1_LINES.water]],
-      b:[[CV1_I.l02Here,'Café table: choose to eat there.',CV1_LINES.service2,CV1_LINES.dineHere],[CV1_I.l02Water,'Canteen: order one water.',CV1_LINES.drink2,CV1_LINES.water],[CV1_I.l02Bill,'A food-court table has been cleared: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total}],[CV1_I.l02Water,'Market drink cooler: ask for one water.',CV1_LINES.what3,CV1_LINES.water]]
-    },
-    3:{
-      a:[[CV1_I.l03Unknown,'Canteen drink choice: the meaning is unknown.',CV1_LINES.drink2,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.drink2,response:CV1_LINES.water,rate:.72}}],[CV1_I.l03Slow,'Service choice: the rate is too fast.',CV1_LINES.service2,CV1_LINES.slower,{resolution:{cue:CV1_LINES.service2,response:CV1_LINES.takeaway,rate:.58}}],[CV1_I.l03Again,'Food choice: the playback was missed once.',CV1_LINES.what3,CV1_LINES.again,{resolution:{cue:CV1_LINES.what3,response:CV1_LINES.orderGaprao,rate:.72}}],[CV1_I.l03Again,'Taxi pickup: the destination cue playback was interrupted.',CV1_LINES.destination1,CV1_LINES.again,{resolution:{cue:CV1_LINES.destination1,response:CV1_LINES.destinationEkkamai,rate:.72}}]],
-      b:[[CV1_I.l03Unknown,'Spice choice: the meaning is unknown.',CV1_LINES.spice3,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.spice3,response:CV1_LINES.notSpicy,rate:.72}}],[CV1_I.l03Slow,'Drink choice: the rate is too fast.',CV1_LINES.drink3,CV1_LINES.slower,{resolution:{cue:CV1_LINES.drink3,response:CV1_LINES.water,rate:.58}}],[CV1_I.l03Again,'Evening-stall service choice: the playback was missed once.',CV1_LINES.service3,CV1_LINES.again,{resolution:{cue:CV1_LINES.service3,response:CV1_LINES.dineHere,rate:.72}}],[CV1_I.l03Slow,'Taxi meter proposal: the rate is too fast.',CV1_LINES.noMeter1,CV1_LINES.slower,{resolution:{cue:CV1_LINES.noMeter1,response:CV1_LINES.meterRequest,rate:.58}}]]
-    }
-  };
-  return ['a','b'].map(formLetter=>({
-    id:`cv1.form.retention.w01.l0${lesson.number}.d7.${formLetter}`,
-    items:maps[lesson.number][formLetter].map((entry,index)=>cvVariant(entry[0],`cv1.interaction.retention.w01.l0${lesson.number}.d7.${formLetter}.0${index+1}`,entry[1],entry[2],entry[3],entry[4]||{}))
-  }));
-}
-Object.keys(CV1_LESSONS).forEach(id=>{ const lesson=CV1_LESSONS[id]; CV1_RETENTION_FORMS[`cv1.retention.w01.l0${lesson.number}.d7`] = cvD7Forms(id); });
-
-const CV1_GATE_POOL = {
-  'pool-a.l01.01':cvVariant(CV1_I.l01Order,'cv1.interaction.assessment.w01.pool-a.l01.01','Food-court display: choose the pointed item.',CV1_LINES.what3,CV1_LINES.orderThis),
-  'pool-a.l01.02':cvVariant(CV1_I.l01Order,'cv1.interaction.assessment.w01.pool-a.l01.02','Lunch counter: choose chicken with holy basil.',CV1_LINES.what2,CV1_LINES.orderGaprao),
-  'pool-a.l01.03':cvVariant(CV1_I.l01Spice,'cv1.interaction.assessment.w01.pool-a.l01.03','Basil stall: request non-spicy.',CV1_LINES.spice1,CV1_LINES.notSpicy),
-  'pool-a.l01.04':cvVariant(CV1_I.l01Spice,'cv1.interaction.assessment.w01.pool-a.l01.04','Riverside noodle stall: request non-spicy.',CV1_LINES.spice3,CV1_LINES.notSpicy),
-  'pool-a.l02.01':cvVariant(CV1_I.l02Here,'cv1.interaction.assessment.w01.pool-a.l02.01','Mall food-hall counter: choose to eat there.',CV1_LINES.service2,CV1_LINES.dineHere),
-  'pool-a.l02.02':cvVariant(CV1_I.l02Water,'cv1.interaction.assessment.w01.pool-a.l02.02','Café cooler: order one water.',CV1_LINES.drink3,CV1_LINES.water),
-  'pool-a.l02.03':cvVariant(CV1_I.l02Bill,'cv1.interaction.assessment.w01.pool-a.l02.03','A café drink is finished: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total}),
-  'pool-a.l02.04':cvVariant(CV1_I.l02Here,'cv1.interaction.assessment.w01.pool-a.l02.04','Street counter: choose takeaway.',CV1_LINES.service3,CV1_LINES.takeaway),
-  'pool-a.l03.01':cvVariant(CV1_I.l03Unknown,'cv1.interaction.assessment.w01.pool-a.l03.01','Drink cue: the meaning is unknown.',CV1_LINES.drink2,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.drink2,response:CV1_LINES.water,rate:.72}}),
-  'pool-a.l03.02':cvVariant(CV1_I.l03Slow,'cv1.interaction.assessment.w01.pool-a.l03.02','Spice cue: the rate is too fast.',CV1_LINES.spice2,CV1_LINES.slower,{resolution:{cue:CV1_LINES.spice2,response:CV1_LINES.notSpicy,rate:.58}}),
-  'pool-a.l03.03':cvVariant(CV1_I.l03Again,'cv1.interaction.assessment.w01.pool-a.l03.03','Service cue: the playback was missed once.',CV1_LINES.service2,CV1_LINES.again,{resolution:{cue:CV1_LINES.service2,response:CV1_LINES.takeaway,rate:.72}}),
-  'pool-a.l03.04':cvVariant(CV1_I.l03Slow,'cv1.interaction.assessment.w01.pool-a.l03.04','Breakfast-counter food cue: the rate is too fast.',CV1_LINES.what3,CV1_LINES.slower,{resolution:{cue:CV1_LINES.what3,response:CV1_LINES.orderThis,rate:.58}}),
-  'pool-b.l01.01':cvVariant(CV1_I.l01Order,'cv1.interaction.assessment.w01.pool-b.l01.01','Canteen display: choose the pointed item.',CV1_LINES.what2,CV1_LINES.orderThis),
-  'pool-b.l01.02':cvVariant(CV1_I.l01Order,'cv1.interaction.assessment.w01.pool-b.l01.02','Basil-food counter: choose chicken with holy basil.',CV1_LINES.what3,CV1_LINES.orderGaprao),
-  'pool-b.l01.03':cvVariant(CV1_I.l01Spice,'cv1.interaction.assessment.w01.pool-b.l01.03','Night-market wok stall: request non-spicy.',CV1_LINES.spice2,CV1_LINES.notSpicy),
-  'pool-b.l01.04':cvVariant(CV1_I.l01Order,'cv1.interaction.assessment.w01.pool-b.l01.04','Breakfast tray: choose the pointed item.',CV1_LINES.what1,CV1_LINES.orderThis),
-  'pool-b.l02.01':cvVariant(CV1_I.l02Here,'cv1.interaction.assessment.w01.pool-b.l02.01','Café table: choose to eat there.',CV1_LINES.service3,CV1_LINES.dineHere),
-  'pool-b.l02.02':cvVariant(CV1_I.l02Water,'cv1.interaction.assessment.w01.pool-b.l02.02','Food-court drink counter: order one water.',CV1_LINES.drink2,CV1_LINES.water),
-  'pool-b.l02.03':cvVariant(CV1_I.l02Bill,'cv1.interaction.assessment.w01.pool-b.l02.03','A food-court meal is finished: initiate payment.',null,CV1_LINES.bill,{event:true,partnerReply:CV1_LINES.total}),
-  'pool-b.l02.04':cvVariant(CV1_I.l02Here,'cv1.interaction.assessment.w01.pool-b.l02.04','Office-tower lunch counter: choose takeaway.',CV1_LINES.service2,CV1_LINES.takeaway),
-  'pool-b.l03.01':cvVariant(CV1_I.l03Unknown,'cv1.interaction.assessment.w01.pool-b.l03.01','Spice cue: the meaning is unknown.',CV1_LINES.spice3,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.spice3,response:CV1_LINES.notSpicy,rate:.72}}),
-  'pool-b.l03.02':cvVariant(CV1_I.l03Slow,'cv1.interaction.assessment.w01.pool-b.l03.02','Evening-stall food cue: the rate is too fast.',CV1_LINES.what2,CV1_LINES.slower,{resolution:{cue:CV1_LINES.what2,response:CV1_LINES.orderThis,rate:.58}}),
-  'pool-b.l03.03':cvVariant(CV1_I.l03Again,'cv1.interaction.assessment.w01.pool-b.l03.03','Drink cue: the playback was missed once.',CV1_LINES.drink3,CV1_LINES.again,{resolution:{cue:CV1_LINES.drink3,response:CV1_LINES.water,rate:.72}}),
-  'pool-b.l03.04':cvVariant(CV1_I.l03Unknown,'cv1.interaction.assessment.w01.pool-b.l03.04','Station-kiosk total cue: the meaning is unknown.',CV1_LINES.total,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.total,response:CV1_LINES.okay,rate:.72}})
-};
-const CV1_GATE_MANIFESTS = {
-  a:['pool-a.l01.01','pool-a.l02.01','pool-a.l03.01','pool-a.l01.02','pool-a.l02.02','pool-a.l03.02','pool-a.l02.03','pool-a.l03.03'],
-  b:['pool-b.l01.01','pool-b.l02.01','pool-b.l03.01','pool-b.l01.02','pool-b.l02.02','pool-b.l03.02','pool-b.l02.03','pool-b.l03.03'],
-  c:['pool-a.l01.03','pool-a.l02.04','pool-a.l03.04','pool-a.l01.04','pool-b.l01.03','pool-b.l01.04','pool-b.l02.04','pool-b.l03.04']
-};
-const CV1_GATE_FORMS = Object.keys(CV1_GATE_MANIFESTS).map(letter=>({id:`cv1.form.gate.w01.${letter}`,revision:1,items:CV1_GATE_MANIFESTS[letter].map(id=>CV1_GATE_POOL[id])}));
-
-const CV1_CONSOLIDATION = {
-  id:CV1_WEEK1_CONSOLIDATION,revision:1,title:'Mix your Week 1 phrases',coreMinutes:8,ordinaryRepairMinutes:2,totalMinutes:10,minutes:10,formId:'cv1.form.consolidation.w01.a',
-  interactions:[
-    cvVariant(CV1_I.l03Unknown,'cv1.interaction.consolidation.w01.01','Food-counter cue: its meaning is unknown.',CV1_LINES.what2,CV1_LINES.dontUnderstand,{resolution:{cue:CV1_LINES.what2,response:CV1_LINES.orderThis,rate:.72}}),
-    cvVariant(CV1_I.l03Slow,'cv1.interaction.consolidation.w01.02','Food-counter spice cue: it is too fast.',CV1_LINES.spice2,CV1_LINES.slower,{resolution:{cue:CV1_LINES.spice2,response:CV1_LINES.notSpicy,rate:.58}}),
-    cvVariant(CV1_I.l01Order,'cv1.interaction.consolidation.w01.03','Food-court display: choose the pointed item.',CV1_LINES.what1,CV1_LINES.orderThis),
-    cvVariant(CV1_I.l02Water,'cv1.interaction.consolidation.w01.04','Food-hall drink counter: order one water.',CV1_LINES.drink1,CV1_LINES.water)
-  ],
-  spoken:[CV1_LINES.orderThis,CV1_LINES.notSpicy,CV1_LINES.dineHere,CV1_LINES.water,CV1_LINES.bill,CV1_LINES.again],
-  transfers:[CV1_LINES.orderGaprao,CV1_LINES.slowAgain]
-};
-const CV1_GATE_META = {id:CV1_WEEK1_GATE,revision:1,title:'Week 1 conversation check',coreMinutes:10,ordinaryRepairMinutes:2,totalMinutes:12,minutes:12};
-const CV1_DELAYED_WORKLOADS = {
-  d1:{revision:1,coreMinutes:2,ordinaryRepairMinutes:1,totalMinutes:3},
-  d7:{revision:1,coreMinutes:4,ordinaryRepairMinutes:1,totalMinutes:5},
-  d30:{revision:1,coreMinutes:6,ordinaryRepairMinutes:2,totalMinutes:8}
-};
 
 function cvPlain(value){ return !!value && typeof value === 'object' && !Array.isArray(value); }
 function cvClone(value){ return JSON.parse(JSON.stringify(value)); }
@@ -384,6 +101,8 @@ function cvResumeValid(raw){
   if(raw.taskKind==='lesson'){
     const lesson=CV1_LESSONS[raw.taskId];if(!lesson||raw.formId!==null||raw.formCycle!==null)return false;
     const stages=['intro','map','pairs','scene','guided','objective','substitution','roleplay-supported','roleplay-reduced','resolution-guided','resolution-objective','record','rating'];if(!stages.includes(raw.stageId))return false;
+    if(['pairs','guided'].includes(raw.stageId)&&raw.itemIndex>lesson.interactions.length)return false;
+    if(raw.stageId.startsWith('resolution-')&&(!lesson.interactions[raw.itemIndex]||!lesson.interactions[raw.itemIndex].resolution||raw.stageIndex>(raw.stageId==='resolution-objective'?6:3)))return false;
     const interactions=lesson.interactions.map(item=>item.id),objectiveIds=cvBuildObjectives(lesson.interactions,`cv1.form.lesson.w01.l0${lesson.number}.a`,'lesson').map(item=>item.id),spoken=lesson.interactions.flatMap((_,index)=>['supported','reduced'].map(mode=>`cv1.spoken.lesson.w01.l0${lesson.number}.${mode}.${String(index+1).padStart(2,'0')}`));
     if(!cvIdList(e.pairIdsPlayed,interactions,false)||!cvIdList(e.sceneIdsPlayed,[lesson.scene.id],false)||!cvIdList(e.responsePromptIds,interactions,false)||!cvIdList(e.responseFirstCorrectIds,interactions,false)||!cvIdList(e.responseRepairIds,interactions,false)||e.responseFirstCorrectIds.some(id=>e.responseRepairIds.includes(id))||!cvIdList(e.itemIds,objectiveIds,e.itemIds.length>0)||!cvIdList(e.answeredIds,objectiveIds,false)||!cvIdList(e.firstCorrectIds,e.answeredIds,false)||!cvIdList(e.clearedIds,objectiveIds,false)||!cvIdList(e.spokenPromptIds,spoken,true)||!cvIdList(e.substitutionIds,[lesson.substitution.id],false)||e.transferIds.length||e.transferCompletedIds.length)return false;
     return true;
@@ -478,7 +197,7 @@ function cvNormalizeSchema2(raw){
   if(cvPlain(raw.activities)&&cvPlain(raw.activities.optional))Object.keys(raw.activities.optional).forEach(id=>{const item=raw.activities.optional[id];if(cvExactKeys(item,['runs','lastCompleted'])&&Number.isInteger(item.runs)&&item.runs>=0&&cvDayNotFuture(item.lastCompleted))c.activities.optional[id]=cvClone(item);else issues.push('activities.optional.'+id);});
   const consolidationDone=!!(c.activities.consolidations[CV1_WEEK1_CONSOLIDATION]&&c.activities.consolidations[CV1_WEEK1_CONSOLIDATION].firstCompleted),rawGate=cvPlain(raw.gates)&&raw.gates[CV1_WEEK1_GATE];
   if(rawGate){if(consolidationDone&&cvAssessmentRecordValid(rawGate,CV1_GATE_FORMS,'gate',null))c.gates[CV1_WEEK1_GATE]=cvClone(rawGate);else issues.push('gates.'+CV1_WEEK1_GATE);}
-  Object.values(CV1_LESSONS).forEach(lesson=>{const record=c.lessons[lesson.id];if(!record||!record.firstCompleted)return;['d1','d7'].forEach(stage=>{const id=`cv1.retention.w01.l0${lesson.number}.${stage}`,due=cvPlusDays(record.firstCompleted,stage==='d1'?1:7),candidate=cvPlain(raw.retention)&&raw.retention[id];if(candidate&&cvAssessmentRecordValid(candidate,CV1_RETENTION_FORMS[id],stage,due))c.retention[id]=cvClone(candidate);else{c.retention[id]=cvAssessmentRecord(null,due);if(candidate)issues.push('retention.'+id);}});});
+  Object.values(CV1_LESSONS).forEach(lesson=>{const record=c.lessons[lesson.id];if(!record||!record.firstCompleted)return;['d1','d7'].forEach(stage=>{const id=`cv1.retention.w01.l0${lesson.number}.${stage}`,due=cvPlusDays(record.firstCompleted,stage==='d1'?1:7),candidate=cvPlain(raw.retention)&&raw.retention[id];if(candidate&&cvAssessmentRecordValid(candidate,cvFormsForHistory(id),stage,due))c.retention[id]=cvClone(candidate);else{c.retention[id]=cvAssessmentRecord(null,due);if(candidate)issues.push('retention.'+id);}});});
   const gate=c.gates[CV1_WEEK1_GATE];if(gate&&gate.passedAt){const id='cv1.retention.w01.d30',due=cvPlusDays(gate.passedAt,30),candidate=cvPlain(raw.retention)&&raw.retention[id];if(candidate&&cvAssessmentRecordValid(candidate,CV1_RETENTION_FORMS[id],'d30',due))c.retention[id]=cvClone(candidate);else{c.retention[id]=cvAssessmentRecord(null,due);if(candidate)issues.push('retention.'+id);}}
   if(cvPlain(raw.retention))Object.keys(raw.retention).forEach(id=>{if(!Object.prototype.hasOwnProperty.call(c.retention,id))issues.push('retention.'+id);});
   if(cvPlain(raw.weakness)&&cvPlain(raw.weakness.items))Object.keys(raw.weakness.items).forEach(id=>{const item=raw.weakness.items[id];if(cvExactKeys(item,['seen','firstMisses','reviewMisses','correctStreak','lastSeen','lastMiss'])&&['seen','firstMisses','reviewMisses','correctStreak'].every(key=>Number.isInteger(item[key])&&item[key]>=0)&&item.firstMisses<=item.seen&&cvDayNotFuture(item.lastSeen)&&cvDayNotFuture(item.lastMiss))c.weakness.items[id]=cvClone(item);else issues.push('weakness.items.'+id);});
@@ -494,6 +213,7 @@ function cvNormalizeSchema2(raw){
     for(const [kind,id,record] of candidates){const recovered=cvRecoveredAssessmentResume(kind,id,record);if(recovered){c.resume=recovered;issues.push('resume.reconstructed');break;}}
   }
   if(cvPlain(raw.extensions)&&cvSafeTree(raw.extensions))c.extensions=cvClone(raw.extensions);else if(raw.extensions!=null)issues.push('extensions');
+  if(c.extensions.learningCheck!=null&&!cvLearningCheckValid(c.extensions.learningCheck)){delete c.extensions.learningCheck;issues.push('extensions.learningCheck');}
   if(cvPlain(raw.recovery)&&cvExactKeys(raw.recovery,['recoveryId','capturedAt','reason','sourceSchema','quarantinedCount']))c.recovery=cvClone(raw.recovery);
   if(issues.length&&!c.recovery){const capturedAt=new Date().toISOString(),recoveryId=`conversation-${capturedAt}-${issues.length}`;c.recovery={recoveryId,capturedAt,reason:issues.some(path=>path.startsWith('resume'))?'invalid-resume':'invalid-authority-record',sourceSchema:2,quarantinedCount:issues.length};try{localStorage.setItem('thai_state_v1_conversation_recovery',JSON.stringify({app:'aan-thai',key:'thai_state_v1',kind:'conversation-recovery',recoveryVersion:1,recoveryId,capturedAt,reason:c.recovery.reason,sourceSchema:2,conversation:{issues,raw:cvClone(raw)}}));}catch(_){}}
   return c;
@@ -557,12 +277,13 @@ function cvValidateConversationImport(raw){
   Object.keys(raw.activities.consolidations).forEach(id=>{if(id!==CV1_WEEK1_CONSOLIDATION||!cvLessonRecordValid(raw.activities.consolidations[id],null,true))throw new Error('invalid conversation consolidation '+id);});
   Object.keys(raw.activities.optional).forEach(id=>{const item=raw.activities.optional[id];if(!cvExactKeys(item,['runs','lastCompleted'])||!Number.isInteger(item.runs)||item.runs<0||!cvDayNotFuture(item.lastCompleted))throw new Error('invalid optional conversation activity '+id);});
   Object.keys(raw.gates).forEach(id=>{if(id!==CV1_WEEK1_GATE||!cvAssessmentRecordValid(raw.gates[id],CV1_GATE_FORMS,'gate',null))throw new Error('invalid conversation gate '+id);});
-  Object.keys(raw.retention).forEach(id=>{if(!CV1_RETENTION_FORMS[id])throw new Error('unknown conversation retention '+id);const stage=id.split('.').pop();if(!cvAssessmentRecordValid(raw.retention[id],CV1_RETENTION_FORMS[id],stage,raw.retention[id].due))throw new Error('invalid conversation retention '+id);});
+  Object.keys(raw.retention).forEach(id=>{if(!CV1_RETENTION_FORMS[id])throw new Error('unknown conversation retention '+id);const stage=id.split('.').pop();if(!cvAssessmentRecordValid(raw.retention[id],cvFormsForHistory(id),stage,raw.retention[id].due))throw new Error('invalid conversation retention '+id);});
   Object.keys(raw.weakness.items).forEach(id=>{const item=raw.weakness.items[id];if(!cvExactKeys(item,['seen','firstMisses','reviewMisses','correctStreak','lastSeen','lastMiss'])||['seen','firstMisses','reviewMisses','correctStreak'].some(key=>!Number.isInteger(item[key])||item[key]<0)||item.firstMisses>item.seen||!cvDayNotFuture(item.lastSeen)||!cvDayNotFuture(item.lastMiss))throw new Error('invalid conversation weakness item '+id);});
   Object.keys(raw.weakness.confusions).forEach(id=>{if(!Number.isInteger(raw.weakness.confusions[id])||raw.weakness.confusions[id]<1||!id.startsWith('cv1.interaction.')||!id.includes('>'))throw new Error('invalid conversation confusion '+id);});
   const knownMain=new Set(CV1_MAIN_SEQUENCE),knownRetention=new Set(Object.keys(CV1_RETENTION_FORMS));
   Object.keys(raw.days).forEach(day=>{const item=raw.days[day];if(!cvDayNotFuture(day)||!cvExactKeys(item,['secs','main','reviews','repairs'])||!Number.isFinite(item.secs)||item.secs<0||item.main!=null&&!knownMain.has(item.main)||!cvIdList(item.reviews,[...knownRetention],false)||!cvIdList(item.repairs,[...knownRetention,CV1_WEEK1_GATE],false))throw new Error('invalid conversation day '+day);});
-  if(raw.completion!=null||raw.recovery!=null)throw new Error('v8.4.1 cannot import final completion or unresolved recovery authority');
+  if(raw.extensions.learningCheck!=null&&!cvLearningCheckValid(raw.extensions.learningCheck))throw new Error('invalid supplementary learning check');
+  if(raw.completion!=null||raw.recovery!=null)throw new Error('v8.5.0 cannot import final completion or unresolved recovery authority');
   const authoritative=CV1_MAIN_SEQUENCE.map(id=>CV1_LESSONS[id]?!!(raw.lessons[id]&&raw.lessons[id].firstCompleted):id===CV1_WEEK1_CONSOLIDATION?!!(raw.activities.consolidations[id]&&raw.activities.consolidations[id].firstCompleted):!!(raw.gates[id]&&raw.gates[id].passedAt));
   const expectedCursor=authoritative.findIndex(done=>!done),cursor=expectedCursor<0?CV1_MAIN_SEQUENCE.length:expectedCursor;if(raw.pace.cursor!==cursor||authoritative.slice(cursor+1).some(Boolean))throw new Error('conversation progression is inconsistent');
   if(Object.keys(raw.activities.consolidations).length&&raw.pace.cursor<3)throw new Error('consolidation exists before its lesson prerequisites');
@@ -631,7 +352,6 @@ function cvDueAssignments(target,day){
   const stageRank={d1:0,d7:1,d30:2};
   return Object.keys(c.retention).map(id=>({id,rec:c.retention[id],stage:id.split('.').pop()}))
     .filter(item=>item.rec.due&&item.rec.due<=today&&!item.rec.passedAt&&item.rec.lastAttempt!==today&&(item.rec.attempts===0||(item.rec.repairCompletedAt&&item.rec.lastAttempt&&item.rec.repairCompletedAt>=item.rec.lastAttempt&&item.rec.lastAttempt<today)))
-    .filter(item=>item.id!=='cv1.retention.w01.l03.d7'||!!c.lessons['cv1.lesson.w02.l04.taxi-destination'])
     .sort((a,b)=>a.rec.due.localeCompare(b.rec.due)||(stageRank[a.stage]-stageRank[b.stage])||a.id.localeCompare(b.id));
 }
 function cvPlannedDueAssignments(target,day){
@@ -701,9 +421,8 @@ function cvResumeEvidence(p){
 }
 function cvResumeStage(p){
   if(p.kind==='lesson'){
-    if(p.phase==='roleplay')return {stageId:`roleplay-${p.roleMode}`,stageIndex:p.step,itemIndex:p.roleIndex};
     if(p.phase==='resolution')return {stageId:`resolution-${p.resolution&&p.resolution.returnPhase||'guided'}`,stageIndex:p.resolution&&p.resolution.returnIndex||0,itemIndex:p.lesson.interactions.indexOf(p.resolution&&p.resolution.item)};
-    const index=p.phase==='pairs'?p.pairIndex:p.phase==='guided'?p.guidedIndex:p.phase==='objective'?p.objectiveIndex:p.phase==='scene'&&p.scenePart1Done?1:0;
+    const index=p.phase==='pairs'?p.pairIndex:p.phase==='guided'?p.guidedIndex:0;
     return {stageId:p.phase,stageIndex:p.step,itemIndex:Math.max(0,index||0)};
   }
   const index=p.phase==='objective'?p.objectiveIndex:p.phase==='spoken'?p.spokenIndex:p.phase==='repair'?p.repairIndex:p.phase==='transfer'?p.transferIndex:0;
@@ -715,16 +434,128 @@ function cvPersistCourseResume(p){
   c.resume={taskId:p.taskId,taskKind:p.taskKind||p.kind,taskRevision:1,curriculumRevision:CV1_CURRICULUM_REVISION,formId:p.form?p.form.id:(p.formId||null),formCycle:p.formCycle==null?null:p.formCycle,attemptOrdinal:p.attemptOrdinal||1,runSeed:p.runSeed||`${p.taskId}|${p.attemptOrdinal||1}`,startedDay:p.startedDay||(old&&old.startedDay)||bangkokDayStr(),savedDay:bangkokDayStr(),stageId:stage.stageId,stageIndex:stage.stageIndex,itemIndex:stage.itemIndex,evidence:cvResumeEvidence(p)};
   saveState();return true;
 }
+// One choice renderer serves lesson comprehension, consolidation, gates and checks.
+// Stable item-keyed shuffles survive reload without fixed correct-answer positions.
+function cvShuffled(values, key){
+  let seed=2166136261;
+  for(const ch of String(key)){seed=Math.imul(seed^ch.charCodeAt(0),16777619)>>>0;}
+  const out=values.slice();
+  for(let i=out.length-1;i>0;i--){
+    seed=(seed+0x6D2B79F5)>>>0;
+    let t=Math.imul(seed^(seed>>>15),seed|1);t^=t+Math.imul(t^(t>>>7),t|61);
+    const j=Math.floor((((t^(t>>>14))>>>0)/4294967296)*(i+1));
+    [out[i],out[j]]=[out[j],out[i]];
+  }
+  return out;
+}
+function cvCueIntent(cue){
+  const family=cvCueFamilyId(cue);
+  const intents={
+    'cv1.cue-family.social.greeting':'A polite greeting.',
+    'cv1.cue-family.food.what-would-you-like':'The vendor asks what you would like.',
+    'cv1.cue-family.food.spice-choice':'The vendor asks about spice.',
+    'cv1.cue-family.food.service-choice':'The vendor asks where you will eat.',
+    'cv1.cue-family.food.drink-choice':'The vendor asks which drink you want.',
+    'cv1.cue-family.food.total':'The vendor gives the total.'
+  };
+  const answer=intents[family];
+  if(!answer)throw new Error('Untaught listening cue: '+(cue&&cue.id));
+  const neighbours={
+    'cv1.cue-family.social.greeting':['The vendor gives the total.','The vendor asks what you would like.'],
+    'cv1.cue-family.food.what-would-you-like':['The vendor asks about spice.','The vendor asks where you will eat.'],
+    'cv1.cue-family.food.spice-choice':['The vendor asks where you will eat.','The vendor asks which drink you want.'],
+    'cv1.cue-family.food.service-choice':['The vendor asks which drink you want.','The vendor asks about spice.'],
+    'cv1.cue-family.food.drink-choice':['The vendor asks where you will eat.','The vendor asks what you would like.'],
+    'cv1.cue-family.food.total':['The vendor asks about spice.','The vendor asks where you will eat.']
+  };
+  return {answer,choices:[answer,...neighbours[family]]};
+}
+function cvChoiceSpec(objective){
+  const item=objective.interaction;
+  const intent=['intent','event-request','partner-reply-intent'].includes(objective.direction);
+  const situation=objective.direction==='event-request'||(objective.direction==='intent'&&!!item.resolution);
+  const cue=objective.direction==='partner-reply-intent'?(item.partnerReply||CV1_LINES.total):item.cue;
+  const data=intent?(situation?{answer:item.intent,choices:item.intentOptions}:cvCueIntent(cue)):null;
+  return {
+    id:objective.id,skill:situation?'situation':intent?'listening':'response',
+    heading:situation||!intent?item.context:'What does the vendor mean?',
+    instruction:situation?'Choose what you need to communicate.':intent?'Listen before choosing.':'Listen to the vendor and the possible replies.',
+    cue:situation?null:cue,
+    options:intent?data.choices.map(label=>({id:label,label})):item.options.map(id=>({id,audio:CV1_RESPONSE_BY_ID[id]})),
+    answer:intent?data.answer:item.response.id,
+    explanation:intent?(situation?item.intent:cue.en):item.response.en,
+    revealLine:intent?(situation?item.response:cue):item.response
+  };
+}
+function cvChoiceReady(spec, heard, option){
+  return (!spec.cue||heard.cue)&&(!option.audio||heard.options.includes(option.id));
+}
+function cvRenderChoiceQuestion(p,spec,config){
+  const opts=config||{},view={};p.choiceView=view;
+  const stillHere=()=>player===p&&p.choiceView===view;
+  const order=cvShuffled(spec.options,(p.runSeed||p.taskId)+'|'+spec.id);
+  if(opts.result){
+    const result=opts.result;
+    el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">${esc(opts.label||'Check')}</div><h2>${esc(spec.heading)}</h2><p class="sub">Your first answer is saved.</p></div><div class="q-feedback ${result.correct?'ok answer-correct':'no answer-wrong'}"><b>${result.correct?'That fits.':'This needs practice.'}</b><p>${esc(spec.explanation)}</p>${spec.revealLine?cvLinePanel(spec.revealLine,'Compare with the model'):''}${spec.feedbackHtml||''}<button class="btn full" id="cv-choice-next">${esc(opts.nextLabel||'Continue')} →</button></div>`;
+    el('cv-choice-next').onclick=()=>{if(stillHere())opts.onNext();};
+    return;
+  }
+  const heard={cue:!spec.cue,options:[]};
+  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">${esc(opts.label||'Check')}</div><h2>${esc(spec.heading)}</h2>${spec.promptHtml||''}<p class="sub">${esc(spec.instruction)}</p>${spec.cue?'<button class="btn full ghost" id="cv-choice-cue">▶ Hear the vendor</button>':''}</div><div class="q-options">${order.map((option,index)=>option.audio?`<div class="cv-audio-option"><button class="btn ghost" data-cv-option-audio="${index}">▶ Hear option ${String.fromCharCode(65+index)}</button><button class="btn" data-cv-option="${index}" disabled>Choose ${String.fromCharCode(65+index)}</button></div>`:`<button class="q-opt" data-cv-option="${index}" ${spec.cue?'disabled':''}>${esc(option.label)}</button>`).join('')}</div><button class="btn full ghost" id="cv-choice-unsure" ${spec.cue?'disabled':''}>I don’t know yet</button>`;
+  const buttons=[...el('stage').querySelectorAll('[data-cv-option]')];
+  const refresh=()=>{
+    buttons.forEach(button=>{button.disabled=!cvChoiceReady(spec,heard,order[Number(button.dataset.cvOption)]);});
+    el('cv-choice-unsure').disabled=!heard.cue;
+  };
+  if(spec.cue)el('cv-choice-cue').onclick=()=>speak(spec.cue.thai,el('cv-choice-cue'),spec.cue.rate,ok=>{if(!ok||!stillHere())return;heard.cue=true;refresh();},'vendor');
+  el('stage').querySelectorAll('[data-cv-option-audio]').forEach(button=>button.onclick=()=>{
+    const option=order[Number(button.dataset.cvOptionAudio)];
+    speak(option.audio.thai,button,option.audio.rate,ok=>{if(!ok||!stillHere())return;cvPushUnique(heard.options,option.id);refresh();},'learner');
+  });
+  let answered=false;
+  const choose=option=>{
+    if(answered||!stillHere()||!heard.cue||(option&&!cvChoiceReady(spec,heard,option)))return;
+    answered=true;buttons.forEach(button=>button.disabled=true);
+    opts.onAnswer(option?option.id:null,!!option&&option.id===spec.answer);
+  };
+  buttons.forEach(button=>button.onclick=()=>choose(order[Number(button.dataset.cvOption)]));
+  el('cv-choice-unsure').onclick=()=>choose(null);
+}
+function cvAssessmentBreakdown(p){
+  const groups={listening:{correct:0,total:0},response:{correct:0,total:0},situation:{correct:0,total:0}};
+  for(const objective of p.objectives){const group=groups[cvChoiceSpec(objective).skill];group.total++;if(p.evidence.firstCorrectIds.includes(objective.id))group.correct++;}
+  return Object.entries(groups).filter(([,x])=>x.total).map(([key,x])=>`${x.correct}/${x.total} ${key==='listening'?'heard meanings':key==='response'?'reply choices':'situation choices'}`).join(' · ');
+}
+
+// Spoken practice uses explicit learner actions; playback never creates recall evidence.
+function cvRenderRecall(p,line,config){
+  const opts=config,view={};p.recallView=view;
+  const stillHere=()=>player===p&&p.recallView===view;
+  const revealed=!!opts.revealed;
+  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">${esc(opts.label||'Your turn without tiles')}</div><h2>${esc(opts.prompt||line.en)}</h2><p class="sub">${revealed?'Compare your attempt with the phrase.':'Try a reply aloud. If you cannot remember it, use the help button.'}</p>${opts.cue?'<button class="btn full ghost" id="cv-recall-cue">▶ Hear the vendor</button>':''}</div>${revealed?cvLinePanel(line,'Model for comparison'):'<div class="cv-support-hidden"><b>Your reply is hidden.</b></div><details class="conversation-transcript-drawer" id="cv-recall-support"><summary>Show the phrase parts</summary>'+cvChunkSupportHtml(line)+'</details>'}<div class="stage-actions">${revealed?'<button class="btn full ghost" id="cv-recall-model">▶ Hear the model</button>'+ (opts.onRate?'<p class="sub">Your own report of this attempt; pronunciation is not scored.</p>'+CV_CHECK_RATINGS.map(r=>`<button class="btn full" data-cv-recall-rating="${r.id}" ${opts.supported&&r.id==='independent'?'disabled':''}>${esc(r.label)}</button>`).join(''):'<button class="btn full" id="cv-recall-next">I practised the reply · continue →</button>'):'<button class="btn full" id="cv-recall-reveal" '+(opts.cue?'disabled':'')+'>I tried a reply · compare</button><button class="btn full ghost" id="cv-recall-help" '+(opts.cue?'disabled':'')+'>I need the model</button>'}</div>`;
+  let heard=!opts.cue||revealed;
+  if(opts.cue)el('cv-recall-cue').onclick=()=>speak(opts.cue.thai,el('cv-recall-cue'),opts.cue.rate,ok=>{
+    if(!ok||!stillHere())return;heard=true;
+    if(!revealed){el('cv-recall-reveal').disabled=false;el('cv-recall-help').disabled=false;}
+  },'vendor');
+  if(revealed){
+    el('cv-recall-model').onclick=()=>speak(line.thai,el('cv-recall-model'),line.rate,null,'learner');
+    if(opts.onRate)el('stage').querySelectorAll('[data-cv-recall-rating]').forEach(button=>button.onclick=()=>{if(stillHere()&&!(opts.supported&&button.dataset.cvRecallRating==='independent'))opts.onRate(button.dataset.cvRecallRating);});
+    else el('cv-recall-next').onclick=()=>{if(stillHere())opts.onNext();};
+  }else{
+    const support=el('cv-recall-support');
+    support.addEventListener('toggle',()=>{if(support.open&&stillHere())opts.onSupport();});
+    el('cv-recall-reveal').onclick=()=>{if(heard&&stillHere())opts.onReveal(false);};
+    el('cv-recall-help').onclick=()=>{if(heard&&stillHere())opts.onReveal(true);};
+  }
+}
+
 function cvLinePanel(line,label){
   return `<div class="conversation-turn learner"><div class="conversation-speaker">${esc(label||'You say')}</div><div class="p-en"><b>${esc(line.en)}</b></div><div class="p-thai" lang="th">${esc(line.thai)}</div><div class="p-tr">${esc(line.tr)}</div>${conversationSegmentsHtml(line.segments,'Phrase parts')}</div>`;
 }
 function cvPronunciationKeyHtml(open){
   return `<details class="conversation-pronunciation-key" ${open?'open':''}><summary>Pronunciation-spelling key (optional)</summary><div class="mt-10"><b>This is an English reading aid, not Thai spelling or a pronunciation score.</b></div><div class="sub mt-10"><b>bp</b> and <b>dt</b> are the unpuffed sounds between English b/p and d/t. <b>ph</b>, <b>th</b> and <b>kh</b> include a puff of air. <b>ng</b> can begin a Thai word. <b>ʉ</b> is a central vowel with rounded lips. Doubled vowels such as <b>aa</b>, <b>ii</b> and <b>uu</b> are long.</div><div class="sub mt-10">Pitch marks: unmarked = mid, grave (à) = low, circumflex (â) = falling, acute (á) = high and caron (ǎ) = rising. Keep this key as support; it is never tested.</div></details>`;
 }
-function cvPlayLineButton(line,label,id,rate){
-  return `<button class="btn ghost" id="${escAttr(id)}">▶ ${esc(label)}</button>`;
-}
-function cvBindLineButton(id,line,rate,role){ const button=el(id); if(button) button.onclick=()=>speak(line.thai,button,rate||line.rate||.72,null,role); }
 function cvLessonPhases(lesson){
   return 4 + (lesson.interactions.length*2);
 }
@@ -747,7 +578,8 @@ function cvBuilderTileHtml(part,index,mode,inAnswer){
   return `<button type="button" class="cv-word-tile${inAnswer?' in-answer':''}" data-cv-builder-part="${index}" aria-label="${escAttr((inAnswer?'Remove ':'Add ')+part.en)}"><span class="thai" lang="th">${esc(part.thai)}</span><span class="tr">${esc(part.tr)}</span>${mode==='teach'?`<span class="en">${esc(part.en)}</span>`:''}</button>`;
 }
 function cvTeachingModelHtml(line){
-  return `<div class="cv-teach-phrase"><div class="conversation-speaker">Your new reply</div><div class="p-en"><b>${esc(line.en)}</b></div><div class="p-thai" lang="th">${esc(line.thai)}</div><div class="p-tr">${esc(line.tr)}</div><div><div class="conversation-speaker">What each part means</div><div class="cv-teach-parts">${line.segments.map(part=>`<div class="cv-teach-part"><div class="thai" lang="th">${esc(part.thai)}</div><div class="meaning"><b>${esc(part.en)}</b><span>${esc(part.tr)}</span></div></div>`).join('')}</div></div><button class="btn full" id="cv-model-reply">▶ Hear the complete phrase</button></div>`;
+  const note=CV1_PATTERN_NOTES[line.id];
+  return `<div class="cv-teach-phrase"><div class="conversation-speaker">Your new reply</div><div class="p-en"><b>${esc(line.en)}</b></div><div class="p-thai" lang="th">${esc(line.thai)}</div><div class="p-tr">${esc(line.tr)}</div><div><div class="conversation-speaker">What each part means</div><div class="cv-teach-parts">${line.segments.map(part=>`<div class="cv-teach-part"><div class="thai" lang="th">${esc(part.thai)}</div><div class="meaning"><b>${esc(part.en)}</b><span>${esc(part.tr)}</span></div></div>`).join('')}</div></div>${note?`<div class="notebox"><b>${esc(note.title)}</b><p>${esc(note.text)}</p></div>`:''}<button class="btn full" id="cv-model-reply">▶ Hear the complete phrase</button></div>`;
 }
 function cvSentenceBuilderHtml(p,line,key,mode,complete){
   const state=cvBuilderState(p,key);if(complete){state.complete=true;if(state.selected.length!==line.segments.length)state.selected=line.segments.map((_,index)=>index);}
@@ -773,6 +605,15 @@ function cvBindSentenceBuilder(p,line,key,mode,options){
   };
   draw();
 }
+function cvBindBuilderPlayback(p,line,key,mode,done,onHeard){
+  const replay=el('cv-builder-replay'),phase=p.phase;
+  const play=()=>{
+    if(!cvBuilderState(p,key).complete)return;
+    speak(line.thai,replay,line.rate,ok=>{if(ok&&player===p&&p.phase===phase)onHeard();},'learner');
+  };
+  replay.disabled=!done;replay.onclick=play;
+  cvBindSentenceBuilder(p,line,key,mode,{onCorrect:()=>{replay.disabled=false;play();}});
+}
 function cvLessonSpokenId(p,index,mode){return `cv1.spoken.lesson.w01.l0${p.lesson.number}.${mode}.${String(index+1).padStart(2,'0')}`;}
 function cvMarkLessonBuilderAttempt(p,item,correct){
   if(!p.evidence.responsePromptIds.includes(item.id)){cvPushUnique(p.evidence.responsePromptIds,item.id);cvPushUnique(correct?p.evidence.responseFirstCorrectIds:p.evidence.responseRepairIds,item.id);}
@@ -781,29 +622,22 @@ function startConversationCourseLesson(taskId){
   const lesson=CV1_LESSONS[taskId];
   if(!lesson) return false;
   const c=cvConversation(),record=c.lessons[taskId],resumable=!(record&&record.firstCompleted)&&CV1_MAIN_SEQUENCE[c.pace.cursor]===taskId,objectives=cvBuildObjectives(lesson.interactions,`cv1.form.lesson.w01.l0${lesson.number}.a`,'lesson');
-  player={type:'conversation-course',kind:'lesson',taskKind:'lesson',taskId,lesson,scene:lesson.scene,phase:'intro',step:0,total:cvLessonPhases(lesson),pairIndex:0,pairPlayback:{},guidedIndex:0,guidedHeard:{},objectiveIndex:0,roleIndex:0,roleMode:'supported',scenePart1Done:false,completed:false,resumable,startedDay:bangkokDayStr(),attemptOrdinal:(record&&record.runs||0)+1,runSeed:`${taskId}|${(record&&record.runs||0)+1}`,
-    optionOffset:(lesson.number-1)%3,optionOrders:{},guidedAttempts:{},objectiveAttempts:{},resolution:null,pairModes:{},builders:{},objectives,evidence:cvLessonEvidence()};
+  player={type:'conversation-course',kind:'lesson',taskKind:'lesson',taskId,lesson,scene:lesson.scene,phase:'intro',step:0,total:cvLessonPhases(lesson),pairIndex:0,pairPlayback:{},guidedIndex:0,objectiveIndex:0,completed:false,resumable,startedDay:bangkokDayStr(),attemptOrdinal:(record&&record.runs||0)+1,runSeed:`${taskId}|${(record&&record.runs||0)+1}`,
+    resolution:null,pairModes:{},builders:{},objectives,evidence:cvLessonEvidence()};
   player.evidence.objective.itemIds=objectives.map(item=>item.id);
   cvPersistCourseResume(player);openOverlay();renderConversationCourseLesson();return true;
 }
 function renderConversationCourseLesson(){
-  const p=player;if(!p||p.type!=='conversation-course'||p.kind!=='lesson') return;
+  const p=player;if(!p||p.type!=='conversation-course'||p.kind!=='lesson')return;
   stopConversationSpeech();cvSetCourseProgress(p);
-  if(p.phase==='intro') return cvRenderLessonIntro(p);
-  if(p.phase==='map'){p.phase='pairs';p.pairIndex=0;cvPersistCourseResume(p);return renderConversationCourseLesson();}
-  if(p.phase==='pairs') return cvRenderLessonPair(p);
-  if(p.phase==='scene') return cvRenderLessonScene(p);
-  if(p.phase==='guided') return cvRenderLessonGuided(p);
-  if(p.phase==='resolution'||p.phase==='objective'||p.phase==='roleplay'||p.phase==='record'){p.phase=p.phase==='record'?'substitution':'guided';p.guidedIndex=Math.min(p.guidedIndex||0,p.lesson.interactions.length-1);cvPersistCourseResume(p);return renderConversationCourseLesson();}
-  if(p.phase==='substitution') return cvRenderLessonSubstitution(p);
-  if(p.phase==='rating') return cvRenderLessonRating(p);
+  const renderers={intro:cvRenderLessonIntro,pairs:cvRenderLessonPair,scene:cvRenderLessonScene,guided:cvRenderLessonGuided,resolution:cvRenderRepairResolution,substitution:cvRenderLessonSubstitution,rating:cvRenderLessonRating};
+  const render=renderers[p.phase];
+  if(!render)throw new Error('Unknown conversation lesson stage: '+p.phase);
+  render(p);
 }
 function cvRenderLessonIntro(p){
   el('stage').innerHTML=`<div class="cv-mission"><div class="eyebrow">Lesson ${p.lesson.number} · ${p.lesson.minutes} min</div><h2>${esc(p.lesson.title)}</h2><p>${esc(p.lesson.situation)}</p><div class="cv-goals">${p.lesson.meaning.map(row=>`<span class="cv-goal">${esc(row[0])}</span>`).join('')}</div></div><p class="sub center">Learn and hear each complete reply first. Then put its familiar parts together and say it aloud.</p><div class="cv-voice-note">${esc(conversationVoiceSummary())}</div><div class="stage-actions"><button class="btn full" id="cv-next">Start with the first phrase →</button></div>`;
   el('cv-next').onclick=()=>{p.pairIndex=0;cvAdvanceLesson('pairs');};
-}
-function cvRenderLessonMap(p){
-  p.phase='pairs';p.pairIndex=0;cvPersistCourseResume(p);renderConversationCourseLesson();
 }
 function cvRenderLessonPair(p){
   const item=p.lesson.interactions[p.pairIndex];
@@ -818,122 +652,98 @@ function cvRenderLessonPair(p){
     return;
   }
   const cueHtml=item.event?`<div class="conversation-turn vendor"><div class="conversation-speaker">Your turn</div><div class="p-en"><b>${esc(item.context)}</b></div><div class="sub">You start this one.</div></div>`:`<div class="conversation-turn vendor"><div class="conversation-speaker">Vendor says</div><div class="p-en"><b>${esc(item.cue.en)}</b></div><div class="p-thai" lang="th">${esc(item.cue.thai)}</div><div class="p-tr">${esc(item.cue.tr)}</div><button class="btn full ghost" id="cv-pair-cue">▶ Hear the vendor</button></div>`;
-  el('stage').innerHTML=`<div class="cv-dialogue-progress">${p.lesson.interactions.map((_,index)=>`<span class="${index<p.pairIndex?'done':index===p.pairIndex?'active':''}"></span>`).join('')}</div><div class="center"><div class="eyebrow">Use phrase ${p.pairIndex+1} of ${p.lesson.interactions.length}</div><h2>Now answer in the conversation</h2><p class="sub">You have seen and heard the complete reply. Listen to the vendor, then put your reply back together.</p></div>${cueHtml}${cvSentenceBuilderHtml(p,item.response,`teach:${item.id}`,'teach',built)}<div class="conversation-playback-actions"><button class="btn ghost" id="cv-pair-reply" ${built?'':'disabled'}>▶ Hear your reply</button><button class="btn ghost" id="cv-pair-stop" data-conversation-stop>Stop</button></div><div class="stage-actions"><button class="btn full" id="cv-next" ${played?'':'disabled'}>${played?'Say it once · next phrase →':'Build and hear your reply first'}</button></div>`;
+  el('stage').innerHTML=`<div class="cv-dialogue-progress">${p.lesson.interactions.map((_,index)=>`<span class="${index<p.pairIndex?'done':index===p.pairIndex?'active':''}"></span>`).join('')}</div><div class="center"><div class="eyebrow">Use phrase ${p.pairIndex+1} of ${p.lesson.interactions.length}</div><h2>Now answer in the conversation</h2><p class="sub">You have seen and heard the complete reply. Listen to the vendor, then put your reply back together.</p></div>${cueHtml}${cvSentenceBuilderHtml(p,item.response,`teach:${item.id}`,'teach',built)}<div class="conversation-playback-actions"><button class="btn ghost" id="cv-pair-reply" ${built?'':'disabled'}>▶ Hear your reply</button><button class="btn ghost" id="cv-pair-stop" data-conversation-stop>Stop</button></div><div class="stage-actions"><button class="btn full" id="cv-next" ${played?'':'disabled'}>${played?'I said it with help · next phrase →':'Build and hear your reply first'}</button></div>`;
   const cueButton=el('cv-pair-cue'),replyButton=el('cv-pair-reply'),next=el('cv-next');
   const stillHere=()=>player===p&&p.phase==='pairs'&&p.lesson.interactions[p.pairIndex]===item;
-  const markComplete=()=>{if(!heard.cue||!heard.reply)return;cvPushUnique(p.evidence.pairIdsPlayed,item.id);const promptId=cvLessonSpokenId(p,p.pairIndex,'supported');cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);cvPersistCourseResume(p);next.disabled=false;next.textContent='Say it once · next phrase →';};
+  const markComplete=()=>{if(!heard.cue||!heard.reply)return;cvPushUnique(p.evidence.pairIdsPlayed,item.id);cvPersistCourseResume(p);next.disabled=false;next.textContent='I said it with help · next phrase →';};
   const playReply=()=>{if(!heard.cue||!cvBuilderState(p,`teach:${item.id}`).complete)return;const finish=ok=>{if(!ok||!stillHere())return;heard.reply=true;p.pairPlayback[item.id]=heard;markComplete();};speak(item.response.thai,replyButton,item.response.rate,ok=>{if(!ok||!stillHere())return;if(item.event&&item.partnerReply){speak(item.partnerReply.thai,replyButton,item.partnerReply.rate,finish,'vendor');return;}finish(true);},'learner');};
   if(cueButton)cueButton.onclick=()=>{speak(item.cue.thai,cueButton,item.cue.rate,ok=>{if(!ok||!stillHere())return;heard.cue=true;p.pairPlayback[item.id]=heard;const check=el('cv-builder-check');if(check)check.disabled=cvBuilderState(p,`teach:${item.id}`).selected.length!==item.response.segments.length;},'vendor');};
   replyButton.onclick=playReply;
   cvBindSentenceBuilder(p,item.response,`teach:${item.id}`,'teach',{disabled:()=>!heard.cue,onFirstWrong:()=>{cvMarkLessonBuilderAttempt(p,item,false);cvPersistCourseResume(p);},onCorrect:first=>{cvMarkLessonBuilderAttempt(p,item,first);replyButton.disabled=false;cvPersistCourseResume(p);playReply();}});
   el('cv-pair-stop').onclick=()=>{stopConversationSpeech();try{speechSynthesis.cancel();}catch(_){}};
-  next.onclick=()=>{if(!p.evidence.pairIdsPlayed.includes(item.id))return;p.pairIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();};
+  next.onclick=()=>{if(!p.evidence.pairIdsPlayed.includes(item.id))return;const promptId=cvLessonSpokenId(p,p.pairIndex,'supported');cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);cvPushUnique(p.evidence.supportOpenedIds,promptId);p.pairIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();};
 }
 function cvRenderLessonScene(p){
   const heard=p.evidence.sceneIdsPlayed.includes(p.lesson.scene.id);
   el('stage').innerHTML=`<div class="center"><div class="eyebrow">Listen once</div><h2>Hear the phrases together</h2><p class="sub">Vendor and customer turns are separated by a clear pause.</p></div><div class="conversation-playback-panel"><div class="conversation-now-playing" id="conversation-now-playing" role="status" aria-live="polite"><div class="conversation-speaker">Ready</div><div class="p-en"><b>Press play when you are ready.</b></div></div><div class="conversation-playback-actions"><button class="btn ghost" id="cv-scene-play">${heard?'↻ Play again':'▶ Play conversation'}</button><button class="btn ghost" id="cv-scene-stop" data-conversation-stop disabled>Stop</button></div><div class="cv-voice-note">${esc(conversationVoiceSummary())}</div></div>${conversationTranscriptHtml(p.lesson.scene)}<div class="stage-actions"><button class="btn full" id="cv-next" ${heard?'':'disabled'}>${heard?'Your turn →':'Listen once to continue'}</button></div>`;
   const play=el('cv-scene-play'),next=el('cv-next');
-  play.onclick=()=>playConversationTurns(p,p.lesson.scene.turns,play,{stopButton:el('cv-scene-stop'),onComplete:()=>{cvPushUnique(p.evidence.sceneIdsPlayed,p.lesson.scene.id);cvPersistCourseResume(p);next.disabled=false;next.textContent='Your turn →';}});
+  play.onclick=()=>playConversationTurns(p,p.lesson.scene.turns,play,{stopButton:el('cv-scene-stop'),onComplete:()=>{if(player!==p||p.phase!=='scene')return;cvPushUnique(p.evidence.sceneIdsPlayed,p.lesson.scene.id);cvPersistCourseResume(p);next.disabled=false;next.textContent='Your turn →';}});
   next.onclick=()=>{if(!p.evidence.sceneIdsPlayed.includes(p.lesson.scene.id))return;p.guidedIndex=0;cvAdvanceLesson('guided');};
 }
-function cvOptionOrder(p,item,index){
-  const key=item.id+'@'+index;if(p.optionOrders[key])return p.optionOrders[key];
-  const options=item.options.slice(),answer=item.response.id,wrong=options.filter(id=>id!==answer),pos=(p.optionOffset+index)%3;
-  const out=wrong.slice();out.splice(pos,0,answer);p.optionOrders[key]=out;return out;
-}
-function cvGuidedOptionHtml(id){ const line=CV1_RESPONSE_BY_ID[id];return `<button class="q-opt" data-cv-guided="${escAttr(id)}"><span class="thai" lang="th">${esc(line.thai)}</span><span class="p-tr">${esc(line.tr)}</span><span class="sub">${esc(line.en)}</span></button>`; }
 function cvRenderLessonGuided(p){
   const item=p.lesson.interactions[p.guidedIndex];
-  if(!item){p.phase='substitution';p.step++;cvPersistCourseResume(p);return renderConversationCourseLesson();}
-  const intentObjective=p.objectives[p.guidedIndex*2],responseObjective=p.objectives[p.guidedIndex*2+1],intentDone=p.evidence.objective.clearedIds.includes(intentObjective.id),responseDone=p.evidence.objective.clearedIds.includes(responseObjective.id),promptId=cvLessonSpokenId(p,p.guidedIndex,'reduced'),spokenDone=p.evidence.spokenBeforeRevealIds.includes(promptId),heard=!!p.guidedHeard[item.id]||item.event;
-  const progress=`<div class="cv-dialogue-progress">${p.lesson.interactions.map((_,index)=>`<span class="${index<p.guidedIndex?'done':index===p.guidedIndex?'active':''}"></span>`).join('')}</div>`;
-  if(!intentDone){
-    el('stage').innerHTML=`${progress}<div class="q-prompt"><div class="eyebrow">Use it · ${p.guidedIndex+1} of ${p.lesson.interactions.length}</div><h2>${esc(item.context)}</h2><p class="sub">${item.event?'What should you do now?':'Listen, then choose what the vendor means.'}</p>${item.event?'<div class="notebox"><b>You start this turn.</b></div>':`<button class="btn full ghost" id="cv-guided-cue">▶ Hear the vendor</button>`}</div><div class="q-options">${item.intentOptions.map(choice=>`<button class="q-opt" data-cv-intent="${escAttr(choice)}" ${heard?'':'disabled'}>${esc(choice)}</button>`).join('')}</div><div class="q-feedback" id="cv-feedback" role="status" aria-live="polite"></div>`;
-    const cue=el('cv-guided-cue');if(cue)cue.onclick=()=>speak(item.cue.thai,cue,item.cue.rate,ok=>{if(!ok||player!==p||p.phase!=='guided')return;p.guidedHeard[item.id]=true;el('stage').querySelectorAll('[data-cv-intent]').forEach(button=>button.disabled=false);},'vendor');
-    el('stage').querySelectorAll('[data-cv-intent]').forEach(button=>button.onclick=()=>{const selected=button.dataset.cvIntent,ok=selected===item.intent,first=!p.evidence.objective.answeredIds.includes(intentObjective.id);if(first){cvPushUnique(p.evidence.objective.answeredIds,intentObjective.id);if(ok)cvPushUnique(p.evidence.objective.firstCorrectIds,intentObjective.id);cvWeaknessSeen(cvConversation(),intentObjective,ok,selected);}if(ok)cvPushUnique(p.evidence.objective.clearedIds,intentObjective.id);cvPersistCourseResume(p);if(ok){renderConversationCourseLesson();return;}const fb=el('cv-feedback');fb.className='q-feedback no answer-wrong';fb.innerHTML='<b>Not this one. Listen again and retry.</b>';button.disabled=true;});
+  if(!item){cvAdvanceLesson('substitution');return;}
+  const intentObjective=p.objectives[p.guidedIndex*2],responseObjective=p.objectives[p.guidedIndex*2+1];
+  const evidence=p.evidence.objective,promptId=cvLessonSpokenId(p,p.guidedIndex,'reduced');
+  const intentDone=evidence.clearedIds.includes(intentObjective.id),responseDone=evidence.clearedIds.includes(responseObjective.id);
+  if(!intentDone||p.guidedFeedback){
+    const spec=cvChoiceSpec(intentObjective);
+    cvRenderChoiceQuestion(p,spec,{
+      label:`Understand · ${p.guidedIndex+1} of ${p.lesson.interactions.length}`,result:p.guidedFeedback,
+      nextLabel:p.guidedFeedback&&!p.guidedFeedback.correct?'Listen and try again':'Build your reply',
+      onAnswer:(selected,correct)=>{
+        if(!evidence.answeredIds.includes(intentObjective.id)){
+          cvPushUnique(evidence.answeredIds,intentObjective.id);
+          if(correct)cvPushUnique(evidence.firstCorrectIds,intentObjective.id);
+          cvWeaknessSeen(cvConversation(),intentObjective,correct,selected||'not-sure');
+        }
+        if(correct)cvPushUnique(evidence.clearedIds,intentObjective.id);
+        p.guidedFeedback={correct};cvPersistCourseResume(p);renderConversationCourseLesson();
+      },
+      onNext:()=>{p.guidedFeedback=null;renderConversationCourseLesson();}
+    });
     return;
   }
-  el('stage').innerHTML=`${progress}<div class="q-prompt"><div class="eyebrow">Your reply</div><h2>${esc(item.response.en)}</h2><p class="sub">Build it again with less help.</p>${item.event?'':`<button class="btn full ghost" id="cv-guided-cue">▶ Hear the vendor again</button>`}</div>${cvSentenceBuilderHtml(p,item.response,`use:${item.id}`,'practice',responseDone)}<div class="conversation-playback-actions"><button class="btn ghost" id="cv-guided-reply" ${responseDone?'':'disabled'}>▶ Hear and say your reply</button></div><div class="stage-actions"><button class="btn full" id="cv-next" ${spokenDone?'':'disabled'}>${spokenDone?'Next turn →':'Hear and say your reply first'}</button></div>`;
-  const cue=el('cv-guided-cue');if(cue)cue.onclick=()=>speak(item.cue.thai,cue,item.cue.rate,null,'vendor');
-  const next=el('cv-next'),reply=el('cv-guided-reply'),stillHere=()=>player===p&&p.phase==='guided'&&p.lesson.interactions[p.guidedIndex]===item;
-  const playReply=()=>{if(!p.evidence.objective.clearedIds.includes(responseObjective.id))return;speak(item.response.thai,reply,item.response.rate,ok=>{if(!ok||!stillHere())return;cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);cvPersistCourseResume(p);next.disabled=false;next.textContent='Next turn →';},'learner');};reply.onclick=playReply;
-  cvBindSentenceBuilder(p,item.response,`use:${item.id}`,'practice',{onFirstWrong:()=>{if(!p.evidence.objective.answeredIds.includes(responseObjective.id)){cvPushUnique(p.evidence.objective.answeredIds,responseObjective.id);cvWeaknessSeen(cvConversation(),responseObjective,false,'wrong-order');cvPersistCourseResume(p);}},onCorrect:first=>{if(!p.evidence.objective.answeredIds.includes(responseObjective.id)){cvPushUnique(p.evidence.objective.answeredIds,responseObjective.id);if(first)cvPushUnique(p.evidence.objective.firstCorrectIds,responseObjective.id);cvWeaknessSeen(cvConversation(),responseObjective,first,first?item.response.id:'wrong-order');}cvPushUnique(p.evidence.objective.clearedIds,responseObjective.id);cvPersistCourseResume(p);reply.disabled=false;playReply();}});
-  next.onclick=()=>{if(!p.evidence.objective.clearedIds.includes(responseObjective.id)||!p.evidence.spokenBeforeRevealIds.includes(promptId))return;p.guidedIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();};
+  if(!responseDone){
+    el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">Practise the pattern</div><h2>${esc(item.response.en)}</h2><p class="sub">Build it again with less help. Next you will try without tiles.</p></div>${cvSentenceBuilderHtml(p,item.response,`use:${item.id}`,'practice',false)}`;
+    cvBindSentenceBuilder(p,item.response,`use:${item.id}`,'practice',{
+      onFirstWrong:()=>{if(!evidence.answeredIds.includes(responseObjective.id)){cvPushUnique(evidence.answeredIds,responseObjective.id);cvWeaknessSeen(cvConversation(),responseObjective,false,'wrong-order');cvPersistCourseResume(p);}},
+      onCorrect:first=>{
+        if(!evidence.answeredIds.includes(responseObjective.id)){cvPushUnique(evidence.answeredIds,responseObjective.id);if(first)cvPushUnique(evidence.firstCorrectIds,responseObjective.id);cvWeaknessSeen(cvConversation(),responseObjective,first,first?item.response.id:'wrong-order');}
+        cvPushUnique(evidence.clearedIds,responseObjective.id);cvPersistCourseResume(p);renderConversationCourseLesson();
+      }
+    });
+    return;
+  }
+  cvRenderRecall(p,item.response,{
+    prompt:item.context,cue:item.cue,label:'Your turn without tiles',
+    revealed:p.evidence.modelRevealIds.includes(promptId),
+    onSupport:()=>{cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPersistCourseResume(p);},
+    onReveal:neededModel=>{
+      if(neededModel)cvPushUnique(p.evidence.supportOpenedIds,promptId);
+      cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);
+      cvPersistCourseResume(p);renderConversationCourseLesson();
+    },
+    onNext:()=>{
+      if(item.resolution){p.resolution={item,returnPhase:'guided',returnIndex:p.guidedIndex+1};cvAdvanceLesson('resolution');}
+      else{p.guidedIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();}
+    }
+  });
 }
 function cvRenderRepairResolution(p){
-  const r=p.resolution,item=r.item,res=item.resolution;
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Repair is not the end</div><h2>Return to the original task</h2><p class="sub">The partner now replays the original cue${res.rate<.7?' slowly':''}. Answer the food or service task before this interaction clears.</p></div>
-    <div class="conversation-turn vendor"><div class="p-en"><b>${esc(res.cue.en)}</b></div><div class="p-thai" lang="th">${esc(res.cue.thai)}</div><div class="p-tr">${esc(res.cue.tr)}</div><button class="btn full ghost" id="cv-resolution-cue">▶ Hear the repaired cue</button></div>
-    <div class="cv-support-hidden" id="cv-resolution-answer"><b>Answer aloud before revealing the model.</b></div>
-    <div class="stage-actions"><button class="btn full" id="cv-resolution-reveal">I answered · show the original-task reply</button></div>`;
-  cvBindLineButton('cv-resolution-cue',res.cue,res.rate,'vendor');
-  el('cv-resolution-reveal').onclick=()=>{
-    el('cv-resolution-answer').outerHTML=cvLinePanel(res.response,'Original task completed');
-    const actions=el('stage').querySelector('.stage-actions');actions.innerHTML='<button class="btn full" id="cv-resolution-next">Continue →</button>';
-    speak(res.response.thai,null,res.response.rate,null,'learner');
-    el('cv-resolution-next').onclick=()=>{p.phase=r.returnPhase;if(r.returnPhase==='guided')p.guidedIndex=r.returnIndex;else p.objectiveIndex=r.returnIndex;p.resolution=null;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();};
-  };
-}
-function cvAudioChoiceRows(p,objective){
-  return cvOptionOrder(p,objective.interaction,p.objectiveIndex).map((id,index)=>`<div class="cv-audio-option"><button class="btn ghost" data-cv-hear="${escAttr(id)}">▶ Hear option ${String.fromCharCode(65+index)}</button><button class="btn" data-cv-choose="${escAttr(id)}">Choose ${String.fromCharCode(65+index)}</button></div>`).join('');
-}
-function cvRenderLessonObjective(p){
-  const objective=p.objectives[p.objectiveIndex];
-  if(!objective){p.phase='substitution';p.step++;cvPersistCourseResume(p);return renderConversationCourseLesson();}
-  const item=objective.interaction,first=!p.objectiveAttempts[objective.id],intent=objective.direction==='intent'||objective.direction==='event-request'||objective.direction==='partner-reply-intent';
-  const partnerTotal=objective.direction==='partner-reply-intent';
-  const choices=partnerTotal?['The vendor gives the total.','The vendor asks where you will eat.','The vendor asks you to choose a drink.']:item.intentOptions;
-  const answer=partnerTotal?'The vendor gives the total.':item.intent;
-  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">Listening check · ${p.objectiveIndex+1} of ${p.objectives.length}</div><h2>${esc(item.context)}</h2><p class="sub">${intent?'Hear the cue, then choose its job.':'Hear each possible reply. Choose the one that fits. Thai text and pronunciation stay hidden until feedback.'}</p>${item.event&&!partnerTotal?'<div class="notebox"><b>Visible event: you need to act now.</b></div>':`<button class="btn full ghost" id="cv-objective-cue">▶ Hear the ${partnerTotal?'partner reply':'cue'}</button>`}</div>
-    ${intent?`<div class="q-options">${choices.map(choice=>`<button class="q-opt" data-cv-intent="${escAttr(choice)}">${esc(choice)}</button>`).join('')}</div>`:`<div>${cvAudioChoiceRows(p,objective)}</div>`}<div class="q-feedback" id="cv-feedback" role="status" aria-live="polite"></div>`;
-  if(!item.event||partnerTotal)cvBindLineButton('cv-objective-cue',partnerTotal?(item.partnerReply||CV1_LINES.total):item.cue,null,'vendor');
-  el('stage').querySelectorAll('[data-cv-hear]').forEach(button=>button.onclick=()=>speak(CV1_RESPONSE_BY_ID[button.dataset.cvHear].thai,button,null,null,'learner'));
-  const answerChoice=selected=>{
-    const ok=intent?selected===answer:selected===item.response.id;
-    if(first){p.objectiveAttempts[objective.id]=true;cvPushUnique(p.evidence.objective.answeredIds,objective.id);if(ok)cvPushUnique(p.evidence.objective.firstCorrectIds,objective.id);cvWeaknessSeen(cvConversation(),objective,ok,selected);cvPersistCourseResume(p);}
-    el('stage').querySelectorAll('[data-cv-intent],[data-cv-choose]').forEach(x=>x.disabled=true);
-    const fb=el('cv-feedback');fb.className='q-feedback '+(ok?'ok answer-correct':'no answer-wrong');
-    if(!ok){fb.innerHTML=`<b>First attempt recorded. Now clear the miss.</b><div class="p-en">${esc(intent?answer:item.response.en)}</div>${intent?(!item.event?`<div class="p-thai" lang="th">${esc((partnerTotal?(item.partnerReply||CV1_LINES.total):item.cue).thai)}</div><div class="p-tr">${esc((partnerTotal?(item.partnerReply||CV1_LINES.total):item.cue).tr)}</div>`:cvLinePanel(item.response,'Useful request')):cvLinePanel(item.response,'Correct reply')}<div class="stage-actions"><button class="btn full" id="cv-retry">Retry this item</button></div>`;el('cv-retry').onclick=()=>renderConversationCourseLesson();return;}
-    cvPushUnique(p.evidence.objective.clearedIds,objective.id);cvPersistCourseResume(p);
-    fb.innerHTML=`<b>${first?'Correct on the first attempt.':'Miss cleared.'}</b>${intent?'<div class="p-en">'+esc(answer)+'</div>':cvLinePanel(item.response,'Useful reply')}<div class="stage-actions"><button class="btn full" id="cv-next">${item.resolution&&objective.direction==='response'?'Finish the original task':'Continue'} →</button></div>`;
-    el('cv-next').onclick=()=>{if(item.resolution&&objective.direction==='response'){p.resolution={item,returnPhase:'objective',returnIndex:p.objectiveIndex+1};p.phase='resolution';cvPersistCourseResume(p);renderConversationCourseLesson();}else{p.objectiveIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();}};
-  };
-  el('stage').querySelectorAll('[data-cv-intent]').forEach(button=>button.onclick=()=>answerChoice(button.dataset.cvIntent));
-  el('stage').querySelectorAll('[data-cv-choose]').forEach(button=>button.onclick=()=>answerChoice(button.dataset.cvChoose));
+  const r=p.resolution,res=r.item.resolution;
+  cvRenderRecall(p,res.response,{
+    label:'Finish the original task',prompt:res.response.en,cue:{...res.cue,rate:res.rate},revealed:!!r.revealed,
+    onSupport:()=>{r.supported=true;},
+    onReveal:()=>{r.revealed=true;renderConversationCourseLesson();},
+    onNext:()=>{p.guidedIndex=r.returnIndex;p.resolution=null;cvAdvanceLesson('guided');}
+  });
 }
 function cvRenderLessonSubstitution(p){
   const sub=p.lesson.substitution,done=p.evidence.substitutionIds.includes(sub.id);
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Change one part</div><h2>${esc(sub.label)}</h2><p class="sub">Build the new version, then say it once.</p></div><div class="conversation-turn learner"><div class="conversation-speaker">Phrase you know</div><div class="p-thai" lang="th">${esc(sub.from.thai)}</div><div class="p-tr">${esc(sub.from.tr)}</div><div class="p-en">${esc(sub.from.en)}</div></div>${cvSentenceBuilderHtml(p,sub.to,`swap:${sub.id}`,'teach',done)}<div class="stage-actions"><button class="btn full" id="cv-next" ${done?'':'disabled'}>${done?'Finish lesson →':'Build the new phrase first'}</button></div>`;
-  const next=el('cv-next'),stillHere=()=>player===p&&p.phase==='substitution';
-  cvBindSentenceBuilder(p,sub.to,`swap:${sub.id}`,'teach',{onCorrect:()=>{speak(sub.to.thai,null,sub.to.rate,ok=>{if(!ok||!stillHere())return;cvPushUnique(p.evidence.substitutionIds,sub.id);p.evidence.recordStepCompleted=true;cvPersistCourseResume(p);next.disabled=false;next.textContent='Finish lesson →';},'learner');}});
-  next.onclick=()=>{if(!p.evidence.substitutionIds.includes(sub.id))return;cvAdvanceLesson('rating');};
+  if(!done&&!p.swapModelReady){
+    el('stage').innerHTML=`<div class="center"><div class="eyebrow">Change one part</div><h2>${esc(sub.label)}</h2><p class="sub">Learn the new version before building it.</p></div>${cvTeachingModelHtml(sub.to)}<button class="btn full" id="cv-next" disabled>Hear the new phrase first</button>`;
+    let heard=false;const stillHere=()=>player===p&&p.phase==='substitution'&&!p.swapModelReady;
+    el('cv-model-reply').onclick=()=>speak(sub.to.thai,el('cv-model-reply'),sub.to.rate,ok=>{if(!ok||!stillHere())return;heard=true;el('cv-next').disabled=false;el('cv-next').textContent='Build the new version →';},'learner');
+    el('cv-next').onclick=()=>{if(!heard||!stillHere())return;p.swapModelReady=true;renderConversationCourseLesson();};return;
+  }
+  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Change one part</div><h2>${esc(sub.label)}</h2><p class="sub">Build the new version, then say it once.</p></div><div class="conversation-turn learner"><div class="conversation-speaker">Phrase you know</div><div class="p-thai" lang="th">${esc(sub.from.thai)}</div><div class="p-tr">${esc(sub.from.tr)}</div><div class="p-en">${esc(sub.from.en)}</div></div>${cvSentenceBuilderHtml(p,sub.to,`swap:${sub.id}`,'teach',done)}<button class="btn full ghost" id="cv-builder-replay">▶ Hear the new phrase</button><div class="stage-actions"><button class="btn full" id="cv-next" ${done?'':'disabled'}>${done?'I said the new phrase · finish →':'Build the new phrase first'}</button></div>`;
+  const next=el('cv-next');
+  cvBindBuilderPlayback(p,sub.to,`swap:${sub.id}`,'teach',done,()=>{cvPushUnique(p.evidence.substitutionIds,sub.id);cvPersistCourseResume(p);next.disabled=false;next.textContent='I said the new phrase · finish →';});
+  next.onclick=()=>{if(!p.evidence.substitutionIds.includes(sub.id))return;p.evidence.recordStepCompleted=true;cvAdvanceLesson('rating');};
 }
-function cvRolePromptId(p,item){return `cv1.spoken.lesson.w01.l0${p.lesson.number}.${p.roleMode}.${String(p.roleIndex+1).padStart(2,'0')}`;}
 function cvChunkSupportHtml(line){
   return `<div class="onboarding-route-list">${line.segments.filter(part=>part.en!=='male polite ending').map(part=>`<div><b>${esc(part.en)}</b><br><span lang="th">${esc(part.thai)}</span> · <span class="p-tr">${esc(part.tr)}</span></div>`).join('')}</div>`;
-}
-function cvRenderLessonRoleplay(p){
-  const item=p.lesson.interactions[p.roleIndex];
-  if(!item){if(p.roleMode==='supported'){p.roleMode='reduced';p.roleIndex=0;p.step++;cvPersistCourseResume(p);return renderConversationCourseLesson();}p.phase='record';p.step++;cvPersistCourseResume(p);return renderConversationCourseLesson();}
-  const promptId=cvRolePromptId(p,item),revealed=p.modelRevealIds&&p.modelRevealIds[promptId];
-  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">${p.roleMode==='supported'?'Supported':'Reduced-support'} role-play · ${p.roleIndex+1} of ${p.lesson.interactions.length}</div><h2>${esc(item.context)}</h2>${item.event?'<div class="notebox"><b>You start after the visible event.</b></div>':`<button class="btn full ghost" id="cv-role-cue">▶ Hear the partner cue</button>`}<details class="conversation-transcript-drawer" id="cv-role-support"><summary>${p.roleMode==='supported'?'Need help? Show cue pronunciation':'Need help? Show response chunks'}</summary>${p.roleMode==='supported'?(item.cue?`<div class="p-thai" lang="th">${esc(item.cue.thai)}</div><div class="p-tr">${esc(item.cue.tr)}</div>`:'<div class="sub">The event tells you to begin.</div>'):cvChunkSupportHtml(item.response)}</details></div>
-    ${revealed?cvLinePanel(item.response,'Model reply'):'<div class="cv-support-hidden"><b>Answer aloud before revealing the model.</b><div class="sub">This is speaking participation, not pronunciation scoring.</div></div>'}
-    <div class="stage-actions"><button class="btn full" id="cv-role-action">${revealed?'I repeated the model · continue':'I answered aloud · show the model'}</button></div>`;
-  if(item.cue)cvBindLineButton('cv-role-cue',item.cue,null,'vendor');
-  const details=el('cv-role-support');if(details)details.addEventListener('toggle',()=>{if(details.open){cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPersistCourseResume(p);}});
-  el('cv-role-action').onclick=()=>{
-    if(!p.modelRevealIds)p.modelRevealIds={};
-    if(!revealed){cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);p.modelRevealIds[promptId]=true;cvPersistCourseResume(p);speak(item.response.thai,null,item.response.rate,null,'learner');renderConversationCourseLesson();return;}
-    p.roleIndex++;p.step++;cvPersistCourseResume(p);renderConversationCourseLesson();
-  };
-}
-function cvRenderLessonRecord(p){
-  const line=p.lesson.record;
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Optional one-phrase comparison</div><h2>Record one useful phrase</h2><p class="sub">Speaking aloud is required practice; microphone recording is optional, private and temporary.</p></div>${cvLinePanel(line,'Your phrase')}
-    <div class="compare-box"><div class="row" style="justify-content:center;gap:10px;margin-bottom:12px">${speakBtn(line.thai,'Hear the device model')}</div><button class="btn full ghost record-btn" id="cv-record">● Record yourself</button><audio class="own-audio" id="cv-own" controls style="display:none"></audio><div class="sub meta-mini mt-10">Nothing is uploaded, saved or scored. If the microphone is unavailable, say it aloud and continue.</div></div>
-    <div class="stage-actions"><button class="btn full" id="cv-next">I practised it · finish lesson →</button></div>`;
-  el('cv-record').onclick=()=>{p.evidence.recordingAttempted=true;cvPersistCourseResume(p);toggleLocalRecording(el('cv-record'),el('cv-own'),LOCAL_RECORDING_LIMIT_MS);};
-  el('cv-next').onclick=()=>{p.evidence.recordStepCompleted=true;cvAdvanceLesson('rating');};
 }
 function cvRenderLessonRating(p){
   el('stage').innerHTML=`<div class="center"><div class="eyebrow">One last tap</div><h2>How did that feel?</h2><p class="sub">Choose the closest answer for your own progress record.</p></div><div class="q-options">${CV1_SUPPORT_RATINGS.map(item=>`<button class="q-opt" data-cv-rating="${escAttr(item.id)}">${esc(item.label)}</button>`).join('')}</div>`;
@@ -951,20 +761,10 @@ function cvFinishLesson(p,rating){
   const completedEvidence=cvClone(p.evidence);delete completedEvidence.objective.answeredIds;
   rec.runs++;rec.objectiveAttempts+=total;rec.firstPct=rec.firstPct==null?pct:rec.firstPct;rec.lastPct=pct;rec.bestPct=Math.max(rec.bestPct==null?0:rec.bestPct,pct);rec.firstCompleted=rec.firstCompleted||day;rec.lastCompleted=day;rec.completedRevision=1;rec.selfRating=rating;rec.lastRun=Object.assign({completed:day,revision:1},completedEvidence);c.lessons[p.taskId]=rec;
   if(!old||!old.firstCompleted)cvScheduleLessonRetention(c,p.lesson,day);
-  const credited=cvClaimMainCredit(c,p.taskId,day);c.resume=null;p.completed=true;saveState();setProg(100);sfxComplete();
-  el('stage').innerHTML=`<div class="result-big">Lesson ${p.lesson.number} complete</div><div class="result-sub">${esc(p.lesson.title)}</div><div class="notebox"><b>You built the replies and used them in a conversation.</b><div class="sub">${credited?'That is enough for today. A short review will return later.':'Nice replay. Your original completion stays unchanged.'}</div></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button><button class="btn full ghost" id="cv-again">Practise again</button></div>`;
+  const credited=cvClaimMainCredit(c,p.taskId,day);if(c.resume&&c.resume.taskId===p.taskId)c.resume=null;p.completed=true;saveState();setProg(100);sfxComplete();
+  el('stage').innerHTML=`<div class="result-big">Lesson ${p.lesson.number} complete</div><div class="result-sub">${esc(p.lesson.title)}</div><div class="notebox"><b>You practised the replies with and without support.</b><div class="sub">${credited?'That is enough for today. A short review will return later.':'Nice replay. Your original completion stays unchanged.'}</div></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button><button class="btn full ghost" id="cv-again">Practise again</button></div>`;
   el('cv-done').onclick=()=>{closeOverlay();renderHome();};el('cv-again').onclick=()=>startConversationCourseLesson(p.taskId);return true;
 }
-
-function cvD30Forms(){
-  const specs={
-    a:[[CV1_I.l01Order,CV1_LINES.what2,CV1_LINES.orderThis,'Breakfast stall: choose the pointed item.'],[CV1_I.l01Spice,CV1_LINES.spice3,CV1_LINES.notSpicy,'Lunch stall: request non-spicy.'],[CV1_I.l02Here,CV1_LINES.service2,CV1_LINES.dineHere,'Mall café: eat there.'],[CV1_I.l02Water,CV1_LINES.drink3,CV1_LINES.water,'Canteen cooler: order one water.'],[CV1_I.l03Unknown,CV1_LINES.total,CV1_LINES.dontUnderstand,'Canteen total cue: its meaning is unknown.',{resolution:{cue:CV1_LINES.total,response:CV1_LINES.okay,rate:.72}}],[CV1_I.l03Slow,CV1_LINES.drink2,CV1_LINES.slower,'Drink cue: the rate is too fast.',{resolution:{cue:CV1_LINES.drink2,response:CV1_LINES.water,rate:.58}}]],
-    b:[[CV1_I.l01Order,CV1_LINES.what3,CV1_LINES.orderGaprao,'Office lunch counter: order basil chicken.'],[CV1_I.l01Spice,CV1_LINES.spice2,CV1_LINES.notSpicy,'Evening wok stall: request non-spicy.'],[CV1_I.l02Here,CV1_LINES.service3,CV1_LINES.takeaway,'Evening counter: choose takeaway.'],[CV1_I.l02Bill,null,CV1_LINES.bill,'Dinner is finished: initiate payment.',{event:true,partnerReply:CV1_LINES.total}],[CV1_I.l03Again,CV1_LINES.what2,CV1_LINES.again,'Food cue: the playback was missed once.',{resolution:{cue:CV1_LINES.what2,response:CV1_LINES.orderThis,rate:.72}}],[CV1_I.l03Slow,CV1_LINES.service2,CV1_LINES.slowAgain,'Service cue: a slow replay is explicitly needed.',{resolution:{cue:CV1_LINES.service2,response:CV1_LINES.takeaway,rate:.58}}]]
-  };
-  return ['a','b'].map(letter=>({id:`cv1.form.retention.w01.d30.${letter}`,items:specs[letter].map((x,index)=>cvVariant(x[0],`cv1.interaction.retention.w01.d30.${letter}.l0${Math.min(3,Math.floor(index/2)+1)}.0${index%2+1}`,x[3],x[1],x[2],x[4]||{})) }));
-}
-CV1_RETENTION_FORMS['cv1.retention.w01.d30']=cvD30Forms();
-Object.values(CV1_RETENTION_FORMS).forEach(forms=>forms.forEach(form=>{form.revision=1;}));
 
 function cvAssessmentSpoken(form,stage){
   const count=stage==='d1'?1:stage==='d7'?2:stage==='d30'?4:6;
@@ -1001,7 +801,7 @@ function startConversationAssessment(taskKind,taskId){
   const form=cvSelectForm(forms,rec);cvConsumeForm(rec,form);
   const objectives=cvBuildObjectives(form.items,form.id,taskKind==='gate'?'gate':'assessment');
   const spoken=cvAssessmentSpoken(form,stage);
-  player={type:'conversation-course',kind:'assessment',taskKind,taskId,stage,form,scene:{chunks:spoken},objectives,spoken,phase:'intro',objectiveIndex:0,spokenIndex:0,completed:false,coldRecorded:false,resumable:true,startedDay:day,attemptOrdinal:rec.attempts+1,formCycle:rec.formCycle,runSeed:`${taskId}|${rec.attempts+1}`,optionOffset:rec.formCycle%3,optionOrders:{},
+  player={type:'conversation-course',kind:'assessment',taskKind,taskId,stage,form,scene:{chunks:spoken},objectives,spoken,phase:'intro',objectiveIndex:0,spokenIndex:0,completed:false,coldRecorded:false,resumable:true,startedDay:day,attemptOrdinal:rec.attempts+1,formCycle:rec.formCycle,runSeed:`${taskId}|${rec.attempts+1}`,
     evidence:{completed:null,revision:1,formId:form.id,itemIds:objectives.map(x=>x.id),answeredIds:[],firstCorrectIds:[],feedbackAcknowledgedIds:[],spokenPromptIds:spoken.map((_,i)=>`${form.id}.spoken.${String(i+1).padStart(2,'0')}`),spokenBeforeRevealIds:[],modelRevealIds:[],supportOpenedIds:[]},missed:[],repairIndex:0};
   cvPersistCourseResume(player);openOverlay();renderConversationAssessment();return true;
 }
@@ -1019,46 +819,42 @@ function renderConversationAssessment(){
 }
 function cvRenderAssessmentIntro(p){
   const isGate=p.taskKind==='gate',label=isGate?'Week 1 check':p.stage==='d1'?'Next-day review':p.stage==='d7'?'One-week review':'One-month review';
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">${esc(label)}</div><h2>${isGate?'Use your food and repair phrases':'Bring the phrases back'}</h2></div><div class="notebox"><b>No hints on the first try.</b><div class="sub">If you miss one, you will see the answer and practise it before you finish.</div></div><div class="notebox"><b>${p.objectives.length} listening choices · ${p.spoken.length} phrase${p.spoken.length===1?'':'s'} to say</b><div class="sub">Pronunciation is not scored.</div></div><div class="stage-actions"><button class="btn full" id="cv-next">Start →</button></div>`;
+  el('stage').innerHTML=`<div class="center"><div class="eyebrow">${esc(label)}</div><h2>${isGate?'Use your food and repair phrases':'Bring the phrases back'}</h2></div><div class="notebox"><b>No hints on the first try.</b><div class="sub">If you miss one, you will see the answer and practise it before you finish.</div></div><div class="notebox"><b>${p.objectives.length} listening and situation choices · ${p.spoken.length} phrase${p.spoken.length===1?'':'s'} to say</b><div class="sub">Pronunciation is not scored.</div></div><div class="stage-actions"><button class="btn full" id="cv-next">Start →</button></div>`;
   el('cv-next').onclick=()=>{p.phase='objective';cvPersistCourseResume(p);renderConversationAssessment();};
-}
-function cvAssessmentIntentChoices(objective){
-  if(objective.direction==='partner-reply-intent')return {answer:'The vendor gives the total.',choices:['The vendor gives the total.','The vendor asks about spice.','The vendor asks where you will eat.']};
-  return {answer:objective.interaction.intent,choices:objective.interaction.intentOptions};
 }
 function cvRenderAssessmentObjective(p){
   const objective=p.objectives[p.objectiveIndex];
   if(!objective){cvCommitAssessmentColdPass(p);p.phase='spoken';p.spokenIndex=0;cvPersistCourseResume(p);return renderConversationAssessment();}
-  const item=objective.interaction,intent=objective.direction==='intent'||objective.direction==='event-request'||objective.direction==='partner-reply-intent',intentData=cvAssessmentIntentChoices(objective),partnerTotal=objective.direction==='partner-reply-intent';
-  if(p.evidence.answeredIds.includes(objective.id)){
-    const correct=p.evidence.firstCorrectIds.includes(objective.id);
-    el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">Question ${p.objectiveIndex+1} of ${p.objectives.length}</div><h2>${esc(item.context)}</h2><p class="sub">You already answered this before leaving the app.</p></div><div class="q-feedback ${correct?'ok answer-correct':'no answer-wrong'}"><b>${correct?'You got it.':'This one needs another look.'}</b>${intent?`<div class="p-en">${esc(intentData.answer)}</div>`:cvLinePanel(item.response,'The reply')}<div class="stage-actions"><button class="btn full" id="cv-next">Continue →</button></div></div>`;
-    el('cv-next').onclick=()=>{p.objectiveIndex++;cvPersistCourseResume(p);renderConversationAssessment();};
-    return;
-  }
-  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">Question ${p.objectiveIndex+1} of ${p.objectives.length}</div><h2>${esc(item.context)}</h2><p class="sub">${intent?'Listen and choose what it means.':'Listen and choose the reply that fits.'}</p>${item.event&&!partnerTotal?'<div class="notebox"><b>You start this turn.</b></div>':`<button class="btn full ghost" id="cv-objective-cue">▶ Hear the ${partnerTotal?'vendor reply':'vendor'}</button>`}</div>
-    ${intent?`<div class="q-options">${intentData.choices.map(choice=>`<button class="q-opt" data-cv-assess-intent="${escAttr(choice)}">${esc(choice)}</button>`).join('')}</div>`:`<div>${cvAudioChoiceRows(p,objective)}</div>`}<div class="q-feedback" id="cv-feedback" role="status" aria-live="polite"></div>`;
-  if(!item.event||partnerTotal)cvBindLineButton('cv-objective-cue',partnerTotal?(item.partnerReply||CV1_LINES.total):item.cue,null,'vendor');
-  el('stage').querySelectorAll('[data-cv-hear]').forEach(button=>button.onclick=()=>speak(CV1_RESPONSE_BY_ID[button.dataset.cvHear].thai,button,null,null,'learner'));
-  const choose=selected=>{
-    const ok=intent?selected===intentData.answer:selected===item.response.id;
-    cvPushUnique(p.evidence.answeredIds,objective.id);if(ok)cvPushUnique(p.evidence.firstCorrectIds,objective.id);else{p.missed.push(objective);cvWeaknessSeen(cvConversation(),objective,false,selected);}if(ok)cvWeaknessSeen(cvConversation(),objective,true,selected);cvPersistCourseResume(p);
-    el('stage').querySelectorAll('[data-cv-assess-intent],[data-cv-choose]').forEach(x=>x.disabled=true);
-    const fb=el('cv-feedback');fb.className='q-feedback '+(ok?'ok answer-correct':'no answer-wrong');
-    if(!ok)cvPushUnique(p.evidence.feedbackAcknowledgedIds,objective.id);
-    fb.innerHTML=`<b>${ok?'That fits.':'Not this time.'}</b>${intent?`<div class="p-en">${esc(intentData.answer)}</div>`:cvLinePanel(item.response,'The reply')}<div class="stage-actions"><button class="btn full" id="cv-next">Continue →</button></div>`;
-    el('cv-next').onclick=()=>{p.objectiveIndex++;cvPersistCourseResume(p);renderConversationAssessment();};
-  };
-  el('stage').querySelectorAll('[data-cv-assess-intent]').forEach(button=>button.onclick=()=>choose(button.dataset.cvAssessIntent));
-  el('stage').querySelectorAll('[data-cv-choose]').forEach(button=>button.onclick=()=>choose(button.dataset.cvChoose));
+  const answered=p.evidence.answeredIds.includes(objective.id);
+  cvRenderChoiceQuestion(p,cvChoiceSpec(objective),{
+    label:`Question ${p.objectiveIndex+1} of ${p.objectives.length}`,
+    result:answered?{correct:p.evidence.firstCorrectIds.includes(objective.id)}:null,
+    onAnswer:(selected,correct)=>{
+      if(p.evidence.answeredIds.includes(objective.id))return;
+      cvPushUnique(p.evidence.answeredIds,objective.id);
+      if(correct)cvPushUnique(p.evidence.firstCorrectIds,objective.id);
+      else{p.missed.push(objective);cvPushUnique(p.evidence.feedbackAcknowledgedIds,objective.id);}
+      cvWeaknessSeen(cvConversation(),objective,correct,selected||'not-sure');
+      cvPersistCourseResume(p);renderConversationAssessment();
+    },
+    onNext:()=>{p.objectiveIndex++;cvPersistCourseResume(p);renderConversationAssessment();}
+  });
 }
 function cvRenderAssessmentSpoken(p){
   const line=p.spoken[p.spokenIndex];
   if(!line){p.phase='result';cvPersistCourseResume(p);return renderConversationAssessment();}
-  const promptId=p.evidence.spokenPromptIds[p.spokenIndex],revealed=p.evidence.modelRevealIds.includes(promptId);
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Say it · ${p.spokenIndex+1} of ${p.spoken.length}</div><h2>${esc(line.en)}</h2><p class="sub">Try the Thai aloud before you look.</p></div>${revealed?cvLinePanel(line,'The phrase'):'<div class="cv-support-hidden"><b>Say your answer now.</b></div>'}${revealed?'':`<details class="conversation-transcript-drawer" id="cv-assessment-support"><summary>Need help? Show the phrase parts</summary>${cvChunkSupportHtml(line)}</details>`}<div class="stage-actions"><button class="btn full" id="cv-spoken">${revealed?'I said it again · continue':'I tried it · show the phrase'}</button></div>`;
-  const support=el('cv-assessment-support');if(support)support.addEventListener('toggle',()=>{if(support.open){cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPersistCourseResume(p);}});
-  el('cv-spoken').onclick=()=>{if(!revealed){cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);cvPersistCourseResume(p);speak(line.thai,null,line.rate,null,'learner');renderConversationAssessment();return;}p.spokenIndex++;cvPersistCourseResume(p);renderConversationAssessment();};
+  const promptId=p.evidence.spokenPromptIds[p.spokenIndex];
+  cvRenderRecall(p,line,{
+    label:`Recall practice · ${p.spokenIndex+1} of ${p.spoken.length}`,
+    revealed:p.evidence.modelRevealIds.includes(promptId),
+    onSupport:()=>{cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPersistCourseResume(p);},
+    onReveal:neededModel=>{
+      if(neededModel)cvPushUnique(p.evidence.supportOpenedIds,promptId);
+      cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);
+      cvPersistCourseResume(p);renderConversationAssessment();
+    },
+    onNext:()=>{p.spokenIndex++;cvPersistCourseResume(p);renderConversationAssessment();}
+  });
 }
 function cvAssessmentPassed(p){return p.evidence.firstCorrectIds.length>=cvAssessmentThreshold(p.stage)&&p.evidence.spokenBeforeRevealIds.length===p.spoken.length;}
 function cvFinishAssessment(p){
@@ -1072,7 +868,7 @@ function cvFinishAssessment(p){
   if(!passed){p.phase='repair';p.repairIndex=0;p.repairCleared=[];cvPersistCourseResume(p);return cvRenderAssessmentRepair(p);}
   c.resume=null;saveState();
   p.completed=true;setProg(100);sfxComplete();
-  el('stage').innerHTML=`<div class="result-big">${isGate?'Week 1 complete':'Review complete'}</div><div class="result-sub">${correct}/${total} listening choices · ${p.spoken.length} phrase${p.spoken.length===1?'':'s'} spoken</div><div class="notebox"><b>${isGate?'You can handle the Week 1 situations.':'These phrases will come back again later.'}</b></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button></div>`;
+  el('stage').innerHTML=`<div class="result-big">${isGate?'Week 1 complete':'Review complete'}</div><div class="result-sub">${esc(cvAssessmentBreakdown(p))}</div><div class="notebox"><b>You completed the choices and recall practice.</b><p class="sub">Speaking was self-checked, with help on ${p.evidence.supportOpenedIds.length} of ${p.spoken.length} prompts. This is not a pronunciation or free-conversation score.</p></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button></div>`;
   el('cv-done').onclick=()=>{closeOverlay();renderHome();};return true;
 }
 function cvRenderAssessmentRepair(p){
@@ -1082,15 +878,18 @@ function cvRenderAssessmentRepair(p){
     rec.repairCompletedAt=day;rec.lastRepairRun={completed:day,revision:1,practiceFormId:`cv1.form.repair.${p.taskId}.a`,sourceMissedObjectiveIds:p.missed.map(x=>x.id),practiceItemIds:practiceIds,firstCorrectIds:[],clearedIds:practiceIds.slice()};cvPushUnique(cvEnsureConversationDay(c,day).repairs,p.taskId);c.resume=null;saveState();p.completed=true;
     el('stage').innerHTML=`<div class="result-big">Practice complete</div><div class="result-sub">You revisited every phrase you missed.</div><div class="notebox"><b>Try the check again another day.</b></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button></div>`;el('cv-done').onclick=()=>{closeOverlay();renderHome();};return;
   }
-  const item=objective.interaction;
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Quick retry · ${p.repairIndex+1} of ${p.missed.length}</div><h2>${esc(item.context)}</h2><p class="sub">Listen, say the useful reply and continue.</p></div>${item.cue?`<div class="conversation-turn vendor"><div class="p-en"><b>${esc(item.cue.en)}</b></div><div class="p-thai" lang="th">${esc(item.cue.thai)}</div><div class="p-tr">${esc(item.cue.tr)}</div><button class="btn full ghost" id="cv-repair-cue">▶ Hear the vendor</button></div>`:'<div class="notebox"><b>You start this turn.</b></div>'}${cvLinePanel(item.response,'Your reply')}<div class="stage-actions"><button class="btn full" id="cv-repair-next">I said it · continue</button></div>`;
-  if(item.cue)cvBindLineButton('cv-repair-cue',item.cue,null,'vendor');el('cv-repair-next').onclick=()=>{speak(item.response.thai,null,item.response.rate,null,'learner');p.repairIndex++;cvPersistCourseResume(p);renderConversationAssessment();};
+  cvRenderChoiceQuestion(p,cvChoiceSpec(objective),{
+    label:`Practise the miss · ${p.repairIndex+1} of ${p.missed.length}`,result:p.repairFeedback,
+    nextLabel:p.repairFeedback&&!p.repairFeedback.correct?'Try again':'Continue',
+    onAnswer:(_,correct)=>{p.repairFeedback={correct};renderConversationAssessment();},
+    onNext:()=>{if(p.repairFeedback.correct)p.repairIndex++;p.repairFeedback=null;cvPersistCourseResume(p);renderConversationAssessment();}
+  });
 }
 
 function startConversationConsolidation(){
   const formId=CV1_CONSOLIDATION.formId,objectives=cvBuildObjectives(CV1_CONSOLIDATION.interactions,formId,'assessment');
   const c=cvConversation(),record=c.activities.consolidations[CV1_WEEK1_CONSOLIDATION],resumable=!(record&&record.firstCompleted)&&CV1_MAIN_SEQUENCE[c.pace.cursor]===CV1_WEEK1_CONSOLIDATION;
-  player={type:'conversation-course',kind:'consolidation',taskKind:'consolidation',taskId:CV1_WEEK1_CONSOLIDATION,phase:'intro',formId,objectives,objectiveIndex:0,spokenIndex:0,transferIndex:0,weaknessDone:false,completed:false,resumable,startedDay:bangkokDayStr(),attemptOrdinal:(record&&record.runs||0)+1,runSeed:`${CV1_WEEK1_CONSOLIDATION}|${(record&&record.runs||0)+1}`,scene:{chunks:CV1_CONSOLIDATION.spoken.concat(CV1_CONSOLIDATION.transfers)},optionOffset:1,optionOrders:{},attempts:{},builders:{},
+  player={type:'conversation-course',kind:'consolidation',taskKind:'consolidation',taskId:CV1_WEEK1_CONSOLIDATION,phase:'intro',formId,objectives,objectiveIndex:0,spokenIndex:0,transferIndex:0,weaknessDone:false,completed:false,resumable,startedDay:bangkokDayStr(),attemptOrdinal:(record&&record.runs||0)+1,runSeed:`${CV1_WEEK1_CONSOLIDATION}|${(record&&record.runs||0)+1}`,scene:{chunks:CV1_CONSOLIDATION.spoken.concat(CV1_CONSOLIDATION.transfers)},builders:{},
     evidence:{completed:null,revision:1,formId,itemIds:objectives.map(x=>x.id),answeredIds:[],firstCorrectIds:[],clearedIds:[],spokenPromptIds:CV1_CONSOLIDATION.spoken.map((_,i)=>`cv1.spoken.consolidation.w01.${String(i+1).padStart(2,'0')}`),spokenBeforeRevealIds:[],modelRevealIds:[],supportOpenedIds:[],transferIds:CV1_CONSOLIDATION.transfers.map((_,i)=>`cv1.transfer.consolidation.w01.${String(i+1).padStart(2,'0')}`),transferCompletedIds:[],weaknessRepairItemIds:[],weaknessRepairClearedIds:[]}};
   cvPersistCourseResume(player);openOverlay();renderConversationConsolidation();return true;
 }
@@ -1109,25 +908,40 @@ function cvRenderConsolidationIntro(p){
   el('cv-next').onclick=()=>{p.phase='objective';cvPersistCourseResume(p);renderConversationConsolidation();};
 }
 function cvRenderConsolidationObjective(p){
-  const objective=p.objectives[p.objectiveIndex];if(!objective){p.phase='spoken';cvPersistCourseResume(p);return renderConversationConsolidation();}
-  const item=objective.interaction,intent=objective.direction==='intent'||objective.direction==='event-request'||objective.direction==='partner-reply-intent',intentData=cvAssessmentIntentChoices(objective),first=!p.attempts[objective.id],partnerTotal=objective.direction==='partner-reply-intent';
-  el('stage').innerHTML=`<div class="q-prompt"><div class="eyebrow">Listen · ${p.objectiveIndex+1} of ${p.objectives.length}</div><h2>${esc(item.context)}</h2>${item.event&&!partnerTotal?'<div class="notebox"><b>You start this turn.</b></div>':`<button class="btn full ghost" id="cv-objective-cue">▶ Hear the ${partnerTotal?'vendor reply':'vendor'}</button>`}<p class="sub">${intent?'Choose what it means.':'Choose the reply that fits.'}</p></div>${intent?`<div class="q-options">${intentData.choices.map(choice=>`<button class="q-opt" data-cv-con-intent="${escAttr(choice)}">${esc(choice)}</button>`).join('')}</div>`:`<div>${cvAudioChoiceRows(p,objective)}</div>`}<div class="q-feedback" id="cv-feedback"></div>`;
-  if(!item.event||partnerTotal)cvBindLineButton('cv-objective-cue',partnerTotal?(item.partnerReply||CV1_LINES.total):item.cue,null,'vendor');
-  el('stage').querySelectorAll('[data-cv-hear]').forEach(button=>button.onclick=()=>speak(CV1_RESPONSE_BY_ID[button.dataset.cvHear].thai,button,null,null,'learner'));
-  const choose=selected=>{const ok=intent?selected===intentData.answer:selected===item.response.id;if(first){p.attempts[objective.id]=true;cvPushUnique(p.evidence.answeredIds,objective.id);if(ok)cvPushUnique(p.evidence.firstCorrectIds,objective.id);cvWeaknessSeen(cvConversation(),objective,ok,selected);cvPersistCourseResume(p);}el('stage').querySelectorAll('[data-cv-con-intent],[data-cv-choose]').forEach(x=>x.disabled=true);const fb=el('cv-feedback');fb.className='q-feedback '+(ok?'ok answer-correct':'no answer-wrong');if(!ok){fb.innerHTML=`<b>Not this one. Look, then try again.</b>${intent?`<div class="p-en">${esc(intentData.answer)}</div>`:cvLinePanel(item.response,'The reply')}<div class="stage-actions"><button class="btn full" id="cv-retry">Try again</button></div>`;el('cv-retry').onclick=()=>renderConversationConsolidation();return;}cvPushUnique(p.evidence.clearedIds,objective.id);cvPersistCourseResume(p);fb.innerHTML=`<b>${first?'That fits.':'Got it.'}</b><div class="stage-actions"><button class="btn full" id="cv-next">Continue →</button></div>`;el('cv-next').onclick=()=>{p.objectiveIndex++;cvPersistCourseResume(p);renderConversationConsolidation();};};
-  el('stage').querySelectorAll('[data-cv-con-intent]').forEach(button=>button.onclick=()=>choose(button.dataset.cvConIntent));el('stage').querySelectorAll('[data-cv-choose]').forEach(button=>button.onclick=()=>choose(button.dataset.cvChoose));
+  const objective=p.objectives[p.objectiveIndex];
+  if(!objective){p.phase='spoken';cvPersistCourseResume(p);return renderConversationConsolidation();}
+  const spec=cvChoiceSpec(objective);
+  cvRenderChoiceQuestion(p,spec,{
+    label:`Mix your phrases · ${p.objectiveIndex+1} of ${p.objectives.length}`,result:p.choiceFeedback,
+    nextLabel:p.choiceFeedback&&!p.choiceFeedback.correct?'Try again':'Continue',
+    onAnswer:(selected,correct)=>{
+      if(!p.evidence.answeredIds.includes(objective.id)){
+        cvPushUnique(p.evidence.answeredIds,objective.id);if(correct)cvPushUnique(p.evidence.firstCorrectIds,objective.id);
+        cvWeaknessSeen(cvConversation(),objective,correct,selected||'not-sure');
+      }
+      if(correct)cvPushUnique(p.evidence.clearedIds,objective.id);
+      p.choiceFeedback={correct};cvPersistCourseResume(p);renderConversationConsolidation();
+    },
+    onNext:()=>{if(p.choiceFeedback.correct)p.objectiveIndex++;p.choiceFeedback=null;cvPersistCourseResume(p);renderConversationConsolidation();}
+  });
 }
 function cvRenderConsolidationSpoken(p){
-  const line=CV1_CONSOLIDATION.spoken[p.spokenIndex];if(!line){p.phase='transfer';cvPersistCourseResume(p);return renderConversationConsolidation();}
-  const id=p.evidence.spokenPromptIds[p.spokenIndex],revealed=p.evidence.modelRevealIds.includes(id);
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Say it · ${p.spokenIndex+1} of 6</div><h2>${esc(line.en)}</h2><p class="sub">Try the Thai aloud before you look.</p></div>${revealed?cvLinePanel(line,'The phrase'):'<div class="cv-support-hidden"><b>Say your answer now.</b></div>'}<div class="stage-actions"><button class="btn full" id="cv-spoken">${revealed?'I said it again · continue':'I tried it · show the phrase'}</button></div>`;
-  el('cv-spoken').onclick=()=>{if(!revealed){cvPushUnique(p.evidence.spokenBeforeRevealIds,id);cvPushUnique(p.evidence.modelRevealIds,id);cvPersistCourseResume(p);speak(line.thai,null,line.rate,null,'learner');renderConversationConsolidation();return;}p.spokenIndex++;cvPersistCourseResume(p);renderConversationConsolidation();};
+  const line=CV1_CONSOLIDATION.spoken[p.spokenIndex];
+  if(!line){p.phase='transfer';cvPersistCourseResume(p);return renderConversationConsolidation();}
+  const promptId=p.evidence.spokenPromptIds[p.spokenIndex];
+  cvRenderRecall(p,line,{
+    label:`Recall practice · ${p.spokenIndex+1} of ${CV1_CONSOLIDATION.spoken.length}`,
+    revealed:p.evidence.modelRevealIds.includes(promptId),
+    onSupport:()=>{cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPersistCourseResume(p);},
+    onReveal:neededModel=>{if(neededModel)cvPushUnique(p.evidence.supportOpenedIds,promptId);cvPushUnique(p.evidence.spokenBeforeRevealIds,promptId);cvPushUnique(p.evidence.modelRevealIds,promptId);cvPersistCourseResume(p);renderConversationConsolidation();},
+    onNext:()=>{p.spokenIndex++;cvPersistCourseResume(p);renderConversationConsolidation();}
+  });
 }
 function cvRenderConsolidationTransfer(p){
   const line=CV1_CONSOLIDATION.transfers[p.transferIndex];if(!line){p.phase='weakness';cvPersistCourseResume(p);return renderConversationConsolidation();}
   const id=p.evidence.transferIds[p.transferIndex],done=p.evidence.transferCompletedIds.includes(id);
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Build it · ${p.transferIndex+1} of 2</div><h2>${esc(line.en)}</h2><p class="sub">Tap the parts into order, then say the phrase.</p></div>${cvSentenceBuilderHtml(p,line,`mix:${id}`,'practice',done)}<div class="stage-actions"><button class="btn full" id="cv-transfer" ${done?'':'disabled'}>${done?'Continue →':'Build the phrase first'}</button></div>`;
-  const next=el('cv-transfer'),stillHere=()=>player===p&&p.phase==='transfer';cvBindSentenceBuilder(p,line,`mix:${id}`,'practice',{onCorrect:()=>{speak(line.thai,null,line.rate,ok=>{if(!ok||!stillHere())return;cvPushUnique(p.evidence.transferCompletedIds,id);cvPersistCourseResume(p);next.disabled=false;next.textContent='Continue →';},'learner');}});next.onclick=()=>{if(!p.evidence.transferCompletedIds.includes(id))return;p.transferIndex++;cvPersistCourseResume(p);renderConversationConsolidation();};
+  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Build it · ${p.transferIndex+1} of 2</div><h2>${esc(line.en)}</h2><p class="sub">Tap the parts into order, then say the phrase.</p></div>${cvSentenceBuilderHtml(p,line,`mix:${id}`,'practice',done)}<button class="btn full ghost" id="cv-builder-replay">▶ Hear the phrase</button><div class="stage-actions"><button class="btn full" id="cv-transfer" ${done?'':'disabled'}>${done?'Continue →':'Build the phrase first'}</button></div>`;
+  const next=el('cv-transfer');cvBindBuilderPlayback(p,line,`mix:${id}`,'practice',done,()=>{cvPushUnique(p.evidence.transferCompletedIds,id);cvPersistCourseResume(p);next.disabled=false;next.textContent='I said it · continue →';});next.onclick=()=>{if(!p.evidence.transferCompletedIds.includes(id))return;p.transferIndex++;cvPersistCourseResume(p);renderConversationConsolidation();};
 }
 function cvWeakestWeek1Line(){
   const c=cvConversation(),entries=Object.keys(c.weakness.items).map(id=>({id,...c.weakness.items[id]})).sort((a,b)=>(b.firstMisses/Math.max(1,b.seen))-(a.firstMisses/Math.max(1,a.seen))||(a.correctStreak-b.correctStreak)||String(b.lastMiss||'').localeCompare(String(a.lastMiss||''))||a.id.localeCompare(b.id));
@@ -1144,7 +958,7 @@ function cvFinishConsolidation(p){
   if(!complete){toast('Finish the current step first.');return;}
   const c=cvConversation(),day=bangkokDayStr(),old=c.activities.consolidations[p.taskId],rec=cvLessonRecord(old),correct=p.evidence.firstCorrectIds.length,total=p.evidence.itemIds.length,pct=Math.round(100*correct/total);p.evidence.completed=day;
   const completedEvidence=cvClone(p.evidence);delete completedEvidence.answeredIds;
-  rec.runs++;rec.objectiveAttempts+=total;rec.firstPct=rec.firstPct==null?pct:rec.firstPct;rec.lastPct=pct;rec.bestPct=Math.max(rec.bestPct==null?0:rec.bestPct,pct);rec.firstCompleted=rec.firstCompleted||day;rec.lastCompleted=day;rec.completedRevision=1;rec.lastRun=completedEvidence;c.activities.consolidations[p.taskId]=rec;const credited=cvClaimMainCredit(c,p.taskId,day);c.resume=null;p.completed=true;saveState();setProg(100);sfxComplete();
+  rec.runs++;rec.objectiveAttempts+=total;rec.firstPct=rec.firstPct==null?pct:rec.firstPct;rec.lastPct=pct;rec.bestPct=Math.max(rec.bestPct==null?0:rec.bestPct,pct);rec.firstCompleted=rec.firstCompleted||day;rec.lastCompleted=day;rec.completedRevision=1;rec.lastRun=completedEvidence;c.activities.consolidations[p.taskId]=rec;const credited=cvClaimMainCredit(c,p.taskId,day);if(c.resume&&c.resume.taskId===p.taskId)c.resume=null;p.completed=true;saveState();setProg(100);sfxComplete();
   el('stage').innerHTML=`<div class="result-big">Week 1 mix complete</div><div class="result-sub">You listened, spoke and rebuilt the useful phrases.</div><div class="notebox"><b>${credited?'That is enough for today.':'Nice extra practice.'}</b></div><div class="stage-actions"><button class="btn full" id="cv-done">Done</button></div>`;el('cv-done').onclick=()=>{closeOverlay();renderHome();};
 }
 
@@ -1156,8 +970,9 @@ function startConversationCourseTask(taskId){
   return false;
 }
 
+function cvFormsForHistory(id){return [...(CV1_RETENTION_FORMS[id]||[]),...(CV1_ARCHIVED_FORMS[id]||[])];}
 function cvFindForm(formId){
-  for(const forms of Object.values(CV1_RETENTION_FORMS)){const found=forms.find(form=>form.id===formId);if(found)return found;}
+  for(const forms of [...Object.values(CV1_RETENTION_FORMS),...Object.values(CV1_ARCHIVED_FORMS)]){const found=forms.find(form=>form.id===formId);if(found)return found;}
   return CV1_GATE_FORMS.find(form=>form.id===formId)||null;
 }
 function cvResumeList(e,key){return e&&Array.isArray(e[key])?e[key].slice():[];}
@@ -1168,29 +983,28 @@ function resumeConversationCourseTask(){
     const lesson=CV1_LESSONS[r.taskId],record=c.lessons[r.taskId];
     if(!lesson||(record&&record.firstCompleted)||CV1_MAIN_SEQUENCE[c.pace.cursor]!==r.taskId){c.resume=null;saveState();return false;}
     const objectives=cvBuildObjectives(lesson.interactions,`cv1.form.lesson.w01.l0${lesson.number}.a`,'lesson'),e=r.evidence||{},stage=r.stageId||'intro';
-    const roleMode=stage==='roleplay-reduced'?'reduced':'supported';let phase=stage.startsWith('roleplay-')?'guided':stage.startsWith('resolution-')?'guided':stage;
+    let phase=stage.startsWith('roleplay-')?'guided':stage.startsWith('resolution-')?'resolution':stage;
     if(phase==='map')phase='pairs';if(phase==='objective')phase='guided';if(phase==='record')phase='substitution';
     const guidedIndex=stage==='objective'?Math.min(lesson.interactions.length-1,Math.floor((r.itemIndex||0)/2)):stage.startsWith('roleplay-')||stage.startsWith('resolution-')?Math.min(lesson.interactions.length-1,r.itemIndex||0):phase==='guided'?r.itemIndex:0;
     const evidence=cvLessonEvidence();
     ['pairIdsPlayed','sceneIdsPlayed','responsePromptIds','responseFirstCorrectIds','responseRepairIds','spokenBeforeRevealIds','modelRevealIds','supportOpenedIds','substitutionIds'].forEach(key=>{evidence[key]=cvResumeList(e,key);});
     evidence.recordStepCompleted=!!e.recordStepCompleted;evidence.recordingAttempted=!!e.recordingAttempted;
     evidence.objective={itemIds:objectives.map(x=>x.id),answeredIds:cvResumeList(e,'answeredIds'),firstCorrectIds:cvResumeList(e,'firstCorrectIds'),clearedIds:cvResumeList(e,'clearedIds')};
-    player={type:'conversation-course',kind:'lesson',taskKind:'lesson',taskId:r.taskId,lesson,scene:lesson.scene,phase,step:Math.max(0,r.stageIndex||0),total:cvLessonPhases(lesson),pairIndex:phase==='pairs'?r.itemIndex:0,pairPlayback:{},guidedIndex,guidedHeard:{},objectiveIndex:0,roleIndex:0,roleMode,scenePart1Done:false,completed:false,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,runSeed:r.runSeed,optionOffset:(lesson.number-1)%3,optionOrders:{},guidedAttempts:{},objectiveAttempts:{},resolution:null,pairModes:{},builders:{},evidence,objectives,modelRevealIds:{}};
-    evidence.responsePromptIds.forEach(id=>{player.guidedAttempts[id]=true;});evidence.objective.answeredIds.forEach(id=>{player.objectiveAttempts[id]=true;});evidence.modelRevealIds.forEach(id=>{player.modelRevealIds[id]=true;});
+    player={type:'conversation-course',kind:'lesson',taskKind:'lesson',taskId:r.taskId,lesson,scene:lesson.scene,phase,step:Math.max(0,r.stageIndex||0),total:cvLessonPhases(lesson),pairIndex:phase==='pairs'?r.itemIndex:0,pairPlayback:{},guidedIndex,objectiveIndex:0,completed:false,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,runSeed:r.runSeed,resolution:phase==='resolution'?{item:lesson.interactions[r.itemIndex],returnPhase:'guided',returnIndex:stage==='resolution-objective'?r.itemIndex+1:r.stageIndex}:null,pairModes:{},builders:{},evidence,objectives};
     openOverlay();renderConversationCourseLesson();return true;
   }
   if(r.taskKind==='consolidation'){
     if(r.taskId!==CV1_WEEK1_CONSOLIDATION||c.activities.consolidations[r.taskId]&&c.activities.consolidations[r.taskId].firstCompleted||CV1_MAIN_SEQUENCE[c.pace.cursor]!==r.taskId){c.resume=null;saveState();return false;}
     const formId=CV1_CONSOLIDATION.formId,objectives=cvBuildObjectives(CV1_CONSOLIDATION.interactions,formId,'assessment'),e=r.evidence||{},phase=r.stageId||'intro';
     const evidence={completed:null,revision:1,formId,itemIds:objectives.map(x=>x.id),answeredIds:cvResumeList(e,'answeredIds'),firstCorrectIds:cvResumeList(e,'firstCorrectIds'),clearedIds:cvResumeList(e,'clearedIds'),spokenPromptIds:CV1_CONSOLIDATION.spoken.map((_,i)=>`cv1.spoken.consolidation.w01.${String(i+1).padStart(2,'0')}`),spokenBeforeRevealIds:cvResumeList(e,'spokenBeforeRevealIds'),modelRevealIds:cvResumeList(e,'modelRevealIds'),supportOpenedIds:cvResumeList(e,'supportOpenedIds'),transferIds:CV1_CONSOLIDATION.transfers.map((_,i)=>`cv1.transfer.consolidation.w01.${String(i+1).padStart(2,'0')}`),transferCompletedIds:cvResumeList(e,'transferCompletedIds'),weaknessRepairItemIds:phase==='finish'?['cv1.practice.consolidation.w01.weakness.01']:[],weaknessRepairClearedIds:phase==='finish'?['cv1.practice.consolidation.w01.weakness.01']:[]};
-    player={type:'conversation-course',kind:'consolidation',taskKind:'consolidation',taskId:r.taskId,phase,formId,objectives,objectiveIndex:phase==='objective'?r.itemIndex:objectives.length,spokenIndex:phase==='spoken'?r.stageIndex:phase==='intro'||phase==='objective'?0:CV1_CONSOLIDATION.spoken.length,transferIndex:phase==='transfer'?r.stageIndex:phase==='intro'||phase==='objective'||phase==='spoken'?0:CV1_CONSOLIDATION.transfers.length,weaknessDone:phase==='finish',completed:false,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,runSeed:r.runSeed,scene:{chunks:CV1_CONSOLIDATION.spoken.concat(CV1_CONSOLIDATION.transfers)},optionOffset:1,optionOrders:{},attempts:{},builders:{},evidence};
-    evidence.answeredIds.forEach(id=>{player.attempts[id]=true;});openOverlay();renderConversationConsolidation();return true;
+    player={type:'conversation-course',kind:'consolidation',taskKind:'consolidation',taskId:r.taskId,phase,formId,objectives,objectiveIndex:phase==='objective'?r.itemIndex:objectives.length,spokenIndex:phase==='spoken'?r.stageIndex:phase==='intro'||phase==='objective'?0:CV1_CONSOLIDATION.spoken.length,transferIndex:phase==='transfer'?r.stageIndex:phase==='intro'||phase==='objective'||phase==='spoken'?0:CV1_CONSOLIDATION.transfers.length,weaknessDone:phase==='finish',completed:false,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,runSeed:r.runSeed,scene:{chunks:CV1_CONSOLIDATION.spoken.concat(CV1_CONSOLIDATION.transfers)},builders:{},evidence};
+    openOverlay();renderConversationConsolidation();return true;
   }
   const form=cvFindForm(r.formId);if(!form){c.resume=null;saveState();return false;}
   const taskKind=r.taskKind,stage=taskKind==='gate'?'gate':r.taskId.split('.').pop(),objectives=cvBuildObjectives(form.items,form.id,taskKind==='gate'?'gate':'assessment'),spoken=cvAssessmentSpoken(form,stage);
   const answered=cvResumeList(r.evidence,'answeredIds'),first=cvResumeList(r.evidence,'firstCorrectIds'),phase=['intro','objective','spoken','result','repair'].includes(r.stageId)?r.stageId:'objective';
   const assessmentRec=taskKind==='gate'?c.gates[r.taskId]:c.retention[r.taskId],coldRecorded=!!(assessmentRec&&assessmentRec.attempts>=r.attemptOrdinal&&assessmentRec.lastRun&&assessmentRec.lastRun.formId===form.id);
-  player={type:'conversation-course',kind:'assessment',taskKind,taskId:r.taskId,stage,form,scene:{chunks:spoken},objectives,spoken,phase,objectiveIndex:Math.min(r.itemIndex||0,objectives.length),spokenIndex:phase==='spoken'?Math.min(r.stageIndex||0,spoken.length):0,completed:false,coldRecorded,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,formCycle:r.formCycle||0,runSeed:r.runSeed,optionOffset:(r.formCycle||0)%3,optionOrders:{},
+  player={type:'conversation-course',kind:'assessment',taskKind,taskId:r.taskId,stage,form,scene:{chunks:spoken},objectives,spoken,phase,objectiveIndex:Math.min(r.itemIndex||0,objectives.length),spokenIndex:phase==='spoken'?Math.min(r.stageIndex||0,spoken.length):0,completed:false,coldRecorded,resumable:true,startedDay:r.startedDay,attemptOrdinal:r.attemptOrdinal,formCycle:r.formCycle||0,runSeed:r.runSeed,
     evidence:{completed:null,revision:1,formId:form.id,itemIds:objectives.map(x=>x.id),answeredIds:answered.slice(),firstCorrectIds:first.slice(),feedbackAcknowledgedIds:answered.filter(id=>!first.includes(id)),spokenPromptIds:spoken.map((_,i)=>`${form.id}.spoken.${String(i+1).padStart(2,'0')}`),spokenBeforeRevealIds:cvResumeList(r.evidence,'spokenBeforeRevealIds'),modelRevealIds:cvResumeList(r.evidence,'modelRevealIds'),supportOpenedIds:cvResumeList(r.evidence,'supportOpenedIds')},missed:objectives.filter(x=>answered.includes(x.id)&&!first.includes(x.id)),repairIndex:phase==='repair'?Math.min(r.stageIndex||0,objectives.length):0};
   openOverlay();renderConversationAssessment();return true;
 }
@@ -1207,11 +1021,19 @@ function startConversationCoursePrimary(){
 }
 function showWeek1ScriptNotice(){
   player={type:'conversation-course',kind:'optional',completed:true};openOverlay();setProg(100);
-  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Optional · 3–5 min</div><h2>Notice three familiar Thai parts</h2><p class="sub">You already know what they mean from speaking practice.</p></div>
-    ${cvLinePanel(CV1_LINES.greeting,'Look for ครับ — the male polite ending')}${cvLinePanel(CV1_LINES.notSpicy,'Look for ไม่ — not')}${cvLinePanel(CV1_LINES.orderThis,'Look for เอา — I will have / want')}
-    <div class="stage-actions"><button class="btn full" id="cv-done">Done</button></div>`;
+  const canDecode=(state.done||[]).includes('l4');
+  el('stage').innerHTML=`<div class="center"><div class="eyebrow">Connect reading and conversation</div><h2>Recognise a phrase, then learn to decode it</h2><p class="sub">Knowing a phrase by sight and reading its letters are different skills.</p></div>${cvLinePanel(CV1_LINES.notSpicy,'A phrase you have used')}${canDecode?'<div class="notebox"><b>Read the part you learned in Reading Lesson 4: ไม่</b><p>ไ is written before ม but sounded after it. ม is low class; ่ gives this word a falling tone. ไม่ reads mâi and means not.</p><p>The rest of the phrase may need later reading lessons.</p></div>':'<div class="notebox"><b>For now, notice the recurring part ไม่.</b><p>It means not. Reading Lesson 4 will teach the letters and tone route needed to decode it. You do not have to read the whole conversation phrase yet.</p></div>'}<button class="btn full" id="cv-script-reading">Continue the reading route →</button><button class="btn full ghost mt-10" id="cv-done">Done</button>`;
+  el('cv-script-reading').onclick=()=>{closeOverlay();renderHome();setReadingCompanionOpen(true);};
   el('cv-done').onclick=()=>closeOverlay();
 }
+function renderConversationReadingCard(){
+  const card=el('reading-course-entry');if(!card)return;
+  const done=(state.done||[]).filter(id=>LESSONS.some(lesson=>lesson.id===id));
+  const next=LESSONS.find(lesson=>!done.includes(lesson.id));
+  card.innerHTML=`<div class="spread"><div class="eyebrow">Read Thai · ${done.length}/${LESSONS.length} lessons</div><span class="sub">Letter → class → tone</span></div><h2>Learn how Thai writing works</h2><p class="sub">${next?`Next in your course: ${esc(next.title)}. Learn the shapes and rules, then decode words you have not memorised.`:'Your reading course is complete. Keep the decoding skill active with review and fresh words.'}</p><p class="sub">Choose reading or conversation as your main block today. You can stop when the useful practice is done.</p><button class="btn full" id="reading-course-open">${done.length?'Continue the reading route':'Start the reading route'} →</button>`;
+  el('reading-course-open').onclick=()=>setReadingCompanionOpen(true);
+}
+
 function renderConversationCourseHome(){
   const card=el('conversation-course-card');if(!card)return;
   const c=cvConversation(),due=cvCurrentDueBlockers(),next=cvNextMain(),today=bangkokDayStr(),available=cvMainAvailableToday(null,today),fits=cvMainFitsToday(next,null,today),resume=!!c.resume,backlog=cvBacklogBlocksMain(null,today);
@@ -1222,9 +1044,10 @@ function renderConversationCourseHome(){
   else if(next&&available&&!fits){kicker.textContent='Done for today';title.textContent=next.title+' is next';status.textContent='Come back tomorrow for the next lesson.';card.disabled=true;}
   else if(next&&available){kicker.textContent=next.kind==='lesson'?`Lesson ${CV1_LESSONS[next.id].number}`:next.kind==='consolidation'?'Week 1 mix':'Week 1 check';title.textContent=next.title;status.textContent=`${next.minutes} min · learn, practise and speak`;card.disabled=false;}
   else if(next){kicker.textContent='Done for today';title.textContent=next.title+' is next';status.textContent='Come back tomorrow · practice stays open.';card.disabled=true;}
-  else{kicker.textContent='Week 1 complete';title.textContent='You can handle the food-stall basics';status.textContent='Short reviews will bring the phrases back later.';card.disabled=true;}
+  else{kicker.textContent='Week 1 complete';title.textContent='Your Week 1 practice is complete';status.textContent='Short reviews will bring the phrases back later.';card.disabled=true;}
   card.classList.toggle('done',(!available||backlog||!fits)&&!resume&&!due.length);card.classList.toggle('recommended',!backlog&&fits&&(available||resume||due.length));
   dayStatus.className='conversation-day-status'+((!available||backlog||!fits)?' done':'');dayStatus.textContent=due.length?'Start with the short reviews below.':backlog?'That is enough review for today.':!fits?'That is enough for today.':!available?'Today’s conversation lesson is complete. Reading remains optional.':'Your first useful reply is only a few taps away.';
+  renderConversationLearningCard();renderConversationReadingCard();
   const list=el('conversation-due-list');list.innerHTML=due.map((item,index)=>`<div class="conversation-route-item due"><span class="route-number">${index+1}</span><div><b>${item.stage==='d1'?'Next-day':item.stage==='d7'?'One-week':'One-month'} review</b><div class="sub">Ready today</div></div><button class="btn small" data-cv-due="${escAttr(item.id)}">Start</button></div>`).join('');
   list.querySelectorAll('[data-cv-due]').forEach(button=>button.onclick=()=>startConversationAssessment('retention',button.dataset.cvDue));
   const optional=el('conversation-optional-panel'),completed=Object.keys(c.lessons).filter(id=>c.lessons[id].firstCompleted);
@@ -1235,16 +1058,18 @@ function renderConversationCourseHome(){
 function renderConversationCourseProgress(){
   const grid=el('conversation-progress-grid');if(!grid)return;
   const c=cvConversation(),lessons=Object.values(c.lessons).filter(rec=>rec.firstCompleted).length,due=cvDueAssignments().length,gates=c.gates[CV1_WEEK1_GATE]&&c.gates[CV1_WEEK1_GATE].passedAt?1:0,next=cvNextMain();
-  grid.innerHTML=`<div><b>${lessons}/24</b><span class="sub meta-mini">lessons</span></div><div><b>${due}</b><span class="sub meta-mini">due checks</span></div><div><b>${gates}/8</b><span class="sub meta-mini">gates</span></div>`;
-  el('conversation-progress-status').textContent=gates?'Week 1 passed':'Week 1 in progress';
+  grid.innerHTML=`<div><b>${lessons}/${Object.keys(CV1_LESSONS).length}</b><span class="sub meta-mini">available lessons</span></div><div><b>${due}</b><span class="sub meta-mini">due checks</span></div><div><b>${gates}/1</b><span class="sub meta-mini">gates</span></div>`;
+  el('conversation-progress-status').textContent=gates?'Week 1 completed':'Week 1 in progress';
+  const check=cvCheckStore(),last=check.runs[check.runs.length-1],results=el('conversation-learning-progress');
+  if(results){results.innerHTML=last?`<p class="sub">Latest learning snapshot · ${esc(last.completedDay)}</p>${cvCheckSummaryHtml(last)}<button class="btn full ghost" id="cv-progress-results">Review these results</button>`:'<p class="sub">Lesson completion records practice. Use “What stuck?” to check listening, reply choices, reading and your own recall.</p>';if(last)el('cv-progress-results').onclick=showConversationLearningResults;}
   el('conversation-progress-next').textContent=next?`Next: ${next.title}${cvMainAvailableToday()?'':' · ready tomorrow'}`:'Week 1 complete; short reviews will appear when they are due.';
 }
 
-function validateV841ConversationTeachingContracts(){
+function validateConversationContracts(){
   const errors=[],lessonIds=Object.keys(CV1_LESSONS),allLines=Object.values(CV1_LINES);
   if(lessonIds.length!==3)errors.push('Week 1 must contain exactly three canonical lessons');
   if(CV1_SCENES.l01.turns.length!==8||CV1_SCENES.l02.turns.length!==10||CV1_SCENES.l03.turns.length!==13)errors.push('Week 1 scene turn counts drifted');
-  const workloads=[[CV1_LESSONS[lessonIds[0]],8,2,10],[CV1_LESSONS[lessonIds[1]],10,2,12],[CV1_LESSONS[lessonIds[2]],10,2,12],[CV1_CONSOLIDATION,8,2,10],[CV1_GATE_META,10,2,12]];
+  const workloads=[[CV1_LESSONS[lessonIds[0]],10,2,12],[CV1_LESSONS[lessonIds[1]],12,2,14],[CV1_LESSONS[lessonIds[2]],12,2,14],[CV1_CONSOLIDATION,8,2,10],[CV1_GATE_META,10,2,12]];
   workloads.forEach(([item,core,repair,total])=>{if(item.revision!==1||item.coreMinutes!==core||item.ordinaryRepairMinutes!==repair||item.totalMinutes!==total||item.minutes!==total)errors.push(item.id+' workload metadata drifted');});
   [['d1',2,1,3],['d7',4,1,5],['d30',6,2,8]].forEach(([stage,core,repair,total])=>{const item=CV1_DELAYED_WORKLOADS[stage];if(item.revision!==1||item.coreMinutes!==core||item.ordinaryRepairMinutes!==repair||item.totalMinutes!==total)errors.push(stage+' delayed workload metadata drifted');});
   lessonIds.forEach(id=>{const lesson=CV1_LESSONS[id],objectives=cvBuildObjectives(lesson.interactions,`cv1.form.lesson.${id}`,'lesson');if(lesson.interactions.length!==3)errors.push(id+' must have three lesson interactions');if(objectives.length!==6||objectives.some(item=>item.revision!==1||item.formId!==`cv1.form.lesson.${id}`||item.sourceInteractionId!==item.interaction.id))errors.push(id+' must have six revisioned lesson objectives');if(lesson.substitution.revision!==1)errors.push(id+' substitution revision missing');});
@@ -1262,27 +1087,22 @@ function validateV841ConversationTeachingContracts(){
   if(allLines.some(line=>line.revision!==1||!['active','recognition','routine','slot','transfer-only'].includes(line.role)||!line.thai.endsWith('ครับ')||line.ttsText!==line.thai||line.lang!=='th-TH'))errors.push('complete Thai lines must be revisioned, role-tagged, male-polite device-TTS records');
   const spellings={};allLines.forEach(line=>{if(spellings[line.thai]&&spellings[line.thai]!==line.tr)errors.push('inconsistent pronunciation spelling for '+line.thai);spellings[line.thai]=line.tr;});
   if(CV1_SUPPORT_RATINGS.map(item=>item.id).join('|')!=='full-support|some-support|minimal-support')errors.push('private support-rating enum drifted');
-  const keySource=String(cvPronunciationKeyHtml),teachingSource=String(cvTeachingModelHtml),blockSource=String(cvBuilderIsBlocked),builderSource=String(cvBindSentenceBuilder),pairSource=String(cvRenderLessonPair),startSource=String(startConversationCourseLesson),resumeSource=String(resumeConversationCourseTask),guidedSource=String(cvRenderLessonGuided),lessonRouter=String(renderConversationCourseLesson),spokenSource=String(cvRenderAssessmentSpoken);
-  if(!['bp','dt','ph','th','kh','ng','ʉ','Doubled vowels','unmarked = mid','grave (à)','circumflex (â)','acute (á)','caron (ǎ)'].every(term=>keySource.includes(term)))errors.push('optional pronunciation-spelling key is incomplete');
-  if(!['line.en','line.thai','line.tr','line.segments.map','What each part means','Hear the complete phrase'].every(term=>teachingSource.includes(term)))errors.push('new replies must show the complete phrase, meaning, pronunciation and ordered parts before practice');
-  if(!builderSource.includes('state.selected.every')||!builderSource.includes('onFirstWrong')||!builderSource.includes('onCorrect')||!builderSource.includes('cvBuilderIsBlocked')||!blockSource.includes("typeof opts.disabled==='function'")||!String(cvBuilderOrder).includes('order.reverse'))errors.push('tap-to-build order, dynamic cue unlock, retry or completion logic is incomplete');
-  if(!pairSource.includes("pairMode==='model'")||!pairSource.includes('cvTeachingModelHtml')||!pairSource.includes('heard.model=true')||!pairSource.includes('if(!heard.model)return')||!pairSource.includes('Practise this reply →')||!pairSource.includes('disabled:()=>!heard.cue')||!startSource.includes('pairModes:{}')||!resumeSource.includes('pairModes:{}'))errors.push('untaught replies must be modelled and heard before their builder can appear, and vendor playback must unlock practice dynamically, including after resume');
-  if(!pairSource.includes('cvSentenceBuilderHtml')||!pairSource.includes('cvBuilderState')||!pairSource.includes('.complete')||pairSource.includes('p.evidence.responsePromptIds.includes')||!pairSource.includes("'teach'")||!pairSource.includes("'vendor'")||!pairSource.includes("'learner'")||!pairSource.includes('if(!ok||!stillHere())return'))errors.push('teaching pairs must hear, correctly build and use role-specific voices before completion');
-  if(!guidedSource.includes('cvSentenceBuilderHtml')||!guidedSource.includes("'practice'")||!guidedSource.includes('spokenBeforeRevealIds')||!lessonRouter.includes("p.phase==='record'?'substitution':'guided'"))errors.push('less-supported rebuild or legacy-resume routing is incomplete');
-  if(!spokenSource.includes('cv-assessment-support')||!spokenSource.includes('supportOpenedIds'))errors.push('assessment support-use tracking is incomplete');
-  if(!String(speakWithDeviceVoice).includes('watchdog')||!String(speakWithDeviceVoice).includes('onComplete')||!String(speakWithDeviceVoice).includes('conversationVoiceForRole')||!String(playConversationTurns).includes('utteranceWatchdog')||!String(playConversationTurns).includes('pauseAfter || 1000')||String(speakWithDeviceVoice).includes('.pitch'))errors.push('role voice, pause or device-TTS safety guards are incomplete');
-  const onboarding=JSON.stringify(ONBOARDING_STEPS),about=String(showAboutApp);
-  if(ONBOARDING_STEPS.map(item=>item.title).join('|')!=='Order something in your first lesson|Check the voices on your phone'||!String(onboardingStepHtml).includes('Start Lesson 1')||!String(showOnboarding).includes("startConversationCourseTask('cv1.lesson.w01.l01.food-order')"))errors.push('two-step onboarding or Lesson 1 launch drifted');
-  if(!onboarding.includes('See the complete phrase, its meaning and each part')||!onboarding.includes('put the familiar parts back together')||!onboarding.includes('reading course is available separately')||!onboarding.includes('does not score pronunciation')||!onboarding.includes('vendor and your reply use different voices'))errors.push('onboarding claims drifted');
-  ['Thai for daily life in Bangkok','food, transport, shopping and everyday problems','first see and hear the complete reply','learn what each part means','native recordings or a native reviewer','Reading is separate and optional'].forEach(term=>{if(!about.includes(term))errors.push('About claim missing: '+term);});
+  // Verify the authored answer matches the question actually shown. Interaction
+  // callbacks and resume behaviour are exercised by conversation-flow-smoke.js.
+  const forms=[...CV1_GATE_FORMS,...Object.values(CV1_RETENTION_FORMS).flat()];
+  for(const form of forms){
+    const mode=CV1_GATE_FORMS.includes(form)?'gate':'assessment';
+    for(const objective of cvBuildObjectives(form.items,form.id,mode)){
+      const spec=cvChoiceSpec(objective);
+      if(spec.options.filter(option=>option.id===spec.answer).length!==1)errors.push('ambiguous choice '+objective.id);
+      if(spec.skill==='listening'&&(!spec.cue||spec.heading!== 'What does the vendor mean?'))errors.push('listening prompt reveals its answer '+objective.id);
+    }
+  }
+  const activeRepair=CV1_RETENTION_FORMS['cv1.retention.w01.l03.d7'];
+  if(activeRepair.some(form=>form.items.some(item=>JSON.stringify(item).includes('transport.'))))errors.push('Week 1 review requires future transport content');
+  if(allLines.some(line=>line.thai.normalize('NFC')!==line.thai||line.segments.map(part=>part.thai).join('').replace(/\s/g,'')!==line.thai.replace(/\s/g,'')))errors.push('phrase segments must reconstruct their NFC model');
   if(/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(JSON.stringify({lines:CV1_LINES,lessons:CV1_LESSONS})))errors.push('authored or remote audio leaked into conversation course');
-  if(bangkokDayStr(new Date('2026-08-28T16:59:59Z'))!=='2026-08-28'||bangkokDayStr(new Date('2026-08-28T17:00:00Z'))!=='2026-08-29')errors.push('Bangkok day boundary is wrong');
-  const legacy={done:['l1'],srs:{x:{iv:1}},conversation:{schema:1,scenes:{old:{runs:1,firstCompleted:'2026-08-01',lastCompleted:'2026-08-01',selfRating:'ready',lastRun:null}}}};const snapshot=JSON.stringify({done:legacy.done,srs:legacy.srs});cvRepairConversationState(legacy);
-  if(snapshot!==JSON.stringify({done:legacy.done,srs:legacy.srs})||legacy.conversation.pace.cursor!==0||Object.keys(legacy.conversation.lessons).length)errors.push('schema-1 migration invented authority or changed Phase 1');
-  const once=JSON.stringify(legacy.conversation);cvRepairConversationState(legacy);if(once!==JSON.stringify(legacy.conversation))errors.push('schema-2 repair must be idempotent');
   try{cvValidateConversationImport(cvFreshConversationState());}catch(_){errors.push('fresh schema-2 state failed strict import validation');}
-  const weakness=cvFreshConversationState(),objective=cvBuildObjectives(CV1_LESSONS[lessonIds[0]].interactions,'cv1.form.lesson.w01.l01.a','lesson')[0];cvWeaknessSeen(weakness,objective,false,'wrong');const weaknessItem=weakness.weakness.items[objective.interaction.id+'>'+objective.direction];if(!weaknessItem||weaknessItem.seen!==1||weaknessItem.firstMisses!==1)errors.push('one first attempt must update weakness exactly once');
-  const capDay=bangkokDayStr(),capState={conversation:cvFreshConversationState()};capState.conversation.days[capDay]={secs:0,main:null,reviews:['cv1.retention.w01.l01.d7','cv1.retention.w01.l02.d7'],repairs:[]};if(cvTodayAuthoredMinutes(capState,capDay)!==10||!cvMainFitsToday(cvMainTask('cv1.lesson.w01.l03.repair'),capState,capDay))errors.push('short review workload metadata failed');
-  if(typeof handleEndDay==='function'&&(String(handleEndDay).includes('startConversationPilot')||!String(handleEndDay).includes('startConversationCoursePrimary')))errors.push('End Day still routes to the retired conversation pilot');
-  if(errors.length)throw new Error('V8.4.1 conversation teaching contract failed:\n'+errors.join('\n'));return true;
+  if(errors.length)throw new Error('Conversation contracts failed:\n'+errors.join('\n'));
+  return true;
 }

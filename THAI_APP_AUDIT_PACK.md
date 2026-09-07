@@ -1,15 +1,17 @@
 # Thai App External Audit Pack
 
-Prepared: 2026-08-31
+Prepared: 2026-09-07
 Workspace: `/Users/lateefoyelade/thai-repo`
-Current app version: `v8.4.1`
+Current app version: `v8.5.0`
 Live app shell: `index.html`
 
 This pack is a current-source review guide, not a historical archive. It should be read with `FILE_MANIFEST.md`, `AGENTS.md`, `CHANGELOG.md`, `tools/phase1-audit.js`, and the generated `docs/phase1_audit.*` files.
 
 ## Current State
 
-Usable conversational Thai for daily Bangkok life is the app's primary goal. v8.4.1 enforces model-before-practice teaching: each new Week 1 reply is shown whole with meaning, pronunciation spelling and ordered parts, then heard, before its tappable builder can appear. Reading remains separate and optional. The app remains a vanilla static PWA with no backend, build step, runtime API calls, human-audio assets, AI audio, scraped audio, speech scoring, cloud sync or native-review dependency.
+**Current release: v8.5.0 "Bangkok Thai — What Stuck?".** Week 1 now checks vendor meaning without an English answer cue, varies choice positions deterministically, requires successful listening before answering, and follows builders with hidden-model recall. Explicit attempts and help are separate from audio completion. Repair phrases return to the original question. Completers get a supplementary “What stuck?” snapshot with separate listening, reply-choice, reported-recall and prerequisite-safe reading results; old completion stays intact. Today prominently offers the complete reading course, and conversation progress shows the available 3 lessons/1 gate. Authored content, course authority/shared player and supplementary checks live in three local scripts with versioned URLs. Lesson estimates are 12/14/14 minutes. Active Lesson 3 +7 forms C/D use only Week 1; A/B remain archived for import/history. Device TTS, male-polite Thai and Phase 1 authority remain unchanged.
+
+Current release contracts: `docs/v8_5_learning_check.md`. The runtime validator is `validateConversationContracts()`; event tests exercise actual registered callbacks in a minimal DOM. Browser/device QA is separate from the deterministic harness.
 
 v5.4.5 was a source-hygiene release. It kept the v5.4.4 learner behaviour and changed reviewability:
 
@@ -314,7 +316,10 @@ v8.3.0 established the conversation-course authority:
 ## Current Tracked Source
 
 - `index.html` - app shell, Phase 1 curriculum/state and shared UI/runtime logic.
-- `conversation-course.js` - schema-2 conversation registry, builder lesson/assessment engine, scheduling, recovery and v8.4 contracts.
+- `conversation-content.js` - authored patterns and forms.
+- `conversation-course.js` - schema-2 authority and shared lesson/assessment views.
+- `conversation-check.js` - isolated supplementary diagnostic.
+- `tools/conversation-flow-smoke.js` - event-driven lesson, assessment and check harness.
 - `manifest.json`, `sw.js`, `vercel.json` - static PWA/deploy support.
 - `icon-180.png`, `icon-192.png`, `icon-512.png` - install icons.
 - `AGENTS.md`, `CLAUDE.md`, `CHANGELOG.md`, `README.md` - release and project context.
@@ -356,7 +361,7 @@ tools/make-release-zip.sh
 
 `docs/phase1_audit.md` should report:
 
-- app version `v8.4.1`
+- app version `v8.5.0`
 - 24 lessons
 - 60 validators passing
 - 0 lesson prerequisite issues
@@ -372,7 +377,7 @@ High-value review areas:
 - imported legacy progress states, especially Endings Refresh, leech cards, axis-review staging and retention checks
 - quiz-generator coverage, because generated choices must stay covered-only and non-giveaway
 - Thai tone derivation and transliteration accuracy
-- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-4-1`, including the external conversation-course module
+- iPhone/PWA update behaviour with service-worker cache `aan-thai-v8-5-0`, including the external conversation-course module
 - slow-network shell fallback and offline reload behaviour
 - absence of automatic Google Fonts network requests
 - learner-facing copy staying plain, Thai-script-first and free of internal scheduler wording

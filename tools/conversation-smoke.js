@@ -5,7 +5,7 @@ const vm = require('vm');
 
 const ROOT = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+const course = require('./app-source').readConversationSource(ROOT);
 const match = html.match(/<script>([\s\S]*)<\/script>/);
 if(!match) throw new Error('embedded app script not found');
 const embedded = match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped by conversation smoke */\n');
@@ -53,7 +53,7 @@ const api=vm.runInContext(`({
   assessmentRecord:cvAssessmentRecord,
   assessmentSpoken:cvAssessmentSpoken,
   weaknessSeen:cvWeaknessSeen,
-  validator:validateV841ConversationTeachingContracts,
+  validator:validateConversationContracts,
   courseSource:String(renderConversationCourseLesson)+String(cvRenderLessonPair)+String(cvRenderLessonGuided)+String(cvRenderLessonSubstitution)+String(cvRenderConsolidationTransfer),
   teachingSource:String(cvTeachingModelHtml),
   teachingHtml:line=>cvTeachingModelHtml(line),
@@ -75,12 +75,12 @@ const api=vm.runInContext(`({
 function assert(ok,message){if(!ok)throw new Error(message);}
 function pass(message){console.log('PASS '+message);}
 
-assert(api.version==='v8.4.1','expected v8.4.1 identity');
-assert(api.validator(),'v8.4.1 validator failed');
+assert(api.version==='v8.5.0','expected v8.5.0 identity');
+assert(api.validator(),'v8.5.0 validator failed');
 assert(Object.keys(api.lessons).length===3,'expected three Week 1 lessons');
 assert(api.scenes.l01.turns.length===8&&api.scenes.l02.turns.length===10&&api.scenes.l03.turns.length===13,'scene turn counts drifted');
 assert(Object.values(api.lines).every(line=>line.revision===1&&['active','recognition','routine','slot','transfer-only'].includes(line.role)),'Thai line revision/role metadata drifted');
-assert(api.lessons['cv1.lesson.w01.l01.food-order'].totalMinutes===10&&api.lessons['cv1.lesson.w01.l02.food-options'].totalMinutes===12&&api.lessons['cv1.lesson.w01.l03.repair'].totalMinutes===12,'lesson workloads drifted');
+assert(api.lessons['cv1.lesson.w01.l01.food-order'].totalMinutes===12&&api.lessons['cv1.lesson.w01.l02.food-options'].totalMinutes===14&&api.lessons['cv1.lesson.w01.l03.repair'].totalMinutes===14,'lesson workloads drifted');
 assert(api.consolidation.coreMinutes===8&&api.consolidation.ordinaryRepairMinutes===2&&api.consolidation.totalMinutes===10,'consolidation workload drifted');
 assert(api.gateMeta.coreMinutes===10&&api.gateMeta.ordinaryRepairMinutes===2&&api.gateMeta.totalMinutes===12,'gate workload drifted');
 assert(api.supportRatings.map(item=>item.id).join('|')==='full-support|some-support|minimal-support','course support-rating enum drifted');
@@ -153,10 +153,10 @@ assert(api.pairSource.includes('disabled:()=>!heard.cue'),'builder captured the 
 assert(api.pairSource.includes('if(!ok||!stillHere())return'),'teaching pair can award playback evidence before successful device speech completion');
 assert(api.pairSource.includes('cvBuilderState')&&api.pairSource.includes('.complete')&&!api.pairSource.includes('p.evidence.responsePromptIds.includes'),'a wrong saved builder attempt could restore as completed after reload');
 assert(['bp','dt','ph','th','kh','ng','ʉ','Doubled vowels','caron (ǎ)'].every(term=>api.pairSource.includes(term)),'pronunciation-spelling key is incomplete');
-assert(api.spokenSource.includes('cv-assessment-support')&&api.spokenSource.includes('supportOpenedIds'),'assessment spoken support is not bounded and recorded');
+assert(api.spokenSource.includes('cvRenderRecall')&&api.spokenSource.includes('supportOpenedIds'),'assessment spoken support is not bounded and recorded');
 assert(api.assessmentSource.includes('feedbackAcknowledgedIds')&&api.assessmentSource.includes('repairCompletedAt'),'cold evidence or repair boundary missing');
 assert(api.assessmentSource.includes("p.phase='repair'")&&api.assessmentSource.includes('cvPersistCourseResume'),'post-check repair is not action-boundary resumable');
-assert(api.assessmentSource.includes('You already answered this before leaving the app')&&api.assessmentSource.includes('p.objectiveIndex++'),'interrupted first answer could be answered again or rewritten');
+assert(api.assessmentSource.includes('p.evidence.answeredIds.includes(objective.id)')&&api.assessmentSource.includes('p.objectiveIndex++'),'interrupted first answer could be answered again or rewritten');
 assert(api.playbackSource.includes('SpeechSynthesisUtterance')&&api.playbackSource.includes('pauseAfter || 1000')&&api.playbackSource.includes('speechSynthesis.cancel'),'guarded device-TTS playback missing');
 const mealTurn=api.resolveTurn(api.scenes.l02,api.scenes.l02.turns[5]);
 assert(mealTurn&&mealTurn.speaker==='learner'&&mealTurn.pauseAfter===1800,'resolved learner chunk lost the meal-to-payment pause');
@@ -173,4 +173,4 @@ const thai=JSON.stringify({lessons:api.lessons,scenes:api.scenes,forms:api.reten
 assert(!thai.includes('ค่ะ'),'female polite particle leaked into course');
 assert(!/https?:|\.(?:mp3|m4a|wav|ogg|aac|flac|webm)/i.test(thai),'authored or remote audio leaked into course');
 pass('male-polite and device-TTS-only content');
-pass('v8.4.1 conversation smoke');
+pass('v8.5.0 conversation smoke');

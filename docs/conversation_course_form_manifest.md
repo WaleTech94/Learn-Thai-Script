@@ -1,5 +1,7 @@
 # Bangkok Conversation Foundation — Form and Recurrence Manifest
 
+> **v8.5.0 override:** see [What stuck? release contract](v8_5_learning_check.md) for current shared interactions, supplementary evidence, lesson estimates and active Lesson 3 +7 forms C/D. Original A/B entries below are archived history. Weeks 2–8 are still unshipped.
+
 **Manifest revision:** 1.0
 **Date:** 2026-08-28
 **Course:** `bangkok-conversation-foundation-v1`

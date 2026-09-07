@@ -1,6 +1,8 @@
 # อ่าน (àan) — Learn Thai
 
-A self-contained, offline-first PWA for building usable conversational Thai for daily life in Bangkok. Every new reply is taught before it is practised: the learner sees the complete Thai phrase with English meaning, pronunciation spelling and a correct-order explanation of each part, hears the full model, then rebuilds and uses it. The complete 24-lesson Phase 1 script course remains preserved underneath as an optional reading companion with its letter → class → tone spine, objective mastery gates, SRS, controlled reads, retention checks and practice tools. The two tracks keep separate progress. Current identity: `Bangkok Thai · v8.4.1`.
+An offline-first PWA for learning usable Bangkok Thai and reading Thai script. Week 1 teaches complete phrases and reusable patterns, checks heard meaning, then asks you to recall replies without tiles. The complete 24-lesson reading course teaches letter → class → tone with its existing mastery gates, SRS, controlled reads and retention checks. Both courses have prominent Today entries and separate progress. Current identity: `Bangkok Thai · v8.5.0`.
+
+v8.5.0 adds **What stuck?** for learners who already completed conversation lessons. Listening, reply choices, self-reported recall and prerequisite-safe reading have separate results; old progress is preserved. The app now uses three small local conversation modules with shared choice/recall views, while the established reading engine stays in `index.html`. See [the release contract](docs/v8_5_learning_check.md).
 
 v8.4.1 fixes a foundational beginner-flow error in v8.4.0: sentence building can no longer appear before the reply has been explicitly modelled and heard. Reloading an unfinished phrase returns to the teaching model rather than skipping it. No curriculum, progress-state, gate, review, voice or Phase 1 contract changes.
 

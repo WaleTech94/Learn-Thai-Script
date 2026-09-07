@@ -1,5 +1,7 @@
 # v8.4.1 Model Before Practice — Implementation Plan and Shipped Contract
 
+> **v8.5.0 override:** see [What stuck? release contract](v8_5_learning_check.md) for current shared interactions, supplementary evidence, lesson estimates and active Lesson 3 +7 forms C/D. Original A/B entries below are archived history. Weeks 2–8 are still unshipped.
+
 **Status:** corrected in v8.4.1 after the v8.4.0 builder exposed an untaught reply as a reconstruction task. This document supersedes the learner-flow, workload and learner-facing-copy portions of the v8.3 Week 1 specification. The canonical Thai lines, interaction IDs, gate forms, delayed forms and schema-2 authority remain unchanged.
 
 ## Product decision

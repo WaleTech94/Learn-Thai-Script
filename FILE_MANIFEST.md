@@ -2,14 +2,19 @@
 
 Purpose: identify the current source of truth for review, separate generated evidence from ignored local artifacts, and avoid uploading noisy or stale files.
 
-Verified current app version: `v8.4.1`.
-Verified current footer string: `Bangkok Thai · v8.4.1`.
-Verified current service-worker cache: `aan-thai-v8-4-1` (includes the external conversation engine).
+Verified current app version: `v8.5.0`.
+Verified current footer string: `Bangkok Thai · v8.5.0`.
+Verified current service-worker cache: `aan-thai-v8-5-0` (includes all three versioned conversation scripts).
 
 ## Tracked Source For Review/Deploy Packages
 
 - `index.html` - shipped PWA shell: HTML/CSS, preserved Phase 1 data/engine, shared state/import/export, validators and UI.
-- `conversation-course.js` - schema-2 Bangkok conversation curriculum, player, scheduler, evidence, resume, repair/import and validation layer.
+- `conversation-content.js` - authored Week 1 registry, patterns and active/archived forms.
+- `conversation-course.js` - schema-2 player, shared question/recall/build views, scheduler, evidence, resume and recovery.
+- `conversation-check.js` - bounded supplementary diagnostic; only writes its optional extension.
+- `tools/app-source.js` - reads the ordered script manifest for every Node harness.
+- `tools/conversation-dom.js`, `tools/conversation-flow-smoke.js` - minimal DOM and event-driven lesson/assessment/check tests.
+- `docs/v8_5_learning_check.md` - current learning, architecture, state and form override.
 - `manifest.json` - PWA metadata, icons, standalone display, portrait orientation and theme colours.
 - `sw.js` - service worker using network-first shell refresh and cache-first static assets.
 - `vercel.json` - static Vercel deployment configuration with no build step and must-revalidate headers for shell files.
@@ -47,7 +52,7 @@ Verified current service-worker cache: `aan-thai-v8-4-1` (includes the external 
 - `docs/phase2_refactor_plan.md` - future refactor plan only; it is not a Phase 2 implementation.
 - `THAI_APP_AUDIT_PACK.md` - concise external audit preparation notes for the current tracked repo state.
 - `FILE_MANIFEST.md` - this current-source manifest.
-- `dist/aan-thai-v8.4.1-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
+- `dist/aan-thai-v8.5.0-source.zip` - generated on demand by `tools/make-release-zip.sh`; ignored and not tracked.
 
 ## Ignored Local Artifacts
 
@@ -78,7 +83,7 @@ From repo root:
 tools/make-release-zip.sh
 ```
 
-The helper writes `dist/aan-thai-v8.4.1-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
+The helper writes `dist/aan-thai-v8.5.0-source.zip` using `git archive`, so it includes tracked files from `HEAD` only. Commit or stash tracked edits before packaging if the zip must include them.
 
 ## Minimal External Source Bundle
 

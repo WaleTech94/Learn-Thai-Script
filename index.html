@@ -441,6 +441,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 	.optional-reading-progress[open]>summary{margin-bottom:12px}
 	.cv-audio-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px;border:2px solid var(--line);border-radius:4px 12px 4px 12px;background:var(--atlas-panel)}
 	.cv-audio-option+.cv-audio-option{margin-top:8px}
+	.q-options>.cv-audio-option{grid-column:1/-1;min-width:0;margin:0}
 	.cv-support-hidden{padding:16px;border:2px dashed var(--line-bright);border-radius:4px 14px 4px 14px;text-align:center}
 	.cv-mission{margin:16px 0;padding:18px;border:2px solid var(--ui-primary);border-radius:4px 18px 4px 18px;background:var(--atlas-panel);box-shadow:4px 4px 0 var(--atlas-hard-shadow)}
 	.cv-mission h2{margin:4px 0 8px}
@@ -1782,14 +1783,14 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </div>
       <div class="today-header-meta">
         <button class="streak today-streak dim" id="today-streak-chip" aria-label="Streak details"><span class="flame">🔥</span><span id="today-streak-num">0</span></button>
-        <span class="version-pill">Bangkok Thai · v8.4.1</span>
+        <span class="version-pill">Bangkok Thai · v8.5.0</span>
       </div>
     </header>
 
     <section class="conversation-front-door">
       <div class="progress-divider">TODAY · CONVERSATION</div>
-      <h1>Speak Thai today</h1>
-      <p class="sub">Learn a useful reply, hear it clearly, then practise and say it in a Bangkok situation.</p>
+      <h1>Understand, read and use Thai</h1>
+      <p class="sub">Learn useful patterns, understand the replies, and build your reading skills alongside speaking.</p>
       <button class="card cta-card action-card primary recommended" id="conversation-course-card">
         <div>
           <div class="eyebrow" id="conversation-card-kicker">Start here · Lesson 1</div>
@@ -1800,16 +1801,18 @@ h1,h2,h3,.display{letter-spacing:-.025em}
       </button>
       <div class="conversation-day-status" id="conversation-day-status">Your first useful reply is only a few taps away.</div>
       <div class="conversation-route-list" id="conversation-due-list"></div>
+      <div class="section-card" id="conversation-learning-check" hidden></div>
       <div class="conversation-optional-panel" id="conversation-optional-panel" hidden></div>
     </section>
 
-    <button class="reading-companion-toggle" id="reading-companion-toggle" aria-expanded="false" aria-controls="reading-companion-panel">Optional: open the complete reading course</button>
+    <section class="section-card reading-course-entry" id="reading-course-entry"></section>
+    <button class="reading-companion-toggle" id="reading-companion-toggle" aria-expanded="false" aria-controls="reading-companion-panel">Show reading route and practice</button>
     <div id="reading-companion-panel" hidden>
     <section class="today-focus">
       <div class="reading-companion-intro">
-        <div class="eyebrow">Optional reading companion</div>
+        <div class="eyebrow">Your reading route</div>
         <h2>Build the script gradually</h2>
-        <p class="sub">Phase 1 keeps its full letter → class → tone course. Use it when you have time; it does not gate the spoken scene above.</p>
+        <p class="sub">Build from letters to independent decoding. Reading and conversation keep their own progress, so you can practise either today.</p>
       </div>
       <div class="progress-divider" id="course-day-label">COURSE DAY</div>
       <h1 id="today-heading">Today's route</h1>
@@ -1924,7 +1927,7 @@ h1,h2,h3,.display{letter-spacing:-.025em}
     </details>
     </div>
     <div class="settings-row">
-      <div class="sub meta-tiny meta-top">Bangkok Thai · v8.4.1</div>
+      <div class="sub meta-tiny meta-top">Bangkok Thai · v8.5.0</div>
     </div>
   </section>
 
@@ -1933,16 +1936,17 @@ h1,h2,h3,.display{letter-spacing:-.025em}
     <div class="screen-head">
       <div class="screen-kicker">Progress</div>
       <h1 class="screen-title">Progress &amp; settings</h1>
-      <p class="screen-sub">Track conversation lessons, delayed checks and optional reading progress.</p>
+      <p class="screen-sub">See what you completed, what you understood, and how your reading is developing.</p>
       <span class="screen-mark" aria-hidden="true">๔๒</span>
     </div>
     <div class="section-card" id="conversation-progress-card">
       <div class="spread"><div><div class="eyebrow">Bangkok Thai</div><h2>Your conversation route</h2></div><span class="sub meta-mini" id="conversation-progress-status">Week 1</span></div>
       <div class="conversation-progress-grid" id="conversation-progress-grid"></div>
       <div class="sub meta-mini mt-10" id="conversation-progress-next">Lesson 1 is ready.</div>
+      <div id="conversation-learning-progress"></div>
     </div>
     <details class="optional-reading-progress" id="optional-reading-progress">
-      <summary>Optional reading progress</summary>
+      <summary>Reading progress · letters, classes and decoding</summary>
       <div>
     <button class="section-card phase1-dashboard" id="phase1-dashboard-card">
       <div class="spread">
@@ -2344,7 +2348,9 @@ h1,h2,h3,.display{letter-spacing:-.025em}
 		  </div>
 </nav>
 </div>
-<script src="./conversation-course.js"></script>
+<script src="./conversation-content.js?v=8.5.0"></script>
+<script src="./conversation-course.js?v=8.5.0"></script>
+<script src="./conversation-check.js?v=8.5.0"></script>
 <script>
 /* =====================================================
    DATA
@@ -3674,8 +3680,8 @@ let state = {
   soundPacks:[],
   sfxVoice:'default'
 };
-const APP_VERSION = 'v8.4.1';
-const APP_VERSION_LABEL = 'Bangkok Thai · v8.4.1';
+const APP_VERSION = 'v8.5.0';
+const APP_VERSION_LABEL = 'Bangkok Thai · v8.5.0';
 const SKEY = 'thai_state_v1';
 const CORRUPT_SKEY = SKEY + '_corrupt';
 const BACKUP_HINT_SEEN_KEY = 'thai_backup_hint_seen';
@@ -5745,7 +5751,7 @@ function completeOnboarding(mode, target){
 const ONBOARDING_STEPS = [
   {
     title:'Order something in your first lesson',
-    body:`<p class="sub">In about 10 minutes, you will learn to point to food, order it and ask for no spice.</p><div class="onboarding-route-list"><div><b>Learn</b><br><span class="sub">See the complete phrase, its meaning and each part.</span></div><div><b>Practise</b><br><span class="sub">Hear it, then put the familiar parts back together.</span></div><div><b>Use it</b><br><span class="sub">Say the reply inside a short conversation.</span></div></div><p class="sub">The reading course is available separately whenever you want it.</p>`
+    body:`<p class="sub">In about 12 minutes, you will learn to point to food, order it and ask for no spice.</p><div class="onboarding-route-list"><div><b>Learn</b><br><span class="sub">See the complete phrase, its meaning and each part.</span></div><div><b>Practise</b><br><span class="sub">Hear it, then put the familiar parts back together.</span></div><div><b>Use it</b><br><span class="sub">Say the reply inside a short conversation.</span></div></div><p class="sub">The reading course is available separately whenever you want it.</p>`
   },
   {
     title:'Check the voices on your phone',
@@ -9363,8 +9369,8 @@ function purchasedSnapshot(){
 }
 function validateV72ShopContracts(){
   const errors = [];
-  if(APP_VERSION !== 'v8.4.1') errors.push('internal app version should be v8.4.1');
-  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('footer label should be Bangkok Thai · v8.4.1');
+  if(APP_VERSION !== 'v8.5.0') errors.push('internal app version should be v8.5.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('footer label should be Bangkok Thai · v8.5.0');
   const seen = new Set();
   shopPurchasables().forEach(item=>{
     if(!item.id) errors.push('shop item missing id');
@@ -9536,8 +9542,8 @@ function validateV73ReadingMileageContracts(){
   const legacy = {done:['l1'], srs:{}, readTimes:null, drillLog:null, toneStats:null, errorProfile:null, stories:null};
   ensureStateCollections(legacy);
   if(!readingMileageText(legacy)) errors.push('Reading mileage should render against legacy imports');
-  if(APP_VERSION !== 'v8.4.1') errors.push('internal app version should be v8.4.1');
-  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('footer label should be Bangkok Thai · v8.4.1');
+  if(APP_VERSION !== 'v8.5.0') errors.push('internal app version should be v8.5.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('footer label should be Bangkok Thai · v8.5.0');
   if(errors.length) throw new Error('V7.3 reading mileage contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9631,8 +9637,8 @@ function validateV74StreetReadContracts(){
   ['streetRead','streetReads','streetMode','v74'].forEach(key=>{
     if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('fresh state should not contain v7.4 key ' + key);
   });
-  if(APP_VERSION !== 'v8.4.1') errors.push('internal app version should be v8.4.1');
-  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('footer label should be Bangkok Thai · v8.4.1');
+  if(APP_VERSION !== 'v8.5.0') errors.push('internal app version should be v8.5.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('footer label should be Bangkok Thai · v8.5.0');
   if(errors.length) throw new Error('V7.4 street read contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9701,8 +9707,8 @@ function validateTimeAwareRouteContracts(){
     if(timeFillStatus().show && !timeFillStatus().done) errors.push('fill layer should stop once measured time reaches target');
   });
   if(/srs|baht/.test(String(startTimeFillSuggestion))) errors.push('time-fill suggestion handler must not write SRS or tokens');
-  if(APP_VERSION !== 'v8.4.1') errors.push('internal app version should be v8.4.1');
-  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('footer label should be Bangkok Thai · v8.4.1');
+  if(APP_VERSION !== 'v8.5.0') errors.push('internal app version should be v8.5.0');
+  if(APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('footer label should be Bangkok Thai · v8.5.0');
   if(errors.length) throw new Error('Time-aware route contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9915,7 +9921,7 @@ function validateV79RetentionDecodeContracts(){
     if(!task || task.id !== 'maintenance-retention30') errors.push('due cold decode should lead maintenance after due review is clear');
   });
   if(!String(masteryQuizExitWouldDiscard).includes('retention30')) errors.push('30-day cold check should share the mastery-stakes exit guard');
-  if(APP_VERSION !== 'v8.4.1' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('v8.4.1 identity mismatch');
+  if(APP_VERSION !== 'v8.5.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('v8.5.0 identity mismatch');
   if(errors.length) throw new Error('V7.9 retention-decode contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -9953,7 +9959,7 @@ function validateV8VisualContracts(){
   const fresh = {done:[], srs:{}};
   ensureStateCollections(fresh);
   ['atlas','visualIdentity','v8'].forEach(key=>{ if(Object.prototype.hasOwnProperty.call(fresh, key)) errors.push('visual pass must not add learner state key ' + key); });
-  if(APP_VERSION !== 'v8.4.1' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('v8.4.1 identity mismatch');
+  if(APP_VERSION !== 'v8.5.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('v8.5.0 identity mismatch');
   if(errors.length) throw new Error('V8.0 visual contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -10022,7 +10028,7 @@ function validateV81ArcadeContracts(){
       player = priorPlayer; stage.innerHTML = priorHtml;
     }
   }
-  if(APP_VERSION !== 'v8.4.1' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.4.1') errors.push('v8.4.1 identity mismatch');
+  if(APP_VERSION !== 'v8.5.0' || APP_VERSION_LABEL !== 'Bangkok Thai · v8.5.0') errors.push('v8.5.0 identity mismatch');
   if(errors.length) throw new Error('V8.1 Street Arcade contract failed:\n' + errors.join('\n'));
   return true;
 }
@@ -12267,7 +12273,7 @@ function overlayExitWouldDiscard(){
 }
 function showOverlayExitConfirm(){
   const speaking = !!(player && player.type === 'conversation-course');
-  const resumable = !!(player && player.type === 'conversation-course' && state.conversation && state.conversation.resume);
+  const resumable = !!(player && player.type === 'conversation-course' && state.conversation && (state.conversation.resume || (player.kind === 'learning-check' && state.conversation.extensions.learningCheck?.resume)));
   const focusTarget = currentFocusTarget();
   const wrap = document.createElement('div');
   wrap.className = 'confirm-modal';
@@ -13779,7 +13785,7 @@ function setReadingCompanionOpen(open){
   if(!panel || !toggle) return;
   panel.hidden = !open;
   toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  toggle.textContent = open ? 'Hide the optional reading course' : 'Optional: open the complete reading course';
+  toggle.textContent = open ? 'Hide reading route and practice' : 'Show reading route and practice';
   if(open && typeof panel.scrollIntoView === 'function') setTimeout(()=>panel.scrollIntoView({block:'start',behavior:'smooth'}), 0);
 }
 function conversationSegmentsHtml(segments, label){
@@ -16229,7 +16235,7 @@ function runFullStartupValidators(){
     validateV79RetentionDecodeContracts,
     validateV8VisualContracts,
     validateV81ArcadeContracts,
-    validateV841ConversationTeachingContracts
+    validateConversationContracts
   ].forEach(fn=>fn());
 }
 function runStartupValidators(){

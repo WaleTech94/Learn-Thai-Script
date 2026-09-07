@@ -15,7 +15,7 @@ function readIndex(){
 function appScript(html){
   const match = html.match(/<script>([\s\S]*)<\/script>/);
   if(!match) throw new Error('script block not found');
-  const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+  const course = require('./app-source').readConversationSource(ROOT);
   return course + '\n' + match[1].replace(/\n\(async function init\(\)\{[\s\S]*?\n\}\)\(\);\s*$/, '\n/* init skipped for precommit check */\n');
 }
 
@@ -100,8 +100,8 @@ function checkScriptSyntax(html){
 }
 
 function checkNfc(html){
-  if(html !== html.normalize('NFC')) throw new Error('index.html is not NFC-normalized');
-  return 'index.html is NFC-normalized';
+  if(html !== html.normalize('NFC')) throw new Error('app source is not NFC-normalized');
+  return 'app source is NFC-normalized';
 }
 
 function checkParticle(html){
@@ -128,8 +128,8 @@ function checkConversationFrontDoor(html){
   const onboardingEnd = html.indexOf('function onboardingStepHtml', onboardingStart);
   if(onboardingStart < 0 || onboardingEnd < 0) throw new Error('onboarding source boundary is missing');
   const onboardingSource = html.slice(onboardingStart, onboardingEnd);
-  if(!html.includes("const APP_VERSION = 'v8.4.1'") || !html.includes('Order something in your first lesson') || !html.includes('Start Lesson 1')){
-    throw new Error('v8.4.1 conversation-course onboarding identity is incomplete');
+  if(!html.includes("const APP_VERSION = 'v8.5.0'") || !html.includes('Order something in your first lesson') || !html.includes('Start Lesson 1')){
+    throw new Error('v8.5.0 conversation-course onboarding identity is incomplete');
   }
   if(/Read Thai from zero|This is letters, not phrase memorising|Start reading/.test(onboardingSource)){
     throw new Error('retired reading-first onboarding copy remains');
@@ -142,12 +142,12 @@ function checkConversationFrontDoor(html){
   if(!/usable conversational Thai/i.test(manifest.description || '') || !/reading as a gradual companion/i.test(manifest.description || '')){
     throw new Error('manifest must describe conversation first and gradual reading');
   }
-  if(!sw.includes("const CACHE = 'aan-thai-v8-4-1'") || !sw.includes("'./conversation-course.js'")) throw new Error('service-worker cache must include the v8.4.1 course module');
+  if(!sw.includes("const CACHE = 'aan-thai-v8-5-0'") || !['conversation-content','conversation-course','conversation-check'].every(name=>sw.includes(`'./${name}.js?v=8.5.0'`)&&html.includes(`src="./${name}.js?v=8.5.0"`))) throw new Error('service-worker cache must include the v8.5.0 course module');
   return 'spoken goal, gradual-reading manifest and cache refresh aligned';
 }
 
 function checkBeginnerConversation(html){
-  const course = fs.readFileSync(path.join(ROOT, 'conversation-course.js'), 'utf8');
+  const course = require('./app-source').readConversationSource(ROOT);
   const source = html + '\n' + course;
   const required = [
     'Order something in your first lesson',
@@ -166,7 +166,7 @@ function checkBeginnerConversation(html){
     'Pronunciation-spelling key',
     'conversationVoiceForRole',
     'pauseAfter || 1000',
-    'validateV841ConversationTeachingContracts'
+    'validateConversationContracts'
   ];
   const missing = required.filter(text=>!source.includes(text));
   if(missing.length) throw new Error('beginner conversation scaffold missing: ' + missing.join(', '));
@@ -368,18 +368,19 @@ function checkConversationSmoke(){
   if(result.status !== 0){
     throw new Error(String(result.stderr || result.stdout || 'conversation smoke failed').split('\n').slice(0, 16).join('; '));
   }
-  return 'v8.4.1 model-first teaching, builder, route, state and role-voice boundaries verified';
+  return 'v8.5.0 model-first teaching, builder, route, state and role-voice boundaries verified';
 }
 
 const html = readIndex();
 const results = [
   runCheck('embedded script syntax', ()=>checkScriptSyntax(html)),
-  runCheck('NFC normalization', ()=>checkNfc(html)),
-  runCheck('male-particle policy', ()=>checkParticle(html)),
+  runCheck('NFC normalization', ()=>checkNfc(html+require('./app-source').readConversationSource(ROOT))),
+  runCheck('male-particle policy', ()=>checkParticle(html+require('./app-source').readConversationSource(ROOT))),
   runCheck('currency policy', ()=>checkCurrency(html)),
   runCheck('conversation-first front door', ()=>checkConversationFrontDoor(html)),
   runCheck('zero-knowledge conversation lesson', ()=>checkBeginnerConversation(html)),
   runCheck('conversation interaction smoke', checkConversationSmoke),
+  runCheck('conversation event flows', ()=>{const r=spawnSync(process.execPath,[path.join(__dirname,'conversation-flow-smoke.js')],{encoding:'utf8'});if(r.status!==0)throw new Error(r.stdout+'\n'+r.stderr);return 'lesson, recall, repair, reload and learning-check isolation verified';}),
   runCheck('tone-grid transliteration', checkToneGrid),
   runCheck('reading-story decodability', checkStories),
   runCheck('fresh-decode corpora', checkFreshDecode)
